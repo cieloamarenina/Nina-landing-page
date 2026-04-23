@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nina Learns Vibe Coding</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=JetBrains+Mono:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #080c14;
+    --surface: #0d1320;
+    --card: #111827;
+    --border: #1e2d45;
+    --accent: #00d4ff;
+    --accent2: #7c3aed;
+    --text: #e8f0fe;
+    --muted: #6b7fa3;
+    --font-display: 'Syne', sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-mono);
+    font-size: 15px;
+    line-height: 1.7;
+    overflow-x: hidden;
+  }
+
+  /* GRID OVERLAY */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(0,212,255,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,212,255,0.03) 1px, transparent 1px);
+    background-size: 60px 60px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    padding: 1.2rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(8,12,20,0.85);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .nav-logo {
+    font-family: var(--font-display);
+    font-size: 1rem;
+    font-weight: 800;
+    color: var(--accent);
+    letter-spacing: 0.05em;
+    text-decoration: none;
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 2rem;
+    list-style: none;
+  }
+
+  .nav-links a {
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 0.75rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    transition: color 0.2s;
+  }
+
+  .nav-links a:hover { color: var(--accent); }
+
+  /* SECTIONS */
+  section {
+    position: relative;
+    z-index: 1;
+    padding: 6rem 2rem;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  /* HERO */
+  #hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding-top: 8rem;
+    max-width: 1100px;
+  }
+
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: rgba(0,212,255,0.08);
+    border: 1px solid rgba(0,212,255,0.25);
+    color: var(--accent);
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    padding: 0.4rem 1rem;
+    border-radius: 2px;
+    margin-bottom: 2rem;
+    width: fit-content;
+  }
+
+  .hero-badge::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    background: var(--accent);
+    border-radius: 50%;
+    animation: pulse 2s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.4; transform: scale(0.7); }
+  }
+
+  .hero-title {
+    font-family: var(--font-display);
+    font-size: clamp(3rem, 8vw, 7rem);
+    font-weight: 800;
+    line-height: 1.0;
+    letter-spacing: -0.03em;
+    margin-bottom: 1.5rem;
+  }
+
+  .hero-title .line-1 { color: var(--text); display: block; }
+  .hero-title .line-2 {
+    display: block;
+    -webkit-text-stroke: 1px var(--accent);
+    color: transparent;
+  }
+  .hero-title .line-3 { color: var(--accent); display: block; }
+
+  .hero-sub {
+    font-size: 1rem;
+    color: var(--muted);
+    max-width: 540px;
+    margin-bottom: 3rem;
+    line-height: 1.8;
+  }
+
+  .hero-sub span { color: var(--accent); }
+
+  .hero-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    background: var(--accent);
+    color: #080c14;
+    font-family: var(--font-mono);
+    font-weight: 600;
+    font-size: 0.8rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 0.85rem 2rem;
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+
+  .hero-cta:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 30px rgba(0,212,255,0.3);
+  }
+
+  .hero-cta::after { content: '→'; }
+
+  .hero-stats {
+    display: flex;
+    gap: 3rem;
+    margin-top: 5rem;
+    padding-top: 3rem;
+    border-top: 1px solid var(--border);
+  }
+
+  .stat-item {}
+  .stat-num {
+    font-family: var(--font-display);
+    font-size: 2.2rem;
+    font-weight: 800;
+    color: var(--accent);
+    display: block;
+    line-height: 1;
+  }
+  .stat-label {
+    font-size: 0.7rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-top: 0.3rem;
+  }
+
+  /* SECTION HEADER */
+  .section-header {
+    margin-bottom: 4rem;
+  }
+
+  .section-tag {
+    font-size: 0.65rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .section-tag::after {
+    content: '';
+    flex: 1;
+    max-width: 60px;
+    height: 1px;
+    background: var(--accent);
+    opacity: 0.4;
+  }
+
+  .section-title {
+    font-family: var(--font-display);
+    font-size: clamp(2rem, 4vw, 3rem);
+    font-weight: 800;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+  }
+
+  /* ABOUT */
+  #about .about-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: center;
+  }
+
+  .about-text p {
+    color: var(--muted);
+    margin-bottom: 1.2rem;
+    line-height: 1.9;
+  }
+
+  .about-text p span { color: var(--text); }
+
+  .about-terminal {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+
+  .terminal-bar {
+    background: var(--surface);
+    padding: 0.75rem 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .dot { width: 10px; height: 10px; border-radius: 50%; }
+  .dot-r { background: #ff5f57; }
+  .dot-y { background: #febc2e; }
+  .dot-g { background: #28c840; }
+
+  .terminal-title {
+    font-size: 0.65rem;
+    color: var(--muted);
+    margin-left: auto;
+    margin-right: auto;
+    letter-spacing: 0.1em;
+  }
+
+  .terminal-body {
+    padding: 1.5rem;
+    font-size: 0.8rem;
+    line-height: 2;
+  }
+
+  .t-prompt { color: var(--accent); }
+  .t-cmd { color: var(--text); }
+  .t-out { color: #a3e635; }
+  .t-comment { color: var(--muted); }
+  .t-error { color: #f87171; }
+
+  /* JOURNEY / TIMELINE */
+  #journey .timeline {
+    position: relative;
+    padding-left: 2rem;
+  }
+
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 1px;
+    background: linear-gradient(to bottom, var(--accent), var(--accent2), transparent);
+    opacity: 0.4;
+  }
+
+  .tl-item {
+    position: relative;
+    margin-bottom: 3rem;
+    padding: 1.5rem 1.5rem 1.5rem 2rem;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-left: 2px solid var(--accent);
+    transition: border-color 0.2s, transform 0.2s;
+  }
+
+  .tl-item:hover {
+    border-left-color: var(--accent2);
+    transform: translateX(4px);
+  }
+
+  .tl-dot {
+    position: absolute;
+    left: -2.85rem;
+    top: 1.75rem;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: var(--accent);
+    border: 2px solid var(--bg);
+    box-shadow: 0 0 0 2px var(--accent);
+  }
+
+  .tl-date {
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 0.4rem;
+  }
+
+  .tl-title {
+    font-family: var(--font-display);
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+  }
+
+  .tl-desc {
+    font-size: 0.8rem;
+    color: var(--muted);
+    line-height: 1.8;
+  }
+
+  .tl-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 1rem;
+  }
+
+  .tag {
+    font-size: 0.65rem;
+    letter-spacing: 0.1em;
+    padding: 0.25rem 0.6rem;
+    background: rgba(0,212,255,0.07);
+    border: 1px solid rgba(0,212,255,0.2);
+    color: var(--accent);
+  }
+
+  /* TOOLS */
+  #tools .tools-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .tool-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    padding: 1.5rem;
+    transition: border-color 0.2s, transform 0.2s;
+    cursor: default;
+  }
+
+  .tool-card:hover {
+    border-color: var(--accent);
+    transform: translateY(-3px);
+  }
+
+  .tool-icon {
+    font-size: 1.8rem;
+    margin-bottom: 0.75rem;
+    display: block;
+    filter: grayscale(0.3);
+  }
+
+  .tool-name {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 1rem;
+    margin-bottom: 0.4rem;
+  }
+
+  .tool-desc {
+    font-size: 0.72rem;
+    color: var(--muted);
+    line-height: 1.7;
+  }
+
+  .tool-level {
+    margin-top: 1rem;
+    height: 2px;
+    background: var(--border);
+    position: relative;
+  }
+
+  .tool-level-fill {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    background: var(--accent);
+    transition: width 1s ease;
+  }
+
+  /* FOOTER */
+  footer {
+    position: relative;
+    z-index: 1;
+    border-top: 1px solid var(--border);
+    padding: 3rem 2rem;
+    max-width: 1100px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .footer-logo {
+    font-family: var(--font-display);
+    font-size: 1.2rem;
+    font-weight: 800;
+    color: var(--accent);
+  }
+
+  .footer-copy {
+    font-size: 0.7rem;
+    color: var(--muted);
+    letter-spacing: 0.1em;
+  }
+
+  .footer-url {
+    font-size: 0.7rem;
+    color: var(--muted);
+  }
+
+  /* SCANLINE */
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: repeating-linear-gradient(
+      to bottom,
+      transparent 0px,
+      transparent 3px,
+      rgba(0,0,0,0.05) 3px,
+      rgba(0,0,0,0.05) 4px
+    );
+    pointer-events: none;
+    z-index: 9999;
+    opacity: 0.4;
+  }
+
+  /* SCROLL ANIMATIONS */
+  .reveal {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* RESPONSIVE */
+  @media (max-width: 768px) {
+    #about .about-grid { grid-template-columns: 1fr; }
+    .hero-stats { flex-wrap: wrap; gap: 1.5rem; }
+    nav .nav-links { display: none; }
+    footer { flex-direction: column; gap: 1rem; text-align: center; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="#hero" class="nav-logo">NLC_</a>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#journey">Journey</a></li>
+    <li><a href="#tools">Stack</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-badge">Live &amp; Learning</div>
+  <h1 class="hero-title">
+    <span class="line-1">Nina</span>
+    <span class="line-2">Learns</span>
+    <span class="line-3">Vibe Coding</span>
+  </h1>
+  <p class="hero-sub">
+    AI Analyst &amp; AI Consultant from <span>Berlin</span> —
+    on my way from prompting to automation.
+    I build, fail, learn and deploy. In real time.
+  </p>
+  <a href="#journey" class="hero-cta">To the Journey</a>
+  <div class="hero-stats">
+    <div class="stat-item">
+      <span class="stat-num">n8n</span>
+      <span class="stat-label">AI Agents Course</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-num">100%</span>
+      <span class="stat-label">Learning in public</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-num">BER</span>
+      <span class="stat-label">Remote · Berlin</span>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="section-header reveal">
+    <div class="section-tag">// about</div>
+    <h2 class="section-title">Who is<br>behind this?</h2>
+  </div>
+  <div class="about-grid">
+    <div class="about-text reveal">
+      <p>
+        I am <span>Nina Panknin</span> — AI Analyst and Consultant,
+        certified with distinction. Ever since I started
+        not just analyzing AI tools, but building them myself,
+        everything has changed.
+      </p>
+      <p>
+        <span>Vibe Coding</span> means to me: programming with AI as co-pilot
+        — even without a classical development background.
+        Workflows, automations, apps. Built with Claude, n8n, Python
+        and a good sense for what's possible.
+      </p>
+      <p>
+        This site is my public learning journal.
+        No polish. <span>Real process.</span>
+      </p>
+    </div>
+    <div class="about-terminal reveal">
+      <div class="terminal-bar">
+        <div class="dot dot-r"></div>
+        <div class="dot dot-y"></div>
+        <div class="dot dot-g"></div>
+        <span class="terminal-title">nina@berlin ~ zsh</span>
+      </div>
+      <div class="terminal-body">
+        <div><span class="t-prompt">❯ </span><span class="t-cmd">whoami</span></div>
+        <div><span class="t-out">nina_panknin</span></div>
+        <br>
+        <div><span class="t-prompt">❯ </span><span class="t-cmd">cat profile.json</span></div>
+        <div><span class="t-comment">{</span></div>
+        <div><span class="t-comment">&nbsp; "role": </span><span class="t-out">"AI Analyst &amp; Consultant"</span><span class="t-comment">,</span></div>
+        <div><span class="t-comment">&nbsp; "location": </span><span class="t-out">"Berlin, DE"</span><span class="t-comment">,</span></div>
+        <div><span class="t-comment">&nbsp; "mode": </span><span class="t-out">"vibe_coding"</span><span class="t-comment">,</span></div>
+        <div><span class="t-comment">&nbsp; "status": </span><span class="t-out">"learning"</span></div>
+        <div><span class="t-comment">}</span></div>
+        <br>
+        <div><span class="t-prompt">❯ </span><span class="t-cmd">_</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- JOURNEY -->
+<section id="journey">
+  <div class="section-header reveal">
+    <div class="section-tag">// journey</div>
+    <h2 class="section-title">Milestones<br>of my Journey</h2>
+  </div>
+  <div class="timeline">
+    <div class="tl-item reveal">
+      <div class="tl-dot"></div>
+      <div class="tl-date">Feb 2026</div>
+      <div class="tl-title">AI Analyst — Certificate with Distinction</div>
+      <div class="tl-desc">348 out of 360 points. Intensive module on AI strategy, prompting and enterprise use. The starting shot for everything that followed.</div>
+      <div class="tl-tags"><span class="tag">Prompting</span><span class="tag">KI-Strategie</span></div>
+    </div>
+    <div class="tl-item reveal">
+      <div class="tl-dot"></div>
+      <div class="tl-date">Mar 2026</div>
+      <div class="tl-title">AI Consultant — Certificate with Distinction</div>
+      <div class="tl-desc">340 out of 360 points. Final project: FEMhit — an AI-powered financial orientation tool for women in critical life situations. Built with Langdock.</div>
+      <div class="tl-tags"><span class="tag">FEMhit</span><span class="tag">Langdock</span><span class="tag">Consulting</span></div>
+    </div>
+    <div class="tl-item reveal">
+      <div class="tl-dot"></div>
+      <div class="tl-date">Apr 2026</div>
+      <div class="tl-title">n8n AI Agents Course — Modul 3</div>
+      <div class="tl-desc">Active learning: Workflows, HTTP Requests, AI Agent Nodes, Webhook Triggers. Daily peer sessions at 9:30am. Own project: Job Tracker Automation.</div>
+      <div class="tl-tags"><span class="tag">n8n</span><span class="tag">AI Agents</span><span class="tag">Automation</span><span class="tag">Python</span></div>
+    </div>
+    <div class="tl-item reveal">
+      <div class="tl-dot"></div>
+      <div class="tl-date">Apr 2026 — now</div>
+      <div class="tl-title">First own domain live</div>
+      <div class="tl-desc">ninalearnsvibecoding.com is live. Hosted on all-inkl.com. Vibe-coded with Claude as co-pilot. You're looking at it right now.</div>
+      <div class="tl-tags"><span class="tag">Vibe Coding</span><span class="tag">Claude AI</span><span class="tag">Deploy</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- TOOLS -->
+<section id="tools">
+  <div class="section-header reveal">
+    <div class="section-tag">// stack</div>
+    <h2 class="section-title">Tools &amp;<br>Tech Stack</h2>
+  </div>
+  <div class="tools-grid">
+    <div class="tool-card reveal">
+      <span class="tool-icon">⚡</span>
+      <div class="tool-name">n8n</div>
+      <div class="tool-desc">Workflow Automation & AI Agents. My daily tool for No-Code / Low-Code pipelines.</div>
+      <div class="tool-level"><div class="tool-level-fill" style="width:75%"></div></div>
+    </div>
+    <div class="tool-card reveal">
+      <span class="tool-icon">🤖</span>
+      <div class="tool-name">Claude AI</div>
+      <div class="tool-desc">My most important co-pilot. Coding, analysis, concepts — Claude is always there.</div>
+      <div class="tool-level"><div class="tool-level-fill" style="width:90%"></div></div>
+    </div>
+    <div class="tool-card reveal">
+      <span class="tool-icon">🐍</span>
+      <div class="tool-name">Python</div>
+      <div class="tool-desc">Scripts, automations, data processing. Work in progress — getting better every day.</div>
+      <div class="tool-level"><div class="tool-level-fill" style="width:45%"></div></div>
+    </div>
+    <div class="tool-card reveal">
+      <span class="tool-icon">🔧</span>
+      <div class="tool-name">Cursor</div>
+      <div class="tool-desc">AI-powered code editor. Vibe Coding starts here — Tab, Tab, Tab.</div>
+      <div class="tool-level"><div class="tool-level-fill" style="width:60%"></div></div>
+    </div>
+    <div class="tool-card reveal">
+      <span class="tool-icon">🌐</span>
+      <div class="tool-name">Hetzner</div>
+      <div class="tool-desc">Cloud server for my own n8n instance. Self-hosted, full control.</div>
+      <div class="tool-level"><div class="tool-level-fill" style="width:55%"></div></div>
+    </div>
+    <div class="tool-card reveal">
+      <span class="tool-icon">✦</span>
+      <div class="tool-name">Langdock</div>
+      <div class="tool-desc">Enterprise AI platform. Used for FEMhit — Custom GPT for women in crisis situations.</div>
+      <div class="tool-level"><div class="tool-level-fill" style="width:70%"></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">NLC_</div>
+  <div class="footer-copy">© 2026 Nina Panknin — Learning in Public</div>
+  <div class="footer-url">ninalearnsvibecoding.com</div>
+</footer>
+
+<script>
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry, i) => {
+      if (entry.isIntersecting) {
+        setTimeout(() => entry.target.classList.add('visible'), i * 80);
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1 });
+  reveals.forEach(el => observer.observe(el));
+</script>
+
+</body>
+</html>
