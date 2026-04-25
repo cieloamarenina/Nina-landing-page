@@ -1054,6 +1054,8 @@ async function initVisitors() {
   post('/visit', { country_code: country.code, country_name: country.name, session_id: sid });
   setInterval(() => post('/ping', { session_id: sid }), 30000);
 
+  renderMap([]);
+
   async function refresh() {
     const stats = await fetchStats();
     if (!stats) return;
