@@ -6,7 +6,7 @@
 <title>Nina Learns Vibe Coding</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=JetBrains+Mono:wght@300;400;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/svgmap@2.1.1/dist/svgMap.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jsvectormap@1.5.3/dist/css/jsvectormap.min.css">
 <style>
   :root {
     --bg: #080c14;
@@ -533,10 +533,9 @@
     margin-bottom: 2rem;
     min-height: 280px;
   }
-  /* Override svgMap for dark theme */
-  .svgMap-map-wrapper { background: transparent !important; }
-  .svgMap-country { stroke: #1e2d45 !important; }
-  .svgMap-tooltip {
+  /* Override jsvectormap for dark theme */
+  .jsvectormap-container { background: transparent !important; }
+  .jsvectormap-tooltip {
     background: var(--card) !important;
     border: 1px solid var(--border) !important;
     color: var(--text) !important;
@@ -973,7 +972,8 @@
   <div class="footer-url">ninalearnsvibecoding.com</div>
 </footer>
 
-<script src="https://cdn.jsdelivr.net/npm/svgmap@2.1.1/dist/svgMap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jsvectormap@1.5.3/dist/js/jsvectormap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jsvectormap@1.5.3/dist/maps/world.js"></script>
 <script>
 // ── VISITOR TRACKING ──────────────────────────────────────────
 const N8N = 'https://n8n.ninalearnsvibecoding.com/webhook';
@@ -1016,24 +1016,34 @@ async function fetchStats() {
 let mapInstance = null;
 
 function renderMap(countries) {
+  if (!countries.length) return;
   const values = {};
   let total = 0;
-  countries.forEach(c => { values[c.code] = { visits: c.count }; total += c.count; });
+  countries.forEach(c => { values[c.code] = c.count; total += c.count; });
   document.getElementById('total-count').textContent = total.toLocaleString();
+
+  if (mapInstance) {
+    mapInstance.series.regions[0].setValues(values);
+    return;
+  }
+
   document.getElementById('visitor-map').innerHTML = '';
-  new svgMap({
-    targetElementID: 'visitor-map',
-    data: {
-      data: { visits: { name: 'Visitors', format: '{0}', thousandSeparator: ',' } },
-      applyData: 'visits',
-      values
+  mapInstance = new jsVectorMap({
+    selector: '#visitor-map',
+    map: 'world',
+    series: {
+      regions: [{
+        values,
+        scale: ['#1a2840', '#00d4ff'],
+        normalizeFunction: 'polynomial'
+      }]
     },
-    colorMin: '#1a2840',
-    colorMax: '#00d4ff',
-    colorNoData: '#0d1320',
-    flagType: 'image',
-    flagURL: 'https://flagcdn.com/24x18/{0}.png',
-    noDataText: '—'
+    regionStyle: {
+      initial: { fill: '#0d1320', stroke: '#1e2d45', strokeWidth: 0.5 }
+    },
+    backgroundColor: 'transparent',
+    zoomOnScroll: false,
+    showTooltip: true
   });
 }
 
