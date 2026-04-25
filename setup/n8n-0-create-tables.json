@@ -1,0 +1,39 @@
+{
+  "name": "Setup – Create Visitor Tables",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "aaa00000-0000-0000-0000-000000000001",
+      "name": "Manual Trigger",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [260, 300]
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "CREATE TABLE IF NOT EXISTS visitor_countries (\n  country_code CHAR(2)      PRIMARY KEY,\n  country_name VARCHAR(100) NOT NULL DEFAULT 'Unknown',\n  visit_count  INTEGER      NOT NULL DEFAULT 0,\n  last_visit   TIMESTAMPTZ  NOT NULL DEFAULT NOW()\n);\n\nCREATE TABLE IF NOT EXISTS visitor_sessions (\n  session_id VARCHAR(128) PRIMARY KEY,\n  last_seen  TIMESTAMPTZ  NOT NULL DEFAULT NOW()\n);",
+        "options": {}
+      },
+      "id": "aaa00000-0000-0000-0000-000000000002",
+      "name": "Create Tables",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.4,
+      "position": [480, 300],
+      "credentials": {
+        "postgres": {
+          "id": "REPLACE_WITH_YOUR_CREDENTIAL_ID",
+          "name": "PostgreSQL account"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Manual Trigger": {
+      "main": [[{ "node": "Create Tables", "type": "main", "index": 0 }]]
+    }
+  },
+  "active": false,
+  "settings": { "executionOrder": "v1" },
+  "tags": []
+}

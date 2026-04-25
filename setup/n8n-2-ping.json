@@ -1,0 +1,65 @@
+{
+  "name": "Visitor – Ping (Heartbeat)",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "ping",
+        "responseMode": "responseNode",
+        "options": { "allowedOrigins": "*" }
+      },
+      "id": "bbb00002-0000-0000-0000-000000000001",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [260, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "const b = $input.first().json.body || {};\nconst sid = String(b.session_id || '').replace(/[^a-zA-Z0-9_\\-]/g, '').slice(0, 128) || 'unknown';\nreturn [{ json: { session_id: sid } }];"
+      },
+      "id": "bbb00002-0000-0000-0000-000000000002",
+      "name": "Sanitize",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [480, 300]
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "=INSERT INTO visitor_sessions (session_id, last_seen)\nVALUES ('{{ $json.session_id }}', NOW())\nON CONFLICT (session_id) DO UPDATE SET last_seen = NOW()",
+        "options": {}
+      },
+      "id": "bbb00002-0000-0000-0000-000000000003",
+      "name": "Update Session",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.4,
+      "position": [700, 300],
+      "credentials": {
+        "postgres": {
+          "id": "REPLACE_WITH_YOUR_CREDENTIAL_ID",
+          "name": "PostgreSQL account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={\"ok\":true}"
+      },
+      "id": "bbb00002-0000-0000-0000-000000000004",
+      "name": "Respond",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [920, 300]
+    }
+  ],
+  "connections": {
+    "Webhook":        { "main": [[{ "node": "Sanitize",       "type": "main", "index": 0 }]] },
+    "Sanitize":       { "main": [[{ "node": "Update Session", "type": "main", "index": 0 }]] },
+    "Update Session": { "main": [[{ "node": "Respond",        "type": "main", "index": 0 }]] }
+  },
+  "active": true,
+  "settings": { "executionOrder": "v1" },
+  "tags": []
+}
