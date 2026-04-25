@@ -542,6 +542,37 @@
     font-family: var(--font-mono) !important;
     font-size: 0.72rem !important;
   }
+  .online-countries {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+    min-height: 1.8rem;
+  }
+  .online-country {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    background: rgba(0, 212, 255, 0.08);
+    border: 1px solid rgba(0, 212, 255, 0.25);
+    border-radius: 999px;
+    padding: 0.2rem 0.7rem 0.2rem 0.4rem;
+    font-size: 0.72rem;
+    color: var(--accent);
+  }
+  .online-country .pulse {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: #00ff88;
+    box-shadow: 0 0 0 0 rgba(0,255,136,0.4);
+    animation: pulse-ring 1.5s ease-out infinite;
+    flex-shrink: 0;
+  }
+  @keyframes pulse-ring {
+    0%   { box-shadow: 0 0 0 0 rgba(0,255,136,0.5); }
+    70%  { box-shadow: 0 0 0 6px rgba(0,255,136,0); }
+    100% { box-shadow: 0 0 0 0 rgba(0,255,136,0); }
+  }
   .flag-grid {
     display: flex;
     flex-wrap: wrap;
@@ -959,6 +990,7 @@
     <span class="live-sep">&nbsp;·&nbsp;</span>
     <span id="total-count">—</span>&nbsp;total visits
   </div>
+  <div id="online-countries" class="online-countries reveal"></div>
   <div id="visitor-map" class="reveal">
     <div class="visitors-loading">Loading map…</div>
   </div>
@@ -1049,6 +1081,18 @@ function renderMap(countries) {
   });
 }
 
+function renderOnlineCountries(countries) {
+  const el = document.getElementById('online-countries');
+  if (!el) return;
+  if (!countries?.length) { el.innerHTML = ''; return; }
+  el.innerHTML = countries.map(c => `
+    <div class="online-country">
+      <span class="pulse"></span>
+      <img src="https://flagcdn.com/16x12/${c.code.toLowerCase()}.png" alt="${c.name}" style="border-radius:2px">
+      ${c.name}
+    </div>`).join('');
+}
+
 function renderFlags(countries) {
   document.getElementById('flag-grid').innerHTML = countries
     .sort((a, b) => b.count - a.count)
@@ -1070,6 +1114,7 @@ async function initVisitors() {
     const stats = await fetchStats();
     if (!stats) return;
     document.getElementById('online-count').textContent = stats.online ?? '—';
+    renderOnlineCountries(stats.online_countries || []);
     if (stats.countries?.length) {
       renderMap(stats.countries);
       renderFlags(stats.countries);

@@ -1,0 +1,39 @@
+{
+  "name": "Setup – Add Country to Sessions",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "aaa00000-0000-0000-0000-000000000010",
+      "name": "Manual Trigger",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [260, 300]
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "ALTER TABLE visitor_sessions\n  ADD COLUMN IF NOT EXISTS country_code VARCHAR(2),\n  ADD COLUMN IF NOT EXISTS country_name VARCHAR(100);",
+        "options": {}
+      },
+      "id": "aaa00000-0000-0000-0000-000000000011",
+      "name": "Add Columns",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.4,
+      "position": [480, 300],
+      "credentials": {
+        "postgres": {
+          "id": "REPLACE_WITH_YOUR_CREDENTIAL_ID",
+          "name": "PostgreSQL account"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Manual Trigger": {
+      "main": [[{ "node": "Add Columns", "type": "main", "index": 0 }]]
+    }
+  },
+  "active": false,
+  "settings": { "executionOrder": "v1" },
+  "tags": []
+}

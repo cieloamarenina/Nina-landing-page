@@ -1,0 +1,65 @@
+{
+  "name": "Visitor – Stats v2",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "GET",
+        "path": "stats",
+        "responseMode": "responseNode",
+        "options": { "allowedOrigins": "*" }
+      },
+      "id": "ccc00003-0000-0000-0000-000000000001",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [260, 300]
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SELECT\n  (SELECT COALESCE(json_agg(json_build_object('code', country_code, 'name', country_name, 'count', visit_count) ORDER BY visit_count DESC), '[]'::json) FROM visitor_countries) AS countries,\n  (SELECT COUNT(*)::int FROM visitor_sessions WHERE last_seen > NOW() - INTERVAL '2 minutes') AS online,\n  (SELECT COALESCE(json_agg(json_build_object('code', country_code, 'name', country_name)), '[]'::json) FROM (SELECT DISTINCT ON (country_code) country_code, country_name FROM visitor_sessions WHERE last_seen > NOW() - INTERVAL '2 minutes' AND country_code IS NOT NULL ORDER BY country_code, last_seen DESC) t) AS online_countries",
+        "options": {}
+      },
+      "id": "ccc00003-0000-0000-0000-000000000002",
+      "name": "Get Stats",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.4,
+      "position": [480, 300],
+      "credentials": {
+        "postgres": {
+          "id": "REPLACE_WITH_YOUR_CREDENTIAL_ID",
+          "name": "PostgreSQL account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const row = $input.first().json;\nreturn [{ json: {\n  countries: row.countries || [],\n  online: row.online || 0,\n  online_countries: row.online_countries || []\n}}];"
+      },
+      "id": "ccc00003-0000-0000-0000-000000000003",
+      "name": "Format",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [700, 300]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify($json) }}"
+      },
+      "id": "ccc00003-0000-0000-0000-000000000004",
+      "name": "Respond",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [920, 300]
+    }
+  ],
+  "connections": {
+    "Webhook":   { "main": [[{ "node": "Get Stats", "type": "main", "index": 0 }]] },
+    "Get Stats": { "main": [[{ "node": "Format",    "type": "main", "index": 0 }]] },
+    "Format":    { "main": [[{ "node": "Respond",   "type": "main", "index": 0 }]] }
+  },
+  "active": true,
+  "settings": { "executionOrder": "v1" },
+  "tags": []
+}
