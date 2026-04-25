@@ -623,7 +623,7 @@
   .pablo-close-btn:hover { color: var(--text); }
 
   #pablo-btn {
-    cursor: pointer;
+    cursor: grab;
     position: relative;
     text-align: center;
     user-select: none;
@@ -1119,6 +1119,55 @@ initVisitors();
 // ── PABLO PLAYER ─────────────────────────────────────────────
 const pabloPlayer = document.getElementById('pablo-player');
 const pabloPanel  = document.getElementById('pablo-panel');
+
+// Drag
+(function() {
+  const handle = document.getElementById('pablo-btn');
+  let dragging = false, didDrag = false;
+  let startX, startY, startLeft, startTop;
+
+  function beginDrag(cx, cy) {
+    const r = pabloPlayer.getBoundingClientRect();
+    pabloPlayer.style.bottom = 'auto';
+    pabloPlayer.style.right  = 'auto';
+    pabloPlayer.style.top    = r.top  + 'px';
+    pabloPlayer.style.left   = r.left + 'px';
+    startX = cx; startY = cy;
+    startLeft = r.left; startTop = r.top;
+    dragging = true; didDrag = false;
+    handle.style.animationPlayState = 'paused';
+  }
+
+  function moveDrag(cx, cy) {
+    if (!dragging) return;
+    const dx = cx - startX, dy = cy - startY;
+    if (Math.abs(dx) > 3 || Math.abs(dy) > 3) didDrag = true;
+    const w = pabloPlayer.offsetWidth, h = pabloPlayer.offsetHeight;
+    const l = Math.max(0, Math.min(window.innerWidth  - w, startLeft + dx));
+    const t = Math.max(0, Math.min(window.innerHeight - h, startTop  + dy));
+    pabloPlayer.style.left = l + 'px';
+    pabloPlayer.style.top  = t + 'px';
+  }
+
+  function endDrag() {
+    if (!dragging) return;
+    dragging = false;
+    handle.style.animationPlayState = '';
+    if (didDrag) localStorage.setItem('pablo-pos', JSON.stringify({ top: pabloPlayer.style.top, left: pabloPlayer.style.left }));
+  }
+
+  handle.addEventListener('mousedown',  e => { if (e.button === 0) { beginDrag(e.clientX, e.clientY); e.preventDefault(); } });
+  document.addEventListener('mousemove', e => moveDrag(e.clientX, e.clientY));
+  document.addEventListener('mouseup',   () => endDrag());
+  handle.addEventListener('click', e => { if (didDrag) { e.stopPropagation(); didDrag = false; } }, true);
+
+  handle.addEventListener('touchstart', e => { const t = e.touches[0]; beginDrag(t.clientX, t.clientY); }, { passive: true });
+  document.addEventListener('touchmove', e => { if (dragging) { moveDrag(e.touches[0].clientX, e.touches[0].clientY); e.preventDefault(); } }, { passive: false });
+  document.addEventListener('touchend', () => endDrag());
+
+  const saved = localStorage.getItem('pablo-pos');
+  if (saved) try { const p = JSON.parse(saved); pabloPlayer.style.bottom = 'auto'; pabloPlayer.style.right = 'auto'; pabloPlayer.style.top = p.top; pabloPlayer.style.left = p.left; } catch(e) {}
+})();
 
 function togglePabloPanel() {
   pabloPanel.classList.toggle('open');
