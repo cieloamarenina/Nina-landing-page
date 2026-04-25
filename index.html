@@ -6,6 +6,7 @@
 <title>Nina Learns Vibe Coding</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=JetBrains+Mono:wght@300;400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/svgmap@2.1.1/dist/svgMap.min.css">
 <style>
   :root {
     --bg: #080c14;
@@ -500,6 +501,204 @@
     transform: translateY(0);
   }
 
+  /* VISITORS */
+  .visitors-live {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin-bottom: 2.5rem;
+    font-size: 0.82rem;
+    color: var(--muted);
+  }
+  .live-dot {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    background: #22c55e;
+    flex-shrink: 0;
+    box-shadow: 0 0 0 0 rgba(34,197,94,0.4);
+    animation: live-pulse 2s ease-in-out infinite;
+  }
+  @keyframes live-pulse {
+    0%   { box-shadow: 0 0 0 0   rgba(34,197,94,0.4); }
+    70%  { box-shadow: 0 0 0 8px rgba(34,197,94,0);   }
+    100% { box-shadow: 0 0 0 0   rgba(34,197,94,0);   }
+  }
+  #online-count, #total-count { color: var(--text); font-weight: 600; }
+  .live-sep { opacity: 0.35; }
+
+  #visitor-map {
+    background: var(--card);
+    border: 1px solid var(--border);
+    padding: 1rem;
+    margin-bottom: 2rem;
+    min-height: 280px;
+  }
+  /* Override svgMap for dark theme */
+  .svgMap-map-wrapper { background: transparent !important; }
+  .svgMap-country { stroke: #1e2d45 !important; }
+  .svgMap-tooltip {
+    background: var(--card) !important;
+    border: 1px solid var(--border) !important;
+    color: var(--text) !important;
+    font-family: var(--font-mono) !important;
+    font-size: 0.72rem !important;
+  }
+  .flag-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-top: 1.5rem;
+  }
+  .flag-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: var(--card);
+    border: 1px solid var(--border);
+    padding: 0.4rem 0.75rem;
+    font-size: 0.72rem;
+    color: var(--muted);
+    transition: border-color 0.2s;
+  }
+  .flag-item:hover { border-color: var(--accent); }
+  .flag-item img { width: 20px; height: 14px; object-fit: cover; }
+  .flag-count { color: var(--accent); font-weight: 600; margin-left: 0.25rem; }
+  .visitors-loading {
+    color: var(--muted);
+    font-size: 0.75rem;
+    letter-spacing: 0.1em;
+    padding: 3rem 0;
+    text-align: center;
+  }
+
+  /* PABLO PLAYER */
+  #pablo-player {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 8px;
+  }
+  #pablo-panel {
+    background: var(--card);
+    border: 1px solid var(--border);
+    width: 300px;
+    border-radius: 4px;
+    overflow: hidden;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.6);
+    display: none;
+    flex-direction: column;
+  }
+  #pablo-panel.open { display: flex; animation: pablo-slide-in 0.25s ease; }
+  @keyframes pablo-slide-in {
+    from { opacity:0; transform: translateY(12px); }
+    to   { opacity:1; transform: translateY(0); }
+  }
+  .pablo-panel-header {
+    padding: 0.6rem 0.9rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--border);
+    font-size: 0.7rem;
+    color: var(--muted);
+  }
+  .pablo-now-dot {
+    display: inline-block;
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: #22c55e;
+    margin-right: 6px;
+    animation: live-pulse 2s infinite;
+  }
+  .pablo-close-btn {
+    background: none; border: none;
+    color: var(--muted); cursor: pointer;
+    font-size: 0.9rem; padding: 0;
+    line-height: 1;
+  }
+  .pablo-close-btn:hover { color: var(--text); }
+
+  #pablo-btn {
+    cursor: pointer;
+    position: relative;
+    text-align: center;
+    user-select: none;
+    animation: pablo-float 3s ease-in-out infinite;
+  }
+  @keyframes pablo-float {
+    0%, 100% { transform: translateY(0px);  }
+    50%       { transform: translateY(-9px); }
+  }
+  #pablo-btn:hover { filter: brightness(1.08); }
+  #pablo-btn:active { transform: scale(0.96) translateY(0) !important; }
+
+  .pablo-photo-wrap {
+    position: relative;
+    width: 88px;
+    height: 88px;
+  }
+  #pablo-photo {
+    width: 88px;
+    height: 88px;
+    border-radius: 50%;
+    object-fit: cover;
+    object-position: center top;
+    display: block;
+    border: 2px solid var(--border);
+    background: var(--card);
+  }
+  /* Glowing ring */
+  .pablo-ring {
+    position: absolute;
+    inset: -4px;
+    border-radius: 50%;
+    border: 2px solid transparent;
+    transition: border-color 0.4s, box-shadow 0.4s;
+    pointer-events: none;
+  }
+  /* PLAYING — cyan glow + faster float */
+  .state-playing #pablo-btn   { animation: pablo-float-fast 1.2s ease-in-out infinite; }
+  .state-playing .pablo-ring  {
+    border-color: var(--accent);
+    box-shadow: 0 0 14px rgba(0,212,255,0.55), 0 0 28px rgba(0,212,255,0.25);
+  }
+  @keyframes pablo-float-fast {
+    0%, 100% { transform: translateY(0px);  }
+    50%       { transform: translateY(-6px); }
+  }
+  /* SLEEPING — grayscale + dim + slow breathe */
+  .state-sleeping #pablo-btn  { animation: pablo-breathe 4s ease-in-out infinite; }
+  .state-sleeping #pablo-photo { filter: grayscale(0.6) brightness(0.75); }
+  @keyframes pablo-breathe {
+    0%, 100% { transform: scale(1);    }
+    50%       { transform: scale(1.03); }
+  }
+
+  .pablo-label {
+    font-size: 0.58rem;
+    letter-spacing: 0.14em;
+    color: var(--muted);
+    margin-top: 5px;
+    text-transform: uppercase;
+  }
+
+  /* ZZZ */
+  #pablo-zzz { position: absolute; top: -10px; right: -2px; display: none; pointer-events: none; }
+  .state-sleeping #pablo-zzz { display: block; }
+  #pablo-zzz span { font-size: 0.75rem; font-weight: 700; color: var(--accent); animation: zzz-float 2.2s ease-in-out infinite; display: inline-block; }
+  #pablo-zzz span:nth-child(1) { animation-delay: 0s;    font-size: 0.55rem; }
+  #pablo-zzz span:nth-child(2) { animation-delay: 0.6s;  font-size: 0.72rem; }
+  #pablo-zzz span:nth-child(3) { animation-delay: 1.2s;  font-size: 0.9rem;  }
+  @keyframes zzz-float {
+    0%   { opacity: 0; transform: translate(0,0) scale(0.5);     }
+    40%  { opacity: 1; }
+    100% { opacity: 0; transform: translate(9px,-20px) scale(1); }
+  }
+
   /* RESPONSIVE */
   @media (max-width: 768px) {
     #about .about-grid { grid-template-columns: 1fr; }
@@ -517,6 +716,7 @@
     <li><a href="#about">About</a></li>
     <li><a href="#journey">Journey</a></li>
     <li><a href="#tools">Stack</a></li>
+    <li><a href="#visitors">Visitors</a></li>
   </ul>
 </nav>
 
@@ -630,9 +830,37 @@
     </div>
     <div class="tl-item reveal">
       <div class="tl-dot"></div>
+      <div class="tl-date">Apr 2026</div>
+      <div class="tl-title">LinkedIn Content Workflow</div>
+      <div class="tl-desc">Fully automated LinkedIn pipeline: AI generates posts, stores them in NocoDB, publishes via LinkedIn API, marks as posted. Built entirely in n8n — first end-to-end automation.</div>
+      <div class="tl-tags"><span class="tag">n8n</span><span class="tag">LinkedIn API</span><span class="tag">NocoDB</span><span class="tag">Automation</span></div>
+    </div>
+    <div class="tl-item reveal">
+      <div class="tl-dot"></div>
+      <div class="tl-date">Apr 2026</div>
+      <div class="tl-title">Mail Tracker — Inbox to Database</div>
+      <div class="tl-desc">n8n workflow that captures incoming emails via Gmail, parses them and writes structured data into a PostgreSQL database. First project touching a real self-hosted database.</div>
+      <div class="tl-tags"><span class="tag">n8n</span><span class="tag">Gmail</span><span class="tag">PostgreSQL</span><span class="tag">Automation</span></div>
+    </div>
+    <div class="tl-item reveal">
+      <div class="tl-dot"></div>
+      <div class="tl-date">Apr 2026</div>
+      <div class="tl-title">Portfolio Tracker — Stocks, ETFs &amp; Crypto</div>
+      <div class="tl-desc">A self-built dashboard to track stock, ETF and crypto positions in real time. Pulls live prices, calculates P&amp;L and visualizes performance — first real full-stack project with React and Node.</div>
+      <div class="tl-tags"><span class="tag">React</span><span class="tag">Node.js</span><span class="tag">API</span><span class="tag">Finance</span></div>
+    </div>
+    <div class="tl-item reveal">
+      <div class="tl-dot"></div>
+      <div class="tl-date">Apr 2026</div>
+      <div class="tl-title">Job Scraper Automation</div>
+      <div class="tl-desc">Automated job scraper that searches multiple platforms, filters by criteria and delivers results directly to inbox. Built with n8n and Python — no more manual searching.</div>
+      <div class="tl-tags"><span class="tag">n8n</span><span class="tag">Python</span><span class="tag">Scraping</span><span class="tag">Automation</span></div>
+    </div>
+    <div class="tl-item reveal">
+      <div class="tl-dot"></div>
       <div class="tl-date">Apr 2026 — now</div>
       <div class="tl-title">First own domain live</div>
-      <div class="tl-desc">ninalearnsvibecoding.com is live. Hosted on all-inkl.com. Vibe-coded with Claude as co-pilot. You're looking at it right now.</div>
+      <div class="tl-desc">ninalearnsvibecoding.com is live. Hosted on Hetzner via Coolify. Vibe-coded with Claude as co-pilot. You're looking at it right now.</div>
       <div class="tl-tags"><span class="tag">Vibe Coding</span><span class="tag">Claude AI</span><span class="tag">Deploy</span></div>
     </div>
   </div>
@@ -681,7 +909,61 @@
       <div class="tool-desc">Enterprise AI platform. Used for FEMhit — Custom GPT for women in crisis situations.</div>
       <div class="tool-level"><div class="tool-level-fill" style="width:70%"></div></div>
     </div>
+    <div class="tool-card reveal">
+      <span class="tool-icon">🐘</span>
+      <div class="tool-name">PostgreSQL</div>
+      <div class="tool-desc">Self-hosted relational database. Stores emails, workflow data and more — running on Hetzner.</div>
+      <div class="tool-level"><div class="tool-level-fill" style="width:50%"></div></div>
+    </div>
+    <div class="tool-card reveal">
+      <span class="tool-icon">🗃️</span>
+      <div class="tool-name">NocoDB</div>
+      <div class="tool-desc">No-Code database frontend. Makes PostgreSQL accessible without writing SQL — perfect for workflows.</div>
+      <div class="tool-level"><div class="tool-level-fill" style="width:60%"></div></div>
+    </div>
+    <div class="tool-card reveal">
+      <span class="tool-icon">🚀</span>
+      <div class="tool-name">Coolify</div>
+      <div class="tool-desc">Self-hosted deployment platform. Manages all services on my Hetzner server — one-click deploys.</div>
+      <div class="tool-level"><div class="tool-level-fill" style="width:55%"></div></div>
+    </div>
+    <div class="tool-card reveal">
+      <span class="tool-icon">⚛️</span>
+      <div class="tool-name">React</div>
+      <div class="tool-desc">Frontend library for the Portfolio Tracker. First real React project — built with Vite and Tailwind.</div>
+      <div class="tool-level"><div class="tool-level-fill" style="width:40%"></div></div>
+    </div>
+    <div class="tool-card reveal">
+      <span class="tool-icon">🐙</span>
+      <div class="tool-name">GitHub</div>
+      <div class="tool-desc">Version control and deployment trigger. Every push to main auto-deploys via Coolify.</div>
+      <div class="tool-level"><div class="tool-level-fill" style="width:65%"></div></div>
+    </div>
+    <div class="tool-card reveal">
+      <span class="tool-icon">🗄️</span>
+      <div class="tool-name">Adminer</div>
+      <div class="tool-desc">Lightweight database UI. Direct access to PostgreSQL — query, inspect and manage tables in the browser.</div>
+      <div class="tool-level"><div class="tool-level-fill" style="width:50%"></div></div>
+    </div>
   </div>
+</section>
+
+<!-- VISITORS -->
+<section id="visitors">
+  <div class="section-header reveal">
+    <div class="section-tag">// visitors</div>
+    <h2 class="section-title">Reading this<br>from where?</h2>
+  </div>
+  <div class="visitors-live reveal">
+    <span class="live-dot"></span>
+    <span id="online-count">—</span>&nbsp;online right now
+    <span class="live-sep">&nbsp;·&nbsp;</span>
+    <span id="total-count">—</span>&nbsp;total visits
+  </div>
+  <div id="visitor-map" class="reveal">
+    <div class="visitors-loading">Loading map…</div>
+  </div>
+  <div id="flag-grid" class="flag-grid reveal"></div>
 </section>
 
 <!-- FOOTER -->
@@ -691,6 +973,103 @@
   <div class="footer-url">ninalearnsvibecoding.com</div>
 </footer>
 
+<script src="https://cdn.jsdelivr.net/npm/svgmap@2.1.1/dist/svgMap.min.js"></script>
+<script>
+// ── VISITOR TRACKING ──────────────────────────────────────────
+const N8N = 'https://n8n.ninalearnsvibecoding.com/webhook';
+const SESSION_KEY = 'nlvc_sid';
+
+function getSessionId() {
+  let id = sessionStorage.getItem(SESSION_KEY);
+  if (!id) {
+    id = 'sid_' + Date.now() + '_' + Math.random().toString(36).slice(2, 9);
+    sessionStorage.setItem(SESSION_KEY, id);
+  }
+  return id;
+}
+
+async function detectCountry() {
+  try {
+    const r = await fetch('https://ipapi.co/json/');
+    const d = await r.json();
+    return { code: d.country_code || 'XX', name: d.country_name || 'Unknown' };
+  } catch { return { code: 'XX', name: 'Unknown' }; }
+}
+
+async function post(path, body) {
+  try {
+    await fetch(N8N + path, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body)
+    });
+  } catch {}
+}
+
+async function fetchStats() {
+  try {
+    const r = await fetch(N8N + '/stats');
+    return await r.json();
+  } catch { return null; }
+}
+
+let mapInstance = null;
+
+function renderMap(countries) {
+  const values = {};
+  let total = 0;
+  countries.forEach(c => { values[c.code] = { visits: c.count }; total += c.count; });
+  document.getElementById('total-count').textContent = total.toLocaleString();
+  document.getElementById('visitor-map').innerHTML = '';
+  new svgMap({
+    targetElementID: 'visitor-map',
+    data: {
+      data: { visits: { name: 'Visitors', format: '{0}', thousandSeparator: ',' } },
+      applyData: 'visits',
+      values
+    },
+    colorMin: '#1a2840',
+    colorMax: '#00d4ff',
+    colorNoData: '#0d1320',
+    flagType: 'image',
+    flagURL: 'https://flagcdn.com/24x18/{0}.png',
+    noDataText: '—'
+  });
+}
+
+function renderFlags(countries) {
+  document.getElementById('flag-grid').innerHTML = countries
+    .sort((a, b) => b.count - a.count)
+    .slice(0, 24)
+    .map(c => `<div class="flag-item">
+      <img src="https://flagcdn.com/24x18/${c.code.toLowerCase()}.png" alt="${c.name}">
+      <span>${c.name}</span>
+      <span class="flag-count">${c.count}</span>
+    </div>`).join('');
+}
+
+async function initVisitors() {
+  const sid = getSessionId();
+  const country = await detectCountry();
+  post('/visit', { country_code: country.code, country_name: country.name, session_id: sid });
+  setInterval(() => post('/ping', { session_id: sid }), 30000);
+
+  async function refresh() {
+    const stats = await fetchStats();
+    if (!stats) return;
+    document.getElementById('online-count').textContent = stats.online ?? '—';
+    if (stats.countries?.length) {
+      renderMap(stats.countries);
+      renderFlags(stats.countries);
+    }
+  }
+  refresh();
+  setInterval(refresh, 60000);
+}
+
+initVisitors();
+// ── END VISITOR TRACKING ──────────────────────────────────────
+</script>
 <script>
   const reveals = document.querySelectorAll('.reveal');
   const observer = new IntersectionObserver((entries) => {
@@ -702,6 +1081,77 @@
     });
   }, { threshold: 0.1 });
   reveals.forEach(el => observer.observe(el));
+</script>
+
+<!-- PABLO PLAYER -->
+<div id="pablo-player" class="state-idle">
+
+  <!-- Expanded Spotify Panel -->
+  <div id="pablo-panel">
+    <div class="pablo-panel-header">
+      <span><span class="pablo-now-dot"></span><span id="pablo-track-name">Pablo's Playlist</span></span>
+      <button class="pablo-close-btn" onclick="togglePabloPanel()">✕</button>
+    </div>
+    <iframe id="pablo-iframe"
+      src="https://open.spotify.com/embed/playlist/37i9dQZF1DX4WYpdgoIcn6?utm_source=generator&theme=0"
+      width="300" height="352" frameBorder="0"
+      allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+      loading="lazy">
+    </iframe>
+  </div>
+
+  <!-- Pablo Dog Button -->
+  <div id="pablo-btn" onclick="togglePabloPanel()" title="Pablo's Playlist 🎵">
+    <div id="pablo-zzz"><span>z</span><span>z</span><span>z</span></div>
+
+    <div class="pablo-photo-wrap">
+      <img id="pablo-photo" src="Pablo.jpeg" alt="Pablo" onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 1 1%22/>'"/>
+      <div class="pablo-ring"></div>
+    </div>
+
+    <div class="pablo-label">Pablo 🎵</div>
+  </div>
+</div>
+
+<script>
+// ── PABLO PLAYER ─────────────────────────────────────────────
+const pabloPlayer = document.getElementById('pablo-player');
+const pabloPanel  = document.getElementById('pablo-panel');
+
+function togglePabloPanel() {
+  pabloPanel.classList.toggle('open');
+}
+
+function setPabloState(state) {
+  pabloPlayer.className = 'state-' + state;
+}
+
+// Demo: cycle through states so you can see all three
+// Remove this once Spotify API is connected via n8n
+let _demo = 0;
+document.getElementById('pablo-btn').addEventListener('dblclick', (e) => {
+  e.stopPropagation();
+  const states = ['idle', 'playing', 'sleeping'];
+  _demo = (_demo + 1) % states.length;
+  setPabloState(states[_demo]);
+});
+
+// ── SPOTIFY NOW PLAYING (via n8n — activate once workflow is set up) ──
+// async function fetchNowPlaying() {
+//   try {
+//     const r = await fetch('https://n8n.ninalearnsvibecoding.com/webhook/spotify-now-playing');
+//     const d = await r.json();
+//     if (d.is_playing) {
+//       document.getElementById('pablo-track-name').textContent = d.artist + ' — ' + d.track;
+//       setPabloState('playing');
+//     } else {
+//       setPabloState('sleeping');
+//     }
+//   } catch { setPabloState('idle'); }
+// }
+// fetchNowPlaying();
+// setInterval(fetchNowPlaying, 30000);
+// ── END PABLO PLAYER ─────────────────────────────────────────
 </script>
 
 </body>
