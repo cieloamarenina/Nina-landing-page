@@ -1,0 +1,39 @@
+{
+  "name": "Setup – Soft Reset (Delete Israel Data)",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "aaa00000-0000-0000-0000-000000000030",
+      "name": "Manual Trigger",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [260, 300]
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "DELETE FROM visitor_countries WHERE country_code = 'IL';\nDELETE FROM visitor_cities WHERE country_code = 'IL';\nDELETE FROM visitor_sessions WHERE country_code = 'IL';",
+        "options": {}
+      },
+      "id": "aaa00000-0000-0000-0000-000000000031",
+      "name": "Delete Israel Data",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.4,
+      "position": [480, 300],
+      "credentials": {
+        "postgres": {
+          "id": "REPLACE_WITH_YOUR_CREDENTIAL_ID",
+          "name": "PostgreSQL account"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Manual Trigger": {
+      "main": [[{ "node": "Delete Israel Data", "type": "main", "index": 0 }]]
+    }
+  },
+  "active": false,
+  "settings": { "executionOrder": "v1" },
+  "tags": []
+}

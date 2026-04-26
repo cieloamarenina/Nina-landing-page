@@ -7,7 +7,6 @@
 <title>Nina Learns Vibe Coding</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=JetBrains+Mono:wght@300;400;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jsvectormap@1.5.3/dist/css/jsvectormap.min.css">
 <style>
   :root {
     --bg: #080c14;
@@ -528,28 +527,15 @@
   .live-sep { opacity: 0.35; }
 
   #visitor-map {
-    background: var(--card);
     border: 1px solid var(--border);
-    padding: 1rem;
     margin-bottom: 2rem;
-    min-height: 280px;
+    height: 420px;
+    overflow: hidden;
     position: relative;
     z-index: 1;
+    cursor: grab;
   }
-  /* Override jsvectormap for dark theme */
-  .jsvectormap-container { background: transparent !important; }
-  .jsvectormap-series-container,
-  .jsvectormap-legend,
-  .jsvectormap-legend-cnt,
-  .jsvectormap-legend-title,
-  .jsvectormap-legend-inner { display: none !important; }
-  .jsvectormap-tooltip {
-    background: var(--card) !important;
-    border: 1px solid var(--border) !important;
-    color: var(--text) !important;
-    font-family: var(--font-mono) !important;
-    font-size: 0.72rem !important;
-  }
+  #visitor-map:active { cursor: grabbing; }
   .online-countries {
     display: flex;
     flex-wrap: wrap;
@@ -1024,9 +1010,7 @@
     <span id="total-count">—</span>&nbsp;total visits
   </div>
   <div id="online-countries" class="online-countries reveal"></div>
-  <div id="visitor-map" class="reveal">
-    <div class="visitors-loading">Loading map…</div>
-  </div>
+  <div id="visitor-map" class="reveal"></div>
   <div id="flag-grid" class="flag-grid reveal"></div>
 </section>
 
@@ -1037,8 +1021,7 @@
   <div class="footer-url">ninalearnsvibecoding.com</div>
 </footer>
 
-<script src="https://cdn.jsdelivr.net/npm/jsvectormap@1.5.3/dist/js/jsvectormap.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/jsvectormap@1.5.3/dist/maps/world.js"></script>
+<script src="https://unpkg.com/globe.gl"></script>
 <script>
 // ── VISITOR TRACKING ──────────────────────────────────────────
 const N8N = 'https://n8n.ninalearnsvibecoding.com/webhook';
@@ -1084,49 +1067,43 @@ async function fetchStats() {
   } catch { return null; }
 }
 
-let mapInstance = null;
+let globeInstance = null;
 
 function renderMap(countries, cities) {
-  if (!countries.length) return;
-  const values = {};
-  let total = 0;
-  countries.forEach(c => { values[c.code] = c.count; total += c.count; });
-  document.getElementById('total-count').textContent = total.toLocaleString();
+  const total = (countries || []).reduce((s, c) => s + c.count, 0);
+  if (total > 0) document.getElementById('total-count').textContent = total.toLocaleString();
 
-  if (mapInstance) {
-    mapInstance.series.regions[0].setValues(values);
+  const pts = (cities || [])
+    .filter(c => c.lat && c.lng)
+    .map(c => ({ lat: c.lat, lng: c.lng, city: c.city, count: c.count || 1 }));
+
+  if (globeInstance) {
+    globeInstance.pointsData(pts);
     return;
   }
 
-  const markers = (cities || [])
-    .filter(c => c.lat && c.lng)
-    .map(c => ({ name: c.city + (c.count > 1 ? ` (${c.count})` : ''), coords: [c.lat, c.lng] }));
+  const el = document.getElementById('visitor-map');
+  el.innerHTML = '';
 
-  document.getElementById('visitor-map').innerHTML = '';
-  mapInstance = new jsVectorMap({
-    selector: '#visitor-map',
-    map: 'world',
-    series: {
-      regions: [{
-        values,
-        scale: ['#163560', '#00d4ff'],
-        normalizeFunction: 'linear'
-      }]
-    },
-    markers,
-    markerStyle: {
-      initial: { fill: '#00d4ff', stroke: '#0a1628', strokeWidth: 1.5, r: 4 },
-      hover:   { fill: '#ffffff', r: 6 }
-    },
-    regionStyle: {
-      initial: { fill: '#0e1f35', stroke: '#1a3050', strokeWidth: 0.5 }
-    },
-    backgroundColor: 'transparent',
-    zoomOnScroll: false,
-    showTooltip: true,
-    zoomButtons: false,
-    focusOn: { scale: 1 }
-  });
+  globeInstance = Globe()
+    .globeImageUrl('https://unpkg.com/three-globe/example/img/earth-night.jpg')
+    .backgroundColor('rgba(0,0,0,0)')
+    .atmosphereColor('#00d4ff')
+    .atmosphereAltitude(0.18)
+    .pointsData(pts)
+    .pointLat(d => d.lat)
+    .pointLng(d => d.lng)
+    .pointColor(() => '#00d4ff')
+    .pointAltitude(0.02)
+    .pointRadius(d => Math.max(0.35, Math.sqrt(d.count) * 0.28))
+    .pointLabel(d => `<span style="font-family:monospace;font-size:12px;color:#00d4ff;background:rgba(8,12,20,0.85);padding:3px 6px;border-radius:3px">${d.city} · ${d.count}</span>`)
+    (el);
+
+  globeInstance.controls().autoRotate = true;
+  globeInstance.controls().autoRotateSpeed = 0.35;
+  globeInstance.controls().enableZoom = false;
+  globeInstance.width(el.offsetWidth);
+  globeInstance.height(420);
 }
 
 function renderOnlineCountries(countries) {
