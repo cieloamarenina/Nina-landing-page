@@ -1593,8 +1593,7 @@ function applyLang(lang) {
 function detectLang() {
   const saved = localStorage.getItem('nlvc_lang');
   if (saved && TRANSLATIONS[saved]) return saved;
-  const browser = (navigator.language || '').slice(0, 2).toLowerCase();
-  return TRANSLATIONS[browser] ? browser : 'en';
+  return 'en';
 }
 
 document.querySelectorAll('.lang-btn').forEach(btn => {
