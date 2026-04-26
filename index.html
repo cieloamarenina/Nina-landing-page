@@ -571,15 +571,15 @@
   .online-country .pulse {
     width: 7px; height: 7px;
     border-radius: 50%;
-    background: #00ff88;
-    box-shadow: 0 0 0 0 rgba(0,255,136,0.4);
+    background: #00d4ff;
+    box-shadow: 0 0 0 0 rgba(0,212,255,0.5);
     animation: pulse-ring 1.5s ease-out infinite;
     flex-shrink: 0;
   }
   @keyframes pulse-ring {
-    0%   { box-shadow: 0 0 0 0 rgba(0,255,136,0.5); }
-    70%  { box-shadow: 0 0 0 6px rgba(0,255,136,0); }
-    100% { box-shadow: 0 0 0 0 rgba(0,255,136,0); }
+    0%   { box-shadow: 0 0 0 0 rgba(0,212,255,0.6); }
+    70%  { box-shadow: 0 0 0 7px rgba(0,212,255,0); }
+    100% { box-shadow: 0 0 0 0 rgba(0,212,255,0); }
   }
   .flag-grid {
     display: flex;
@@ -1084,17 +1084,17 @@ function renderMap(countries, cities) {
     series: {
       regions: [{
         values,
-        scale: ['#1a2840', '#00d4ff'],
+        scale: ['#163560', '#00d4ff'],
         normalizeFunction: 'linear'
       }]
     },
     markers,
     markerStyle: {
-      initial: { fill: '#00ff88', stroke: '#0d1320', strokeWidth: 1, r: 4 },
-      hover:   { fill: '#00ffcc', r: 6 }
+      initial: { fill: '#00d4ff', stroke: '#0a1628', strokeWidth: 1.5, r: 4 },
+      hover:   { fill: '#ffffff', r: 6 }
     },
     regionStyle: {
-      initial: { fill: '#0d1320', stroke: '#1e2d45', strokeWidth: 0.5 }
+      initial: { fill: '#0e1f35', stroke: '#1a3050', strokeWidth: 0.5 }
     },
     backgroundColor: 'transparent',
     zoomOnScroll: false,
