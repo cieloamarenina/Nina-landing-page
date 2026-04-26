@@ -1062,16 +1062,16 @@ function renderMap(countries, cities) {
   countries.forEach(c => { values[c.code] = c.count; total += c.count; });
   document.getElementById('total-count').textContent = total.toLocaleString();
 
+  if (mapInstance) {
+    mapInstance.series.regions[0].setValues(values);
+    return;
+  }
+
   const markers = (cities || [])
     .filter(c => c.lat && c.lng)
     .map(c => ({ name: c.city + (c.count > 1 ? ` (${c.count})` : ''), coords: [c.lat, c.lng] }));
 
-  if (mapInstance) {
-    try { mapInstance.destroy(); } catch(e) {}
-    mapInstance = null;
-    document.getElementById('visitor-map').innerHTML = '';
-  }
-
+  document.getElementById('visitor-map').innerHTML = '';
   mapInstance = new jsVectorMap({
     selector: '#visitor-map',
     map: 'world',
