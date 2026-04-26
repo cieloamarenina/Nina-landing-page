@@ -89,6 +89,29 @@
 
   .nav-links a:hover { color: var(--accent); }
 
+  /* LANG SWITCHER */
+  .lang-switcher {
+    display: flex;
+    gap: 0.3rem;
+    align-items: center;
+  }
+
+  .lang-btn {
+    background: none;
+    border: 1px solid transparent;
+    color: var(--muted);
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    letter-spacing: 0.1em;
+    padding: 0.2rem 0.45rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-transform: uppercase;
+  }
+
+  .lang-btn:hover { color: var(--accent); border-color: rgba(0,212,255,0.3); }
+  .lang-btn.active { color: var(--accent); border-color: rgba(0,212,255,0.5); }
+
   /* SECTIONS */
   section {
     position: relative;
@@ -700,7 +723,6 @@
     border: 2px solid var(--border);
     background: var(--card);
   }
-  /* Glowing ring */
   .pablo-ring {
     position: absolute;
     inset: -4px;
@@ -709,7 +731,6 @@
     transition: border-color 0.4s, box-shadow 0.4s;
     pointer-events: none;
   }
-  /* PLAYING — cyan glow + faster float */
   .state-playing #pablo-btn   { animation: pablo-float-fast 1.2s ease-in-out infinite; }
   .state-playing .pablo-ring  {
     border-color: var(--accent);
@@ -719,7 +740,6 @@
     0%, 100% { transform: translateY(0px);  }
     50%       { transform: translateY(-6px); }
   }
-  /* SLEEPING — grayscale + dim + slow breathe */
   .state-sleeping #pablo-btn  { animation: pablo-breathe 4s ease-in-out infinite; }
   .state-sleeping #pablo-photo { filter: grayscale(0.6) brightness(0.75); }
   @keyframes pablo-breathe {
@@ -735,7 +755,6 @@
     text-transform: uppercase;
   }
 
-  /* ZZZ */
   #pablo-zzz { position: absolute; top: -10px; right: -2px; display: none; pointer-events: none; }
   .state-sleeping #pablo-zzz { display: block; }
   #pablo-zzz span { font-size: 0.75rem; font-weight: 700; color: var(--accent); animation: zzz-float 2.2s ease-in-out infinite; display: inline-block; }
@@ -762,39 +781,41 @@
 <nav>
   <a href="#hero" class="nav-logo">NLC_</a>
   <ul class="nav-links">
-    <li><a href="#about">About</a></li>
-    <li><a href="#journey">Journey</a></li>
-    <li><a href="#tools">Stack</a></li>
-    <li><a href="#visitors">Visitors</a></li>
+    <li><a href="#about" data-i18n="nav.about">About</a></li>
+    <li><a href="#journey" data-i18n="nav.journey">Journey</a></li>
+    <li><a href="#tools" data-i18n="nav.stack">Stack</a></li>
+    <li><a href="#visitors" data-i18n="nav.visitors">Visitors</a></li>
   </ul>
+  <div class="lang-switcher">
+    <button class="lang-btn" data-lang="en">EN</button>
+    <button class="lang-btn" data-lang="de">DE</button>
+    <button class="lang-btn" data-lang="fr">FR</button>
+    <button class="lang-btn" data-lang="es">ES</button>
+  </div>
 </nav>
 
 <!-- HERO -->
 <section id="hero">
-  <div class="hero-badge">Live &amp; Learning</div>
+  <div class="hero-badge" data-i18n="hero.badge">Live &amp; Learning</div>
   <h1 class="hero-title">
     <span class="line-1">Nina</span>
     <span class="line-2">Learns</span>
     <span class="line-3">Vibe Coding</span>
   </h1>
-  <p class="hero-sub">
-    AI Analyst &amp; AI Consultant from <span>Berlin</span> —
-    on my way from prompting to automation.
-    I build, fail, learn and deploy. In real time.
-  </p>
-  <a href="#journey" class="hero-cta">To the Journey</a>
+  <p class="hero-sub" data-i18n="hero.sub">AI Analyst &amp; AI Consultant from <span>Berlin</span> — on my way from prompting to automation. I build, fail, learn and deploy. In real time.</p>
+  <a href="#journey" class="hero-cta" data-i18n="hero.cta">To the Journey</a>
   <div class="hero-stats">
     <div class="stat-item">
       <span class="stat-num">n8n</span>
-      <span class="stat-label">AI Agents Course</span>
+      <span class="stat-label" data-i18n="hero.stat1">AI Agents Course</span>
     </div>
     <div class="stat-item">
       <span class="stat-num">100%</span>
-      <span class="stat-label">Learning in public</span>
+      <span class="stat-label" data-i18n="hero.stat2">Learning in public</span>
     </div>
     <div class="stat-item">
       <span class="stat-num">BER</span>
-      <span class="stat-label">Remote · Berlin</span>
+      <span class="stat-label" data-i18n="hero.stat3">Remote · Berlin</span>
     </div>
   </div>
 </section>
@@ -802,27 +823,14 @@
 <!-- ABOUT -->
 <section id="about">
   <div class="section-header reveal">
-    <div class="section-tag">// about</div>
-    <h2 class="section-title">Who is<br>behind this?</h2>
+    <div class="section-tag" data-i18n="about.tag">// about</div>
+    <h2 class="section-title" data-i18n="about.title">Who is<br>behind this?</h2>
   </div>
   <div class="about-grid">
     <div class="about-text reveal">
-      <p>
-        I am <span>Nina Panknin</span> — AI Analyst and Consultant,
-        certified with distinction. Ever since I started
-        not just analyzing AI tools, but building them myself,
-        everything has changed.
-      </p>
-      <p>
-        <span>Vibe Coding</span> means to me: programming with AI as co-pilot
-        — even without a classical development background.
-        Workflows, automations, apps. Built with Claude, n8n, Python
-        and a good sense for what's possible.
-      </p>
-      <p>
-        This site is my public learning journal.
-        No polish. <span>Real process.</span>
-      </p>
+      <p data-i18n="about.p1">I am <span>Nina Panknin</span> — AI Analyst and Consultant, certified with distinction. Ever since I started not just analyzing AI tools, but building them myself, everything has changed.</p>
+      <p data-i18n="about.p2"><span>Vibe Coding</span> means to me: programming with AI as co-pilot — even without a classical development background. Workflows, automations, apps. Built with Claude, n8n, Python and a good sense for what's possible.</p>
+      <p data-i18n="about.p3">This site is my public learning journal. No polish. <span>Real process.</span></p>
     </div>
     <div class="about-terminal reveal">
       <div class="terminal-bar">
@@ -852,64 +860,64 @@
 <!-- JOURNEY -->
 <section id="journey">
   <div class="section-header reveal">
-    <div class="section-tag">// journey</div>
-    <h2 class="section-title">Milestones<br>of my Journey</h2>
+    <div class="section-tag" data-i18n="journey.tag">// journey</div>
+    <h2 class="section-title" data-i18n="journey.title">Milestones<br>of my Journey</h2>
   </div>
   <div class="timeline">
     <div class="tl-item reveal">
       <div class="tl-dot"></div>
       <div class="tl-date">Feb 2026</div>
-      <div class="tl-title">AI Analyst — Certificate with Distinction</div>
-      <div class="tl-desc">348 out of 360 points. Intensive module on AI strategy, prompting and enterprise use. The starting shot for everything that followed.</div>
+      <div class="tl-title" data-i18n="tl1.title">AI Analyst — Certificate with Distinction</div>
+      <div class="tl-desc" data-i18n="tl1.desc">348 out of 360 points. Intensive module on AI strategy, prompting and enterprise use. The starting shot for everything that followed.</div>
       <div class="tl-tags"><span class="tag">Prompting</span><span class="tag">KI-Strategie</span></div>
     </div>
     <div class="tl-item reveal">
       <div class="tl-dot"></div>
       <div class="tl-date">Mar 2026</div>
-      <div class="tl-title">AI Consultant — Certificate with Distinction</div>
-      <div class="tl-desc">340 out of 360 points. Final project: FEMhit — an AI-powered financial orientation tool for women in critical life situations. Built with Langdock.</div>
+      <div class="tl-title" data-i18n="tl2.title">AI Consultant — Certificate with Distinction</div>
+      <div class="tl-desc" data-i18n="tl2.desc">340 out of 360 points. Final project: FEMhit — an AI-powered financial orientation tool for women in critical life situations. Built with Langdock.</div>
       <div class="tl-tags"><span class="tag">FEMhit</span><span class="tag">Langdock</span><span class="tag">Consulting</span></div>
     </div>
     <div class="tl-item reveal">
       <div class="tl-dot"></div>
       <div class="tl-date">Apr 2026</div>
-      <div class="tl-title">n8n AI Agents Course — Modul 3</div>
-      <div class="tl-desc">Active learning: Workflows, HTTP Requests, AI Agent Nodes, Webhook Triggers. Daily peer sessions at 9:30am. Own project: Job Tracker Automation.</div>
+      <div class="tl-title" data-i18n="tl3.title">n8n AI Agents Course — Modul 3</div>
+      <div class="tl-desc" data-i18n="tl3.desc">Active learning: Workflows, HTTP Requests, AI Agent Nodes, Webhook Triggers. Daily peer sessions at 9:30am. Own project: Job Tracker Automation.</div>
       <div class="tl-tags"><span class="tag">n8n</span><span class="tag">AI Agents</span><span class="tag">Automation</span><span class="tag">Python</span></div>
     </div>
     <div class="tl-item reveal">
       <div class="tl-dot"></div>
       <div class="tl-date">Apr 2026</div>
-      <div class="tl-title">LinkedIn Content Workflow</div>
-      <div class="tl-desc">Fully automated LinkedIn pipeline: AI generates posts, stores them in NocoDB, publishes via LinkedIn API, marks as posted. Built entirely in n8n — first end-to-end automation.</div>
+      <div class="tl-title" data-i18n="tl4.title">LinkedIn Content Workflow</div>
+      <div class="tl-desc" data-i18n="tl4.desc">Fully automated LinkedIn pipeline: AI generates posts, stores them in NocoDB, publishes via LinkedIn API, marks as posted. Built entirely in n8n — first end-to-end automation.</div>
       <div class="tl-tags"><span class="tag">n8n</span><span class="tag">LinkedIn API</span><span class="tag">NocoDB</span><span class="tag">Automation</span></div>
     </div>
     <div class="tl-item reveal">
       <div class="tl-dot"></div>
       <div class="tl-date">Apr 2026</div>
-      <div class="tl-title">Mail Tracker — Inbox to Database</div>
-      <div class="tl-desc">n8n workflow that captures incoming emails via Gmail, parses them and writes structured data into a PostgreSQL database. First project touching a real self-hosted database.</div>
+      <div class="tl-title" data-i18n="tl5.title">Mail Tracker — Inbox to Database</div>
+      <div class="tl-desc" data-i18n="tl5.desc">n8n workflow that captures incoming emails via Gmail, parses them and writes structured data into a PostgreSQL database. First project touching a real self-hosted database.</div>
       <div class="tl-tags"><span class="tag">n8n</span><span class="tag">Gmail</span><span class="tag">PostgreSQL</span><span class="tag">Automation</span></div>
     </div>
     <div class="tl-item reveal">
       <div class="tl-dot"></div>
       <div class="tl-date">Apr 2026</div>
-      <div class="tl-title">Portfolio Tracker — Stocks, ETFs &amp; Crypto</div>
-      <div class="tl-desc">A self-built dashboard to track stock, ETF and crypto positions in real time. Pulls live prices, calculates P&amp;L and visualizes performance — first real full-stack project with React and Node.</div>
+      <div class="tl-title" data-i18n="tl6.title">Portfolio Tracker — Stocks, ETFs &amp; Crypto</div>
+      <div class="tl-desc" data-i18n="tl6.desc">A self-built dashboard to track stock, ETF and crypto positions in real time. Pulls live prices, calculates P&amp;L and visualizes performance — first real full-stack project with React and Node.</div>
       <div class="tl-tags"><span class="tag">React</span><span class="tag">Node.js</span><span class="tag">API</span><span class="tag">Finance</span></div>
     </div>
     <div class="tl-item reveal">
       <div class="tl-dot"></div>
       <div class="tl-date">Apr 2026</div>
-      <div class="tl-title">Job Scraper Automation</div>
-      <div class="tl-desc">Automated job scraper that searches multiple platforms, filters by criteria and delivers results directly to inbox. Built with n8n and Python — no more manual searching.</div>
+      <div class="tl-title" data-i18n="tl7.title">Job Scraper Automation</div>
+      <div class="tl-desc" data-i18n="tl7.desc">Automated job scraper that searches multiple platforms, filters by criteria and delivers results directly to inbox. Built with n8n and Python — no more manual searching.</div>
       <div class="tl-tags"><span class="tag">n8n</span><span class="tag">Python</span><span class="tag">Scraping</span><span class="tag">Automation</span></div>
     </div>
     <div class="tl-item reveal">
       <div class="tl-dot"></div>
       <div class="tl-date">Apr 2026 — now</div>
-      <div class="tl-title">First own domain live</div>
-      <div class="tl-desc">ninalearnsvibecoding.com is live. Hosted on Hetzner via Coolify. Vibe-coded with Claude as co-pilot. You're looking at it right now.</div>
+      <div class="tl-title" data-i18n="tl8.title">First own domain live</div>
+      <div class="tl-desc" data-i18n="tl8.desc">ninalearnsvibecoding.com is live. Hosted on Hetzner via Coolify. Vibe-coded with Claude as co-pilot. You're looking at it right now.</div>
       <div class="tl-tags"><span class="tag">Vibe Coding</span><span class="tag">Claude AI</span><span class="tag">Deploy</span></div>
     </div>
   </div>
@@ -918,80 +926,80 @@
 <!-- TOOLS -->
 <section id="tools">
   <div class="section-header reveal">
-    <div class="section-tag">// stack</div>
-    <h2 class="section-title">Tools &amp;<br>Tech Stack</h2>
+    <div class="section-tag" data-i18n="tools.tag">// stack</div>
+    <h2 class="section-title" data-i18n="tools.title">Tools &amp;<br>Tech Stack</h2>
   </div>
   <div class="tools-grid">
     <div class="tool-card reveal">
       <span class="tool-icon">⚡</span>
       <div class="tool-name">n8n</div>
-      <div class="tool-desc">Workflow Automation & AI Agents. My daily tool for No-Code / Low-Code pipelines.</div>
+      <div class="tool-desc" data-i18n="tool.n8n">Workflow Automation &amp; AI Agents. My daily tool for No-Code / Low-Code pipelines.</div>
       <div class="tool-level"><div class="tool-level-fill" style="width:75%"></div></div>
     </div>
     <div class="tool-card reveal">
       <span class="tool-icon">🤖</span>
       <div class="tool-name">Claude AI</div>
-      <div class="tool-desc">My most important co-pilot. Coding, analysis, concepts — Claude is always there.</div>
+      <div class="tool-desc" data-i18n="tool.claude">My most important co-pilot. Coding, analysis, concepts — Claude is always there.</div>
       <div class="tool-level"><div class="tool-level-fill" style="width:90%"></div></div>
     </div>
     <div class="tool-card reveal">
       <span class="tool-icon">🐍</span>
       <div class="tool-name">Python</div>
-      <div class="tool-desc">Scripts, automations, data processing. Work in progress — getting better every day.</div>
+      <div class="tool-desc" data-i18n="tool.python">Scripts, automations, data processing. Work in progress — getting better every day.</div>
       <div class="tool-level"><div class="tool-level-fill" style="width:45%"></div></div>
     </div>
     <div class="tool-card reveal">
       <span class="tool-icon">🔧</span>
       <div class="tool-name">Cursor</div>
-      <div class="tool-desc">AI-powered code editor. Vibe Coding starts here — Tab, Tab, Tab.</div>
+      <div class="tool-desc" data-i18n="tool.cursor">AI-powered code editor. Vibe Coding starts here — Tab, Tab, Tab.</div>
       <div class="tool-level"><div class="tool-level-fill" style="width:60%"></div></div>
     </div>
     <div class="tool-card reveal">
       <span class="tool-icon">🌐</span>
       <div class="tool-name">Hetzner</div>
-      <div class="tool-desc">Cloud server for my own n8n instance. Self-hosted, full control.</div>
+      <div class="tool-desc" data-i18n="tool.hetzner">Cloud server for my own n8n instance. Self-hosted, full control.</div>
       <div class="tool-level"><div class="tool-level-fill" style="width:55%"></div></div>
     </div>
     <div class="tool-card reveal">
       <span class="tool-icon">✦</span>
       <div class="tool-name">Langdock</div>
-      <div class="tool-desc">Enterprise AI platform. Used for FEMhit — Custom GPT for women in crisis situations.</div>
+      <div class="tool-desc" data-i18n="tool.langdock">Enterprise AI platform. Used for FEMhit — Custom GPT for women in crisis situations.</div>
       <div class="tool-level"><div class="tool-level-fill" style="width:70%"></div></div>
     </div>
     <div class="tool-card reveal">
       <span class="tool-icon">🐘</span>
       <div class="tool-name">PostgreSQL</div>
-      <div class="tool-desc">Self-hosted relational database. Stores emails, workflow data and more — running on Hetzner.</div>
+      <div class="tool-desc" data-i18n="tool.postgres">Self-hosted relational database. Stores emails, workflow data and more — running on Hetzner.</div>
       <div class="tool-level"><div class="tool-level-fill" style="width:50%"></div></div>
     </div>
     <div class="tool-card reveal">
       <span class="tool-icon">🗃️</span>
       <div class="tool-name">NocoDB</div>
-      <div class="tool-desc">No-Code database frontend. Makes PostgreSQL accessible without writing SQL — perfect for workflows.</div>
+      <div class="tool-desc" data-i18n="tool.nocodb">No-Code database frontend. Makes PostgreSQL accessible without writing SQL — perfect for workflows.</div>
       <div class="tool-level"><div class="tool-level-fill" style="width:60%"></div></div>
     </div>
     <div class="tool-card reveal">
       <span class="tool-icon">🚀</span>
       <div class="tool-name">Coolify</div>
-      <div class="tool-desc">Self-hosted deployment platform. Manages all services on my Hetzner server — one-click deploys.</div>
+      <div class="tool-desc" data-i18n="tool.coolify">Self-hosted deployment platform. Manages all services on my Hetzner server — one-click deploys.</div>
       <div class="tool-level"><div class="tool-level-fill" style="width:55%"></div></div>
     </div>
     <div class="tool-card reveal">
       <span class="tool-icon">⚛️</span>
       <div class="tool-name">React</div>
-      <div class="tool-desc">Frontend library for the Portfolio Tracker. First real React project — built with Vite and Tailwind.</div>
+      <div class="tool-desc" data-i18n="tool.react">Frontend library for the Portfolio Tracker. First real React project — built with Vite and Tailwind.</div>
       <div class="tool-level"><div class="tool-level-fill" style="width:40%"></div></div>
     </div>
     <div class="tool-card reveal">
       <span class="tool-icon">🐙</span>
       <div class="tool-name">GitHub</div>
-      <div class="tool-desc">Version control and deployment trigger. Every push to main auto-deploys via Coolify.</div>
+      <div class="tool-desc" data-i18n="tool.github">Version control and deployment trigger. Every push to main auto-deploys via Coolify.</div>
       <div class="tool-level"><div class="tool-level-fill" style="width:65%"></div></div>
     </div>
     <div class="tool-card reveal">
       <span class="tool-icon">🗄️</span>
       <div class="tool-name">Adminer</div>
-      <div class="tool-desc">Lightweight database UI. Direct access to PostgreSQL — query, inspect and manage tables in the browser.</div>
+      <div class="tool-desc" data-i18n="tool.adminer">Lightweight database UI. Direct access to PostgreSQL — query, inspect and manage tables in the browser.</div>
       <div class="tool-level"><div class="tool-level-fill" style="width:50%"></div></div>
     </div>
   </div>
@@ -1000,14 +1008,14 @@
 <!-- VISITORS -->
 <section id="visitors">
   <div class="section-header reveal">
-    <div class="section-tag">// visitors</div>
-    <h2 class="section-title">Reading this<br>from where?</h2>
+    <div class="section-tag" data-i18n="visitors.tag">// visitors</div>
+    <h2 class="section-title" data-i18n="visitors.title">Reading this<br>from where?</h2>
   </div>
   <div class="visitors-live reveal">
     <span class="live-dot"></span>
-    <span id="online-count">—</span>&nbsp;online right now
+    <span id="online-count">—</span>&nbsp;<span data-i18n="visitors.online">online right now</span>
     <span class="live-sep">&nbsp;·&nbsp;</span>
-    <span id="total-count">—</span>&nbsp;total visits
+    <span id="total-count">—</span>&nbsp;<span data-i18n="visitors.total">total visits</span>
   </div>
   <div id="online-countries" class="online-countries reveal"></div>
   <div id="visitor-map" class="reveal"></div>
@@ -1017,7 +1025,7 @@
 <!-- FOOTER -->
 <footer>
   <div class="footer-logo">NLC_</div>
-  <div class="footer-copy">© 2026 Nina Panknin — Learning in Public</div>
+  <div class="footer-copy" data-i18n="footer.copy">© 2026 Nina Panknin — Learning in Public</div>
   <div class="footer-url">ninalearnsvibecoding.com</div>
 </footer>
 
@@ -1168,8 +1176,6 @@ initVisitors();
 
 <!-- PABLO PLAYER -->
 <div id="pablo-player" class="state-idle">
-
-  <!-- Expanded Spotify Panel -->
   <div id="pablo-panel">
     <div class="pablo-panel-header">
       <span><span class="pablo-now-dot"></span><span id="pablo-track-name">Pablo's Playlist</span></span>
@@ -1189,16 +1195,12 @@ initVisitors();
       loading="lazy">
     </iframe>
   </div>
-
-  <!-- Pablo Dog Button -->
   <div id="pablo-btn" onclick="togglePabloPanel()" title="Pablo's Playlist 🎵">
     <div id="pablo-zzz"><span>z</span><span>z</span><span>z</span></div>
-
     <div class="pablo-photo-wrap">
       <img id="pablo-photo" src="Pablo.jpeg" alt="Pablo" onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 1 1%22/>'"/>
       <div class="pablo-ring"></div>
     </div>
-
     <div class="pablo-label">Pablo 🎵</div>
   </div>
 </div>
@@ -1208,7 +1210,6 @@ initVisitors();
 const pabloPlayer = document.getElementById('pablo-player');
 const pabloPanel  = document.getElementById('pablo-panel');
 
-// Drag
 (function() {
   const handle = document.getElementById('pablo-btn');
   let dragging = false, didDrag = false;
@@ -1273,8 +1274,6 @@ function setPabloState(state) {
   pabloPlayer.className = 'state-' + state;
 }
 
-// Demo: cycle through states so you can see all three
-// Remove this once Spotify API is connected via n8n
 let _demo = 0;
 document.getElementById('pablo-btn').addEventListener('dblclick', (e) => {
   e.stopPropagation();
@@ -1282,23 +1281,258 @@ document.getElementById('pablo-btn').addEventListener('dblclick', (e) => {
   _demo = (_demo + 1) % states.length;
   setPabloState(states[_demo]);
 });
-
-// ── SPOTIFY NOW PLAYING (via n8n — activate once workflow is set up) ──
-// async function fetchNowPlaying() {
-//   try {
-//     const r = await fetch('https://n8n.ninalearnsvibecoding.com/webhook/spotify-now-playing');
-//     const d = await r.json();
-//     if (d.is_playing) {
-//       document.getElementById('pablo-track-name').textContent = d.artist + ' — ' + d.track;
-//       setPabloState('playing');
-//     } else {
-//       setPabloState('sleeping');
-//     }
-//   } catch { setPabloState('idle'); }
-// }
-// fetchNowPlaying();
-// setInterval(fetchNowPlaying, 30000);
 // ── END PABLO PLAYER ─────────────────────────────────────────
+</script>
+
+<!-- i18n -->
+<script>
+const TRANSLATIONS = {
+  en: {
+    'nav.about': 'About',
+    'nav.journey': 'Journey',
+    'nav.stack': 'Stack',
+    'nav.visitors': 'Visitors',
+    'hero.badge': 'Live &amp; Learning',
+    'hero.sub': 'AI Analyst &amp; AI Consultant from <span>Berlin</span> — on my way from prompting to automation. I build, fail, learn and deploy. In real time.',
+    'hero.cta': 'To the Journey',
+    'hero.stat1': 'AI Agents Course',
+    'hero.stat2': 'Learning in public',
+    'hero.stat3': 'Remote · Berlin',
+    'about.tag': '// about',
+    'about.title': 'Who is<br>behind this?',
+    'about.p1': 'I am <span>Nina Panknin</span> — AI Analyst and Consultant, certified with distinction. Ever since I started not just analyzing AI tools, but building them myself, everything has changed.',
+    'about.p2': '<span>Vibe Coding</span> means to me: programming with AI as co-pilot — even without a classical development background. Workflows, automations, apps. Built with Claude, n8n, Python and a good sense for what\'s possible.',
+    'about.p3': 'This site is my public learning journal. No polish. <span>Real process.</span>',
+    'journey.tag': '// journey',
+    'journey.title': 'Milestones<br>of my Journey',
+    'tl1.title': 'AI Analyst — Certificate with Distinction',
+    'tl1.desc': '348 out of 360 points. Intensive module on AI strategy, prompting and enterprise use. The starting shot for everything that followed.',
+    'tl2.title': 'AI Consultant — Certificate with Distinction',
+    'tl2.desc': '340 out of 360 points. Final project: FEMhit — an AI-powered financial orientation tool for women in critical life situations. Built with Langdock.',
+    'tl3.title': 'n8n AI Agents Course — Module 3',
+    'tl3.desc': 'Active learning: Workflows, HTTP Requests, AI Agent Nodes, Webhook Triggers. Daily peer sessions at 9:30am. Own project: Job Tracker Automation.',
+    'tl4.title': 'LinkedIn Content Workflow',
+    'tl4.desc': 'Fully automated LinkedIn pipeline: AI generates posts, stores them in NocoDB, publishes via LinkedIn API, marks as posted. Built entirely in n8n — first end-to-end automation.',
+    'tl5.title': 'Mail Tracker — Inbox to Database',
+    'tl5.desc': 'n8n workflow that captures incoming emails via Gmail, parses them and writes structured data into a PostgreSQL database. First project touching a real self-hosted database.',
+    'tl6.title': 'Portfolio Tracker — Stocks, ETFs &amp; Crypto',
+    'tl6.desc': 'A self-built dashboard to track stock, ETF and crypto positions in real time. Pulls live prices, calculates P&amp;L and visualizes performance — first real full-stack project with React and Node.',
+    'tl7.title': 'Job Scraper Automation',
+    'tl7.desc': 'Automated job scraper that searches multiple platforms, filters by criteria and delivers results directly to inbox. Built with n8n and Python — no more manual searching.',
+    'tl8.title': 'First own domain live',
+    'tl8.desc': 'ninalearnsvibecoding.com is live. Hosted on Hetzner via Coolify. Vibe-coded with Claude as co-pilot. You\'re looking at it right now.',
+    'tools.tag': '// stack',
+    'tools.title': 'Tools &amp;<br>Tech Stack',
+    'tool.n8n': 'Workflow Automation &amp; AI Agents. My daily tool for No-Code / Low-Code pipelines.',
+    'tool.claude': 'My most important co-pilot. Coding, analysis, concepts — Claude is always there.',
+    'tool.python': 'Scripts, automations, data processing. Work in progress — getting better every day.',
+    'tool.cursor': 'AI-powered code editor. Vibe Coding starts here — Tab, Tab, Tab.',
+    'tool.hetzner': 'Cloud server for my own n8n instance. Self-hosted, full control.',
+    'tool.langdock': 'Enterprise AI platform. Used for FEMhit — Custom GPT for women in crisis situations.',
+    'tool.postgres': 'Self-hosted relational database. Stores emails, workflow data and more — running on Hetzner.',
+    'tool.nocodb': 'No-Code database frontend. Makes PostgreSQL accessible without writing SQL — perfect for workflows.',
+    'tool.coolify': 'Self-hosted deployment platform. Manages all services on my Hetzner server — one-click deploys.',
+    'tool.react': 'Frontend library for the Portfolio Tracker. First real React project — built with Vite and Tailwind.',
+    'tool.github': 'Version control and deployment trigger. Every push to main auto-deploys via Coolify.',
+    'tool.adminer': 'Lightweight database UI. Direct access to PostgreSQL — query, inspect and manage tables in the browser.',
+    'visitors.tag': '// visitors',
+    'visitors.title': 'Reading this<br>from where?',
+    'visitors.online': 'online right now',
+    'visitors.total': 'total visits',
+    'footer.copy': '© 2026 Nina Panknin — Learning in Public',
+  },
+
+  de: {
+    'nav.about': 'Über mich',
+    'nav.journey': 'Journey',
+    'nav.stack': 'Stack',
+    'nav.visitors': 'Besucher',
+    'hero.badge': 'Live &amp; am Lernen',
+    'hero.sub': 'AI Analyst &amp; AI Consultant aus <span>Berlin</span> — auf dem Weg vom Prompting zur Automatisierung. Ich baue, scheitere, lerne und deploye. In Echtzeit.',
+    'hero.cta': 'Zur Journey',
+    'hero.stat1': 'KI-Agenten-Kurs',
+    'hero.stat2': 'Lernen in der Öffentlichkeit',
+    'hero.stat3': 'Remote · Berlin',
+    'about.tag': '// über mich',
+    'about.title': 'Wer steckt<br>dahinter?',
+    'about.p1': 'Ich bin <span>Nina Panknin</span> — KI-Analystin und Consultant, zertifiziert mit Auszeichnung. Seit ich KI-Tools nicht mehr nur analysiere, sondern selbst baue, hat sich alles verändert.',
+    'about.p2': '<span>Vibe Coding</span> bedeutet für mich: Programmieren mit KI als Co-Pilot — auch ohne klassischen Entwicklungshintergrund. Workflows, Automatisierungen, Apps. Gebaut mit Claude, n8n, Python und einem guten Gespür für das Machbare.',
+    'about.p3': 'Diese Seite ist mein öffentliches Lerntagebuch. Kein Hochglanz. <span>Echter Prozess.</span>',
+    'journey.tag': '// journey',
+    'journey.title': 'Meilensteine<br>meiner Journey',
+    'tl1.title': 'KI-Analyst — Zertifikat mit Auszeichnung',
+    'tl1.desc': '348 von 360 Punkten. Intensivmodul zu KI-Strategie, Prompting und Enterprise-Einsatz. Der Startschuss für alles, was danach kam.',
+    'tl2.title': 'KI-Consultant — Zertifikat mit Auszeichnung',
+    'tl2.desc': '340 von 360 Punkten. Abschlussprojekt: FEMhit — ein KI-basiertes Finanzorientierungstool für Frauen in kritischen Lebenssituationen. Gebaut mit Langdock.',
+    'tl3.title': 'n8n KI-Agenten-Kurs — Modul 3',
+    'tl3.desc': 'Aktives Lernen: Workflows, HTTP-Anfragen, KI-Agenten-Nodes, Webhook-Trigger. Tägliche Peer-Sessions um 9:30 Uhr. Eigenes Projekt: Job-Tracker-Automatisierung.',
+    'tl4.title': 'LinkedIn Content Workflow',
+    'tl4.desc': 'Vollautomatisierte LinkedIn-Pipeline: KI generiert Posts, speichert sie in NocoDB, veröffentlicht über die LinkedIn API und markiert sie als gepostet. Vollständig in n8n gebaut — erste End-to-End-Automatisierung.',
+    'tl5.title': 'Mail Tracker — Posteingang zur Datenbank',
+    'tl5.desc': 'n8n-Workflow, der eingehende E-Mails über Gmail erfasst, parst und strukturierte Daten in eine PostgreSQL-Datenbank schreibt. Erstes Projekt mit einer echten selbst gehosteten Datenbank.',
+    'tl6.title': 'Portfolio Tracker — Aktien, ETFs &amp; Krypto',
+    'tl6.desc': 'Ein selbst gebautes Dashboard zur Echtzeit-Verfolgung von Aktien-, ETF- und Krypto-Positionen. Zieht Live-Preise, berechnet G&amp;V und visualisiert die Performance — erstes echtes Full-Stack-Projekt mit React und Node.',
+    'tl7.title': 'Job Scraper Automatisierung',
+    'tl7.desc': 'Automatisierter Job-Scraper, der mehrere Plattformen durchsucht, nach Kriterien filtert und Ergebnisse direkt ins Postfach liefert. Mit n8n und Python gebaut — kein manuelles Suchen mehr.',
+    'tl8.title': 'Erste eigene Domain live',
+    'tl8.desc': 'ninalearnsvibecoding.com ist live. Gehostet auf Hetzner via Coolify. Vibe-coded mit Claude als Co-Pilot. Du schaust dir das gerade an.',
+    'tools.tag': '// stack',
+    'tools.title': 'Tools &amp;<br>Tech Stack',
+    'tool.n8n': 'Workflow-Automatisierung &amp; KI-Agenten. Mein tägliches Tool für No-Code / Low-Code-Pipelines.',
+    'tool.claude': 'Mein wichtigster Co-Pilot. Coding, Analyse, Konzepte — Claude ist immer dabei.',
+    'tool.python': 'Skripte, Automatisierungen, Datenverarbeitung. Work in Progress — wird täglich besser.',
+    'tool.cursor': 'KI-gestützter Code-Editor. Vibe Coding fängt hier an — Tab, Tab, Tab.',
+    'tool.hetzner': 'Cloud-Server für meine eigene n8n-Instanz. Self-hosted, volle Kontrolle.',
+    'tool.langdock': 'Enterprise-KI-Plattform. Für FEMhit genutzt — Custom GPT für Frauen in Krisensituationen.',
+    'tool.postgres': 'Self-hosted relationale Datenbank. Speichert E-Mails, Workflow-Daten und mehr — läuft auf Hetzner.',
+    'tool.nocodb': 'No-Code-Datenbank-Frontend. Macht PostgreSQL zugänglich ohne SQL zu schreiben — perfekt für Workflows.',
+    'tool.coolify': 'Self-hosted Deployment-Plattform. Verwaltet alle Dienste auf meinem Hetzner-Server — One-Click-Deploys.',
+    'tool.react': 'Frontend-Bibliothek für den Portfolio Tracker. Erstes echtes React-Projekt — gebaut mit Vite und Tailwind.',
+    'tool.github': 'Versionskontrolle und Deployment-Trigger. Jeder Push zu Main wird automatisch über Coolify deployed.',
+    'tool.adminer': 'Leichtgewichtige Datenbank-UI. Direkter Zugriff auf PostgreSQL — Tabellen im Browser abfragen, inspizieren und verwalten.',
+    'visitors.tag': '// besucher',
+    'visitors.title': 'Von wo aus<br>liest du das?',
+    'visitors.online': 'gerade online',
+    'visitors.total': 'Besuche insgesamt',
+    'footer.copy': '© 2026 Nina Panknin — Lernen in der Öffentlichkeit',
+  },
+
+  fr: {
+    'nav.about': 'À propos',
+    'nav.journey': 'Parcours',
+    'nav.stack': 'Stack',
+    'nav.visitors': 'Visiteurs',
+    'hero.badge': 'En direct &amp; en apprentissage',
+    'hero.sub': 'AI Analyst &amp; AI Consultant de <span>Berlin</span> — en route du prompting vers l\'automatisation. Je construis, échoue, apprends et déploie. En temps réel.',
+    'hero.cta': 'Voir le parcours',
+    'hero.stat1': 'Cours d\'agents IA',
+    'hero.stat2': 'Apprendre en public',
+    'hero.stat3': 'Remote · Berlin',
+    'about.tag': '// à propos',
+    'about.title': 'Qui se cache<br>derrière tout ça?',
+    'about.p1': 'Je suis <span>Nina Panknin</span> — Analyste et Consultante IA, certifiée avec distinction. Depuis que j\'ai commencé à non seulement analyser les outils IA, mais à les construire moi-même, tout a changé.',
+    'about.p2': '<span>Le Vibe Coding</span>, c\'est pour moi : programmer avec l\'IA comme co-pilote — même sans formation classique en développement. Workflows, automatisations, applications. Construits avec Claude, n8n, Python et un bon sens de ce qui est possible.',
+    'about.p3': 'Ce site est mon journal d\'apprentissage public. Sans polish. <span>Processus réel.</span>',
+    'journey.tag': '// parcours',
+    'journey.title': 'Étapes<br>de mon parcours',
+    'tl1.title': 'AI Analyst — Certificat avec distinction',
+    'tl1.desc': '348 sur 360 points. Module intensif sur la stratégie IA, le prompting et l\'utilisation en entreprise. Le coup d\'envoi de tout ce qui a suivi.',
+    'tl2.title': 'AI Consultant — Certificat avec distinction',
+    'tl2.desc': '340 sur 360 points. Projet final : FEMhit — un outil d\'orientation financière alimenté par l\'IA pour les femmes dans des situations de vie critiques. Construit avec Langdock.',
+    'tl3.title': 'Cours d\'agents IA n8n — Module 3',
+    'tl3.desc': 'Apprentissage actif : Workflows, requêtes HTTP, nœuds d\'agents IA, déclencheurs Webhook. Sessions quotidiennes entre pairs à 9h30. Projet personnel : automatisation du suivi des offres d\'emploi.',
+    'tl4.title': 'Workflow de contenu LinkedIn',
+    'tl4.desc': 'Pipeline LinkedIn entièrement automatisée : l\'IA génère des posts, les stocke dans NocoDB, publie via l\'API LinkedIn et marque comme posté. Entièrement construit dans n8n — première automatisation de bout en bout.',
+    'tl5.title': 'Mail Tracker — Boîte de réception vers base de données',
+    'tl5.desc': 'Workflow n8n qui capture les e-mails entrants via Gmail, les analyse et écrit des données structurées dans une base de données PostgreSQL. Premier projet touchant une vraie base de données auto-hébergée.',
+    'tl6.title': 'Portfolio Tracker — Actions, ETF &amp; Crypto',
+    'tl6.desc': 'Un tableau de bord auto-construit pour suivre les positions en actions, ETF et crypto en temps réel. Récupère les prix en direct, calcule les P&amp;L et visualise la performance — premier vrai projet full-stack avec React et Node.',
+    'tl7.title': 'Automatisation du scraper d\'emploi',
+    'tl7.desc': 'Scraper d\'emploi automatisé qui recherche sur plusieurs plateformes, filtre par critères et livre les résultats directement dans la boîte de réception. Construit avec n8n et Python — plus de recherche manuelle.',
+    'tl8.title': 'Premier domaine personnel en ligne',
+    'tl8.desc': 'ninalearnsvibecoding.com est en ligne. Hébergé sur Hetzner via Coolify. Vibe-codé avec Claude comme co-pilote. Vous le regardez en ce moment même.',
+    'tools.tag': '// stack',
+    'tools.title': 'Outils &amp;<br>Stack technique',
+    'tool.n8n': 'Automatisation de workflows &amp; agents IA. Mon outil quotidien pour les pipelines No-Code / Low-Code.',
+    'tool.claude': 'Mon co-pilote le plus important. Coding, analyse, concepts — Claude est toujours là.',
+    'tool.python': 'Scripts, automatisations, traitement de données. Work in progress — s\'améliore chaque jour.',
+    'tool.cursor': 'Éditeur de code alimenté par l\'IA. Le Vibe Coding commence ici — Tab, Tab, Tab.',
+    'tool.hetzner': 'Serveur cloud pour ma propre instance n8n. Auto-hébergé, contrôle total.',
+    'tool.langdock': 'Plateforme IA d\'entreprise. Utilisé pour FEMhit — GPT personnalisé pour les femmes en situation de crise.',
+    'tool.postgres': 'Base de données relationnelle auto-hébergée. Stocke les e-mails, données de workflow et plus — sur Hetzner.',
+    'tool.nocodb': 'Interface de base de données No-Code. Rend PostgreSQL accessible sans écrire de SQL — parfait pour les workflows.',
+    'tool.coolify': 'Plateforme de déploiement auto-hébergée. Gère tous les services sur mon serveur Hetzner — déploiements en un clic.',
+    'tool.react': 'Bibliothèque frontend pour le Portfolio Tracker. Premier vrai projet React — construit avec Vite et Tailwind.',
+    'tool.github': 'Contrôle de version et déclencheur de déploiement. Chaque push sur main se déploie automatiquement via Coolify.',
+    'tool.adminer': 'Interface de base de données légère. Accès direct à PostgreSQL — interroger, inspecter et gérer les tables dans le navigateur.',
+    'visitors.tag': '// visiteurs',
+    'visitors.title': 'Vous lisez ceci<br>depuis où?',
+    'visitors.online': 'en ligne maintenant',
+    'visitors.total': 'visites au total',
+    'footer.copy': '© 2026 Nina Panknin — Apprendre en public',
+  },
+
+  es: {
+    'nav.about': 'Sobre mí',
+    'nav.journey': 'Trayectoria',
+    'nav.stack': 'Stack',
+    'nav.visitors': 'Visitantes',
+    'hero.badge': 'En vivo &amp; aprendiendo',
+    'hero.sub': 'AI Analyst &amp; AI Consultant de <span>Berlín</span> — en camino del prompting a la automatización. Construyo, fallo, aprendo y despliego. En tiempo real.',
+    'hero.cta': 'Ver la trayectoria',
+    'hero.stat1': 'Curso de agentes IA',
+    'hero.stat2': 'Aprendiendo en público',
+    'hero.stat3': 'Remote · Berlín',
+    'about.tag': '// sobre mí',
+    'about.title': '¿Quién está<br>detrás de esto?',
+    'about.p1': 'Soy <span>Nina Panknin</span> — Analista y Consultora de IA, certificada con distinción. Desde que empecé a no solo analizar herramientas de IA, sino a construirlas yo misma, todo ha cambiado.',
+    'about.p2': '<span>Vibe Coding</span> significa para mí: programar con IA como copiloto — incluso sin formación clásica en desarrollo. Workflows, automatizaciones, apps. Construidos con Claude, n8n, Python y buen ojo para lo posible.',
+    'about.p3': 'Este sitio es mi diario de aprendizaje público. Sin pulido. <span>Proceso real.</span>',
+    'journey.tag': '// trayectoria',
+    'journey.title': 'Hitos<br>de mi trayectoria',
+    'tl1.title': 'AI Analyst — Certificado con distinción',
+    'tl1.desc': '348 de 360 puntos. Módulo intensivo sobre estrategia de IA, prompting y uso empresarial. El pistoletazo de salida para todo lo que vino después.',
+    'tl2.title': 'AI Consultant — Certificado con distinción',
+    'tl2.desc': '340 de 360 puntos. Proyecto final: FEMhit — una herramienta de orientación financiera con IA para mujeres en situaciones de vida críticas. Construida con Langdock.',
+    'tl3.title': 'Curso de agentes IA n8n — Módulo 3',
+    'tl3.desc': 'Aprendizaje activo: Workflows, peticiones HTTP, nodos de agentes IA, disparadores Webhook. Sesiones diarias con compañeros a las 9:30. Proyecto propio: automatización de seguimiento de empleos.',
+    'tl4.title': 'Workflow de contenido LinkedIn',
+    'tl4.desc': 'Pipeline de LinkedIn completamente automatizada: la IA genera posts, los almacena en NocoDB, publica via API de LinkedIn y marca como publicado. Construida enteramente en n8n — primera automatización de extremo a extremo.',
+    'tl5.title': 'Mail Tracker — Bandeja de entrada a base de datos',
+    'tl5.desc': 'Workflow de n8n que captura correos entrantes via Gmail, los analiza y escribe datos estructurados en una base de datos PostgreSQL. Primer proyecto que toca una base de datos real auto-alojada.',
+    'tl6.title': 'Portfolio Tracker — Acciones, ETFs &amp; Cripto',
+    'tl6.desc': 'Un panel construido por mí para rastrear posiciones en acciones, ETF y cripto en tiempo real. Obtiene precios en vivo, calcula P&amp;L y visualiza el rendimiento — primer proyecto full-stack real con React y Node.',
+    'tl7.title': 'Automatización de scraper de empleos',
+    'tl7.desc': 'Scraper de empleos automatizado que busca en múltiples plataformas, filtra por criterios y entrega resultados directamente a la bandeja de entrada. Construido con n8n y Python — sin más búsqueda manual.',
+    'tl8.title': 'Primer dominio propio en vivo',
+    'tl8.desc': 'ninalearnsvibecoding.com está en vivo. Alojado en Hetzner via Coolify. Vibe-coded con Claude como copiloto. Lo estás viendo ahora mismo.',
+    'tools.tag': '// stack',
+    'tools.title': 'Herramientas &amp;<br>Tech Stack',
+    'tool.n8n': 'Automatización de workflows y agentes IA. Mi herramienta diaria para pipelines No-Code / Low-Code.',
+    'tool.claude': 'Mi copiloto más importante. Código, análisis, conceptos — Claude siempre está ahí.',
+    'tool.python': 'Scripts, automatizaciones, procesamiento de datos. Work in progress — mejorando cada día.',
+    'tool.cursor': 'Editor de código con IA. El Vibe Coding empieza aquí — Tab, Tab, Tab.',
+    'tool.hetzner': 'Servidor cloud para mi propia instancia de n8n. Auto-alojado, control total.',
+    'tool.langdock': 'Plataforma IA empresarial. Usada para FEMhit — GPT personalizado para mujeres en situaciones de crisis.',
+    'tool.postgres': 'Base de datos relacional auto-alojada. Almacena correos, datos de workflow y más — funcionando en Hetzner.',
+    'tool.nocodb': 'Interfaz de base de datos No-Code. Hace PostgreSQL accesible sin escribir SQL — perfecto para workflows.',
+    'tool.coolify': 'Plataforma de despliegue auto-alojada. Gestiona todos los servicios en mi servidor Hetzner — despliegues con un clic.',
+    'tool.react': 'Biblioteca frontend para el Portfolio Tracker. Primer proyecto real de React — construido con Vite y Tailwind.',
+    'tool.github': 'Control de versiones y disparador de despliegue. Cada push a main se despliega automáticamente via Coolify.',
+    'tool.adminer': 'Interfaz de base de datos ligera. Acceso directo a PostgreSQL — consultar, inspeccionar y gestionar tablas en el navegador.',
+    'visitors.tag': '// visitantes',
+    'visitors.title': '¿Desde dónde<br>lees esto?',
+    'visitors.online': 'en línea ahora',
+    'visitors.total': 'visitas totales',
+    'footer.copy': '© 2026 Nina Panknin — Aprendiendo en público',
+  }
+};
+
+function applyLang(lang) {
+  const t = TRANSLATIONS[lang] || TRANSLATIONS.en;
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const val = t[el.dataset.i18n] ?? TRANSLATIONS.en[el.dataset.i18n];
+    if (val !== undefined) el.innerHTML = val;
+  });
+  document.querySelectorAll('.lang-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.lang === lang);
+  });
+  document.documentElement.lang = lang;
+  localStorage.setItem('nlvc_lang', lang);
+}
+
+function detectLang() {
+  const saved = localStorage.getItem('nlvc_lang');
+  if (saved && TRANSLATIONS[saved]) return saved;
+  const browser = (navigator.language || '').slice(0, 2).toLowerCase();
+  return TRANSLATIONS[browser] ? browser : 'en';
+}
+
+document.querySelectorAll('.lang-btn').forEach(btn => {
+  btn.addEventListener('click', () => applyLang(btn.dataset.lang));
+});
+
+applyLang(detectLang());
 </script>
 
 </body>
