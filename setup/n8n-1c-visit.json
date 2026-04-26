@@ -1,0 +1,101 @@
+{
+  "name": "Visitor – Log Visit v3",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "visit",
+        "responseMode": "responseNode",
+        "options": { "allowedOrigins": "*" }
+      },
+      "id": "aaa00001-0000-0000-0000-000000000001",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [260, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "const b = $input.first().json.body || {};\nconst clean = s => String(s || '').replace(/[^a-zA-Z0-9 \\-\\.,'éàüöä]/g, '').slice(0, 80);\nconst cleanCity = s => String(s || '').replace(/[^a-zA-Z0-9 \\-\\.,'éàüöä]/g, '').slice(0, 100);\nconst lat = parseFloat(b.lat);\nconst lng = parseFloat(b.lng);\nreturn [{ json: {\n  country_code: clean(b.country_code).toUpperCase().slice(0,2) || 'XX',\n  country_name: clean(b.country_name) || 'Unknown',\n  session_id:   clean(b.session_id).slice(0,128) || 'unknown',\n  city:         cleanCity(b.city) || '',\n  lat:          isNaN(lat) ? null : lat,\n  lng:          isNaN(lng) ? null : lng\n}}];"
+      },
+      "id": "aaa00001-0000-0000-0000-000000000002",
+      "name": "Sanitize",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [480, 300]
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "=INSERT INTO visitor_countries (country_code, country_name, visit_count, last_visit)\nVALUES ('{{ $json.country_code }}', '{{ $json.country_name }}', 1, NOW())\nON CONFLICT (country_code) DO UPDATE SET\n  visit_count = visitor_countries.visit_count + 1,\n  country_name = EXCLUDED.country_name,\n  last_visit = NOW()",
+        "options": {}
+      },
+      "id": "aaa00001-0000-0000-0000-000000000003",
+      "name": "Upsert Country",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.4,
+      "position": [700, 160],
+      "credentials": {
+        "postgres": {
+          "id": "REPLACE_WITH_YOUR_CREDENTIAL_ID",
+          "name": "PostgreSQL account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "=INSERT INTO visitor_sessions (session_id, last_seen, country_code, country_name)\nVALUES ('{{ $json.session_id }}', NOW(), '{{ $json.country_code }}', '{{ $json.country_name }}')\nON CONFLICT (session_id) DO UPDATE SET\n  last_seen = NOW(),\n  country_code = EXCLUDED.country_code,\n  country_name = EXCLUDED.country_name",
+        "options": {}
+      },
+      "id": "aaa00001-0000-0000-0000-000000000004",
+      "name": "Upsert Session",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.4,
+      "position": [700, 300],
+      "credentials": {
+        "postgres": {
+          "id": "REPLACE_WITH_YOUR_CREDENTIAL_ID",
+          "name": "PostgreSQL account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "=INSERT INTO visitor_cities (city_key, city_name, country_code, lat, lng, visit_count, last_visit)\nSELECT\n  '{{ $json.country_code }}:{{ $json.city }}',\n  '{{ $json.city }}',\n  '{{ $json.country_code }}',\n  {{ $json.lat !== null ? $json.lat : 'NULL' }},\n  {{ $json.lng !== null ? $json.lng : 'NULL' }},\n  1, NOW()\nWHERE '{{ $json.city }}' <> ''\nON CONFLICT (city_key) DO UPDATE SET\n  visit_count = visitor_cities.visit_count + 1,\n  last_visit = NOW()",
+        "options": {}
+      },
+      "id": "aaa00001-0000-0000-0000-000000000006",
+      "name": "Upsert City",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.4,
+      "position": [700, 440],
+      "credentials": {
+        "postgres": {
+          "id": "REPLACE_WITH_YOUR_CREDENTIAL_ID",
+          "name": "PostgreSQL account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={\"ok\":true}"
+      },
+      "id": "aaa00001-0000-0000-0000-000000000005",
+      "name": "Respond",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [920, 300]
+    }
+  ],
+  "connections": {
+    "Webhook":       { "main": [[{ "node": "Sanitize",       "type": "main", "index": 0 }]] },
+    "Sanitize":      { "main": [[{ "node": "Upsert Country", "type": "main", "index": 0 }, { "node": "Upsert Session", "type": "main", "index": 0 }, { "node": "Upsert City", "type": "main", "index": 0 }]] },
+    "Upsert Country":{ "main": [[{ "node": "Respond",        "type": "main", "index": 0 }]] }
+  },
+  "active": true,
+  "settings": { "executionOrder": "v1" },
+  "tags": []
+}

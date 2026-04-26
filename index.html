@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%230d1320'/><text x='2' y='22' font-family='monospace' font-weight='bold' font-size='13' fill='%2300d4ff'>NLC</text></svg>">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Nina Learns Vibe Coding</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -1024,8 +1025,14 @@ async function detectCountry() {
   try {
     const r = await fetch('https://ipapi.co/json/');
     const d = await r.json();
-    return { code: d.country_code || 'XX', name: d.country_name || 'Unknown' };
-  } catch { return { code: 'XX', name: 'Unknown' }; }
+    return {
+      code: d.country_code || 'XX',
+      name: d.country_name || 'Unknown',
+      city: d.city || '',
+      lat:  d.latitude  || null,
+      lng:  d.longitude || null
+    };
+  } catch { return { code: 'XX', name: 'Unknown', city: '', lat: null, lng: null }; }
 }
 
 async function post(path, body) {
@@ -1047,19 +1054,23 @@ async function fetchStats() {
 
 let mapInstance = null;
 
-function renderMap(countries) {
+function renderMap(countries, cities) {
   if (!countries.length) return;
   const values = {};
   let total = 0;
   countries.forEach(c => { values[c.code] = c.count; total += c.count; });
   document.getElementById('total-count').textContent = total.toLocaleString();
 
+  const markers = (cities || [])
+    .filter(c => c.lat && c.lng)
+    .map(c => ({ name: c.city + (c.count > 1 ? ` (${c.count})` : ''), coords: [c.lat, c.lng] }));
+
   if (mapInstance) {
-    mapInstance.series.regions[0].setValues(values);
-    return;
+    try { mapInstance.destroy(); } catch(e) {}
+    mapInstance = null;
+    document.getElementById('visitor-map').innerHTML = '';
   }
 
-  document.getElementById('visitor-map').innerHTML = '';
   mapInstance = new jsVectorMap({
     selector: '#visitor-map',
     map: 'world',
@@ -1069,6 +1080,11 @@ function renderMap(countries) {
         scale: ['#1a2840', '#00d4ff'],
         normalizeFunction: 'polynomial'
       }]
+    },
+    markers,
+    markerStyle: {
+      initial: { fill: '#00ff88', stroke: '#0d1320', strokeWidth: 1, r: 4 },
+      hover:   { fill: '#00ffcc', r: 6 }
     },
     regionStyle: {
       initial: { fill: '#0d1320', stroke: '#1e2d45', strokeWidth: 0.5 }
@@ -1108,7 +1124,7 @@ function renderFlags(countries) {
 async function initVisitors() {
   const sid = getSessionId();
   const country = await detectCountry();
-  post('/visit', { country_code: country.code, country_name: country.name, session_id: sid });
+  post('/visit', { country_code: country.code, country_name: country.name, session_id: sid, city: country.city, lat: country.lat, lng: country.lng });
   setInterval(() => post('/ping', { session_id: sid }), 30000);
 
   async function refresh() {
@@ -1117,7 +1133,7 @@ async function initVisitors() {
     document.getElementById('online-count').textContent = stats.online ?? '—';
     renderOnlineCountries(stats.online_countries || []);
     if (stats.countries?.length) {
-      renderMap(stats.countries);
+      renderMap(stats.countries, stats.cities || []);
       renderFlags(stats.countries);
     }
   }

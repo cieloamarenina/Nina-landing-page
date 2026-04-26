@@ -1,0 +1,39 @@
+{
+  "name": "Setup – Create Cities Table",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "aaa00000-0000-0000-0000-000000000020",
+      "name": "Manual Trigger",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [260, 300]
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "CREATE TABLE IF NOT EXISTS visitor_cities (\n  city_key     VARCHAR(200) PRIMARY KEY,\n  city_name    VARCHAR(100) NOT NULL DEFAULT 'Unknown',\n  country_code CHAR(2)      NOT NULL DEFAULT 'XX',\n  lat          DECIMAL(9,6),\n  lng          DECIMAL(9,6),\n  visit_count  INTEGER      NOT NULL DEFAULT 0,\n  last_visit   TIMESTAMPTZ  NOT NULL DEFAULT NOW()\n);",
+        "options": {}
+      },
+      "id": "aaa00000-0000-0000-0000-000000000021",
+      "name": "Create Cities Table",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.4,
+      "position": [480, 300],
+      "credentials": {
+        "postgres": {
+          "id": "REPLACE_WITH_YOUR_CREDENTIAL_ID",
+          "name": "PostgreSQL account"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Manual Trigger": {
+      "main": [[{ "node": "Create Cities Table", "type": "main", "index": 0 }]]
+    }
+  },
+  "active": false,
+  "settings": { "executionOrder": "v1" },
+  "tags": []
+}
