@@ -536,7 +536,11 @@
   }
   /* Override jsvectormap for dark theme */
   .jsvectormap-container { background: transparent !important; }
-  .jsvectormap-series-container { display: none !important; }
+  .jsvectormap-series-container,
+  .jsvectormap-legend,
+  .jsvectormap-legend-cnt,
+  .jsvectormap-legend-title,
+  .jsvectormap-legend-inner { display: none !important; }
   .jsvectormap-tooltip {
     background: var(--card) !important;
     border: 1px solid var(--border) !important;
