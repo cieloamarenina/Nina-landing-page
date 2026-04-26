@@ -536,6 +536,7 @@
   }
   /* Override jsvectormap for dark theme */
   .jsvectormap-container { background: transparent !important; }
+  .jsvectormap-series-container { display: none !important; }
   .jsvectormap-tooltip {
     background: var(--card) !important;
     border: 1px solid var(--border) !important;
@@ -1078,7 +1079,7 @@ function renderMap(countries, cities) {
       regions: [{
         values,
         scale: ['#1a2840', '#00d4ff'],
-        normalizeFunction: 'polynomial'
+        normalizeFunction: 'linear'
       }]
     },
     markers,
