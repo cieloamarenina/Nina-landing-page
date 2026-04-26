@@ -1095,6 +1095,7 @@ function renderOnlineCountries(countries) {
 
 function renderFlags(countries) {
   document.getElementById('flag-grid').innerHTML = countries
+    .filter(c => c.code !== 'XX')
     .sort((a, b) => b.count - a.count)
     .slice(0, 24)
     .map(c => `<div class="flag-item">
