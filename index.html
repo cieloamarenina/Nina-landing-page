@@ -659,6 +659,31 @@
     line-height: 1;
   }
   .pablo-close-btn:hover { color: var(--text); }
+  .pablo-playlists {
+    display: flex;
+    gap: 0.35rem;
+    padding: 0.5rem 0.75rem;
+    flex-wrap: wrap;
+    border-bottom: 1px solid var(--border);
+  }
+  .pl-btn {
+    background: rgba(0,212,255,0.06);
+    border: 1px solid rgba(0,212,255,0.15);
+    color: var(--muted);
+    border-radius: 999px;
+    padding: 0.2rem 0.6rem;
+    font-size: 0.68rem;
+    font-family: var(--font-mono);
+    cursor: pointer;
+    transition: all 0.15s;
+    white-space: nowrap;
+  }
+  .pl-btn:hover { background: rgba(0,212,255,0.12); color: var(--text); }
+  .pl-btn.active {
+    background: rgba(0,212,255,0.18);
+    border-color: rgba(0,212,255,0.5);
+    color: var(--accent);
+  }
 
   #pablo-btn {
     cursor: grab;
@@ -1173,6 +1198,13 @@ initVisitors();
       <span><span class="pablo-now-dot"></span><span id="pablo-track-name">Pablo's Playlist</span></span>
       <button class="pablo-close-btn" onclick="togglePabloPanel()">✕</button>
     </div>
+    <div class="pablo-playlists">
+      <button class="pl-btn active" onclick="switchPlaylist('37i9dQZF1DX4WYpdgoIcn6','Chill Hits',this)">🧊 Chill</button>
+      <button class="pl-btn" onclick="switchPlaylist('0N7P8SiYBFNcrEigOJogBo','Lost In The Light',this)">✨ Light</button>
+      <button class="pl-btn" onclick="switchPlaylist('3iL63Gb5RO0Mn3SL4aTgxD','Super-Héros',this)">⚡ Hero</button>
+      <button class="pl-btn" onclick="switchPlaylist('1mWqV6dDAdLtRutjgqa9nZ','Orange County',this)">🌅 OC</button>
+      <button class="pl-btn" onclick="switchPlaylist('0rF7rgJx8xR5aU87Y4qlSP','Testing 123',this)">🎛️ Test</button>
+    </div>
     <iframe id="pablo-iframe"
       src="https://open.spotify.com/embed/playlist/37i9dQZF1DX4WYpdgoIcn6?utm_source=generator&theme=0"
       width="300" height="352" frameBorder="0"
@@ -1247,6 +1279,14 @@ const pabloPanel  = document.getElementById('pablo-panel');
   const saved = localStorage.getItem('pablo-pos');
   if (saved) try { const p = JSON.parse(saved); pabloPlayer.style.bottom = 'auto'; pabloPlayer.style.right = 'auto'; pabloPlayer.style.top = p.top; pabloPlayer.style.left = p.left; } catch(e) {}
 })();
+
+function switchPlaylist(id, name, btn) {
+  document.getElementById('pablo-iframe').src =
+    'https://open.spotify.com/embed/playlist/' + id + '?utm_source=generator&theme=0';
+  document.getElementById('pablo-track-name').textContent = name;
+  document.querySelectorAll('.pl-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+}
 
 function togglePabloPanel() {
   pabloPanel.classList.toggle('open');
