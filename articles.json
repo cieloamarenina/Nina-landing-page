@@ -1,5 +1,25 @@
 [
   {
+    "slug": "entfessle-die-macht-der-ki-tools-fuer-dein-coding",
+    "gradient": "135deg, #0a1628 0%, #00d4ff 100%",
+    "image": "images/entfessle-die-macht-der-ki-tools-fuer-dein-coding.png",
+    "date": "2026-04-27",
+    "translations": {
+      "de": {
+        "tag": "Vibe Coding",
+        "title": "Entfessle die Macht der KI-Tools für dein Coding!",
+        "excerpt": "In der heutigen digitalen Landschaft verlassen sich Entwickler zunehmend auf KI-Tools, um ihre Produktivität und Kreativität zu steigern. Vibecoding i...",
+        "content": "In der heutigen digitalen Landschaft verlassen sich Entwickler zunehmend auf KI-Tools, um ihre Produktivität und Kreativität zu steigern. Vibecoding integriert innovative Lösungen wie Cursor, Claude Code und n8n, um dir zu helfen, schneller und effizienter zu arbeiten. In diesem Beitrag werfen wir einen genaueren Blick darauf, wie diese Tools den Coding-Prozess verändern und welche Vorteile sie bringen. Lass uns gemeinsam die Zukunft des Codierens erkunden!"
+      },
+      "en": {
+        "tag": "Vibe Coding",
+        "title": "Entfessle die Macht der KI-Tools für dein Coding!",
+        "excerpt": "In der heutigen digitalen Landschaft verlassen sich Entwickler zunehmend auf KI-Tools, um ihre Produktivität und Kreativität zu steigern. Vibecoding i...",
+        "content": "In der heutigen digitalen Landschaft verlassen sich Entwickler zunehmend auf KI-Tools, um ihre Produktivität und Kreativität zu steigern. Vibecoding integriert innovative Lösungen wie Cursor, Claude Code und n8n, um dir zu helfen, schneller und effizienter zu arbeiten. In diesem Beitrag werfen wir einen genaueren Blick darauf, wie diese Tools den Coding-Prozess verändern und welche Vorteile sie bringen. Lass uns gemeinsam die Zukunft des Codierens erkunden!"
+      }
+    }
+  },
+  {
     "slug": "neue-trends-im-ai-coding-die-zukunft-von-vibecoding",
     "gradient": "135deg, #0a1628 0%, #00d4ff 100%",
     "date": "2026-04-27",
