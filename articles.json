@@ -1,0 +1,29 @@
+[
+  {
+    "slug": "was-ist-vibe-coding",
+    "title": "Was ist Vibe Coding — und warum ich damit angefangen habe",
+    "date": "2026-04-27",
+    "tag": "Vibe Coding",
+    "excerpt": "Programmieren ohne klassischen Dev-Background? Mit KI als Co-Pilot geht das. Was Vibe Coding bedeutet und wie ich damit gestartet bin.",
+    "gradient": "135deg, #0d1320 0%, #7c3aed 100%",
+    "content": "<p>Vibe Coding ist die Idee, dass du mit einer KI als Co-Pilot programmieren kannst — auch ohne klassisches Entwickler-Hintergrundwissen. Du beschreibst, was du willst. Die KI schreibt den Code. Du verstehst genug, um zu steuern, zu debuggen und weiterzudenken.</p><p>Für mich begann das mit einem einfachen Experiment: Ich wollte einen kleinen Automatisierungs-Workflow bauen, hatte aber keine Ahnung von Python. Claude hat mir nicht nur den Code geschrieben, sondern erklärt, was er tut — und warum.</p><p>Das hat alles verändert. Ich bin keine Entwicklerin. Aber ich baue jetzt Dinge, die funktionieren.</p>"
+  },
+  {
+    "slug": "erster-n8n-workflow",
+    "title": "Mein erster n8n Workflow: LinkedIn-Posts automatisieren",
+    "date": "2026-04-20",
+    "tag": "n8n",
+    "excerpt": "Keine Ahnung von Nodes, trotzdem deployed. So habe ich meinen ersten Workflow gebaut — mit viel Claude und wenig Schlaf.",
+    "gradient": "135deg, #0d1320 0%, #00d4ff 50%, #0d1320 100%",
+    "content": "<p>n8n ist ein Open-Source Workflow-Automatisierungstool, das du selbst hosten kannst. Nodes verbinden sich zu Workflows — klingt einfach, ist es aber anfangs überhaupt nicht.</p><p>Mein Ziel: Automatisch LinkedIn-Posts aus meinen Notizen generieren und vorbereiten. Erster Versuch: kompletter Misserfolg. Zweiter Versuch: auch. Dritter Versuch mit Claude als Navigator: es hat funktioniert.</p><p>Was ich gelernt habe: n8n-Fehler sind oft subtil. Claude hilft beim Debuggen, aber du musst die richtigen Fragen stellen. Der Schlüssel war, den Fehler-Output direkt in den Chat zu kopieren statt ihn zu beschreiben.</p>"
+  },
+  {
+    "slug": "claude-code-erste-schritte",
+    "title": "Claude Code: Meine ersten Wochen mit dem KI-Terminal",
+    "date": "2026-04-15",
+    "tag": "Claude Code",
+    "excerpt": "Ein Terminal, das denkt. Claude Code hat mein Verhältnis zum Code-Schreiben komplett verändert. Was ich gelernt habe.",
+    "gradient": "135deg, #0d1320 0%, #f59e0b 100%",
+    "content": "<p>Claude Code ist ein CLI-Tool, das Claude direkt in dein Terminal bringt — mit Zugriff auf deine Dateien, dein Git, deine gesamte Projektstruktur. Kein Copy-Paste mehr zwischen Chat und Editor.</p><p>Die ersten Tage waren überwältigend. Claude kann Dateien lesen, schreiben, Befehle ausführen — und dabei immer im Kontext deines Projekts bleiben. Das ist ein fundamentaler Unterschied zum normalen Chat.</p><p>Mein größtes Learning: Claude Code ist kein Auto-Pilot. Es ist ein extrem fähiger Kollege, der genau so gut ist wie deine Fähigkeit, ihm zu erklären, was du willst. Kommunikation ist alles.</p>"
+  }
+]
