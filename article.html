@@ -298,7 +298,7 @@ function renderArticle(lang) {
   const t = _article.translations[lang] || _article.translations.en;
   document.title = `${t.title} — Nina Learns Vibe Coding`;
   const heroStyle = _article.image
-    ? `background:url('data:image/png;base64,${_article.image}') center/cover no-repeat; height:280px; margin:-8rem -2rem 3rem; border-bottom:1px solid var(--border);`
+    ? `background:url('${_article.image}') center/cover no-repeat; height:280px; margin:-8rem -2rem 3rem; border-bottom:1px solid var(--border);`
     : `background:linear-gradient(${_article.gradient}); height:200px; margin:-8rem -2rem 3rem; border-bottom:1px solid var(--border);`;
   main.innerHTML = `
     <div style="${heroStyle}"></div>
