@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="de">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%230d1320'/><text x='2' y='22' font-family='monospace' font-weight='bold' font-size='13' fill='%2300d4ff'>NLC</text></svg>">
@@ -98,6 +98,28 @@
 
   .nav-links a:hover, .nav-links a.active { color: var(--accent); }
 
+  .lang-switcher {
+    display: flex;
+    gap: 0.3rem;
+    align-items: center;
+  }
+
+  .lang-btn {
+    background: none;
+    border: 1px solid transparent;
+    color: var(--muted);
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    letter-spacing: 0.1em;
+    padding: 0.2rem 0.45rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-transform: uppercase;
+  }
+
+  .lang-btn:hover { color: var(--accent); border-color: rgba(0,212,255,0.3); }
+  .lang-btn.active { color: var(--accent); border-color: rgba(0,212,255,0.5); }
+
   main {
     position: relative;
     z-index: 1;
@@ -156,8 +178,7 @@
     color: var(--text);
     display: flex;
     flex-direction: column;
-    transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
-    cursor: pointer;
+    transition: transform 0.2s, border-top-color 0.2s, box-shadow 0.2s;
   }
 
   .blog-card:hover {
@@ -166,10 +187,7 @@
     box-shadow: 0 8px 30px rgba(0,212,255,0.1);
   }
 
-  .card-cover {
-    height: 120px;
-    flex-shrink: 0;
-  }
+  .card-cover { height: 120px; flex-shrink: 0; }
 
   .card-body {
     padding: 1.25rem;
@@ -211,12 +229,6 @@
     border-top: 1px solid var(--border);
   }
 
-  .loading {
-    color: var(--muted);
-    font-size: 0.8rem;
-    letter-spacing: 0.1em;
-  }
-
   footer {
     position: relative;
     z-index: 1;
@@ -254,55 +266,95 @@
 <nav>
   <a href="index.html" class="nav-logo">NLC_</a>
   <ul class="nav-links">
-    <li><a href="index.html#about">About</a></li>
-    <li><a href="index.html#journey">Journey</a></li>
-    <li><a href="index.html#tools">Stack</a></li>
-    <li><a href="blog.html" class="active">Blog</a></li>
+    <li><a href="index.html#about" id="nav-about">About</a></li>
+    <li><a href="index.html#journey" id="nav-journey">Journey</a></li>
+    <li><a href="index.html#tools" id="nav-stack">Stack</a></li>
+    <li><a href="blog.html" class="active" id="nav-blog">Blog</a></li>
   </ul>
+  <div class="lang-switcher">
+    <button class="lang-btn" data-lang="en">EN</button>
+    <button class="lang-btn" data-lang="de">DE</button>
+    <button class="lang-btn" data-lang="fr">FR</button>
+    <button class="lang-btn" data-lang="es">ES</button>
+    <button class="lang-btn" data-lang="it">IT</button>
+  </div>
 </nav>
 
 <main>
-  <div class="section-tag">// latest posts</div>
+  <div class="section-tag" id="blog-tag">// latest posts</div>
   <h1 class="page-title">Vibe Coding<br>News</h1>
-  <p class="page-sub">Learnings, Tools und ehrliche Berichte aus dem Alltag des KI-gestützten Bauens.</p>
-
-  <div class="blog-grid" id="blog-grid">
-    <p class="loading">Lade Artikel...</p>
-  </div>
+  <p class="page-sub" id="blog-sub">Learnings, tools and honest reports from everyday AI-assisted building.</p>
+  <div class="blog-grid" id="blog-grid"></div>
 </main>
 
 <footer>
   <div class="footer-logo">NLC_</div>
-  <div class="footer-copy">© 2026 Nina Panknin — Learning in Public</div>
+  <div class="footer-copy" id="footer-copy">© 2026 Nina Panknin — Learning in Public</div>
 </footer>
 
 <script>
-  fetch('articles.json')
-    .then(r => r.json())
-    .then(articles => {
-      const grid = document.getElementById('blog-grid');
-      grid.innerHTML = articles.map(a => `
-        <a class="blog-card" href="article.html?slug=${a.slug}">
-          <div class="card-cover" style="background: linear-gradient(${a.gradient})"></div>
-          <div class="card-body">
-            <div class="card-tag">${a.tag}</div>
-            <div class="card-title">${a.title}</div>
-            <div class="card-excerpt">${a.excerpt}</div>
-            <div class="card-date">${formatDate(a.date)}</div>
-          </div>
-        </a>
-      `).join('');
-    })
-    .catch(() => {
-      document.getElementById('blog-grid').innerHTML =
-        '<p class="loading">Artikel konnten nicht geladen werden.</p>';
-    });
+const LANG_LOCALE = {en:'en-GB', de:'de-DE', fr:'fr-FR', es:'es-ES', it:'it-IT'};
 
-  function formatDate(dateStr) {
-    return new Date(dateStr).toLocaleDateString('de-DE', {
-      day: 'numeric', month: 'long', year: 'numeric'
-    });
-  }
+const UI = {
+  en: { tag:'// latest posts', sub:'Learnings, tools and honest reports from everyday AI-assisted building.', footer:'© 2026 Nina Panknin — Learning in Public', about:'About', journey:'Journey', stack:'Stack', blog:'Blog' },
+  de: { tag:'// neueste artikel', sub:'Learnings, Tools und ehrliche Berichte aus dem Alltag des KI-gestützten Bauens.', footer:'© 2026 Nina Panknin — Lernen in der Öffentlichkeit', about:'Über mich', journey:'Journey', stack:'Stack', blog:'Blog' },
+  fr: { tag:'// derniers articles', sub:"Apprentissages, outils et rapports honnêtes du quotidien de la construction assistée par IA.", footer:'© 2026 Nina Panknin — Apprendre en public', about:'À propos', journey:'Parcours', stack:'Stack', blog:'Blog' },
+  es: { tag:'// últimas entradas', sub:'Aprendizajes, herramientas e informes honestos del día a día de la construcción asistida por IA.', footer:'© 2026 Nina Panknin — Aprendiendo en público', about:'Sobre mí', journey:'Journey', stack:'Stack', blog:'Blog' },
+  it: { tag:'// ultimi articoli', sub:"Apprendimenti, strumenti e resoconti onesti dal quotidiano della costruzione assistita dall'IA.", footer:'© 2026 Nina Panknin — Imparare in pubblico', about:'Chi sono', journey:'Percorso', stack:'Stack', blog:'Blog' },
+};
+
+let _articles = [];
+
+function getLang() { return localStorage.getItem('nlvc_lang') || 'en'; }
+
+function applyUI(lang) {
+  const u = UI[lang] || UI.en;
+  document.getElementById('blog-tag').textContent = u.tag;
+  document.getElementById('blog-sub').textContent = u.sub;
+  document.getElementById('footer-copy').textContent = u.footer;
+  document.getElementById('nav-about').textContent = u.about;
+  document.getElementById('nav-journey').textContent = u.journey;
+  document.getElementById('nav-stack').textContent = u.stack;
+  document.getElementById('nav-blog').textContent = u.blog;
+  document.querySelectorAll('.lang-btn').forEach(b => b.classList.toggle('active', b.dataset.lang === lang));
+  document.documentElement.lang = lang;
+  localStorage.setItem('nlvc_lang', lang);
+}
+
+function renderBlog(lang) {
+  const grid = document.getElementById('blog-grid');
+  if (!grid || !_articles.length) return;
+  grid.innerHTML = _articles.map(a => {
+    const t = a.translations[lang] || a.translations.en;
+    return `<a class="blog-card" href="article.html?slug=${a.slug}">
+      <div class="card-cover" style="background:linear-gradient(${a.gradient})"></div>
+      <div class="card-body">
+        <div class="card-tag">${t.tag}</div>
+        <div class="card-title">${t.title}</div>
+        <div class="card-excerpt">${t.excerpt}</div>
+        <div class="card-date">${new Date(a.date).toLocaleDateString(LANG_LOCALE[lang]||'en-GB',{day:'numeric',month:'long',year:'numeric'})}</div>
+      </div>
+    </a>`;
+  }).join('');
+}
+
+document.querySelectorAll('.lang-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const lang = btn.dataset.lang;
+    applyUI(lang);
+    renderBlog(lang);
+  });
+});
+
+fetch('articles.json')
+  .then(r => r.json())
+  .then(articles => {
+    _articles = articles;
+    const lang = getLang();
+    applyUI(lang);
+    renderBlog(lang);
+  })
+  .catch(() => { document.getElementById('blog-grid').innerHTML = ''; });
 </script>
 </body>
 </html>

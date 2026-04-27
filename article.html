@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="de">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%230d1320'/><text x='2' y='22' font-family='monospace' font-weight='bold' font-size='13' fill='%2300d4ff'>NLC</text></svg>">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Artikel — Nina Learns Vibe Coding</title>
+<title>Article — Nina Learns Vibe Coding</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=JetBrains+Mono:wght@300;400;600&display=swap" rel="stylesheet">
 <style>
@@ -98,6 +98,28 @@
 
   .nav-links a:hover { color: var(--accent); }
 
+  .lang-switcher {
+    display: flex;
+    gap: 0.3rem;
+    align-items: center;
+  }
+
+  .lang-btn {
+    background: none;
+    border: 1px solid transparent;
+    color: var(--muted);
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    letter-spacing: 0.1em;
+    padding: 0.2rem 0.45rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-transform: uppercase;
+  }
+
+  .lang-btn:hover { color: var(--accent); border-color: rgba(0,212,255,0.3); }
+  .lang-btn.active { color: var(--accent); border-color: rgba(0,212,255,0.5); }
+
   main {
     position: relative;
     z-index: 1;
@@ -129,7 +151,6 @@
     margin-bottom: 1rem;
     display: inline-flex;
     align-items: center;
-    gap: 0.5rem;
     background: rgba(0,212,255,0.08);
     border: 1px solid rgba(0,212,255,0.25);
     padding: 0.3rem 0.8rem;
@@ -156,7 +177,6 @@
   .article-content {
     font-size: 0.95rem;
     line-height: 2;
-    color: var(--text);
   }
 
   .article-content p {
@@ -178,10 +198,7 @@
     margin-bottom: 1rem;
   }
 
-  .not-found p {
-    color: var(--muted);
-    margin-bottom: 2rem;
-  }
+  .not-found p { color: var(--muted); margin-bottom: 2rem; }
 
   .not-found a {
     color: var(--accent);
@@ -225,61 +242,110 @@
 <nav>
   <a href="index.html" class="nav-logo">NLC_</a>
   <ul class="nav-links">
-    <li><a href="index.html#about">About</a></li>
-    <li><a href="index.html#journey">Journey</a></li>
-    <li><a href="index.html#tools">Stack</a></li>
-    <li><a href="blog.html">Blog</a></li>
+    <li><a href="index.html#about" id="nav-about">About</a></li>
+    <li><a href="index.html#journey" id="nav-journey">Journey</a></li>
+    <li><a href="index.html#tools" id="nav-stack">Stack</a></li>
+    <li><a href="blog.html" id="nav-blog">Blog</a></li>
   </ul>
+  <div class="lang-switcher">
+    <button class="lang-btn" data-lang="en">EN</button>
+    <button class="lang-btn" data-lang="de">DE</button>
+    <button class="lang-btn" data-lang="fr">FR</button>
+    <button class="lang-btn" data-lang="es">ES</button>
+    <button class="lang-btn" data-lang="it">IT</button>
+  </div>
 </nav>
 
-<main id="article-main">
-  <p style="color:var(--muted);font-size:0.8rem;">Lade Artikel...</p>
-</main>
+<main id="article-main"></main>
 
 <footer>
   <div class="footer-logo">NLC_</div>
-  <div class="footer-copy">© 2026 Nina Panknin — Learning in Public</div>
+  <div class="footer-copy" id="footer-copy">© 2026 Nina Panknin — Learning in Public</div>
 </footer>
 
 <script>
-  const slug = new URLSearchParams(window.location.search).get('slug');
-  const main = document.getElementById('article-main');
+const LANG_LOCALE = {en:'en-GB', de:'de-DE', fr:'fr-FR', es:'es-ES', it:'it-IT'};
 
-  if (!slug) {
-    showNotFound();
-  } else {
-    fetch('articles.json')
-      .then(r => r.json())
-      .then(articles => {
-        const article = articles.find(a => a.slug === slug);
-        if (!article) { showNotFound(); return; }
-        document.title = `${article.title} — Nina Learns Vibe Coding`;
-        main.innerHTML = `
-          <a class="back-link" href="blog.html">← Zurück zum Blog</a>
-          <div class="article-tag">${article.tag}</div>
-          <h1 class="article-title">${article.title}</h1>
-          <div class="article-date">${formatDate(article.date)}</div>
-          <div class="article-content">${article.content}</div>
-        `;
-      })
-      .catch(showNotFound);
-  }
+const UI = {
+  en: { back:'← Back to Blog', loading:'Loading article...', notFound:'This article does not exist (anymore).', footer:'© 2026 Nina Panknin — Learning in Public', about:'About', journey:'Journey', stack:'Stack', blog:'Blog' },
+  de: { back:'← Zurück zum Blog', loading:'Lade Artikel...', notFound:'Dieser Artikel existiert nicht (mehr).', footer:'© 2026 Nina Panknin — Lernen in der Öffentlichkeit', about:'Über mich', journey:'Journey', stack:'Stack', blog:'Blog' },
+  fr: { back:'← Retour au blog', loading:'Chargement...', notFound:"Cet article n'existe plus.", footer:'© 2026 Nina Panknin — Apprendre en public', about:'À propos', journey:'Parcours', stack:'Stack', blog:'Blog' },
+  es: { back:'← Volver al blog', loading:'Cargando artículo...', notFound:'Este artículo no existe (más).', footer:'© 2026 Nina Panknin — Aprendiendo en público', about:'Sobre mí', journey:'Journey', stack:'Stack', blog:'Blog' },
+  it: { back:'← Torna al blog', loading:'Caricamento...', notFound:"Questo articolo non esiste (più).", footer:'© 2026 Nina Panknin — Imparare in pubblico', about:'Chi sono', journey:'Percorso', stack:'Stack', blog:'Blog' },
+};
 
-  function showNotFound() {
-    main.innerHTML = `
-      <div class="not-found">
-        <h1>404</h1>
-        <p>Dieser Artikel existiert nicht (mehr).</p>
-        <a href="blog.html">← Zurück zum Blog</a>
-      </div>
-    `;
-  }
+const slug = new URLSearchParams(window.location.search).get('slug');
+const main = document.getElementById('article-main');
+let _article = null;
 
-  function formatDate(dateStr) {
-    return new Date(dateStr).toLocaleDateString('de-DE', {
-      day: 'numeric', month: 'long', year: 'numeric'
+function getLang() { return localStorage.getItem('nlvc_lang') || 'en'; }
+
+function applyUI(lang) {
+  const u = UI[lang] || UI.en;
+  document.getElementById('footer-copy').textContent = u.footer;
+  document.getElementById('nav-about').textContent = u.about;
+  document.getElementById('nav-journey').textContent = u.journey;
+  document.getElementById('nav-stack').textContent = u.stack;
+  document.getElementById('nav-blog').textContent = u.blog;
+  document.querySelectorAll('.lang-btn').forEach(b => b.classList.toggle('active', b.dataset.lang === lang));
+  document.documentElement.lang = lang;
+  localStorage.setItem('nlvc_lang', lang);
+}
+
+function renderArticle(lang) {
+  if (!_article) return;
+  const u = UI[lang] || UI.en;
+  const t = _article.translations[lang] || _article.translations.en;
+  document.title = `${t.title} — Nina Learns Vibe Coding`;
+  main.innerHTML = `
+    <a class="back-link" href="blog.html">${u.back}</a>
+    <div class="article-tag">${t.tag}</div>
+    <h1 class="article-title">${t.title}</h1>
+    <div class="article-date">${new Date(_article.date).toLocaleDateString(LANG_LOCALE[lang]||'en-GB',{day:'numeric',month:'long',year:'numeric'})}</div>
+    <div class="article-content">${t.content}</div>
+  `;
+}
+
+function showNotFound(lang) {
+  const u = UI[lang] || UI.en;
+  main.innerHTML = `
+    <div class="not-found">
+      <h1>404</h1>
+      <p>${u.notFound}</p>
+      <a href="blog.html">${u.back}</a>
+    </div>
+  `;
+}
+
+document.querySelectorAll('.lang-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const lang = btn.dataset.lang;
+    applyUI(lang);
+    if (_article) renderArticle(lang);
+    else showNotFound(lang);
+  });
+});
+
+if (!slug) {
+  const lang = getLang();
+  applyUI(lang);
+  showNotFound(lang);
+} else {
+  fetch('articles.json')
+    .then(r => r.json())
+    .then(articles => {
+      const lang = getLang();
+      applyUI(lang);
+      _article = articles.find(a => a.slug === slug) || null;
+      if (_article) renderArticle(lang);
+      else showNotFound(lang);
+    })
+    .catch(() => {
+      const lang = getLang();
+      applyUI(lang);
+      showNotFound(lang);
     });
-  }
+}
 </script>
 </body>
 </html>

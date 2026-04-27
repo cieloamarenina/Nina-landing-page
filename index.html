@@ -1178,13 +1178,13 @@
 <!-- BLOG TEASER -->
 <section id="blog-teaser">
   <div class="section-header reveal">
-    <div class="section-tag">// latest posts</div>
-    <h2 class="section-title">Vibe Coding<br>News</h2>
+    <div class="section-tag" data-i18n="blog.tag">// latest posts</div>
+    <h2 class="section-title" data-i18n="blog.title">Vibe Coding<br>News</h2>
   </div>
   <div class="teaser-grid reveal" id="teaser-grid">
-    <p style="color:var(--muted);font-size:0.8rem;">Lade Artikel...</p>
+    <p data-i18n="blog.loading" style="color:var(--muted);font-size:0.8rem;">Loading articles...</p>
   </div>
-  <a href="blog.html" class="blog-cta reveal">Alle Artikel lesen →</a>
+  <a href="blog.html" class="blog-cta reveal" data-i18n="blog.cta">Read all articles →</a>
 </section>
 
 <!-- FOOTER -->
@@ -1509,6 +1509,10 @@ const TRANSLATIONS = {
     'visitors.online': 'online right now',
     'visitors.total': 'total visits',
     'footer.copy': '© 2026 Nina Panknin — Learning in Public',
+    'blog.tag': '// latest posts',
+    'blog.title': 'Vibe Coding<br>News',
+    'blog.cta': 'Read all articles →',
+    'blog.loading': 'Loading articles...',
   },
 
   de: {
@@ -1565,6 +1569,10 @@ const TRANSLATIONS = {
     'visitors.online': 'gerade online',
     'visitors.total': 'Besuche insgesamt',
     'footer.copy': '© 2026 Nina Panknin — Lernen in der Öffentlichkeit',
+    'blog.tag': '// neueste artikel',
+    'blog.title': 'Vibe Coding<br>News',
+    'blog.cta': 'Alle Artikel lesen →',
+    'blog.loading': 'Lade Artikel...',
   },
 
   fr: {
@@ -1621,6 +1629,10 @@ const TRANSLATIONS = {
     'visitors.online': 'en ligne maintenant',
     'visitors.total': 'visites au total',
     'footer.copy': '© 2026 Nina Panknin — Apprendre en public',
+    'blog.tag': '// derniers articles',
+    'blog.title': 'Vibe Coding<br>News',
+    'blog.cta': 'Lire tous les articles →',
+    'blog.loading': 'Chargement des articles...',
   },
 
   it: {
@@ -1677,6 +1689,10 @@ const TRANSLATIONS = {
     'visitors.online': 'online adesso',
     'visitors.total': 'visite totali',
     'footer.copy': '© 2026 Nina Panknin — Imparare in pubblico',
+    'blog.tag': '// ultimi articoli',
+    'blog.title': 'Vibe Coding<br>News',
+    'blog.cta': 'Leggi tutti gli articoli →',
+    'blog.loading': 'Caricamento articoli...',
   },
 
   es: {
@@ -1733,6 +1749,10 @@ const TRANSLATIONS = {
     'visitors.online': 'en línea ahora',
     'visitors.total': 'visitas totales',
     'footer.copy': '© 2026 Nina Panknin — Aprendiendo en público',
+    'blog.tag': '// últimas entradas',
+    'blog.title': 'Vibe Coding<br>News',
+    'blog.cta': 'Leer todos los artículos →',
+    'blog.loading': 'Cargando artículos...',
   }
 };
 
@@ -1763,22 +1783,34 @@ applyLang(detectLang());
 </script>
 
 <script>
+  const LANG_LOCALE = {en:'en-GB', de:'de-DE', fr:'fr-FR', es:'es-ES', it:'it-IT'};
+  let _teaserArticles = [];
+
+  function renderTeaser(lang) {
+    const grid = document.getElementById('teaser-grid');
+    if (!grid || !_teaserArticles.length) return;
+    grid.innerHTML = _teaserArticles.slice(0, 3).map(a => {
+      const t = a.translations[lang] || a.translations.en;
+      return `<a class="teaser-card" href="article.html?slug=${a.slug}">
+        <div class="teaser-cover" style="background:linear-gradient(${a.gradient})"></div>
+        <div class="teaser-body">
+          <div class="teaser-tag">${t.tag}</div>
+          <div class="teaser-title">${t.title}</div>
+          <div class="teaser-excerpt">${t.excerpt}</div>
+          <div class="teaser-date">${new Date(a.date).toLocaleDateString(LANG_LOCALE[lang]||'en-GB',{day:'numeric',month:'long',year:'numeric'})}</div>
+        </div>
+      </a>`;
+    }).join('');
+  }
+
   fetch('articles.json')
     .then(r => r.json())
     .then(articles => {
-      const grid = document.getElementById('teaser-grid');
-      const latest = articles.slice(0, 3);
-      grid.innerHTML = latest.map(a => `
-        <a class="teaser-card" href="article.html?slug=${a.slug}">
-          <div class="teaser-cover" style="background: linear-gradient(${a.gradient})"></div>
-          <div class="teaser-body">
-            <div class="teaser-tag">${a.tag}</div>
-            <div class="teaser-title">${a.title}</div>
-            <div class="teaser-excerpt">${a.excerpt}</div>
-            <div class="teaser-date">${new Date(a.date).toLocaleDateString('de-DE', {day:'numeric', month:'long', year:'numeric'})}</div>
-          </div>
-        </a>
-      `).join('');
+      _teaserArticles = articles;
+      renderTeaser(localStorage.getItem('nlvc_lang') || 'en');
+      document.querySelectorAll('.lang-btn').forEach(btn =>
+        btn.addEventListener('click', () => renderTeaser(btn.dataset.lang))
+      );
     })
     .catch(() => {
       const grid = document.getElementById('teaser-grid');
