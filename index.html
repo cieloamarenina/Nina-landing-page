@@ -830,6 +830,95 @@
     nav .nav-links { display: none; }
     footer { flex-direction: column; gap: 1rem; text-align: center; }
   }
+
+  /* BLOG TEASER */
+  #blog-teaser .teaser-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2.5rem;
+  }
+
+  .teaser-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-top: 2px solid var(--accent);
+    text-decoration: none;
+    color: var(--text);
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.2s, border-top-color 0.2s, box-shadow 0.2s;
+  }
+
+  .teaser-card:hover {
+    transform: translateY(-4px);
+    border-top-color: var(--accent2);
+    box-shadow: 0 8px 30px rgba(0,212,255,0.1);
+  }
+
+  .teaser-cover {
+    height: 100px;
+    flex-shrink: 0;
+  }
+
+  .teaser-body {
+    padding: 1.1rem;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+  }
+
+  .teaser-tag {
+    font-size: 0.6rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 0.4rem;
+  }
+
+  .teaser-title {
+    font-family: var(--font-display);
+    font-size: 0.9rem;
+    font-weight: 700;
+    line-height: 1.3;
+    margin-bottom: 0.4rem;
+  }
+
+  .teaser-excerpt {
+    font-size: 0.7rem;
+    color: var(--muted);
+    line-height: 1.6;
+    flex: 1;
+  }
+
+  .teaser-date {
+    font-size: 0.6rem;
+    color: var(--muted);
+    margin-top: 0.8rem;
+    padding-top: 0.6rem;
+    border-top: 1px solid var(--border);
+  }
+
+  .blog-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    border: 1px solid rgba(0,212,255,0.4);
+    color: var(--accent);
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 0.75rem 1.75rem;
+    text-decoration: none;
+    transition: background 0.2s, border-color 0.2s, transform 0.2s;
+  }
+
+  .blog-cta:hover {
+    background: rgba(0,212,255,0.08);
+    border-color: var(--accent);
+    transform: translateY(-2px);
+  }
 </style>
 </head>
 <body>
@@ -841,6 +930,7 @@
     <li><a href="#journey" data-i18n="nav.journey">Journey</a></li>
     <li><a href="#tools" data-i18n="nav.stack">Stack</a></li>
     <li><a href="#visitors" data-i18n="nav.visitors">Visitors</a></li>
+    <li><a href="blog.html">Blog</a></li>
   </ul>
   <div class="lang-switcher">
     <button class="lang-btn" data-lang="en">EN</button>
@@ -1083,6 +1173,18 @@
   <div id="online-countries" class="online-countries reveal"></div>
   <div id="visitor-map" class="reveal"></div>
   <div id="flag-grid" class="flag-grid reveal"></div>
+</section>
+
+<!-- BLOG TEASER -->
+<section id="blog-teaser">
+  <div class="section-header reveal">
+    <div class="section-tag">// latest posts</div>
+    <h2 class="section-title">Vibe Coding<br>News</h2>
+  </div>
+  <div class="teaser-grid reveal" id="teaser-grid">
+    <p style="color:var(--muted);font-size:0.8rem;">Lade Artikel...</p>
+  </div>
+  <a href="blog.html" class="blog-cta reveal">Alle Artikel lesen →</a>
 </section>
 
 <!-- FOOTER -->
@@ -1660,5 +1762,28 @@ document.querySelectorAll('.lang-btn').forEach(btn => {
 applyLang(detectLang());
 </script>
 
+<script>
+  fetch('articles.json')
+    .then(r => r.json())
+    .then(articles => {
+      const grid = document.getElementById('teaser-grid');
+      const latest = articles.slice(0, 3);
+      grid.innerHTML = latest.map(a => `
+        <a class="teaser-card" href="article.html?slug=${a.slug}">
+          <div class="teaser-cover" style="background: linear-gradient(${a.gradient})"></div>
+          <div class="teaser-body">
+            <div class="teaser-tag">${a.tag}</div>
+            <div class="teaser-title">${a.title}</div>
+            <div class="teaser-excerpt">${a.excerpt}</div>
+            <div class="teaser-date">${new Date(a.date).toLocaleDateString('de-DE', {day:'numeric', month:'long', year:'numeric'})}</div>
+          </div>
+        </a>
+      `).join('');
+    })
+    .catch(() => {
+      const grid = document.getElementById('teaser-grid');
+      if (grid) grid.innerHTML = '';
+    });
+</script>
 </body>
 </html>
