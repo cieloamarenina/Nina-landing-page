@@ -326,8 +326,11 @@ function renderBlog(lang) {
   if (!grid || !_articles.length) return;
   grid.innerHTML = _articles.map(a => {
     const t = a.translations[lang] || a.translations.en;
+    const coverStyle = a.image
+      ? `background:url('data:image/png;base64,${a.image}') center/cover no-repeat`
+      : `background:linear-gradient(${a.gradient})`;
     return `<a class="blog-card" href="article.html?slug=${a.slug}">
-      <div class="card-cover" style="background:linear-gradient(${a.gradient})"></div>
+      <div class="card-cover" style="${coverStyle}"></div>
       <div class="card-body">
         <div class="card-tag">${t.tag}</div>
         <div class="card-title">${t.title}</div>
