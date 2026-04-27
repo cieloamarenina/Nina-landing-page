@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%230d1320'/><text x='2' y='22' font-family='monospace' font-weight='bold' font-size='13' fill='%2300d4ff'>NLC</text></svg>">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Blog — Nina Learns Vibe Coding</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=JetBrains+Mono:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #080c14;
+    --surface: #0d1320;
+    --card: #111827;
+    --border: #1e2d45;
+    --accent: #00d4ff;
+    --accent2: #7c3aed;
+    --text: #e8f0fe;
+    --muted: #6b7fa3;
+    --font-display: 'Syne', sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-mono);
+    font-size: 15px;
+    line-height: 1.7;
+    overflow-x: hidden;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(0,212,255,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,212,255,0.03) 1px, transparent 1px);
+    background-size: 60px 60px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: repeating-linear-gradient(
+      to bottom,
+      transparent 0px, transparent 3px,
+      rgba(0,0,0,0.05) 3px, rgba(0,0,0,0.05) 4px
+    );
+    pointer-events: none;
+    z-index: 9999;
+    opacity: 0.4;
+  }
+
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    padding: 1.2rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(8,12,20,0.85);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .nav-logo {
+    font-family: var(--font-display);
+    font-size: 1rem;
+    font-weight: 800;
+    color: var(--accent);
+    letter-spacing: 0.05em;
+    text-decoration: none;
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 2rem;
+    list-style: none;
+  }
+
+  .nav-links a {
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 0.75rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    transition: color 0.2s;
+  }
+
+  .nav-links a:hover, .nav-links a.active { color: var(--accent); }
+
+  main {
+    position: relative;
+    z-index: 1;
+    padding: 8rem 2rem 6rem;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .section-tag {
+    font-size: 0.65rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .section-tag::after {
+    content: '';
+    flex: 1;
+    max-width: 60px;
+    height: 1px;
+    background: var(--accent);
+    opacity: 0.4;
+  }
+
+  .page-title {
+    font-family: var(--font-display);
+    font-size: clamp(2.5rem, 6vw, 5rem);
+    font-weight: 800;
+    line-height: 1.0;
+    letter-spacing: -0.03em;
+    margin-bottom: 1rem;
+  }
+
+  .page-sub {
+    font-size: 0.9rem;
+    color: var(--muted);
+    margin-bottom: 4rem;
+    max-width: 500px;
+  }
+
+  .blog-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .blog-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-top: 2px solid var(--accent);
+    text-decoration: none;
+    color: var(--text);
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
+    cursor: pointer;
+  }
+
+  .blog-card:hover {
+    transform: translateY(-4px);
+    border-top-color: var(--accent2);
+    box-shadow: 0 8px 30px rgba(0,212,255,0.1);
+  }
+
+  .card-cover {
+    height: 120px;
+    flex-shrink: 0;
+  }
+
+  .card-body {
+    padding: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+  }
+
+  .card-tag {
+    font-size: 0.62rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 0.6rem;
+  }
+
+  .card-title {
+    font-family: var(--font-display);
+    font-size: 1rem;
+    font-weight: 700;
+    line-height: 1.3;
+    margin-bottom: 0.6rem;
+    color: var(--text);
+  }
+
+  .card-excerpt {
+    font-size: 0.72rem;
+    color: var(--muted);
+    line-height: 1.7;
+    flex: 1;
+  }
+
+  .card-date {
+    font-size: 0.62rem;
+    color: var(--muted);
+    letter-spacing: 0.1em;
+    margin-top: 1rem;
+    padding-top: 0.75rem;
+    border-top: 1px solid var(--border);
+  }
+
+  .loading {
+    color: var(--muted);
+    font-size: 0.8rem;
+    letter-spacing: 0.1em;
+  }
+
+  footer {
+    position: relative;
+    z-index: 1;
+    border-top: 1px solid var(--border);
+    padding: 3rem 2rem;
+    max-width: 1100px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .footer-logo {
+    font-family: var(--font-display);
+    font-size: 1.2rem;
+    font-weight: 800;
+    color: var(--accent);
+  }
+
+  .footer-copy {
+    font-size: 0.7rem;
+    color: var(--muted);
+    letter-spacing: 0.1em;
+  }
+
+  @media (max-width: 600px) {
+    nav .nav-links { display: none; }
+    footer { flex-direction: column; gap: 1rem; text-align: center; }
+    .blog-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-logo">NLC_</a>
+  <ul class="nav-links">
+    <li><a href="index.html#about">About</a></li>
+    <li><a href="index.html#journey">Journey</a></li>
+    <li><a href="index.html#tools">Stack</a></li>
+    <li><a href="blog.html" class="active">Blog</a></li>
+  </ul>
+</nav>
+
+<main>
+  <div class="section-tag">// latest posts</div>
+  <h1 class="page-title">Vibe Coding<br>News</h1>
+  <p class="page-sub">Learnings, Tools und ehrliche Berichte aus dem Alltag des KI-gestützten Bauens.</p>
+
+  <div class="blog-grid" id="blog-grid">
+    <p class="loading">Lade Artikel...</p>
+  </div>
+</main>
+
+<footer>
+  <div class="footer-logo">NLC_</div>
+  <div class="footer-copy">© 2026 Nina Panknin — Learning in Public</div>
+</footer>
+
+<script>
+  fetch('articles.json')
+    .then(r => r.json())
+    .then(articles => {
+      const grid = document.getElementById('blog-grid');
+      grid.innerHTML = articles.map(a => `
+        <a class="blog-card" href="article.html?slug=${a.slug}">
+          <div class="card-cover" style="background: linear-gradient(${a.gradient})"></div>
+          <div class="card-body">
+            <div class="card-tag">${a.tag}</div>
+            <div class="card-title">${a.title}</div>
+            <div class="card-excerpt">${a.excerpt}</div>
+            <div class="card-date">${formatDate(a.date)}</div>
+          </div>
+        </a>
+      `).join('');
+    })
+    .catch(() => {
+      document.getElementById('blog-grid').innerHTML =
+        '<p class="loading">Artikel konnten nicht geladen werden.</p>';
+    });
+
+  function formatDate(dateStr) {
+    return new Date(dateStr).toLocaleDateString('de-DE', {
+      day: 'numeric', month: 'long', year: 'numeric'
+    });
+  }
+</script>
+</body>
+</html>
