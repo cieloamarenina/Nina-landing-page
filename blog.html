@@ -349,7 +349,7 @@ document.querySelectorAll('.lang-btn').forEach(btn => {
   });
 });
 
-fetch('articles.json')
+fetch('articles.json?v=' + Date.now())
   .then(r => r.json())
   .then(articles => {
     _articles = articles;
