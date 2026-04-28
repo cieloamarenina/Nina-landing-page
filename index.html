@@ -1235,6 +1235,10 @@
   </form>
 
   <script>
+    // ── WEBHOOK URL: hier die n8n Webhook-URL eintragen ──────────
+    const LEAD_WEBHOOK_URL = 'https://n8n.ninalearnsvibecoding.com/webhook/lead-capture';
+    // ──────────────────────────────────────────────────────────────
+
     document.getElementById('leadForm').addEventListener('submit', async function(e) {
       e.preventDefault();
       const btn = document.getElementById('leadSubmitBtn');
@@ -1247,15 +1251,18 @@
       const data = Object.fromEntries(formData.entries());
 
       try {
-        await fetch('https://n8n.ninalearnsvibecoding.com/form/84a6f29c-5c70-4517-9a93-bf8a6cfa986b', {
+        const res = await fetch(LEAD_WEBHOOK_URL, {
           method: 'POST',
-          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-          body: new URLSearchParams(data)
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data)
         });
+        if (!res.ok) throw new Error('HTTP ' + res.status);
         document.getElementById('leadSuccess').style.display = 'block';
+        document.getElementById('leadError').style.display = 'none';
         document.getElementById('leadForm').reset();
       } catch(err) {
         document.getElementById('leadError').style.display = 'block';
+        document.getElementById('leadSuccess').style.display = 'none';
       } finally {
         btn.textContent = t['contact.submit'] || 'ANFRAGE SENDEN →';
         btn.disabled = false;
