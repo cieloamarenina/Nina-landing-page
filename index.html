@@ -1182,53 +1182,53 @@
 <!-- CONTACT WIDGET -->
 <section id="contact" style="padding: 6rem 2rem; max-width: 680px; margin: 0 auto;">
   <div style="text-align:center; margin-bottom: 3rem;">
-    <span style="font-family: var(--font-mono); color: var(--accent); font-size: 0.8rem; letter-spacing: 0.15em;">// KONTAKT</span>
-    <h2 style="font-family: var(--font-display); font-size: clamp(2rem, 5vw, 3rem); margin-top: 0.5rem;">Schreib mir</h2>
-    <p style="color: var(--muted); margin-top: 0.75rem;">Ich melde mich innerhalb von 24 Stunden.</p>
+    <span data-i18n="contact.tag" style="font-family: var(--font-mono); color: var(--accent); font-size: 0.8rem; letter-spacing: 0.15em;">// KONTAKT</span>
+    <h2 data-i18n="contact.title" style="font-family: var(--font-display); font-size: clamp(2rem, 5vw, 3rem); margin-top: 0.5rem; color: var(--text);">Schreib mir</h2>
+    <p data-i18n="contact.sub" style="color: var(--muted); margin-top: 0.75rem;">Ich melde mich innerhalb von 24 Stunden.</p>
   </div>
 
   <form id="leadForm" style="display: flex; flex-direction: column; gap: 1.2rem;">
     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem;">
       <div>
-        <label style="display:block; font-size:0.75rem; color:var(--muted); margin-bottom:0.4rem; letter-spacing:0.1em;">NAME *</label>
-        <input name="Vollständiger Name" required placeholder="Nina Mustermann"
+        <label data-i18n="contact.name" style="display:block; font-size:0.75rem; color:var(--muted); margin-bottom:0.4rem; letter-spacing:0.1em;">NAME *</label>
+        <input name="Vollständiger Name" required data-i18n-placeholder="contact.placeholder.name" placeholder="Nina Mustermann"
           style="width:100%; background:var(--card); border:1px solid var(--border); color:var(--text); padding:0.75rem 1rem; font-family:var(--font-mono); font-size:0.9rem; outline:none; transition: border-color 0.2s;"
           onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='var(--border)'">
       </div>
       <div>
-        <label style="display:block; font-size:0.75rem; color:var(--muted); margin-bottom:0.4rem; letter-spacing:0.1em;">TELEFON</label>
-        <input name="Telefonnummer" placeholder="+49 ..."
+        <label data-i18n="contact.phone" style="display:block; font-size:0.75rem; color:var(--muted); margin-bottom:0.4rem; letter-spacing:0.1em;">TELEFON</label>
+        <input name="Telefonnummer" data-i18n-placeholder="contact.placeholder.phone" placeholder="+49 ..."
           style="width:100%; background:var(--card); border:1px solid var(--border); color:var(--text); padding:0.75rem 1rem; font-family:var(--font-mono); font-size:0.9rem; outline:none; transition: border-color 0.2s;"
           onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='var(--border)'">
       </div>
     </div>
     <div>
-      <label style="display:block; font-size:0.75rem; color:var(--muted); margin-bottom:0.4rem; letter-spacing:0.1em;">E-MAIL *</label>
-      <input name="E-Mail-Adresse" type="email" required placeholder="hallo@beispiel.de"
+      <label data-i18n="contact.email" style="display:block; font-size:0.75rem; color:var(--muted); margin-bottom:0.4rem; letter-spacing:0.1em;">E-MAIL *</label>
+      <input name="E-Mail-Adresse" type="email" required data-i18n-placeholder="contact.placeholder.email" placeholder="hallo@beispiel.de"
         style="width:100%; background:var(--card); border:1px solid var(--border); color:var(--text); padding:0.75rem 1rem; font-family:var(--font-mono); font-size:0.9rem; outline:none; transition: border-color 0.2s;"
         onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='var(--border)'">
     </div>
     <div>
-      <label style="display:block; font-size:0.75rem; color:var(--muted); margin-bottom:0.4rem; letter-spacing:0.1em;">UNTERNEHMEN</label>
-      <input name="Unternehmen" placeholder="Firma GmbH"
+      <label data-i18n="contact.company" style="display:block; font-size:0.75rem; color:var(--muted); margin-bottom:0.4rem; letter-spacing:0.1em;">UNTERNEHMEN</label>
+      <input name="Unternehmen" data-i18n-placeholder="contact.placeholder.company" placeholder="Firma GmbH"
         style="width:100%; background:var(--card); border:1px solid var(--border); color:var(--text); padding:0.75rem 1rem; font-family:var(--font-mono); font-size:0.9rem; outline:none; transition: border-color 0.2s;"
         onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='var(--border)'">
     </div>
     <div>
-      <label style="display:block; font-size:0.75rem; color:var(--muted); margin-bottom:0.4rem; letter-spacing:0.1em;">NACHRICHT</label>
-      <textarea name="Nachricht" rows="4" placeholder="Womit kann ich dir helfen?"
+      <label data-i18n="contact.message" style="display:block; font-size:0.75rem; color:var(--muted); margin-bottom:0.4rem; letter-spacing:0.1em;">NACHRICHT</label>
+      <textarea name="Nachricht" rows="4" data-i18n-placeholder="contact.placeholder.message" placeholder="Womit kann ich dir helfen?"
         style="width:100%; background:var(--card); border:1px solid var(--border); color:var(--text); padding:0.75rem 1rem; font-family:var(--font-mono); font-size:0.9rem; outline:none; resize:vertical; transition: border-color 0.2s;"
         onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='var(--border)'"></textarea>
     </div>
-    <button type="submit" id="leadSubmitBtn"
+    <button type="submit" id="leadSubmitBtn" data-i18n="contact.submit"
       style="background:var(--accent); color:#000; border:none; padding:0.9rem 2rem; font-family:var(--font-mono); font-size:0.9rem; font-weight:600; letter-spacing:0.1em; cursor:pointer; transition: opacity 0.2s;"
       onmouseover="this.style.opacity='0.85'" onmouseout="this.style.opacity='1'">
       ANFRAGE SENDEN →
     </button>
-    <div id="leadSuccess" style="display:none; text-align:center; color:var(--accent); padding:1rem; border:1px solid var(--accent); background:rgba(0,212,255,0.05);">
+    <div id="leadSuccess" data-i18n="contact.success" style="display:none; text-align:center; color:var(--accent); padding:1rem; border:1px solid var(--accent); background:rgba(0,212,255,0.05);">
       ✓ Danke! Ich melde mich bald bei dir.
     </div>
-    <div id="leadError" style="display:none; text-align:center; color:#ff5f57; padding:1rem; border:1px solid #ff5f57; background:rgba(255,95,87,0.05);">
+    <div id="leadError" data-i18n="contact.error" style="display:none; text-align:center; color:#ff5f57; padding:1rem; border:1px solid #ff5f57; background:rgba(255,95,87,0.05);">
       ✗ Etwas ist schiefgelaufen. Bitte versuch es nochmal.
     </div>
   </form>
@@ -1237,14 +1237,16 @@
     document.getElementById('leadForm').addEventListener('submit', async function(e) {
       e.preventDefault();
       const btn = document.getElementById('leadSubmitBtn');
-      btn.textContent = 'Wird gesendet...';
+      const lang = document.documentElement.getAttribute('data-lang') || 'de';
+      const t = translations[lang] || translations['de'];
+      btn.textContent = t['contact.sending'] || 'Wird gesendet...';
       btn.disabled = true;
 
       const formData = new FormData(this);
       const data = Object.fromEntries(formData.entries());
 
       try {
-        const res = await fetch('https://n8n.ninalearnsvibecoding.com/form/84a6f29c-5c70-4517-9a93-bf8a6cfa986b', {
+        await fetch('https://n8n.ninalearnsvibecoding.com/form/84a6f29c-5c70-4517-9a93-bf8a6cfa986b', {
           method: 'POST',
           headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
           body: new URLSearchParams(data)
@@ -1254,7 +1256,7 @@
       } catch(err) {
         document.getElementById('leadError').style.display = 'block';
       } finally {
-        btn.textContent = 'ANFRAGE SENDEN →';
+        btn.textContent = t['contact.submit'] || 'ANFRAGE SENDEN →';
         btn.disabled = false;
       }
     });
@@ -1583,6 +1585,23 @@ const TRANSLATIONS = {
     'visitors.online': 'online right now',
     'visitors.total': 'total visits',
     'footer.copy': '© 2026 Nina Panknin — Learning in Public',
+    'contact.tag': '// contact',
+    'contact.title': 'Write to me',
+    'contact.sub': 'I\'ll get back to you within 24 hours.',
+    'contact.name': 'NAME *',
+    'contact.phone': 'PHONE',
+    'contact.email': 'E-MAIL *',
+    'contact.company': 'COMPANY',
+    'contact.message': 'MESSAGE',
+    'contact.submit': 'SEND REQUEST →',
+    'contact.sending': 'Sending...',
+    'contact.success': '✓ Thank you! I\'ll be in touch soon.',
+    'contact.error': '✗ Something went wrong. Please try again.',
+    'contact.placeholder.name': 'Nina Mustermann',
+    'contact.placeholder.phone': '+49 ...',
+    'contact.placeholder.email': 'hello@example.com',
+    'contact.placeholder.company': 'Company Ltd.',
+    'contact.placeholder.message': 'How can I help you?',
     'blog.tag': '// latest posts',
     'blog.title': 'Vibe Coding<br>News',
     'blog.cta': 'Read all articles →',
@@ -1643,6 +1662,23 @@ const TRANSLATIONS = {
     'visitors.online': 'gerade online',
     'visitors.total': 'Besuche insgesamt',
     'footer.copy': '© 2026 Nina Panknin — Lernen in der Öffentlichkeit',
+    'contact.tag': '// kontakt',
+    'contact.title': 'Schreib mir',
+    'contact.sub': 'Ich melde mich innerhalb von 24 Stunden.',
+    'contact.name': 'NAME *',
+    'contact.phone': 'TELEFON',
+    'contact.email': 'E-MAIL *',
+    'contact.company': 'UNTERNEHMEN',
+    'contact.message': 'NACHRICHT',
+    'contact.submit': 'ANFRAGE SENDEN →',
+    'contact.sending': 'Wird gesendet...',
+    'contact.success': '✓ Danke! Ich melde mich bald bei dir.',
+    'contact.error': '✗ Etwas ist schiefgelaufen. Bitte versuch es nochmal.',
+    'contact.placeholder.name': 'Nina Mustermann',
+    'contact.placeholder.phone': '+49 ...',
+    'contact.placeholder.email': 'hallo@beispiel.de',
+    'contact.placeholder.company': 'Firma GmbH',
+    'contact.placeholder.message': 'Womit kann ich dir helfen?',
     'blog.tag': '// neueste artikel',
     'blog.title': 'Vibe Coding<br>News',
     'blog.cta': 'Alle Artikel lesen →',
@@ -1703,6 +1739,23 @@ const TRANSLATIONS = {
     'visitors.online': 'en ligne maintenant',
     'visitors.total': 'visites au total',
     'footer.copy': '© 2026 Nina Panknin — Apprendre en public',
+    'contact.tag': '// contact',
+    'contact.title': 'Écris-moi',
+    'contact.sub': 'Je te réponds dans les 24 heures.',
+    'contact.name': 'NOM *',
+    'contact.phone': 'TÉLÉPHONE',
+    'contact.email': 'E-MAIL *',
+    'contact.company': 'ENTREPRISE',
+    'contact.message': 'MESSAGE',
+    'contact.submit': 'ENVOYER →',
+    'contact.sending': 'Envoi en cours...',
+    'contact.success': '✓ Merci ! Je te contacte bientôt.',
+    'contact.error': '✗ Une erreur s\'est produite. Réessaie.',
+    'contact.placeholder.name': 'Nina Mustermann',
+    'contact.placeholder.phone': '+33 ...',
+    'contact.placeholder.email': 'bonjour@exemple.fr',
+    'contact.placeholder.company': 'Société SARL',
+    'contact.placeholder.message': 'Comment puis-je t\'aider ?',
     'blog.tag': '// derniers articles',
     'blog.title': 'Vibe Coding<br>News',
     'blog.cta': 'Lire tous les articles →',
@@ -1763,6 +1816,23 @@ const TRANSLATIONS = {
     'visitors.online': 'online adesso',
     'visitors.total': 'visite totali',
     'footer.copy': '© 2026 Nina Panknin — Imparare in pubblico',
+    'contact.tag': '// contatto',
+    'contact.title': 'Scrivimi',
+    'contact.sub': 'Ti rispondo entro 24 ore.',
+    'contact.name': 'NOME *',
+    'contact.phone': 'TELEFONO',
+    'contact.email': 'E-MAIL *',
+    'contact.company': 'AZIENDA',
+    'contact.message': 'MESSAGGIO',
+    'contact.submit': 'INVIA RICHIESTA →',
+    'contact.sending': 'Invio in corso...',
+    'contact.success': '✓ Grazie! Ti contatterò presto.',
+    'contact.error': '✗ Qualcosa è andato storto. Riprova.',
+    'contact.placeholder.name': 'Nina Mustermann',
+    'contact.placeholder.phone': '+39 ...',
+    'contact.placeholder.email': 'ciao@esempio.it',
+    'contact.placeholder.company': 'Azienda Srl',
+    'contact.placeholder.message': 'Come posso aiutarti?',
     'blog.tag': '// ultimi articoli',
     'blog.title': 'Vibe Coding<br>News',
     'blog.cta': 'Leggi tutti gli articoli →',
@@ -1823,6 +1893,23 @@ const TRANSLATIONS = {
     'visitors.online': 'en línea ahora',
     'visitors.total': 'visitas totales',
     'footer.copy': '© 2026 Nina Panknin — Aprendiendo en público',
+    'contact.tag': '// contacto',
+    'contact.title': 'Escríbeme',
+    'contact.sub': 'Te respondo en 24 horas.',
+    'contact.name': 'NOMBRE *',
+    'contact.phone': 'TELÉFONO',
+    'contact.email': 'E-MAIL *',
+    'contact.company': 'EMPRESA',
+    'contact.message': 'MENSAJE',
+    'contact.submit': 'ENVIAR SOLICITUD →',
+    'contact.sending': 'Enviando...',
+    'contact.success': '✓ ¡Gracias! Me pondré en contacto pronto.',
+    'contact.error': '✗ Algo salió mal. Por favor, inténtalo de nuevo.',
+    'contact.placeholder.name': 'Nina Mustermann',
+    'contact.placeholder.phone': '+34 ...',
+    'contact.placeholder.email': 'hola@ejemplo.es',
+    'contact.placeholder.company': 'Empresa S.L.',
+    'contact.placeholder.message': '¿En qué puedo ayudarte?',
     'blog.tag': '// últimas entradas',
     'blog.title': 'Vibe Coding<br>News',
     'blog.cta': 'Leer todos los artículos →',
@@ -1836,6 +1923,11 @@ function applyLang(lang) {
     const val = t[el.dataset.i18n] ?? TRANSLATIONS.en[el.dataset.i18n];
     if (val !== undefined) el.innerHTML = val;
   });
+  document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+    const val = t[el.dataset.i18nPlaceholder] ?? TRANSLATIONS.en[el.dataset.i18nPlaceholder];
+    if (val !== undefined) el.placeholder = val;
+  });
+  document.documentElement.setAttribute('data-lang', lang);
   document.querySelectorAll('.lang-btn').forEach(btn => {
     btn.classList.toggle('active', btn.dataset.lang === lang);
   });
