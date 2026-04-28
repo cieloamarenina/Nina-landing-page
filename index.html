@@ -1971,7 +1971,7 @@ applyLang(detectLang());
     grid.innerHTML = _teaserArticles.slice(0, 3).map(a => {
       const t = (a.translations && (a.translations[lang] || a.translations.en)) || a;
       return `<a class="teaser-card" href="article.html?slug=${a.slug}">
-        <div class="teaser-cover" style="background:linear-gradient(${a.gradient})"></div>
+        <div class="teaser-cover" style="${a.image ? `background-image:url('data:image/png;base64,${a.image}');background-size:cover;background-position:center;` : `background:linear-gradient(${a.gradient})`}"></div>
         <div class="teaser-body">
           <div class="teaser-tag">${t.tag}</div>
           <div class="teaser-title">${t.title}</div>
