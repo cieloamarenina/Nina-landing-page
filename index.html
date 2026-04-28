@@ -1243,7 +1243,7 @@
       e.preventDefault();
       const btn = document.getElementById('leadSubmitBtn');
       const lang = document.documentElement.getAttribute('data-lang') || 'de';
-      const t = translations[lang] || translations['de'];
+      const t = TRANSLATIONS[lang] || TRANSLATIONS['de'];
       btn.textContent = t['contact.sending'] || 'Wird gesendet...';
       btn.disabled = true;
 
