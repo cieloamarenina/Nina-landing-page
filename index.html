@@ -1962,7 +1962,7 @@ applyLang(detectLang());
     const grid = document.getElementById('teaser-grid');
     if (!grid || !_teaserArticles.length) return;
     grid.innerHTML = _teaserArticles.slice(0, 3).map(a => {
-      const t = a.translations[lang] || a.translations.en;
+      const t = (a.translations && (a.translations[lang] || a.translations.en)) || a;
       return `<a class="teaser-card" href="article.html?slug=${a.slug}">
         <div class="teaser-cover" style="background:linear-gradient(${a.gradient})"></div>
         <div class="teaser-body">
