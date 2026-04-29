@@ -275,8 +275,8 @@
     <button class="lang-btn" data-lang="en">EN</button>
     <button class="lang-btn" data-lang="de">DE</button>
     <button class="lang-btn" data-lang="fr">FR</button>
-    <button class="lang-btn" data-lang="es">ES</button>
     <button class="lang-btn" data-lang="it">IT</button>
+    <button class="lang-btn" data-lang="es">ES</button>
   </div>
 </nav>
 
@@ -325,7 +325,7 @@ function renderBlog(lang) {
   const grid = document.getElementById('blog-grid');
   if (!grid || !_articles.length) return;
   grid.innerHTML = _articles.map(a => {
-    const t = a.translations[lang] || a.translations.en;
+    const t = (a.translations && (a.translations[lang] || a.translations.en)) || { tag: a.tag, title: a.title, excerpt: a.excerpt };
     const coverStyle = a.image
       ? `background-image:url('${a.image}'); background-size:cover; background-position:center top`
       : `background:linear-gradient(${a.gradient})`;
