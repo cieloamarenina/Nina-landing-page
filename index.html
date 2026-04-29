@@ -1066,6 +1066,13 @@
       <div class="tl-desc" data-i18n="tl8.desc">ninalearnsvibecoding.com is live. Hosted on Hetzner via Coolify. Vibe-coded with Claude as co-pilot. You're looking at it right now.</div>
       <div class="tl-tags"><span class="tag">Vibe Coding</span><span class="tag">Claude AI</span><span class="tag">Deploy</span></div>
     </div>
+    <div class="tl-item reveal">
+      <div class="tl-dot"></div>
+      <div class="tl-date">Apr 2026</div>
+      <div class="tl-title" data-i18n="tl9.title">Cal.com Booking Agent</div>
+      <div class="tl-desc" data-i18n="tl9.desc">Automated booking pipeline: Cal.com fires a webhook on every new appointment, an AI agent writes a personalised confirmation email in the guest's language, stores the booking in NocoDB and sends a Pushover push notification — all in n8n.</div>
+      <div class="tl-tags"><span class="tag">n8n</span><span class="tag">Cal.com</span><span class="tag">AI</span><span class="tag">NocoDB</span><span class="tag">Pushover</span></div>
+    </div>
   </div>
 </section>
 
@@ -1221,6 +1228,9 @@
         style="width:100%; background:var(--card); border:1px solid var(--border); color:var(--text); padding:0.75rem 1rem; font-family:var(--font-mono); font-size:0.9rem; outline:none; resize:vertical; transition: border-color 0.2s;"
         onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='var(--border)'"></textarea>
     </div>
+    <div style="position:absolute;left:-9999px;top:-9999px;opacity:0;pointer-events:none;" aria-hidden="true">
+      <input type="text" name="_hp" tabindex="-1" autocomplete="off" value="">
+    </div>
     <button type="submit" id="leadSubmitBtn" data-i18n="contact.submit"
       style="background:var(--accent); color:#000; border:none; padding:0.9rem 2rem; font-family:var(--font-mono); font-size:0.9rem; font-weight:600; letter-spacing:0.1em; cursor:pointer; transition: opacity 0.2s;"
       onmouseover="this.style.opacity='0.85'" onmouseout="this.style.opacity='1'">
@@ -1249,6 +1259,14 @@
 
       const formData = new FormData(this);
       const data = Object.fromEntries(formData.entries());
+
+      if (data._hp) {
+        document.getElementById('leadSuccess').style.display = 'block';
+        btn.textContent = t['contact.submit'] || 'ANFRAGE SENDEN →';
+        btn.disabled = false;
+        return;
+      }
+      delete data._hp;
 
       try {
         const res = await fetch(LEAD_WEBHOOK_URL, {
@@ -1281,7 +1299,7 @@
   </a>
 </footer>
 
-<script src="https://unpkg.com/globe.gl"></script>
+<script src="https://unpkg.com/globe.gl@2.32.2/dist/globe.gl.min.js"></script>
 <script>
 // ── VISITOR TRACKING ──────────────────────────────────────────
 const N8N = 'https://n8n.ninalearnsvibecoding.com/webhook';
@@ -1575,6 +1593,8 @@ const TRANSLATIONS = {
     'tl7.desc': 'Automated job scraper that searches multiple platforms, filters by criteria and delivers results directly to inbox. Built with n8n and Python — no more manual searching.',
     'tl8.title': 'First own domain live',
     'tl8.desc': 'ninalearnsvibecoding.com is live. Hosted on Hetzner via Coolify. Vibe-coded with Claude as co-pilot. You\'re looking at it right now.',
+    'tl9.title': 'Cal.com Booking Agent',
+    'tl9.desc': 'Automated booking pipeline: Cal.com fires a webhook on every new appointment, an AI agent writes a personalised confirmation email in the guest\'s language, stores the booking in NocoDB and sends a Pushover push notification — all in n8n.',
     'tools.tag': '// stack',
     'tools.title': 'Tools &amp;<br>Tech Stack',
     'tool.n8n': 'Workflow Automation &amp; AI Agents. My daily tool for No-Code / Low-Code pipelines.',
@@ -1653,6 +1673,8 @@ const TRANSLATIONS = {
     'tl7.desc': 'Automatisierter Job-Scraper, der mehrere Plattformen durchsucht, nach Kriterien filtert und Ergebnisse direkt ins Postfach liefert. Mit n8n und Python gebaut — kein manuelles Suchen mehr.',
     'tl8.title': 'Erste eigene Domain live',
     'tl8.desc': 'ninalearnsvibecoding.com ist live. Gehostet auf Hetzner via Coolify. Vibe-coded mit Claude als Co-Pilot. Du schaust dir das gerade an.',
+    'tl9.title': 'Cal.com Booking Agent',
+    'tl9.desc': 'Automatisierte Buchungs-Pipeline: Cal.com feuert bei jedem neuen Termin einen Webhook, ein KI-Agent schreibt eine personalisierte Bestätigungsmail in der Sprache des Gastes, speichert die Buchung in NocoDB und sendet eine Pushover-Benachrichtigung — alles in n8n.',
     'tools.tag': '// stack',
     'tools.title': 'Tools &amp;<br>Tech Stack',
     'tool.n8n': 'Workflow-Automatisierung &amp; KI-Agenten. Mein tägliches Tool für No-Code / Low-Code-Pipelines.',
@@ -1731,6 +1753,8 @@ const TRANSLATIONS = {
     'tl7.desc': 'Scraper d\'emploi automatisé qui recherche sur plusieurs plateformes, filtre par critères et livre les résultats directement dans la boîte de réception. Construit avec n8n et Python — plus de recherche manuelle.',
     'tl8.title': 'Premier domaine personnel en ligne',
     'tl8.desc': 'ninalearnsvibecoding.com est en ligne. Hébergé sur Hetzner via Coolify. Vibe-codé avec Claude comme co-pilote. Vous le regardez en ce moment même.',
+    'tl9.title': 'Agent de réservation Cal.com',
+    'tl9.desc': 'Pipeline de réservation automatisé : Cal.com envoie un webhook à chaque nouveau rendez-vous, un agent IA rédige un e-mail de confirmation personnalisé dans la langue du client, enregistre la réservation dans NocoDB et envoie une notification Pushover — le tout dans n8n.',
     'tools.tag': '// stack',
     'tools.title': 'Outils &amp;<br>Stack technique',
     'tool.n8n': 'Automatisation de workflows &amp; agents IA. Mon outil quotidien pour les pipelines No-Code / Low-Code.',
@@ -1809,6 +1833,8 @@ const TRANSLATIONS = {
     'tl7.desc': 'Scraper di lavoro automatizzato che cerca su più piattaforme, filtra per criteri e consegna i risultati direttamente nella posta in arrivo. Costruito con n8n e Python — niente più ricerca manuale.',
     'tl8.title': 'Primo dominio personale online',
     'tl8.desc': 'ninalearnsvibecoding.com è online. Ospitato su Hetzner tramite Coolify. Vibe-coded con Claude come co-pilota. Lo stai guardando proprio adesso.',
+    'tl9.title': 'Agente di prenotazione Cal.com',
+    'tl9.desc': 'Pipeline di prenotazione automatizzata: Cal.com invia un webhook ad ogni nuovo appuntamento, un agente AI scrive un\'email di conferma personalizzata nella lingua dell\'ospite, salva la prenotazione in NocoDB e invia una notifica Pushover — tutto in n8n.',
     'tools.tag': '// stack',
     'tools.title': 'Strumenti &amp;<br>Tech Stack',
     'tool.n8n': 'Automazione workflow &amp; AI Agents. Il mio strumento quotidiano per pipeline No-Code / Low-Code.',
@@ -1887,6 +1913,8 @@ const TRANSLATIONS = {
     'tl7.desc': 'Scraper de empleos automatizado que busca en múltiples plataformas, filtra por criterios y entrega resultados directamente a la bandeja de entrada. Construido con n8n y Python — sin más búsqueda manual.',
     'tl8.title': 'Primer dominio propio en vivo',
     'tl8.desc': 'ninalearnsvibecoding.com está en vivo. Alojado en Hetzner via Coolify. Vibe-coded con Claude como copiloto. Lo estás viendo ahora mismo.',
+    'tl9.title': 'Agente de reservas Cal.com',
+    'tl9.desc': 'Pipeline de reservas automatizado: Cal.com dispara un webhook en cada nueva cita, un agente IA escribe un correo de confirmación personalizado en el idioma del invitado, guarda la reserva en NocoDB y envía una notificación Pushover — todo en n8n.',
     'tools.tag': '// stack',
     'tools.title': 'Herramientas &amp;<br>Tech Stack',
     'tool.n8n': 'Automatización de workflows y agentes IA. Mi herramienta diaria para pipelines No-Code / Low-Code.',
