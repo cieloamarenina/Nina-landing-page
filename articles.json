@@ -43,29 +43,29 @@
     "date": "2026-04-27",
     "translations": {
       "de": {
-        "title": "",
-        "tag": "",
-        "excerpt": ""
+        "title": "Die Zukunft des Codings: KI-Tools im Fokus",
+        "tag": "KI-Tools",
+        "excerpt": "Erfahren Sie, wie künstliche Intelligenz die Zukunft der Softwareentwicklung gestaltet und welche KI-Tools bereits heute den Unterschied machen."
       },
       "en": {
-        "title": "",
-        "tag": "",
-        "excerpt": ""
+        "title": "The Future of Coding: AI Tools in Focus",
+        "tag": "AI Tools",
+        "excerpt": "Discover how artificial intelligence is shaping the future of software development and which AI tools are already making a difference today."
       },
       "fr": {
-        "title": "",
-        "tag": "",
-        "excerpt": ""
+        "title": "L'Avenir du Codage: Les Outils IA en Vedette",
+        "tag": "Outils IA",
+        "excerpt": "Découvrez comment l'intelligence artificielle façonne l'avenir du développement logiciel et quels outils IA font déjà la différence aujourd'hui."
       },
       "es": {
-        "title": "",
-        "tag": "",
-        "excerpt": ""
+        "title": "El Futuro de la Codificación: Herramientas de IA en Enfoque",
+        "tag": "Herramientas de IA",
+        "excerpt": "Descubra cómo la inteligencia artificial está moldeando el futuro del desarrollo de software y qué herramientas de IA ya marcan la diferencia hoy."
       },
       "it": {
-        "title": "",
-        "tag": "",
-        "excerpt": ""
+        "title": "Il Futuro della Codifica: Strumenti di IA in Primo Piano",
+        "tag": "Strumenti di IA",
+        "excerpt": "Scopri come l'intelligenza artificiale sta plasmando il futuro dello sviluppo software e quali strumenti di IA stanno già facendo la differenza oggi."
       }
     }
   },
@@ -75,29 +75,29 @@
     "date": "2026-04-27",
     "translations": {
       "de": {
-        "title": "",
-        "tag": "",
-        "excerpt": ""
+        "title": "Neue Trends im AI Coding: Die Zukunft von Vibecoding",
+        "tag": "AI Coding Trends",
+        "excerpt": "Erkundigen Sie sich über die neuesten Trends in der KI-gesteuerten Programmierung und wie Vibecoding die Zukunft des Codings revolutioniert."
       },
       "en": {
-        "title": "",
-        "tag": "",
-        "excerpt": ""
+        "title": "New Trends in AI Coding: The Future of Vibecoding",
+        "tag": "AI Coding Trends",
+        "excerpt": "Learn about the latest trends in AI-driven programming and how Vibecoding is revolutionizing the future of coding."
       },
       "fr": {
-        "title": "",
-        "tag": "",
-        "excerpt": ""
+        "title": "Nouvelles Tendances du Codage IA: L'Avenir de Vibecoding",
+        "tag": "Tendances du Codage IA",
+        "excerpt": "Découvrez les dernières tendances de la programmation pilotée par l'IA et comment Vibecoding révolutionne l'avenir du codage."
       },
       "es": {
-        "title": "",
-        "tag": "",
-        "excerpt": ""
+        "title": "Nuevas Tendencias en Codificación con IA: El Futuro de Vibecoding",
+        "tag": "Tendencias de Codificación IA",
+        "excerpt": "Conozca las últimas tendencias en programación impulsada por IA y cómo Vibecoding está revolucionando el futuro de la codificación."
       },
       "it": {
-        "title": "",
-        "tag": "",
-        "excerpt": ""
+        "title": "Nuovi Trend nella Codifica IA: Il Futuro di Vibecoding",
+        "tag": "Tendenze della Codifica IA",
+        "excerpt": "Scopri gli ultimi trend nella programmazione guidata dall'IA e come Vibecoding sta rivoluzionando il futuro della codifica."
       }
     }
   },
@@ -107,29 +107,29 @@
     "date": "2026-04-27",
     "translations": {
       "de": {
-        "title": "",
-        "tag": "",
-        "excerpt": ""
+        "title": "Was ist Vibe Coding?",
+        "tag": "Vibe Coding",
+        "excerpt": "Ein umfassender Überblick über Vibe Coding - eine innovative Methode zur Softwareentwicklung, die Kreativität und KI-Unterstützung verbindet."
       },
       "en": {
-        "title": "",
-        "tag": "",
-        "excerpt": ""
+        "title": "What is Vibe Coding?",
+        "tag": "Vibe Coding",
+        "excerpt": "A comprehensive overview of Vibe Coding - an innovative approach to software development that combines creativity with AI support."
       },
       "fr": {
-        "title": "",
-        "tag": "",
-        "excerpt": ""
+        "title": "Qu'est-ce que le Vibe Coding?",
+        "tag": "Vibe Coding",
+        "excerpt": "Un aperçu complet du Vibe Coding - une approche innovante du développement logiciel qui combine créativité et support IA."
       },
       "es": {
-        "title": "",
-        "tag": "",
-        "excerpt": ""
+        "title": "¿Qué es Vibe Coding?",
+        "tag": "Vibe Coding",
+        "excerpt": "Una descripción general completa de Vibe Coding - un enfoque innovador del desarrollo de software que combina creatividad y soporte de IA."
       },
       "it": {
-        "title": "",
-        "tag": "",
-        "excerpt": ""
+        "title": "Cos'è il Vibe Coding?",
+        "tag": "Vibe Coding",
+        "excerpt": "Una panoramica completa del Vibe Coding - un approccio innovativo allo sviluppo software che combina creatività e supporto dell'IA."
       }
     }
   },
@@ -139,29 +139,29 @@
     "date": "2026-04-20",
     "translations": {
       "de": {
-        "title": "",
-        "tag": "",
-        "excerpt": ""
+        "title": "Erster N8N Workflow",
+        "tag": "N8N",
+        "excerpt": "Schritt-für-Schritt Anleitung zur Erstellung deines ersten N8N Workflows - Automatisierung leicht gemacht."
       },
       "en": {
-        "title": "",
-        "tag": "",
-        "excerpt": ""
+        "title": "Your First N8N Workflow",
+        "tag": "N8N",
+        "excerpt": "Step-by-step guide to creating your first N8N workflow - automation made easy."
       },
       "fr": {
-        "title": "",
-        "tag": "",
-        "excerpt": ""
+        "title": "Votre Premier Workflow N8N",
+        "tag": "N8N",
+        "excerpt": "Guide étape par étape pour créer votre premier workflow N8N - l'automatisation rendue facile."
       },
       "es": {
-        "title": "",
-        "tag": "",
-        "excerpt": ""
+        "title": "Tu Primer Flujo de Trabajo N8N",
+        "tag": "N8N",
+        "excerpt": "Guía paso a paso para crear tu primer flujo de trabajo N8N - automatización hecha fácil."
       },
       "it": {
-        "title": "",
-        "tag": "",
-        "excerpt": ""
+        "title": "Il Tuo Primo Workflow N8N",
+        "tag": "N8N",
+        "excerpt": "Guida passo dopo passo per creare il tuo primo workflow N8N - automazione resa facile."
       }
     }
   },
@@ -171,29 +171,29 @@
     "date": "2026-04-15",
     "translations": {
       "de": {
-        "title": "",
-        "tag": "",
-        "excerpt": ""
+        "title": "Claude Code: Erste Schritte",
+        "tag": "Claude Code",
+        "excerpt": "Eine Einführung in Claude Code - dem KI-gestützten Codier-Assistenten von Anthropic. Erste Schritte und praktische Tipps."
       },
       "en": {
-        "title": "",
-        "tag": "",
-        "excerpt": ""
+        "title": "Claude Code: Getting Started",
+        "tag": "Claude Code",
+        "excerpt": "An introduction to Claude Code - Anthropic's AI-powered coding assistant. First steps and practical tips."
       },
       "fr": {
-        "title": "",
-        "tag": "",
-        "excerpt": ""
+        "title": "Claude Code: Pour Commencer",
+        "tag": "Claude Code",
+        "excerpt": "Une introduction à Claude Code - l'assistant de codage alimenté par l'IA d'Anthropic. Premiers pas et conseils pratiques."
       },
       "es": {
-        "title": "",
-        "tag": "",
-        "excerpt": ""
+        "title": "Claude Code: Primeros Pasos",
+        "tag": "Claude Code",
+        "excerpt": "Una introducción a Claude Code - el asistente de codificación impulsado por IA de Anthropic. Primeros pasos y consejos prácticos."
       },
       "it": {
-        "title": "",
-        "tag": "",
-        "excerpt": ""
+        "title": "Claude Code: I Primi Passi",
+        "tag": "Claude Code",
+        "excerpt": "Un'introduzione a Claude Code - l'assistente di codifica alimentato da IA di Anthropic. I primi passi e consigli pratici."
       }
     }
   }
