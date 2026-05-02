@@ -1457,6 +1457,7 @@ initVisitors();
       <button class="pl-btn" onclick="switchPlaylist('3iL63Gb5RO0Mn3SL4aTgxD','Super-Héros',this)">⚡ Hero</button>
       <button class="pl-btn" onclick="switchPlaylist('1mWqV6dDAdLtRutjgqa9nZ','Orange County',this)">🌅 OC</button>
       <button class="pl-btn" onclick="switchPlaylist('0rF7rgJx8xR5aU87Y4qlSP','Testing 123',this)">🎛️ Test</button>
+      <button class="pl-btn" onclick="switchPlaylist('53ebDyYHhHmElRY1Epe97N','Nina is coding',this)">💻 Coding</button>
     </div>
     <iframe id="pablo-iframe"
       src="https://open.spotify.com/embed/playlist/37i9dQZF1DX4WYpdgoIcn6?utm_source=generator&theme=0"
@@ -2010,7 +2011,7 @@ applyLang(detectLang());
     }).join('');
   }
 
-  fetch('articles.json')
+  fetch('https://raw.githubusercontent.com/cieloamarenina/Nina-landing-page/main/articles.json')
     .then(r => r.json())
     .then(articles => {
       _teaserArticles = articles;
