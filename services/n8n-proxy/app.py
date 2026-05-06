@@ -36,7 +36,7 @@ def _n8n_get(path: str, params: dict | None = None) -> dict:
 
 def _today_utc_iso() -> str:
     now = datetime.now(timezone.utc)
-    return now.replace(hour=0, minute=0, second=0, microsecond=0).isoformat()
+    return now.replace(hour=0, minute=0, second=0, microsecond=0).strftime("%Y-%m-%dT%H:%M:%SZ")
 
 
 def _require_jwt(f):
@@ -71,19 +71,30 @@ def _fetch_all_workflows() -> list:
     return results
 
 
-def _fetch_executions_since(iso_timestamp: str, status: str | None = None) -> list:
+def _fetch_executions_since(iso_timestamp: str) -> list:
+    """Fetch executions, stopping when startedAt < iso_timestamp (date-filter in Python)."""
+    cutoff = datetime.strptime(iso_timestamp, "%Y-%m-%dT%H:%M:%SZ").replace(tzinfo=timezone.utc)
     results = []
     cursor = None
     while True:
-        params = {"limit": 250, "startedAfter": iso_timestamp, "includeData": "false"}
-        if status:
-            params["status"] = status
+        params = {"limit": 250, "includeData": "false"}
         if cursor:
             params["cursor"] = cursor
         page = _n8n_get("/executions", params=params)
-        results.extend(page.get("data", []))
+        batch = page.get("data", [])
+        for ex in batch:
+            started = ex.get("startedAt", "")
+            if not started:
+                continue
+            try:
+                ex_dt = _parse_dt(started).replace(tzinfo=timezone.utc)
+            except Exception:
+                continue
+            if ex_dt < cutoff:
+                return results  # executions are newest-first; stop here
+            results.append(ex)
         cursor = page.get("nextCursor")
-        if not cursor:
+        if not cursor or not batch:
             break
     return results
 
