@@ -514,6 +514,83 @@
     transition: width 1s ease;
   }
 
+  /* AUTOMATIONS */
+  .auto-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    margin-bottom: 2rem;
+  }
+
+  .auto-stat-card {
+    background: var(--card);
+    padding: 2rem;
+    text-align: center;
+  }
+
+  .auto-stat-value {
+    font-family: var(--font-display);
+    font-size: clamp(2rem, 4vw, 3rem);
+    font-weight: 800;
+    color: var(--accent);
+    line-height: 1;
+    margin-bottom: 0.4rem;
+  }
+
+  .auto-stat-label {
+    font-size: 0.72rem;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  .auto-stat-sub {
+    font-size: 0.7rem;
+    color: var(--muted);
+    margin-top: 6px;
+    opacity: 0.7;
+  }
+
+  .auto-indicators {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 2.5rem;
+    flex-wrap: wrap;
+  }
+
+  .auto-indicator {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 16px;
+    font-size: 0.78rem;
+    color: var(--muted);
+  }
+
+  .auto-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 24px;
+    background: transparent;
+    border: 1px solid var(--accent);
+    border-radius: 8px;
+    color: var(--accent);
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    text-decoration: none;
+    transition: background 0.2s;
+  }
+
+  .auto-cta:hover { background: rgba(0,212,255,0.08); }
+
   /* FOOTER */
   footer {
     position: relative;
@@ -923,6 +1000,7 @@
     <li><a href="#journey" data-i18n="nav.journey">Journey</a></li>
     <li><a href="#tools" data-i18n="nav.stack">Stack</a></li>
     <li><a href="#visitors" data-i18n="nav.visitors">Visitors</a></li>
+    <li><a href="#automations" data-i18n="nav.automations">Automations</a></li>
     <li><a href="blog.html">Blog</a></li>
     <li><a href="#contact" data-i18n="nav.contact">Contact</a></li>
   </ul>
@@ -1159,6 +1237,54 @@
       <div class="tool-desc" data-i18n="tool.adminer">Lightweight database UI. Direct access to PostgreSQL — query, inspect and manage tables in the browser.</div>
       <div class="tool-level"><div class="tool-level-fill" style="width:50%"></div></div>
     </div>
+    <div class="tool-card reveal">
+      <span class="tool-icon">🎵</span>
+      <div class="tool-name">Spotify</div>
+      <div class="tool-desc" data-i18n="tool.spotify">Music API integration via n8n — automated playlists and listening data workflows.</div>
+      <div class="tool-level"><div class="tool-level-fill" style="width:35%"></div></div>
+    </div>
+    <div class="tool-card reveal">
+      <span class="tool-icon">🔍</span>
+      <div class="tool-name">SearXNG</div>
+      <div class="tool-desc" data-i18n="tool.searxng">Self-hosted privacy search engine. Powers AI agent web search without Google tracking.</div>
+      <div class="tool-level"><div class="tool-level-fill" style="width:40%"></div></div>
+    </div>
+    <div class="tool-card reveal">
+      <span class="tool-icon">☁️</span>
+      <div class="tool-name">Nextcloud</div>
+      <div class="tool-desc" data-i18n="tool.nextcloud">Self-hosted file storage and collaboration — connected to n8n for file automation workflows.</div>
+      <div class="tool-level"><div class="tool-level-fill" style="width:45%"></div></div>
+    </div>
+    <div class="tool-card reveal">
+      <span class="tool-icon">🧠</span>
+      <div class="tool-name">Mistral</div>
+      <div class="tool-desc" data-i18n="tool.mistral">Open-source LLM — newest addition. Used for AI agent workflows alongside Claude.</div>
+      <div class="tool-level"><div class="tool-level-fill" style="width:25%"></div></div>
+    </div>
+    <div class="tool-card reveal">
+      <span class="tool-icon">✈️</span>
+      <div class="tool-name">Telegram</div>
+      <div class="tool-desc" data-i18n="tool.telegram">Bot API for notifications and interaction. Running a live Telegram bot via n8n.</div>
+      <div class="tool-level"><div class="tool-level-fill" style="width:55%"></div></div>
+    </div>
+    <div class="tool-card reveal">
+      <span class="tool-icon">📁</span>
+      <div class="tool-name">Google Drive</div>
+      <div class="tool-desc" data-i18n="tool.gdrive">File upload automation — Gmail attachments auto-sorted into Drive folders via n8n.</div>
+      <div class="tool-level"><div class="tool-level-fill" style="width:50%"></div></div>
+    </div>
+    <div class="tool-card reveal">
+      <span class="tool-icon">📅</span>
+      <div class="tool-name">Cal.com</div>
+      <div class="tool-desc" data-i18n="tool.calcom">Open-source scheduling tool. Powers the Booking Agent workflow — automated calendar management.</div>
+      <div class="tool-level"><div class="tool-level-fill" style="width:40%"></div></div>
+    </div>
+    <div class="tool-card reveal">
+      <span class="tool-icon">🔔</span>
+      <div class="tool-name">Pushover</div>
+      <div class="tool-desc" data-i18n="tool.pushover">Push notification service. Workflows send real-time alerts to phone via Pushover.</div>
+      <div class="tool-level"><div class="tool-level-fill" style="width:45%"></div></div>
+    </div>
   </div>
 </section>
 
@@ -1177,6 +1303,37 @@
   <div id="online-countries" class="online-countries reveal"></div>
   <div id="visitor-map" class="reveal"></div>
   <div id="flag-grid" class="flag-grid reveal"></div>
+</section>
+
+<!-- AUTOMATIONS -->
+<section id="automations">
+  <div class="section-header reveal">
+    <div class="section-tag" data-i18n="automations.tag">// automations</div>
+    <h2 class="section-title" data-i18n="automations.title">My n8n<br>Automations</h2>
+  </div>
+  <div class="auto-stats-grid reveal">
+    <div class="auto-stat-card">
+      <div class="auto-stat-value" id="auto-total">—</div>
+      <div class="auto-stat-label" data-i18n="automations.workflows">Workflows</div>
+      <div class="auto-stat-sub" id="auto-active-sub"></div>
+    </div>
+    <div class="auto-stat-card">
+      <div class="auto-stat-value" id="auto-runs">—</div>
+      <div class="auto-stat-label" data-i18n="automations.runs">Runs today</div>
+    </div>
+    <div class="auto-stat-card">
+      <div class="auto-stat-value" id="auto-success">—</div>
+      <div class="auto-stat-label" data-i18n="automations.success">Success Rate</div>
+      <div class="auto-stat-sub" id="auto-error-sub"></div>
+    </div>
+  </div>
+  <div class="auto-indicators reveal">
+    <div class="auto-indicator" id="auto-status-indicator">
+      <span class="live-dot" style="background:var(--muted);box-shadow:none;animation:none"></span>
+      <span data-i18n="automations.loading">Loading…</span>
+    </div>
+  </div>
+  <a href="/dashboard" class="auto-cta reveal" data-i18n="automations.cta">→ View Dashboard</a>
 </section>
 
 <!-- BLOG TEASER -->
@@ -1566,7 +1723,7 @@ const TRANSLATIONS = {
   en: {
     'nav.about': 'About',
     'nav.journey': 'Journey',
-    'nav.stack': 'Stack',
+    'nav.stack': 'Tools',
     'nav.visitors': 'Visitors',
     'nav.contact': 'Contact',
     'hero.badge': 'Live &amp; Learning',
@@ -1615,6 +1772,14 @@ const TRANSLATIONS = {
     'tool.react': 'Frontend library for the Portfolio Tracker. First real React project — built with Vite and Tailwind.',
     'tool.github': 'Version control and deployment trigger. Every push to main auto-deploys via Coolify.',
     'tool.adminer': 'Lightweight database UI. Direct access to PostgreSQL — query, inspect and manage tables in the browser.',
+    'tool.spotify': 'Music API integration via n8n — automated playlists and listening data workflows.',
+    'tool.searxng': 'Self-hosted privacy search engine. Powers AI agent web search without Google tracking.',
+    'tool.nextcloud': 'Self-hosted file storage and collaboration — connected to n8n for file automation workflows.',
+    'tool.mistral': 'Open-source LLM — newest addition. Used for AI agent workflows alongside Claude.',
+    'tool.telegram': 'Bot API for notifications and interaction. Running a live Telegram bot via n8n.',
+    'tool.gdrive': 'File upload automation — Gmail attachments auto-sorted into Drive folders via n8n.',
+    'tool.calcom': 'Open-source scheduling tool. Powers the Booking Agent workflow — automated calendar management.',
+    'tool.pushover': 'Push notification service. Workflows send real-time alerts to phone via Pushover.',
     'visitors.tag': '// visitors',
     'visitors.title': 'Reading this<br>from where?',
     'visitors.online': 'online right now',
@@ -1641,12 +1806,24 @@ const TRANSLATIONS = {
     'blog.title': 'Vibe Coding<br>News',
     'blog.cta': 'Read all articles →',
     'blog.loading': 'Loading articles...',
+    'nav.automations': 'Automations',
+    'automations.tag': '// automations',
+    'automations.title': 'My n8n<br>Automations',
+    'automations.workflows': 'Workflows',
+    'automations.runs': 'Runs today',
+    'automations.success': 'Success Rate',
+    'automations.cta': '→ View Dashboard',
+    'automations.loading': 'Loading…',
+    'automations.active': 'active',
+    'automations.errors': 'errors (24h)',
+    'automations.online': 'n8n online',
+    'automations.offline': 'n8n offline',
   },
 
   de: {
     'nav.about': 'Über mich',
     'nav.journey': 'Journey',
-    'nav.stack': 'Stack',
+    'nav.stack': 'Tools',
     'nav.visitors': 'Besucher',
     'nav.contact': 'Kontakt',
     'hero.badge': 'Live &amp; am Lernen',
@@ -1695,6 +1872,14 @@ const TRANSLATIONS = {
     'tool.react': 'Frontend-Bibliothek für den Portfolio Tracker. Erstes echtes React-Projekt — gebaut mit Vite und Tailwind.',
     'tool.github': 'Versionskontrolle und Deployment-Trigger. Jeder Push zu Main wird automatisch über Coolify deployed.',
     'tool.adminer': 'Leichtgewichtige Datenbank-UI. Direkter Zugriff auf PostgreSQL — Tabellen im Browser abfragen, inspizieren und verwalten.',
+    'tool.spotify': 'Musik-API-Integration via n8n — automatisierte Playlists und Listening-Data-Workflows.',
+    'tool.searxng': 'Self-hosted Datenschutz-Suchmaschine. Gibt AI Agents Web-Suche ohne Google-Tracking.',
+    'tool.nextcloud': 'Self-hosted Dateispeicher — verbunden mit n8n für Datei-Automatisierungs-Workflows.',
+    'tool.mistral': 'Open-Source LLM — neueste Ergänzung. Für AI-Agent-Workflows neben Claude.',
+    'tool.telegram': 'Bot-API für Benachrichtigungen und Interaktion. Live Telegram-Bot läuft via n8n.',
+    'tool.gdrive': 'Datei-Upload-Automatisierung — Gmail-Anhänge werden automatisch in Drive-Ordner sortiert.',
+    'tool.calcom': 'Open-Source Buchungstool. Treibt den Booking-Agent-Workflow an — automatisches Kalender-Management.',
+    'tool.pushover': 'Push-Benachrichtigungs-Service. Workflows senden Echtzeit-Alerts aufs Handy.',
     'visitors.tag': '// besucher',
     'visitors.title': 'Von wo aus<br>liest du das?',
     'visitors.online': 'gerade online',
@@ -1721,12 +1906,24 @@ const TRANSLATIONS = {
     'blog.title': 'Vibe Coding<br>News',
     'blog.cta': 'Alle Artikel lesen →',
     'blog.loading': 'Lade Artikel...',
+    'nav.automations': 'Automationen',
+    'automations.tag': '// automatisierungen',
+    'automations.title': 'Meine n8n<br>Automatisierungen',
+    'automations.workflows': 'Workflows',
+    'automations.runs': 'Runs heute',
+    'automations.success': 'Erfolgsrate',
+    'automations.cta': '→ Dashboard öffnen',
+    'automations.loading': 'Wird geladen…',
+    'automations.active': 'aktiv',
+    'automations.errors': 'Fehler (24h)',
+    'automations.online': 'n8n online',
+    'automations.offline': 'n8n offline',
   },
 
   fr: {
     'nav.about': 'À propos',
     'nav.journey': 'Parcours',
-    'nav.stack': 'Stack',
+    'nav.stack': 'Outils',
     'nav.visitors': 'Visiteurs',
     'nav.contact': 'Contact',
     'hero.badge': 'En direct &amp; en apprentissage',
@@ -1775,6 +1972,14 @@ const TRANSLATIONS = {
     'tool.react': 'Bibliothèque frontend pour le Portfolio Tracker. Premier vrai projet React — construit avec Vite et Tailwind.',
     'tool.github': 'Contrôle de version et déclencheur de déploiement. Chaque push sur main se déploie automatiquement via Coolify.',
     'tool.adminer': 'Interface de base de données légère. Accès direct à PostgreSQL — interroger, inspecter et gérer les tables dans le navigateur.',
+    'tool.spotify': 'Intégration API musique via n8n — playlists automatisées et workflows de données d\'écoute.',
+    'tool.searxng': 'Moteur de recherche auto-hébergé respectueux de la vie privée. Pour les agents IA sans tracking Google.',
+    'tool.nextcloud': 'Stockage de fichiers auto-hébergé — connecté à n8n pour les workflows d\'automatisation.',
+    'tool.mistral': 'LLM open-source — dernier ajout. Utilisé pour les workflows d\'agents IA aux côtés de Claude.',
+    'tool.telegram': 'API Bot pour notifications et interactions. Bot Telegram en direct via n8n.',
+    'tool.gdrive': 'Automatisation d\'upload — pièces jointes Gmail triées automatiquement dans Drive.',
+    'tool.calcom': 'Outil de planification open-source. Alimente le Booking Agent — gestion automatique du calendrier.',
+    'tool.pushover': 'Service de notifications push. Les workflows envoient des alertes en temps réel sur le téléphone.',
     'visitors.tag': '// visiteurs',
     'visitors.title': 'Vous lisez ceci<br>depuis où?',
     'visitors.online': 'en ligne maintenant',
@@ -1801,12 +2006,24 @@ const TRANSLATIONS = {
     'blog.title': 'Vibe Coding<br>News',
     'blog.cta': 'Lire tous les articles →',
     'blog.loading': 'Chargement des articles...',
+    'nav.automations': 'Automatisations',
+    'automations.tag': '// automatisations',
+    'automations.title': 'Mes<br>Automatisations n8n',
+    'automations.workflows': 'Workflows',
+    'automations.runs': 'Runs aujourd\'hui',
+    'automations.success': 'Taux de réussite',
+    'automations.cta': '→ Voir le tableau',
+    'automations.loading': 'Chargement…',
+    'automations.active': 'actifs',
+    'automations.errors': 'erreurs (24h)',
+    'automations.online': 'n8n en ligne',
+    'automations.offline': 'n8n hors ligne',
   },
 
   it: {
     'nav.about': 'Chi sono',
     'nav.journey': 'Percorso',
-    'nav.stack': 'Stack',
+    'nav.stack': 'Strumenti',
     'nav.visitors': 'Visitatori',
     'nav.contact': 'Contatto',
     'hero.badge': 'In diretta &amp; in apprendimento',
@@ -1855,6 +2072,14 @@ const TRANSLATIONS = {
     'tool.react': 'Libreria frontend per il Portfolio Tracker. Primo vero progetto React — costruito con Vite e Tailwind.',
     'tool.github': 'Controllo versione e trigger di deployment. Ogni push su main si distribuisce automaticamente tramite Coolify.',
     'tool.adminer': 'Interfaccia database leggera. Accesso diretto a PostgreSQL — interrogare, ispezionare e gestire tabelle nel browser.',
+    'tool.spotify': 'Integrazione API musica via n8n — playlist automatizzate e workflow di dati di ascolto.',
+    'tool.searxng': 'Motore di ricerca self-hosted per la privacy. Alimenta la ricerca web degli agenti IA senza tracking Google.',
+    'tool.nextcloud': 'Archiviazione file self-hosted — connessa a n8n per i workflow di automazione file.',
+    'tool.mistral': 'LLM open-source — ultima aggiunta. Usato per i workflow degli agenti IA insieme a Claude.',
+    'tool.telegram': 'API Bot per notifiche e interazione. Bot Telegram live tramite n8n.',
+    'tool.gdrive': 'Automazione upload file — allegati Gmail ordinati automaticamente nelle cartelle Drive.',
+    'tool.calcom': 'Strumento di pianificazione open-source. Alimenta il Booking Agent — gestione calendario automatica.',
+    'tool.pushover': 'Servizio di notifiche push. I workflow inviano alert in tempo reale al telefono.',
     'visitors.tag': '// visitatori',
     'visitors.title': 'Da dove<br>stai leggendo?',
     'visitors.online': 'online adesso',
@@ -1881,12 +2106,24 @@ const TRANSLATIONS = {
     'blog.title': 'Vibe Coding<br>News',
     'blog.cta': 'Leggi tutti gli articoli →',
     'blog.loading': 'Caricamento articoli...',
+    'nav.automations': 'Automazioni',
+    'automations.tag': '// automazioni',
+    'automations.title': 'Le mie<br>Automazioni n8n',
+    'automations.workflows': 'Workflow',
+    'automations.runs': 'Runs oggi',
+    'automations.success': 'Tasso di successo',
+    'automations.cta': '→ Apri dashboard',
+    'automations.loading': 'Caricamento…',
+    'automations.active': 'attivi',
+    'automations.errors': 'errori (24h)',
+    'automations.online': 'n8n online',
+    'automations.offline': 'n8n offline',
   },
 
   es: {
     'nav.about': 'Sobre mí',
     'nav.journey': 'Trayectoria',
-    'nav.stack': 'Stack',
+    'nav.stack': 'Herramientas',
     'nav.visitors': 'Visitantes',
     'nav.contact': 'Contacto',
     'hero.badge': 'En vivo &amp; aprendiendo',
@@ -1935,6 +2172,14 @@ const TRANSLATIONS = {
     'tool.react': 'Biblioteca frontend para el Portfolio Tracker. Primer proyecto real de React — construido con Vite y Tailwind.',
     'tool.github': 'Control de versiones y disparador de despliegue. Cada push a main se despliega automáticamente via Coolify.',
     'tool.adminer': 'Interfaz de base de datos ligera. Acceso directo a PostgreSQL — consultar, inspeccionar y gestionar tablas en el navegador.',
+    'tool.spotify': 'Integración API de música via n8n — playlists automatizadas y workflows de datos de escucha.',
+    'tool.searxng': 'Motor de búsqueda autoalojado para privacidad. Alimenta la búsqueda web de agentes IA sin tracking de Google.',
+    'tool.nextcloud': 'Almacenamiento de archivos autoalojado — conectado a n8n para workflows de automatización.',
+    'tool.mistral': 'LLM de código abierto — última incorporación. Usado para workflows de agentes IA junto a Claude.',
+    'tool.telegram': 'API Bot para notificaciones e interacción. Bot de Telegram en vivo via n8n.',
+    'tool.gdrive': 'Automatización de carga — adjuntos de Gmail ordenados automáticamente en carpetas de Drive.',
+    'tool.calcom': 'Herramienta de programación open-source. Impulsa el Booking Agent — gestión automática del calendario.',
+    'tool.pushover': 'Servicio de notificaciones push. Los workflows envían alertas en tiempo real al teléfono.',
     'visitors.tag': '// visitantes',
     'visitors.title': '¿Desde dónde<br>lees esto?',
     'visitors.online': 'en línea ahora',
@@ -1961,6 +2206,18 @@ const TRANSLATIONS = {
     'blog.title': 'Vibe Coding<br>News',
     'blog.cta': 'Leer todos los artículos →',
     'blog.loading': 'Cargando artículos...',
+    'nav.automations': 'Automatizaciones',
+    'automations.tag': '// automatizaciones',
+    'automations.title': 'Mis<br>Automatizaciones n8n',
+    'automations.workflows': 'Workflows',
+    'automations.runs': 'Runs hoy',
+    'automations.success': 'Tasa de éxito',
+    'automations.cta': '→ Ver dashboard',
+    'automations.loading': 'Cargando…',
+    'automations.active': 'activos',
+    'automations.errors': 'errores (24h)',
+    'automations.online': 'n8n en línea',
+    'automations.offline': 'n8n sin conexión',
   }
 };
 
@@ -2032,5 +2289,45 @@ applyLang(detectLang());
 </script>
 
 <script src="chat-widget.js?v=20260506-1332" defer></script>
+
+<script>
+// n8n public stats
+const N8N_PROXY = '/n8n-api';
+
+async function loadAutoStats() {
+  const lang = localStorage.getItem('nlvc_lang') || 'en';
+  const t = TRANSLATIONS[lang] || TRANSLATIONS.en;
+  try {
+    const r = await fetch(`${N8N_PROXY}/api/public-stats`);
+    if (!r.ok) throw new Error('api error');
+    const d = await r.json();
+
+    document.getElementById('auto-total').textContent = d.total_workflows ?? '—';
+    document.getElementById('auto-runs').textContent =
+      d.runs_today != null ? d.runs_today.toLocaleString() : '—';
+    document.getElementById('auto-success').textContent =
+      d.success_rate != null ? `${d.success_rate}%` : '—';
+    document.getElementById('auto-active-sub').textContent =
+      d.active_workflows != null ? `${d.active_workflows} ${t['automations.active']}` : '';
+    document.getElementById('auto-error-sub').textContent =
+      d.errors_24h != null ? `${d.errors_24h} ${t['automations.errors']}` : '';
+
+    const ind = document.getElementById('auto-status-indicator');
+    ind.innerHTML = `<span class="live-dot"></span><span>${t['automations.online']}</span>`;
+  } catch {
+    const ind = document.getElementById('auto-status-indicator');
+    if (ind) ind.innerHTML =
+      `<span class="live-dot" style="background:var(--muted);box-shadow:none;animation:none"></span>` +
+      `<span>${t['automations.offline']}</span>`;
+  }
+}
+
+loadAutoStats();
+
+// Re-run on language switch so labels update
+document.querySelectorAll('.lang-btn').forEach(btn =>
+  btn.addEventListener('click', () => setTimeout(loadAutoStats, 50))
+);
+</script>
 </body>
 </html>

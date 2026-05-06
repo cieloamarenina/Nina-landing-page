@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>n8n Dashboard — NLC</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%230d1320'/><text x='2' y='22' font-family='monospace' font-weight='bold' font-size='13' fill='%2300d4ff'>n8n</text></svg>">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=JetBrains+Mono:wght@300;400;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #080c14; --surface: #0d1320; --card: #111827;
+      --border: #1e2d45; --accent: #00d4ff; --text: #e8f0fe;
+      --muted: #6b7fa3; --red: #f85149; --green: #3fb950;
+      --font-display: 'Syne', sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: var(--bg); color: var(--text); font-family: var(--font-mono); min-height: 100vh; }
+
+    /* ── LOGIN ── */
+    #login-screen { display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 2rem; }
+    .login-box { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 2.5rem; width: 100%; max-width: 400px; }
+    .login-title { font-family: var(--font-display); font-size: 1.4rem; font-weight: 800; margin-bottom: 0.4rem; color: var(--accent); }
+    .login-sub { font-size: 0.78rem; color: var(--muted); margin-bottom: 2rem; }
+    .login-label { font-size: 0.72rem; color: var(--muted); margin-bottom: 6px; display: block; }
+    .login-input { width: 100%; background: var(--card); border: 1px solid var(--border); border-radius: 6px; padding: 10px 14px; color: var(--text); font-family: var(--font-mono); font-size: 0.85rem; outline: none; margin-bottom: 1rem; }
+    .login-input:focus { border-color: var(--accent); }
+    .login-btn { width: 100%; background: var(--accent); color: var(--bg); border: none; border-radius: 6px; padding: 11px; font-family: var(--font-mono); font-size: 0.85rem; font-weight: 600; cursor: pointer; transition: opacity 0.15s; }
+    .login-btn:hover { opacity: 0.85; }
+    .login-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+    .login-msg { font-size: 0.78rem; margin-top: 0.8rem; min-height: 1.2em; }
+    .login-msg.error { color: var(--red); }
+    .login-msg.success { color: var(--green); }
+    .login-back { font-size: 0.75rem; color: var(--muted); margin-top: 0.8rem; cursor: pointer; text-decoration: underline; background: none; border: none; font-family: var(--font-mono); }
+    .login-home { display: inline-block; margin-top: 1.5rem; font-size: 0.72rem; color: var(--muted); text-decoration: none; }
+    .login-home:hover { color: var(--accent); }
+
+    /* ── DASHBOARD ── */
+    #dashboard-screen { display: none; }
+
+    .db-header { border-bottom: 1px solid var(--border); padding: 14px 32px; display: flex; align-items: center; justify-content: space-between; background: var(--surface); }
+    .db-logo { display: flex; align-items: center; gap: 10px; font-family: var(--font-display); font-weight: 700; font-size: 1rem; }
+    .db-live-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 8px var(--accent); animation: pulse 2s infinite; }
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.4} }
+    .db-header-right { display: flex; align-items: center; gap: 1.5rem; }
+    .db-user { font-size: 0.72rem; color: var(--muted); }
+    .db-logout { font-size: 0.72rem; color: var(--muted); cursor: pointer; background: none; border: none; font-family: var(--font-mono); text-decoration: underline; }
+    .db-logout:hover { color: var(--red); }
+
+    .db-stats { display: grid; grid-template-columns: repeat(4,1fr); gap: 1px; background: var(--border); border-bottom: 1px solid var(--border); }
+    .db-stat { background: var(--surface); padding: 18px 28px; }
+    .db-stat-label { font-size: 0.67rem; color: var(--muted); text-transform: uppercase; letter-spacing:.08em; margin-bottom: 5px; }
+    .db-stat-value { font-family: var(--font-display); font-size: 1.7rem; font-weight: 800; }
+    .db-stat-value.cyan { color: var(--accent); }
+    .db-stat-value.red { color: var(--red); }
+    .db-stat-value.white { color: var(--text); }
+    .db-stat-sub { font-size: 0.68rem; color: var(--muted); margin-top: 3px; }
+
+    .db-error-banner { background: rgba(248,81,73,.1); border: 1px solid rgba(248,81,73,.25); color: var(--red); padding: 12px 32px; font-size: 0.8rem; display: none; }
+
+    .db-toolbar { padding: 14px 32px; display: flex; gap: 10px; align-items: center; border-bottom: 1px solid var(--border); flex-wrap: wrap; }
+    .db-search { flex: 1; min-width: 180px; max-width: 280px; background: var(--card); border: 1px solid var(--border); border-radius: 6px; padding: 7px 12px; color: var(--text); font-size: 0.82rem; font-family: var(--font-mono); outline: none; }
+    .db-search:focus { border-color: var(--accent); }
+    .db-search::placeholder { color: var(--muted); }
+    .db-filter { background: var(--card); border: 1px solid var(--border); border-radius: 6px; padding: 6px 13px; color: var(--muted); font-size: 0.77rem; cursor: pointer; font-family: var(--font-mono); transition: all .15s; }
+    .db-filter.active, .db-filter:hover { border-color: var(--accent); color: var(--accent); }
+    .db-refresh { margin-left: auto; background: rgba(0,212,255,.08); border: 1px solid rgba(0,212,255,.25); border-radius: 6px; padding: 6px 14px; color: var(--accent); font-size: 0.77rem; cursor: pointer; font-family: var(--font-mono); }
+    .db-refresh:hover { background: rgba(0,212,255,.15); }
+
+    .db-table-wrap { padding: 0 32px 40px; overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; margin-top: 14px; }
+    thead th { text-align: left; font-size: 0.67rem; color: var(--muted); text-transform: uppercase; letter-spacing:.07em; padding: 10px 12px; border-bottom: 1px solid var(--border); cursor: pointer; white-space: nowrap; user-select: none; }
+    thead th:hover { color: var(--text); }
+    thead th.sorted { color: var(--accent); }
+    tbody tr { border-bottom: 1px solid var(--border); transition: background .1s; }
+    tbody tr:hover { background: rgba(255,255,255,.02); }
+    td { padding: 11px 12px; font-size: 0.82rem; }
+    .wf-name { font-weight: 500; }
+    .mono { font-family: var(--font-mono); font-size: 0.76rem; color: var(--muted); }
+    .badge { display: inline-flex; align-items: center; gap: 5px; font-size: 0.69rem; font-family: var(--font-mono); padding: 3px 7px; border-radius: 4px; }
+    .b-active { background: rgba(63,185,80,.1); color: var(--green); border: 1px solid rgba(63,185,80,.2); }
+    .b-inactive { background: rgba(107,127,163,.08); color: var(--muted); border: 1px solid rgba(107,127,163,.18); }
+    .b-success { background: rgba(0,212,255,.07); color: var(--accent); border: 1px solid rgba(0,212,255,.18); }
+    .b-error { background: rgba(248,81,73,.1); color: var(--red); border: 1px solid rgba(248,81,73,.22); }
+    .b-none { background: rgba(107,127,163,.06); color: var(--muted); border: 1px solid rgba(107,127,163,.12); }
+    .dot-sm { width: 6px; height: 6px; border-radius: 50%; display: inline-block; }
+    .dot-g { background: var(--green); }
+    .dot-gray { background: var(--muted); }
+    .open-btn { background: none; border: 1px solid var(--border); border-radius: 4px; padding: 4px 9px; color: var(--muted); font-size: 0.72rem; cursor: pointer; font-family: var(--font-mono); transition: all .15s; text-decoration: none; display: inline-block; }
+    .open-btn:hover { border-color: var(--accent); color: var(--accent); }
+    .empty-row td { text-align: center; color: var(--muted); padding: 3rem; font-size: 0.8rem; }
+
+    @media (max-width: 700px) {
+      .db-header { padding: 12px 16px; }
+      .db-stat { padding: 14px 16px; }
+      .db-stats { grid-template-columns: repeat(2,1fr); }
+      .db-toolbar { padding: 12px 16px; }
+      .db-table-wrap { padding: 0 16px 32px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="login-screen">
+  <div class="login-box">
+    <div class="login-title">n8n Dashboard</div>
+    <div class="login-sub">NLC privat — nur für Nina</div>
+
+    <div id="step-email">
+      <label class="login-label">E-Mail</label>
+      <input class="login-input" type="email" id="login-email" placeholder="deine@email.de" autocomplete="email">
+      <button class="login-btn" id="btn-send-code">Code senden</button>
+      <div class="login-msg" id="msg-1"></div>
+    </div>
+
+    <div id="step-code" style="display:none">
+      <label class="login-label">6-stelliger Code aus der E-Mail</label>
+      <input class="login-input" type="text" id="login-code" placeholder="123456" maxlength="6" inputmode="numeric">
+      <button class="login-btn" id="btn-verify">Einloggen</button>
+      <div class="login-msg" id="msg-2"></div>
+      <button class="login-back" id="btn-back">← Andere E-Mail eingeben</button>
+    </div>
+
+    <a href="/" class="login-home">← Zurück zur Website</a>
+  </div>
+</div>
+
+<!-- DASHBOARD -->
+<div id="dashboard-screen">
+  <div class="db-header">
+    <div class="db-logo">
+      <span class="db-live-dot"></span>
+      n8n Dashboard
+      <span style="color:var(--muted);font-weight:400;font-size:.82rem">/ ninalearnsvibecoding</span>
+    </div>
+    <div class="db-header-right">
+      <span class="db-user" id="db-user-email"></span>
+      <button class="db-logout" id="btn-logout">Ausloggen</button>
+    </div>
+  </div>
+
+  <div class="db-error-banner" id="db-error-banner"></div>
+
+  <div class="db-stats">
+    <div class="db-stat">
+      <div class="db-stat-label">Workflows gesamt</div>
+      <div class="db-stat-value white" id="st-total">—</div>
+      <div class="db-stat-sub" id="st-active-sub"></div>
+    </div>
+    <div class="db-stat">
+      <div class="db-stat-label">Ausführungen heute</div>
+      <div class="db-stat-value cyan" id="st-runs">—</div>
+    </div>
+    <div class="db-stat">
+      <div class="db-stat-label">Fehler (24h)</div>
+      <div class="db-stat-value red" id="st-errors">—</div>
+    </div>
+    <div class="db-stat">
+      <div class="db-stat-label">Ø Laufzeit</div>
+      <div class="db-stat-value cyan" id="st-runtime">—</div>
+    </div>
+  </div>
+
+  <div class="db-toolbar">
+    <input class="db-search" type="text" id="db-search" placeholder="Workflow suchen …">
+    <button class="db-filter active" data-filter="all">Alle</button>
+    <button class="db-filter" data-filter="active">Aktiv</button>
+    <button class="db-filter" data-filter="inactive">Inaktiv</button>
+    <button class="db-filter" data-filter="error">Mit Fehler</button>
+    <button class="db-refresh" id="btn-refresh">↻ Refresh</button>
+  </div>
+
+  <div class="db-table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th data-col="active">Status</th>
+          <th data-col="name" class="sorted">Name ↑</th>
+          <th data-col="node_count">Nodes ↕</th>
+          <th data-col="last_exec">Letzte Ausführung ↕</th>
+          <th>Letzter Status</th>
+          <th data-col="runs_today">Runs heute ↕</th>
+          <th data-col="created_at">Erstellt ↕</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody id="wf-tbody">
+        <tr class="empty-row"><td colspan="8">Lade Workflows…</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<script>
+  const AUTH_URL  = 'https://auth.ninalearnsvibecoding.com';
+  const PROXY_URL = '/n8n-api';
+  const N8N_URL   = 'https://n8n.ninalearnsvibecoding.com';
+  const TOKEN_KEY = 'nlvc_jwt';
+
+  // ── Auth helpers ──────────────────────────────────────────────
+  const getToken   = () => localStorage.getItem(TOKEN_KEY);
+  const setToken   = t => localStorage.setItem(TOKEN_KEY, t);
+  const clearToken = () => localStorage.removeItem(TOKEN_KEY);
+
+  function isExpired(token) {
+    try { return JSON.parse(atob(token.split('.')[1])).exp * 1000 < Date.now(); }
+    catch { return true; }
+  }
+
+  function emailFromToken(token) {
+    try { return JSON.parse(atob(token.split('.')[1])).sub; }
+    catch { return ''; }
+  }
+
+  // ── Init ──────────────────────────────────────────────────────
+  (function init() {
+    const t = getToken();
+    if (t && !isExpired(t)) { showDashboard(t); }
+    else { clearToken(); showLogin(); }
+  })();
+
+  function showLogin() {
+    document.getElementById('login-screen').style.display = 'flex';
+    document.getElementById('dashboard-screen').style.display = 'none';
+  }
+
+  function showDashboard(token) {
+    document.getElementById('login-screen').style.display = 'none';
+    document.getElementById('dashboard-screen').style.display = 'block';
+    document.getElementById('db-user-email').textContent = emailFromToken(token);
+    loadDashboard();
+  }
+
+  // ── Login: step 1 — request code ─────────────────────────────
+  document.getElementById('btn-send-code').addEventListener('click', async () => {
+    const email = document.getElementById('login-email').value.trim();
+    const msg   = document.getElementById('msg-1');
+    const btn   = document.getElementById('btn-send-code');
+    if (!email) { setMsg(msg, 'Bitte E-Mail eingeben.', 'error'); return; }
+
+    btn.disabled = true;
+    setMsg(msg, 'Sende Code…', '');
+    try {
+      const r = await fetch(`${AUTH_URL}/auth/request-code`, {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({
+          email, lang: 'de',
+          consent: { accepted_at: new Date().toISOString(), version: '1.0' }
+        }),
+      });
+      if (!r.ok) throw new Error(await r.text());
+      setMsg(msg, 'Code gesendet — schau in dein E-Mail-Postfach.', 'success');
+      document.getElementById('step-email').style.display = 'none';
+      document.getElementById('step-code').style.display  = 'block';
+      document.getElementById('login-code').focus();
+    } catch (e) {
+      setMsg(msg, `Fehler: ${e.message}`, 'error');
+      btn.disabled = false;
+    }
+  });
+
+  // ── Login: step 2 — verify code ──────────────────────────────
+  document.getElementById('btn-verify').addEventListener('click', async () => {
+    const email = document.getElementById('login-email').value.trim();
+    const code  = document.getElementById('login-code').value.trim();
+    const msg   = document.getElementById('msg-2');
+    const btn   = document.getElementById('btn-verify');
+    if (code.length !== 6) { setMsg(msg, 'Code muss 6 Ziffern haben.', 'error'); return; }
+
+    btn.disabled = true;
+    setMsg(msg, 'Verifiziere…', '');
+    try {
+      const r = await fetch(`${AUTH_URL}/auth/verify`, {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({ email, code }),
+      });
+      if (!r.ok) throw new Error('Falscher Code oder abgelaufen.');
+      const { jwt } = await r.json();
+      setToken(jwt);
+      showDashboard(jwt);
+    } catch (e) {
+      setMsg(msg, e.message, 'error');
+      btn.disabled = false;
+    }
+  });
+
+  document.getElementById('btn-back').addEventListener('click', () => {
+    document.getElementById('step-email').style.display = 'block';
+    document.getElementById('step-code').style.display  = 'none';
+    setMsg(document.getElementById('msg-1'), '', '');
+    document.getElementById('btn-send-code').disabled = false;
+  });
+
+  document.getElementById('btn-logout').addEventListener('click', () => {
+    clearToken(); showLogin();
+  });
+
+  // ── Data ──────────────────────────────────────────────────────
+  let _workflows = [];
+  let _sortCol   = 'name';
+  let _sortDir   = 1;
+  let _filter    = 'all';
+  let _search    = '';
+
+  async function apiGet(path) {
+    const r = await fetch(`${PROXY_URL}${path}`, {
+      headers: { Authorization: `Bearer ${getToken()}` },
+    });
+    if (r.status === 401) { clearToken(); showLogin(); throw new Error('session expired'); }
+    if (!r.ok) throw new Error(`HTTP ${r.status}`);
+    return r.json();
+  }
+
+  async function loadDashboard() {
+    hideBanner();
+    try {
+      const [stats, wfData] = await Promise.all([
+        apiGet('/api/stats'),
+        apiGet('/api/workflows'),
+      ]);
+      renderStats(stats);
+      _workflows = wfData.workflows || [];
+      renderTable();
+    } catch (e) {
+      if (e.message !== 'session expired') showBanner(`Fehler: ${e.message}`);
+    }
+  }
+
+  function renderStats(s) {
+    document.getElementById('st-total').textContent   = s.total_workflows ?? '—';
+    document.getElementById('st-runs').textContent    = s.runs_today != null ? s.runs_today.toLocaleString('de-DE') : '—';
+    document.getElementById('st-errors').textContent  = s.errors_24h ?? '—';
+    document.getElementById('st-runtime').textContent = s.avg_runtime_s != null ? `${s.avg_runtime_s}s` : '—';
+    document.getElementById('st-active-sub').textContent =
+      s.active_workflows != null ? `davon ${s.active_workflows} aktiv` : '';
+  }
+
+  // ── Table ─────────────────────────────────────────────────────
+  function renderTable() {
+    let rows = [..._workflows];
+
+    if (_filter === 'active')   rows = rows.filter(w => w.active);
+    if (_filter === 'inactive') rows = rows.filter(w => !w.active);
+    if (_filter === 'error')    rows = rows.filter(w => w.last_execution?.status === 'error');
+    if (_search) {
+      const q = _search.toLowerCase();
+      rows = rows.filter(w => w.name.toLowerCase().includes(q));
+    }
+
+    rows.sort((a, b) => {
+      let av, bv;
+      switch (_sortCol) {
+        case 'name':       av = a.name; bv = b.name; break;
+        case 'node_count': av = a.node_count; bv = b.node_count; break;
+        case 'runs_today': av = a.runs_today; bv = b.runs_today; break;
+        case 'created_at': av = a.created_at; bv = b.created_at; break;
+        case 'last_exec':  av = a.last_execution?.started_at ?? ''; bv = b.last_execution?.started_at ?? ''; break;
+        case 'active':     av = a.active ? 1 : 0; bv = b.active ? 1 : 0; break;
+        default:           av = ''; bv = '';
+      }
+      return av < bv ? -_sortDir : av > bv ? _sortDir : 0;
+    });
+
+    const tbody = document.getElementById('wf-tbody');
+    if (!rows.length) {
+      tbody.innerHTML = '<tr class="empty-row"><td colspan="8">Keine Workflows gefunden.</td></tr>';
+      return;
+    }
+
+    tbody.innerHTML = rows.map(w => {
+      const statusBadge = w.active
+        ? `<span class="badge b-active"><span class="dot-sm dot-g"></span>aktiv</span>`
+        : `<span class="badge b-inactive"><span class="dot-sm dot-gray"></span>inaktiv</span>`;
+
+      const st = w.last_execution?.status;
+      const execBadge = !st ? `<span class="badge b-none">— —</span>`
+        : st === 'success' ? `<span class="badge b-success">✓ success</span>`
+        : `<span class="badge b-error">✕ error</span>`;
+
+      const lastExec = w.last_execution
+        ? `${relTime(w.last_execution.started_at)}${w.last_execution.duration_s != null ? ' · ' + w.last_execution.duration_s + 's' : ''}`
+        : '—';
+
+      const runsStyle = st === 'error' && w.runs_today > 0 ? ' style="color:var(--red)"' : '';
+
+      return `<tr>
+        <td>${statusBadge}</td>
+        <td class="wf-name">${esc(w.name)}</td>
+        <td class="mono">${w.node_count}</td>
+        <td class="mono">${lastExec}</td>
+        <td>${execBadge}</td>
+        <td class="mono"${runsStyle}>${w.runs_today}</td>
+        <td class="mono">${shortDate(w.created_at)}</td>
+        <td><a class="open-btn" href="${N8N_URL}/workflow/${w.id}" target="_blank" rel="noopener">→ öffnen</a></td>
+      </tr>`;
+    }).join('');
+  }
+
+  // ── Events ────────────────────────────────────────────────────
+  document.getElementById('db-search').addEventListener('input', e => {
+    _search = e.target.value.trim(); renderTable();
+  });
+
+  document.querySelectorAll('.db-filter').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.db-filter').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      _filter = btn.dataset.filter;
+      renderTable();
+    });
+  });
+
+  document.querySelectorAll('thead th[data-col]').forEach(th => {
+    th.addEventListener('click', () => {
+      const col = th.dataset.col;
+      _sortDir = _sortCol === col ? -_sortDir : 1;
+      _sortCol = col;
+      document.querySelectorAll('thead th').forEach(h => {
+        h.classList.remove('sorted');
+        h.textContent = h.textContent.replace(/ [↑↓↕]$/, '') + (h.dataset.col ? ' ↕' : '');
+      });
+      th.classList.add('sorted');
+      th.textContent = th.textContent.replace(/ [↑↓↕]$/, '') + (_sortDir === 1 ? ' ↑' : ' ↓');
+      renderTable();
+    });
+  });
+
+  document.getElementById('btn-refresh').addEventListener('click', loadDashboard);
+
+  // ── Helpers ───────────────────────────────────────────────────
+  function esc(s) { return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+  function relTime(iso) {
+    if (!iso) return '—';
+    const s = Math.floor((Date.now() - new Date(iso)) / 1000);
+    if (s < 60)    return `vor ${s}s`;
+    if (s < 3600)  return `vor ${Math.floor(s/60)} Min`;
+    if (s < 86400) return `vor ${Math.floor(s/3600)} Std`;
+    return `vor ${Math.floor(s/86400)} Tagen`;
+  }
+
+  function shortDate(iso) {
+    if (!iso) return '—';
+    return new Date(iso).toLocaleDateString('de-DE', {day:'numeric', month:'short'});
+  }
+
+  function setMsg(el, text, type) {
+    el.textContent = text;
+    el.className = 'login-msg' + (type ? ` ${type}` : '');
+  }
+
+  function showBanner(msg) {
+    const b = document.getElementById('db-error-banner');
+    b.textContent = msg; b.style.display = 'block';
+  }
+
+  function hideBanner() {
+    document.getElementById('db-error-banner').style.display = 'none';
+  }
+</script>
+</body>
+</html>
