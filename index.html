@@ -482,7 +482,18 @@
     font-size: 1.8rem;
     margin-bottom: 0.75rem;
     display: block;
-    filter: grayscale(0.3);
+  }
+
+  img.tool-icon {
+    width: 2rem;
+    height: 2rem;
+    object-fit: contain;
+    font-size: 0;
+    opacity: 0.85;
+  }
+
+  img.tool-icon:hover {
+    opacity: 1;
   }
 
   .tool-name {
@@ -1166,19 +1177,19 @@
   </div>
   <div class="tools-grid">
     <div class="tool-card reveal">
-      <span class="tool-icon">⚡</span>
+      <img class="tool-icon" src="https://cdn.simpleicons.org/n8n/EA4B71" alt="n8n">
       <div class="tool-name">n8n</div>
       <div class="tool-desc" data-i18n="tool.n8n">Workflow Automation &amp; AI Agents. My daily tool for No-Code / Low-Code pipelines.</div>
       <div class="tool-level"><div class="tool-level-fill" style="width:75%"></div></div>
     </div>
     <div class="tool-card reveal">
-      <span class="tool-icon">🤖</span>
+      <img class="tool-icon" src="https://cdn.simpleicons.org/anthropic/D4956A" alt="Claude AI">
       <div class="tool-name">Claude AI</div>
       <div class="tool-desc" data-i18n="tool.claude">My most important co-pilot. Coding, analysis, concepts — Claude is always there.</div>
       <div class="tool-level"><div class="tool-level-fill" style="width:90%"></div></div>
     </div>
     <div class="tool-card reveal">
-      <span class="tool-icon">🐍</span>
+      <img class="tool-icon" src="https://cdn.simpleicons.org/python/FFD43B" alt="Python">
       <div class="tool-name">Python</div>
       <div class="tool-desc" data-i18n="tool.python">Scripts, automations, data processing. Work in progress — getting better every day.</div>
       <div class="tool-level"><div class="tool-level-fill" style="width:45%"></div></div>
@@ -1190,7 +1201,7 @@
       <div class="tool-level"><div class="tool-level-fill" style="width:60%"></div></div>
     </div>
     <div class="tool-card reveal">
-      <span class="tool-icon">🌐</span>
+      <img class="tool-icon" src="https://cdn.simpleicons.org/hetzner/D50C2D" alt="Hetzner">
       <div class="tool-name">Hetzner</div>
       <div class="tool-desc" data-i18n="tool.hetzner">Cloud server for my own n8n instance. Self-hosted, full control.</div>
       <div class="tool-level"><div class="tool-level-fill" style="width:55%"></div></div>
@@ -1202,13 +1213,13 @@
       <div class="tool-level"><div class="tool-level-fill" style="width:70%"></div></div>
     </div>
     <div class="tool-card reveal">
-      <span class="tool-icon">🐘</span>
+      <img class="tool-icon" src="https://cdn.simpleicons.org/postgresql/4169E1" alt="PostgreSQL">
       <div class="tool-name">PostgreSQL</div>
       <div class="tool-desc" data-i18n="tool.postgres">Self-hosted relational database. Stores emails, workflow data and more — running on Hetzner.</div>
       <div class="tool-level"><div class="tool-level-fill" style="width:50%"></div></div>
     </div>
     <div class="tool-card reveal">
-      <span class="tool-icon">🗃️</span>
+      <span class="tool-icon" style="font-size:1.1rem;font-family:var(--font-display);font-weight:800;color:#02AF8E;background:rgba(2,175,142,0.12);border-radius:6px;padding:2px 6px;display:inline-block">No</span>
       <div class="tool-name">NocoDB</div>
       <div class="tool-desc" data-i18n="tool.nocodb">No-Code database frontend. Makes PostgreSQL accessible without writing SQL — perfect for workflows.</div>
       <div class="tool-level"><div class="tool-level-fill" style="width:60%"></div></div>
@@ -1220,13 +1231,13 @@
       <div class="tool-level"><div class="tool-level-fill" style="width:55%"></div></div>
     </div>
     <div class="tool-card reveal">
-      <span class="tool-icon">⚛️</span>
+      <img class="tool-icon" src="https://cdn.simpleicons.org/react/61DAFB" alt="React">
       <div class="tool-name">React</div>
       <div class="tool-desc" data-i18n="tool.react">Frontend library for the Portfolio Tracker. First real React project — built with Vite and Tailwind.</div>
       <div class="tool-level"><div class="tool-level-fill" style="width:40%"></div></div>
     </div>
     <div class="tool-card reveal">
-      <span class="tool-icon">🐙</span>
+      <img class="tool-icon" src="https://cdn.simpleicons.org/github/e8f0fe" alt="GitHub">
       <div class="tool-name">GitHub</div>
       <div class="tool-desc" data-i18n="tool.github">Version control and deployment trigger. Every push to main auto-deploys via Coolify.</div>
       <div class="tool-level"><div class="tool-level-fill" style="width:65%"></div></div>
@@ -1238,43 +1249,43 @@
       <div class="tool-level"><div class="tool-level-fill" style="width:50%"></div></div>
     </div>
     <div class="tool-card reveal">
-      <span class="tool-icon">🎵</span>
+      <img class="tool-icon" src="https://cdn.simpleicons.org/spotify/1DB954" alt="Spotify">
       <div class="tool-name">Spotify</div>
       <div class="tool-desc" data-i18n="tool.spotify">Music API integration via n8n — automated playlists and listening data workflows.</div>
       <div class="tool-level"><div class="tool-level-fill" style="width:35%"></div></div>
     </div>
     <div class="tool-card reveal">
-      <span class="tool-icon">🔍</span>
+      <svg class="tool-icon" viewBox="0 0 32 32" style="width:2rem;height:2rem;display:block;margin-bottom:0.75rem" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="13" cy="13" r="9" stroke="#00d4ff" stroke-width="2.5"/><circle cx="13" cy="13" r="4" fill="#7c3aed" opacity="0.7"/><line x1="20" y1="20" x2="28" y2="28" stroke="#00d4ff" stroke-width="2.5" stroke-linecap="round"/></svg>
       <div class="tool-name">SearXNG</div>
       <div class="tool-desc" data-i18n="tool.searxng">Self-hosted privacy search engine. Powers AI agent web search without Google tracking.</div>
       <div class="tool-level"><div class="tool-level-fill" style="width:40%"></div></div>
     </div>
     <div class="tool-card reveal">
-      <span class="tool-icon">☁️</span>
+      <img class="tool-icon" src="https://cdn.simpleicons.org/nextcloud/0082C9" alt="Nextcloud">
       <div class="tool-name">Nextcloud</div>
       <div class="tool-desc" data-i18n="tool.nextcloud">Self-hosted file storage and collaboration — connected to n8n for file automation workflows.</div>
       <div class="tool-level"><div class="tool-level-fill" style="width:45%"></div></div>
     </div>
     <div class="tool-card reveal">
-      <span class="tool-icon">🧠</span>
+      <span class="tool-icon" style="font-size:1.6rem;font-family:var(--font-display);font-weight:800;color:#FF7000;letter-spacing:-1px">M</span>
       <div class="tool-name">Mistral</div>
       <div class="tool-desc" data-i18n="tool.mistral">Open-source LLM — newest addition. Used for AI agent workflows alongside Claude.</div>
       <div class="tool-level"><div class="tool-level-fill" style="width:25%"></div></div>
     </div>
     <div class="tool-card reveal">
-      <span class="tool-icon">✈️</span>
+      <img class="tool-icon" src="https://cdn.simpleicons.org/telegram/26A5E4" alt="Telegram">
       <div class="tool-name">Telegram</div>
       <div class="tool-desc" data-i18n="tool.telegram">Bot API for notifications and interaction. Running a live Telegram bot via n8n.</div>
       <div class="tool-level"><div class="tool-level-fill" style="width:55%"></div></div>
     </div>
     <div class="tool-card reveal">
-      <span class="tool-icon">📁</span>
+      <img class="tool-icon" src="https://cdn.simpleicons.org/googledrive/4285F4" alt="Google Drive">
       <div class="tool-name">Google Drive</div>
       <div class="tool-desc" data-i18n="tool.gdrive">File upload automation — Gmail attachments auto-sorted into Drive folders via n8n.</div>
       <div class="tool-level"><div class="tool-level-fill" style="width:50%"></div></div>
     </div>
     <div class="tool-card reveal">
-      <span class="tool-icon">📅</span>
+      <img class="tool-icon" src="https://cdn.simpleicons.org/caldotcom/e8f0fe" alt="Cal.com">
       <div class="tool-name">Cal.com</div>
       <div class="tool-desc" data-i18n="tool.calcom">Open-source scheduling tool. Powers the Booking Agent workflow — automated calendar management.</div>
       <div class="tool-level"><div class="tool-level-fill" style="width:40%"></div></div>
