@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+# Auto-bumps version when frontend chat-widget files are staged.
+# Stages the resulting version.json and index.html so they go in the same commit.
+#
+# Activate once per clone:
+#   git config core.hooksPath .githooks
+
+set -e
+
+# Only run if chat-widget.css or chat-widget.js is in staged changes.
+STAGED=$(git diff --cached --name-only --diff-filter=ACMR)
+if echo "$STAGED" | grep -qE '^chat-widget\.(css|js)$'; then
+  ROOT="$(git rev-parse --show-toplevel)"
+  echo "→ chat-widget changed, bumping version…"
+  "$ROOT/scripts/bump-version.sh"
+  git add "$ROOT/version.json" "$ROOT/index.html"
+fi
