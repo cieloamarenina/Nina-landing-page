@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chat Widget Preview — Nina Learns Vibe Coding</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=JetBrains+Mono:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #080c14;
+    --surface: #0d1320;
+    --card: #111827;
+    --border: #1e2d45;
+    --accent: #00d4ff;
+    --accent2: #7c3aed;
+    --text: #e8f0fe;
+    --muted: #6b7fa3;
+    --font-display: 'Syne', sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
+    --deep-blue: #061018;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-mono);
+    min-height: 100vh;
+    padding: 3rem 1.5rem;
+  }
+
+  /* Demo-Info */
+  .demo-info {
+    max-width: 800px;
+    margin: 0 auto 3rem;
+    padding: 2rem;
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    background: var(--surface);
+  }
+  .demo-info h1 {
+    font-family: var(--font-display);
+    color: var(--accent);
+    font-size: 1.5rem;
+    margin-bottom: 0.8rem;
+    letter-spacing: 0.05em;
+  }
+  .demo-info p {
+    color: var(--muted);
+    line-height: 1.7;
+    margin-bottom: 0.5rem;
+    font-size: 0.85rem;
+  }
+  .demo-info strong { color: var(--text); font-weight: 500; }
+  .demo-lang-switcher {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 1.2rem;
+  }
+  .demo-lang-btn {
+    background: var(--card);
+    border: 1px solid var(--border);
+    color: var(--muted);
+    font-family: var(--font-mono);
+    padding: 0.4rem 0.8rem;
+    cursor: pointer;
+    border-radius: 6px;
+    font-size: 0.7rem;
+    letter-spacing: 0.1em;
+    transition: all 0.2s;
+  }
+  .demo-lang-btn:hover { color: var(--accent); border-color: var(--accent); }
+  .demo-lang-btn.active {
+    background: var(--accent);
+    color: var(--bg);
+    border-color: var(--accent);
+    font-weight: 600;
+  }
+
+  /* Mock context (Hero-Stats above + About below) */
+  .mock-context {
+    max-width: 800px;
+    margin: 0 auto;
+    text-align: center;
+    color: var(--muted);
+    font-size: 0.75rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+  }
+  .mock-hero-stats {
+    display: flex;
+    justify-content: center;
+    gap: 3rem;
+    padding: 2rem;
+    border-top: 1px dashed var(--border);
+    border-bottom: 1px dashed var(--border);
+  }
+  .mock-hero-stat-num {
+    color: var(--accent);
+    font-size: 1.4rem;
+    font-weight: 700;
+    display: block;
+    margin-bottom: 0.3rem;
+  }
+  .mock-hero-stat-label {
+    font-size: 0.65rem;
+    letter-spacing: 0.15em;
+  }
+  .mock-about-tag {
+    padding: 2rem 0 0;
+    color: var(--muted);
+  }
+
+  /* CHAT WIDGET CONTAINER (Position D) — fixed height, no layout shift on expand */
+  .chat-widget-container {
+    padding: 5rem 1rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 720px;
+  }
+
+  /* THE CARD — idle small, expands in place */
+  .chat-invite {
+    width: 280px;
+    height: 200px;
+    border-radius: 24px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    background:
+      radial-gradient(ellipse at 50% 28%, rgba(255,255,255,0.55) 0%, rgba(0,212,255,0.55) 25%, transparent 65%),
+      radial-gradient(ellipse at 50% 100%, rgba(6,16,24,1) 0%, var(--deep-blue) 100%);
+    box-shadow: 0 0 60px rgba(0,212,255,0.25);
+    transition:
+      width 0.5s cubic-bezier(0.34, 1.4, 0.64, 1),
+      height 0.5s cubic-bezier(0.34, 1.4, 0.64, 1),
+      transform 0.3s ease,
+      box-shadow 0.3s ease;
+    border: 1px solid rgba(0,212,255,0.2);
+    display: flex;
+    flex-direction: column;
+  }
+  .chat-invite:not(.expanded):hover {
+    transform: translateY(-3px);
+    box-shadow: 0 0 90px rgba(0,212,255,0.45);
+  }
+  .chat-invite:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 4px;
+  }
+  .chat-invite.expanded {
+    width: 400px;
+    height: 600px;
+    cursor: default;
+    box-shadow: 0 30px 80px rgba(0,0,0,0.5), 0 0 80px rgba(0,212,255,0.3);
+  }
+
+  /* Header area = always Underwater scenery */
+  .chat-scene {
+    position: relative;
+    height: 100%;
+    flex-shrink: 0;
+    overflow: hidden;
+    transition: height 0.5s cubic-bezier(0.34, 1.4, 0.64, 1);
+  }
+  .chat-invite.expanded .chat-scene {
+    height: 200px;
+  }
+
+  /* THE SUN — bright core */
+  .chat-scene::before {
+    content: '';
+    position: absolute;
+    top: 18%;
+    left: 50%;
+    width: 100px;
+    height: 100px;
+    transform: translateX(-50%);
+    background:
+      radial-gradient(circle,
+        rgba(255,255,255,1) 0%,
+        rgba(255,250,220,0.95) 18%,
+        rgba(180,235,255,0.85) 38%,
+        rgba(0,212,255,0.55) 60%,
+        transparent 78%);
+    border-radius: 50%;
+    animation: sun-breath 4s ease-in-out infinite;
+    filter: blur(1px);
+    z-index: 3;
+    box-shadow: 0 0 60px rgba(255,255,255,0.5), 0 0 120px rgba(0,212,255,0.4);
+  }
+  @keyframes sun-breath {
+    0%, 100% { transform: translateX(-50%) scale(1); opacity: 0.9; }
+    50% { transform: translateX(-50%) scale(1.18); opacity: 1; }
+  }
+
+  /* LIGHT RAYS — much brighter, white-into-cyan */
+  .chat-scene::after {
+    content: '';
+    position: absolute;
+    top: -5%;
+    left: 50%;
+    width: 360px;
+    height: 380px;
+    transform: translateX(-50%);
+    background: conic-gradient(
+      from 92deg at 50% 0%,
+      transparent 0deg,
+      rgba(255,255,255,0.5) 8deg,
+      rgba(180,235,255,0.6) 14deg,
+      rgba(0,212,255,0.4) 22deg,
+      transparent 38deg,
+      rgba(255,255,255,0.35) 60deg,
+      rgba(180,235,255,0.5) 70deg,
+      rgba(0,212,255,0.3) 80deg,
+      transparent 96deg,
+      rgba(255,255,255,0.55) 116deg,
+      rgba(180,235,255,0.65) 124deg,
+      rgba(0,212,255,0.4) 134deg,
+      transparent 150deg,
+      rgba(255,255,255,0.4) 168deg,
+      rgba(180,235,255,0.5) 176deg,
+      transparent 188deg
+    );
+    pointer-events: none;
+    animation: rays-shimmer 6s ease-in-out infinite;
+    z-index: 2;
+    mix-blend-mode: screen;
+  }
+  @keyframes rays-shimmer {
+    0%, 100% { opacity: 0.7; }
+    50% { opacity: 1; }
+  }
+
+  /* CAUSTIC WAVES at bottom */
+  .caustic-waves {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 80px;
+    overflow: hidden;
+    pointer-events: none;
+    z-index: 4;
+  }
+  /* Wave shape (dark blue line) */
+  .caustic-waves::before {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: -50%;
+    right: -50%;
+    height: 100%;
+    background:
+      radial-gradient(ellipse 80px 26px at 20% 100%, rgba(0,212,255,0.7), transparent 70%),
+      radial-gradient(ellipse 100px 32px at 50% 100%, rgba(0,212,255,0.55), transparent 70%),
+      radial-gradient(ellipse 70px 24px at 80% 100%, rgba(0,212,255,0.7), transparent 70%);
+    animation: caustic-drift 14s linear infinite;
+    opacity: 0.55;
+  }
+  /* LIGHT REFRACTION — bright streaks where rays hit waves */
+  .caustic-waves::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: -50%;
+    right: -50%;
+    height: 100%;
+    background:
+      radial-gradient(ellipse 30px 60px at 35% 95%, rgba(255,255,255,0.65), transparent 60%),
+      radial-gradient(ellipse 45px 80px at 50% 100%, rgba(255,255,255,0.85), rgba(180,235,255,0.5) 30%, transparent 70%),
+      radial-gradient(ellipse 30px 60px at 65% 95%, rgba(255,255,255,0.65), transparent 60%),
+      radial-gradient(ellipse 18px 40px at 42% 100%, rgba(255,255,255,0.7), transparent 60%),
+      radial-gradient(ellipse 18px 40px at 58% 100%, rgba(255,255,255,0.7), transparent 60%);
+    animation: refraction-shimmer 5s ease-in-out infinite;
+    mix-blend-mode: screen;
+    filter: blur(1px);
+  }
+  @keyframes caustic-drift {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(50%); }
+  }
+  @keyframes refraction-shimmer {
+    0%, 100% { opacity: 0.7; transform: scaleY(1); }
+    50% { opacity: 1; transform: scaleY(1.15); }
+  }
+
+  /* CLOSE BUTTON in expanded scene */
+  .chat-close-btn {
+    position: absolute;
+    top: 0.8rem;
+    right: 0.8rem;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: rgba(8,12,20,0.7);
+    border: 1px solid rgba(0,212,255,0.25);
+    color: var(--accent);
+    cursor: pointer;
+    z-index: 10;
+    font-size: 1.1rem;
+    line-height: 1;
+    font-family: var(--font-mono);
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.3s ease;
+  }
+  .chat-invite.expanded .chat-close-btn {
+    opacity: 1;
+    pointer-events: all;
+  }
+  .chat-close-btn:hover {
+    background: rgba(0,212,255,0.2);
+    transform: rotate(90deg);
+  }
+
+  /* CHAT BODY — hidden when idle, visible when expanded */
+  .chat-body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    min-height: 0;
+    background: var(--surface);
+    opacity: 0;
+    transition: opacity 0.3s ease 0.2s;
+    pointer-events: none;
+  }
+  .chat-invite.expanded .chat-body {
+    opacity: 1;
+    pointer-events: all;
+  }
+
+  .chat-messages {
+    flex: 1;
+    overflow-y: auto;
+    padding: 1.2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+  }
+
+  .chat-bubble {
+    max-width: 85%;
+    padding: 0.7rem 1rem;
+    border-radius: 16px;
+    font-size: 0.85rem;
+    line-height: 1.55;
+    animation: bubble-in 0.3s ease-out;
+  }
+  @keyframes bubble-in {
+    from { opacity: 0; transform: scale(0.85) translateY(8px); }
+    to { opacity: 1; transform: scale(1) translateY(0); }
+  }
+
+  /* Bot bubble with mini-sun avatar */
+  .chat-bubble.bot {
+    align-self: flex-start;
+    background: var(--card);
+    color: var(--text);
+    border-bottom-left-radius: 4px;
+    position: relative;
+    padding-left: 2.6rem;
+    border: 1px solid var(--border);
+  }
+  .chat-bubble.bot::before {
+    content: '';
+    position: absolute;
+    left: 0.6rem;
+    top: 0.65rem;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background:
+      radial-gradient(circle at 50% 30%, rgba(255,255,255,0.95) 0%, rgba(160,230,255,0.8) 30%, rgba(0,212,255,0.6) 60%, var(--deep-blue) 100%);
+    box-shadow: 0 0 8px rgba(0,212,255,0.5), inset 0 0 4px rgba(255,255,255,0.3);
+    flex-shrink: 0;
+  }
+
+  .chat-bubble.user {
+    align-self: flex-end;
+    background: linear-gradient(135deg, var(--accent), #4a8fb5);
+    color: #061018;
+    border-bottom-right-radius: 4px;
+    font-weight: 500;
+  }
+
+  .chat-input-area {
+    padding: 0.9rem 1rem 0.4rem;
+    border-top: 1px solid var(--border);
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+  }
+  .chat-input {
+    flex: 1;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 0.7rem 0.9rem;
+    color: var(--text);
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .chat-input:focus { border-color: var(--accent); }
+  .chat-send-btn {
+    background: var(--accent);
+    color: var(--bg);
+    border: none;
+    border-radius: 12px;
+    padding: 0.7rem 1rem;
+    cursor: pointer;
+    font-family: var(--font-mono);
+    font-weight: 600;
+    font-size: 0.8rem;
+    transition: opacity 0.2s, transform 0.1s;
+    letter-spacing: 0.05em;
+  }
+  .chat-send-btn:hover { opacity: 0.85; }
+  .chat-send-btn:active { transform: scale(0.96); }
+
+  .chat-disclaimer {
+    text-align: center;
+    color: var(--muted);
+    font-size: 0.7rem;
+    padding: 0.4rem 1rem 0.7rem;
+    letter-spacing: 0.03em;
+  }
+
+  /* Mobile */
+  @media (max-width: 600px) {
+    body { padding: 1.5rem 1rem; }
+    .chat-widget-container { min-height: 700px; padding: 2rem 0.5rem; }
+    .chat-invite.expanded {
+      width: calc(100vw - 1.5rem);
+      max-width: 400px;
+      height: 580px;
+    }
+  }
+</style>
+</head>
+<body>
+
+<div class="demo-info">
+  <h1>// Chat Widget Preview</h1>
+  <p>Visuelle Vorschau des „Underwater + Sun"-Widgets — <strong>kein Backend, kein echtes AI</strong>. Klick aufs Bild → Modal-Panel öffnet sich. Sprache wechseln, um Greeting + KI-Hinweis zu sehen.</p>
+  <p style="margin-top: 0.8rem;"><strong>Position auf der echten Site:</strong> mittig zwischen <code style="color:var(--accent)">hero-stats</code> und <code style="color:var(--accent)">// about</code>.</p>
+  <div class="demo-lang-switcher">
+    <button class="demo-lang-btn active" data-lang="de">DE</button>
+    <button class="demo-lang-btn" data-lang="en">EN</button>
+    <button class="demo-lang-btn" data-lang="fr">FR</button>
+    <button class="demo-lang-btn" data-lang="es">ES</button>
+    <button class="demo-lang-btn" data-lang="it">IT</button>
+  </div>
+</div>
+
+<!-- mock hero-stats above -->
+<div class="mock-context">
+  <div class="mock-hero-stats">
+    <div><span class="mock-hero-stat-num">n8n</span><span class="mock-hero-stat-label">Course</span></div>
+    <div><span class="mock-hero-stat-num">100%</span><span class="mock-hero-stat-label">Public</span></div>
+    <div><span class="mock-hero-stat-num">BER</span><span class="mock-hero-stat-label">Berlin</span></div>
+  </div>
+</div>
+
+<!-- WIDGET (Position D) — inline expansion, no modal -->
+<div class="chat-widget-container">
+  <div class="chat-invite" id="chat-invite" role="button" aria-label="Chat öffnen" tabindex="0">
+    <div class="chat-scene">
+      <div class="caustic-waves"></div>
+      <button class="chat-close-btn" id="chat-close-btn" aria-label="Schließen" type="button">×</button>
+    </div>
+    <div class="chat-body">
+      <div class="chat-messages" id="chat-messages"></div>
+      <div class="chat-input-area">
+        <input type="text" class="chat-input" id="chat-input" placeholder="">
+        <button class="chat-send-btn" id="chat-send-btn" type="button"></button>
+      </div>
+      <div class="chat-disclaimer" id="chat-disclaimer"></div>
+    </div>
+  </div>
+</div>
+
+<!-- mock // about below -->
+<div class="mock-context">
+  <div class="mock-about-tag">// about — Who is behind this?</div>
+</div>
+
+<script>
+  const TRANSLATIONS = {
+    de: {
+      greeting: "Hallo! Wie geht's dir heute? Wie kann ich dir helfen, was interessiert dich?",
+      placeholder: "Schreib eine Nachricht...",
+      send: "Senden",
+      disclaimer: "🤖 Du chattest mit einer KI",
+      sample_user: "Wer ist Nina eigentlich?",
+      sample_bot: "Nina ist AI Analyst & Consultant aus Berlin und lernt gerade Vibecoding (KI-gestütztes Coden). Mehr über sie persönlich findest du auf LinkedIn: linkedin.com/in/ninapankninberlin/",
+      demo_reply: "(Demo-Modus — die echte AI antwortet erst, wenn das Backend live ist.)"
+    },
+    en: {
+      greeting: "Hi! How are you doing today? How can I help — what are you curious about?",
+      placeholder: "Type a message...",
+      send: "Send",
+      disclaimer: "🤖 You're chatting with an AI",
+      sample_user: "Who is Nina actually?",
+      sample_bot: "Nina is an AI Analyst & Consultant from Berlin learning Vibecoding (AI-assisted coding). More about her on LinkedIn: linkedin.com/in/ninapankninberlin/",
+      demo_reply: "(Demo mode — the real AI will answer once the backend is live.)"
+    },
+    fr: {
+      greeting: "Salut ! Comment vas-tu aujourd'hui ? Comment puis-je t'aider, qu'est-ce qui t'intéresse ?",
+      placeholder: "Écris un message...",
+      send: "Envoyer",
+      disclaimer: "🤖 Tu chattes avec une IA",
+      sample_user: "Qui est Nina au juste ?",
+      sample_bot: "Nina est AI Analyst & Consultant à Berlin qui apprend le Vibecoding (codage assisté par IA). Plus sur elle sur LinkedIn : linkedin.com/in/ninapankninberlin/",
+      demo_reply: "(Mode démo — la vraie IA répondra quand le backend sera en ligne.)"
+    },
+    es: {
+      greeting: "¡Hola! ¿Cómo estás hoy? ¿En qué puedo ayudarte, qué te interesa?",
+      placeholder: "Escribe un mensaje...",
+      send: "Enviar",
+      disclaimer: "🤖 Estás chateando con una IA",
+      sample_user: "¿Quién es Nina exactamente?",
+      sample_bot: "Nina es AI Analyst & Consultant de Berlín, aprendiendo Vibecoding (programación asistida por IA). Más sobre ella en LinkedIn: linkedin.com/in/ninapankninberlin/",
+      demo_reply: "(Modo demo — la IA real responderá cuando el backend esté activo.)"
+    },
+    it: {
+      greeting: "Ciao! Come stai oggi? Come posso aiutarti, cosa ti interessa?",
+      placeholder: "Scrivi un messaggio...",
+      send: "Invia",
+      disclaimer: "🤖 Stai chattando con un'IA",
+      sample_user: "Chi è Nina esattamente?",
+      sample_bot: "Nina è AI Analyst & Consultant da Berlino, sta imparando il Vibecoding (programmazione assistita da IA). Altro su di lei su LinkedIn: linkedin.com/in/ninapankninberlin/",
+      demo_reply: "(Modalità demo — la vera IA risponderà quando il backend sarà attivo.)"
+    }
+  };
+
+  let currentLang = 'de';
+
+  function applyLang(lang) {
+    currentLang = lang;
+    const t = TRANSLATIONS[lang];
+    document.getElementById('chat-input').placeholder = t.placeholder;
+    document.getElementById('chat-send-btn').textContent = t.send;
+    document.getElementById('chat-disclaimer').textContent = t.disclaimer;
+    document.querySelectorAll('.demo-lang-btn').forEach(b => {
+      b.classList.toggle('active', b.dataset.lang === lang);
+    });
+    if (document.getElementById('chat-panel').classList.contains('open')) {
+      renderDemoMessages();
+    }
+  }
+
+  function renderDemoMessages() {
+    const container = document.getElementById('chat-messages');
+    const t = TRANSLATIONS[currentLang];
+    container.innerHTML = `
+      <div class="chat-bubble bot">${t.greeting}</div>
+      <div class="chat-bubble user">${t.sample_user}</div>
+      <div class="chat-bubble bot">${t.sample_bot}</div>
+    `;
+  }
+
+  function appendBubble(role, text) {
+    const container = document.getElementById('chat-messages');
+    const div = document.createElement('div');
+    div.className = `chat-bubble ${role}`;
+    div.textContent = text;
+    container.appendChild(div);
+    container.scrollTop = container.scrollHeight;
+  }
+
+  document.querySelectorAll('.demo-lang-btn').forEach(btn => {
+    btn.addEventListener('click', () => applyLang(btn.dataset.lang));
+  });
+
+  const invite = document.getElementById('chat-invite');
+
+  function openChat() {
+    if (invite.classList.contains('expanded')) return;
+    invite.classList.add('expanded');
+    invite.setAttribute('aria-label', 'Chat geöffnet');
+    renderDemoMessages();
+    setTimeout(() => document.getElementById('chat-input').focus(), 500);
+  }
+
+  function closeChat(e) {
+    if (e) { e.stopPropagation(); }
+    invite.classList.remove('expanded');
+    invite.setAttribute('aria-label', 'Chat öffnen');
+  }
+
+  invite.addEventListener('click', (e) => {
+    if (invite.classList.contains('expanded')) return;
+    if (e.target.closest('.chat-body') || e.target.closest('.chat-close-btn')) return;
+    openChat();
+  });
+  invite.addEventListener('keydown', (e) => {
+    if (invite.classList.contains('expanded')) return;
+    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openChat(); }
+  });
+  document.getElementById('chat-close-btn').addEventListener('click', closeChat);
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && invite.classList.contains('expanded')) closeChat();
+  });
+
+  // Demo-Send: User-Bubble + Fake-Bot-Bubble nach 800ms
+  function sendDemo() {
+    const input = document.getElementById('chat-input');
+    const txt = input.value.trim();
+    if (!txt) return;
+    appendBubble('user', txt);
+    input.value = '';
+    setTimeout(() => appendBubble('bot', TRANSLATIONS[currentLang].demo_reply), 800);
+  }
+  document.getElementById('chat-send-btn').addEventListener('click', sendDemo);
+  document.getElementById('chat-input').addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') sendDemo();
+  });
+
+  applyLang('de');
+</script>
+
+</body>
+</html>

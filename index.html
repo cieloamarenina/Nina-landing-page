@@ -7,6 +7,7 @@
 <title>Nina Learns Vibe Coding</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=JetBrains+Mono:wght@300;400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="chat-widget.css">
 <style>
   :root {
     --bg: #080c14;
@@ -965,6 +966,9 @@
     </div>
   </div>
 </section>
+
+<!-- CHAT WIDGET (Position D) -->
+<div id="chat-widget-container" class="chat-widget-container"></div>
 
 <!-- ABOUT -->
 <section id="about">
@@ -2026,5 +2030,7 @@ applyLang(detectLang());
       if (grid) grid.innerHTML = '';
     });
 </script>
+
+<script src="chat-widget.js" defer></script>
 </body>
 </html>

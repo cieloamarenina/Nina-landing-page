@@ -1,0 +1,23 @@
+# macOS
+.DS_Store
+
+# Chat Widget secrets and runtime data
+services/auth/.env
+services/auth/data/*.db
+services/auth/data/*.db-*
+services/auth/.venv/
+services/auth/__pycache__/
+services/auth/**/__pycache__/
+services/auth/.pytest_cache/
+services/auth/htmlcov/
+services/auth/.coverage
+
+setup/python/.env
+setup/python/.venv/
+setup/python/__pycache__/
+setup/python/**/__pycache__/
+
+# Python general
+*.pyc
+.pytest_cache/
+__pycache__/
