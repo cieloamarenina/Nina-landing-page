@@ -113,45 +113,47 @@
 
   /* CHAT WIDGET CONTAINER (Position D) — fixed height, no layout shift on expand */
   .chat-widget-container {
-    padding: 5rem 1rem;
+    padding: 8rem 1rem;
     display: flex;
     justify-content: center;
     align-items: center;
-    min-height: 720px;
+    min-height: 800px;
   }
 
-  /* THE CARD — idle small, expands in place */
+  /* THE CARD — idle = round circle, expanded = rounded rectangle */
   .chat-invite {
-    width: 280px;
-    height: 200px;
-    border-radius: 24px;
+    width: 320px;
+    height: 320px;
+    border-radius: 50%;
     cursor: pointer;
     position: relative;
     overflow: hidden;
     background:
-      radial-gradient(ellipse at 50% 28%, rgba(255,255,255,0.55) 0%, rgba(0,212,255,0.55) 25%, transparent 65%),
-      radial-gradient(ellipse at 50% 100%, rgba(6,16,24,1) 0%, var(--deep-blue) 100%);
-    box-shadow: 0 0 60px rgba(0,212,255,0.25);
+      radial-gradient(circle at 50% 22%, rgba(255,250,210,0.7) 0%, rgba(180,235,255,0.6) 18%, transparent 45%),
+      radial-gradient(circle at 50% 30%, rgba(120,210,255,0.85) 0%, rgba(40,140,200,0.6) 35%, rgba(8,40,80,0.95) 75%, #020a14 100%);
+    box-shadow: 0 0 80px rgba(0,212,255,0.3), inset 0 -20px 60px rgba(2,10,20,0.5);
     transition:
-      width 0.5s cubic-bezier(0.34, 1.4, 0.64, 1),
-      height 0.5s cubic-bezier(0.34, 1.4, 0.64, 1),
+      width 0.6s cubic-bezier(0.34, 1.4, 0.64, 1),
+      height 0.6s cubic-bezier(0.34, 1.4, 0.64, 1),
+      border-radius 0.6s cubic-bezier(0.34, 1.4, 0.64, 1),
       transform 0.3s ease,
       box-shadow 0.3s ease;
-    border: 1px solid rgba(0,212,255,0.2);
+    border: 1px solid rgba(0,212,255,0.25);
     display: flex;
     flex-direction: column;
   }
   .chat-invite:not(.expanded):hover {
-    transform: translateY(-3px);
-    box-shadow: 0 0 90px rgba(0,212,255,0.45);
+    transform: translateY(-4px);
+    box-shadow: 0 0 110px rgba(0,212,255,0.5), inset 0 -20px 60px rgba(2,10,20,0.5);
   }
   .chat-invite:focus-visible {
     outline: 2px solid var(--accent);
-    outline-offset: 4px;
+    outline-offset: 6px;
   }
   .chat-invite.expanded {
     width: 400px;
     height: 600px;
+    border-radius: 24px;
     cursor: default;
     box-shadow: 0 30px 80px rgba(0,0,0,0.5), 0 0 80px rgba(0,212,255,0.3);
   }

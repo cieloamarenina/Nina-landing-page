@@ -6,45 +6,47 @@
 }
 
 #chat-widget-container.chat-widget-container {
-  padding: 5rem 1rem;
+  padding: 8rem 1rem;
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 720px;
+  min-height: 800px;
 }
 
-/* THE CARD — idle small, expands in place to chat panel */
+/* THE CARD — idle = round circle, expanded = rounded rectangle */
 .chat-invite {
-  width: 280px;
-  height: 200px;
-  border-radius: 24px;
+  width: 320px;
+  height: 320px;
+  border-radius: 50%;
   cursor: pointer;
   position: relative;
   overflow: hidden;
   background:
-    radial-gradient(ellipse at 50% 28%, rgba(255,255,255,0.55) 0%, rgba(0,212,255,0.55) 25%, transparent 65%),
-    radial-gradient(ellipse at 50% 100%, rgba(6,16,24,1) 0%, var(--nlvc-deep-blue) 100%);
-  box-shadow: 0 0 60px rgba(0,212,255,0.25);
+    radial-gradient(circle at 50% 22%, rgba(255,250,210,0.7) 0%, rgba(180,235,255,0.6) 18%, transparent 45%),
+    radial-gradient(circle at 50% 30%, rgba(120,210,255,0.85) 0%, rgba(40,140,200,0.6) 35%, rgba(8,40,80,0.95) 75%, #020a14 100%);
+  box-shadow: 0 0 80px rgba(0,212,255,0.3), inset 0 -20px 60px rgba(2,10,20,0.5);
   transition:
-    width 0.5s cubic-bezier(0.34, 1.4, 0.64, 1),
-    height 0.5s cubic-bezier(0.34, 1.4, 0.64, 1),
+    width 0.6s cubic-bezier(0.34, 1.4, 0.64, 1),
+    height 0.6s cubic-bezier(0.34, 1.4, 0.64, 1),
+    border-radius 0.6s cubic-bezier(0.34, 1.4, 0.64, 1),
     transform 0.3s ease,
     box-shadow 0.3s ease;
-  border: 1px solid rgba(0,212,255,0.2);
+  border: 1px solid rgba(0,212,255,0.25);
   display: flex;
   flex-direction: column;
 }
 .chat-invite:not(.expanded):hover {
-  transform: translateY(-3px);
-  box-shadow: 0 0 90px rgba(0,212,255,0.45);
+  transform: translateY(-4px);
+  box-shadow: 0 0 110px rgba(0,212,255,0.5), inset 0 -20px 60px rgba(2,10,20,0.5);
 }
 .chat-invite:focus-visible {
   outline: 2px solid var(--accent, #00d4ff);
-  outline-offset: 4px;
+  outline-offset: 6px;
 }
 .chat-invite.expanded {
   width: 400px;
   height: 600px;
+  border-radius: 24px;
   cursor: default;
   box-shadow: 0 30px 80px rgba(0,0,0,0.5), 0 0 80px rgba(0,212,255,0.3);
 }
@@ -61,119 +63,117 @@
   height: 200px;
 }
 
-/* The sun */
+/* The sun — diffuse glow from above, like sunlight through water surface */
 .chat-scene::before {
   content: '';
   position: absolute;
-  top: 18%;
+  top: 8%;
   left: 50%;
-  width: 100px;
-  height: 100px;
+  width: 140px;
+  height: 90px;
   transform: translateX(-50%);
-  background: radial-gradient(circle,
-    rgba(255,255,255,1) 0%,
-    rgba(255,250,220,0.95) 18%,
-    rgba(180,235,255,0.85) 38%,
-    rgba(0,212,255,0.55) 60%,
-    transparent 78%);
+  background: radial-gradient(ellipse,
+    rgba(255,255,250,1) 0%,
+    rgba(255,245,200,0.85) 15%,
+    rgba(200,235,255,0.7) 35%,
+    rgba(120,200,240,0.4) 60%,
+    transparent 85%);
   border-radius: 50%;
-  animation: nlvc-sun-breath 4s ease-in-out infinite;
-  filter: blur(1px);
+  animation: nlvc-sun-breath 5s ease-in-out infinite;
+  filter: blur(8px);
   z-index: 3;
-  box-shadow: 0 0 60px rgba(255,255,255,0.5), 0 0 120px rgba(0,212,255,0.4);
+  box-shadow: 0 0 80px rgba(255,250,220,0.6), 0 0 140px rgba(0,212,255,0.4);
+  mix-blend-mode: screen;
 }
 @keyframes nlvc-sun-breath {
-  0%, 100% { transform: translateX(-50%) scale(1); opacity: 0.9; }
-  50% { transform: translateX(-50%) scale(1.18); opacity: 1; }
+  0%, 100% { transform: translateX(-50%) scale(1); opacity: 0.85; }
+  50% { transform: translateX(-50%) scale(1.15); opacity: 1; }
 }
 
-/* Light rays */
+/* Light rays piercing down through water */
 .chat-scene::after {
   content: '';
   position: absolute;
-  top: -5%;
+  top: -10%;
   left: 50%;
-  width: 360px;
-  height: 380px;
+  width: 480px;
+  height: 480px;
   transform: translateX(-50%);
   background: conic-gradient(
-    from 92deg at 50% 0%,
+    from 88deg at 50% 0%,
     transparent 0deg,
-    rgba(255,255,255,0.5) 8deg,
-    rgba(180,235,255,0.6) 14deg,
-    rgba(0,212,255,0.4) 22deg,
-    transparent 38deg,
-    rgba(255,255,255,0.35) 60deg,
-    rgba(180,235,255,0.5) 70deg,
-    rgba(0,212,255,0.3) 80deg,
-    transparent 96deg,
-    rgba(255,255,255,0.55) 116deg,
-    rgba(180,235,255,0.65) 124deg,
-    rgba(0,212,255,0.4) 134deg,
-    transparent 150deg,
-    rgba(255,255,255,0.4) 168deg,
-    rgba(180,235,255,0.5) 176deg,
-    transparent 188deg
+    rgba(255,255,240,0.55) 6deg,
+    rgba(200,240,255,0.7) 11deg,
+    rgba(0,212,255,0.45) 18deg,
+    transparent 30deg,
+    rgba(255,255,240,0.4) 48deg,
+    rgba(200,240,255,0.6) 56deg,
+    rgba(0,212,255,0.35) 66deg,
+    transparent 80deg,
+    rgba(255,255,240,0.6) 102deg,
+    rgba(200,240,255,0.75) 110deg,
+    rgba(0,212,255,0.5) 120deg,
+    transparent 134deg,
+    rgba(255,255,240,0.45) 150deg,
+    rgba(200,240,255,0.6) 158deg,
+    rgba(0,212,255,0.35) 168deg,
+    transparent 184deg
   );
   pointer-events: none;
   animation: nlvc-rays-shimmer 6s ease-in-out infinite;
   z-index: 2;
   mix-blend-mode: screen;
+  filter: blur(2px);
 }
 @keyframes nlvc-rays-shimmer {
-  0%, 100% { opacity: 0.7; }
-  50% { opacity: 1; }
+  0%, 100% { opacity: 0.6; transform: translateX(-50%) scale(1); }
+  50%      { opacity: 1; transform: translateX(-50%) scale(1.05); }
 }
 
-/* Caustic waves at the bottom of the scene */
+/* Caustic waves — full coverage, dancing light patches across the whole scene */
 .caustic-waves {
   position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 80px;
+  inset: 0;
   overflow: hidden;
   pointer-events: none;
   z-index: 4;
+  mix-blend-mode: screen;
 }
 .caustic-waves::before {
   content: '';
   position: absolute;
-  bottom: -10px;
-  left: -50%;
-  right: -50%;
-  height: 100%;
+  inset: -25%;
   background:
-    radial-gradient(ellipse 80px 26px at 20% 100%, rgba(0,212,255,0.7), transparent 70%),
-    radial-gradient(ellipse 100px 32px at 50% 100%, rgba(0,212,255,0.55), transparent 70%),
-    radial-gradient(ellipse 70px 24px at 80% 100%, rgba(0,212,255,0.7), transparent 70%);
-  animation: nlvc-caustic-drift 14s linear infinite;
-  opacity: 0.55;
+    radial-gradient(ellipse 60px 14px at 18% 22%, rgba(255,255,240,0.55), transparent 65%),
+    radial-gradient(ellipse 90px 20px at 42% 38%, rgba(220,245,255,0.5), transparent 70%),
+    radial-gradient(ellipse 50px 12px at 72% 28%, rgba(255,255,240,0.45), transparent 65%),
+    radial-gradient(ellipse 110px 22px at 28% 55%, rgba(200,240,255,0.5), transparent 70%),
+    radial-gradient(ellipse 70px 16px at 60% 60%, rgba(255,255,240,0.55), transparent 65%),
+    radial-gradient(ellipse 80px 18px at 82% 70%, rgba(220,245,255,0.5), transparent 70%),
+    radial-gradient(ellipse 100px 20px at 35% 80%, rgba(255,255,240,0.5), transparent 70%),
+    radial-gradient(ellipse 60px 14px at 70% 88%, rgba(200,240,255,0.55), transparent 65%);
+  animation: nlvc-caustic-drift 18s linear infinite;
+  filter: blur(1.5px);
 }
 .caustic-waves::after {
   content: '';
   position: absolute;
-  bottom: 0;
-  left: -50%;
-  right: -50%;
-  height: 100%;
+  inset: -25%;
   background:
-    radial-gradient(ellipse 30px 60px at 35% 95%, rgba(255,255,255,0.65), transparent 60%),
-    radial-gradient(ellipse 45px 80px at 50% 100%, rgba(255,255,255,0.85), rgba(180,235,255,0.5) 30%, transparent 70%),
-    radial-gradient(ellipse 30px 60px at 65% 95%, rgba(255,255,255,0.65), transparent 60%),
-    radial-gradient(ellipse 18px 40px at 42% 100%, rgba(255,255,255,0.7), transparent 60%),
-    radial-gradient(ellipse 18px 40px at 58% 100%, rgba(255,255,255,0.7), transparent 60%);
-  animation: nlvc-refraction 5s ease-in-out infinite;
-  mix-blend-mode: screen;
-  filter: blur(1px);
+    radial-gradient(ellipse 70px 16px at 25% 35%, rgba(255,255,240,0.45), transparent 70%),
+    radial-gradient(ellipse 50px 12px at 55% 25%, rgba(220,245,255,0.5), transparent 65%),
+    radial-gradient(ellipse 90px 18px at 75% 45%, rgba(255,255,240,0.4), transparent 70%),
+    radial-gradient(ellipse 60px 14px at 38% 65%, rgba(200,240,255,0.5), transparent 70%),
+    radial-gradient(ellipse 80px 16px at 68% 78%, rgba(255,255,240,0.45), transparent 70%),
+    radial-gradient(ellipse 50px 12px at 22% 90%, rgba(220,245,255,0.4), transparent 65%);
+  animation: nlvc-caustic-drift 26s linear infinite reverse;
+  filter: blur(2px);
+  opacity: 0.85;
 }
 @keyframes nlvc-caustic-drift {
-  0% { transform: translateX(0); }
-  100% { transform: translateX(50%); }
-}
-@keyframes nlvc-refraction {
-  0%, 100% { opacity: 0.7; transform: scaleY(1); }
-  50% { opacity: 1; transform: scaleY(1.15); }
+  0%   { transform: translate(0, 0); }
+  50%  { transform: translate(8%, -3%); }
+  100% { transform: translate(0, 0); }
 }
 
 /* Close button (visible only when expanded) */
@@ -419,12 +419,17 @@
 /* Mobile */
 @media (max-width: 600px) {
   #chat-widget-container.chat-widget-container {
-    min-height: 700px;
-    padding: 2rem 0.5rem;
+    min-height: 720px;
+    padding: 4rem 0.5rem;
+  }
+  .chat-invite {
+    width: 280px;
+    height: 280px;
   }
   .chat-invite.expanded {
     width: calc(100vw - 1.5rem);
     max-width: 400px;
     height: 580px;
+    border-radius: 24px;
   }
 }
