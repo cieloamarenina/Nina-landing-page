@@ -45,6 +45,15 @@ async def send_code_email(
     msg.set_content(f"Your code: {code}\n(Open this email in HTML to see the styled version.)")
     msg.add_alternative(render_template(lang, code), subtype="html")
 
+    # All-inkl SMTP serves a wildcard cert for *.kasserver.com that doesn't
+    # match the smtp.all-inkl.com hostname, so we disable hostname/cert
+    # verification on the TLS handshake. The connection itself is still
+    # encrypted via STARTTLS — only the chain-of-trust check is relaxed.
+    import ssl
+    tls_context = ssl.create_default_context()
+    tls_context.check_hostname = False
+    tls_context.verify_mode = ssl.CERT_NONE
+
     await aiosmtplib.send(
         msg,
         hostname=host,
@@ -52,4 +61,5 @@ async def send_code_email(
         username=user,
         password=password,
         start_tls=True,
+        tls_context=tls_context,
     )
