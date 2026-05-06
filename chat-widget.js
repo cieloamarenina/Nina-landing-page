@@ -10,6 +10,8 @@
   const AUTH_BASE = 'https://auth.ninalearnsvibecoding.com';
   const WEBHOOK_URL = 'https://n8n.ninalearnsvibecoding.com/webhook/8b1a11fc-6362-44c4-8422-7eb8b13e8d3e';
   const CONSENT_VERSION = '1.0';
+  const VERSION_URL = '/version.json';
+  const VERSION_CHECK_INTERVAL_MS = 60_000;
 
   const STORAGE = {
     sid: 'nlvc_chat_session_id',
@@ -485,6 +487,38 @@
   }
 
   // ==========================================================================
+  // Auto-update — poll version.json, reload page when version changes
+  // ==========================================================================
+  async function checkForUpdates() {
+    try {
+      const r = await fetch(`${VERSION_URL}?_=${Date.now()}`, { cache: 'no-store' });
+      if (!r.ok) return;
+      const data = await r.json();
+      if (!data || !data.version) return;
+      const stored = localStorage.getItem('nlvc_site_version');
+      if (stored && stored !== data.version) {
+        localStorage.setItem('nlvc_site_version', data.version);
+        // Reload, but don't interrupt user mid-typing
+        if (!card || !card.classList.contains('expanded')) {
+          location.reload();
+        } else {
+          // schedule reload for when user closes the chat
+          card.addEventListener('transitionend', function once() {
+            if (!card.classList.contains('expanded')) {
+              card.removeEventListener('transitionend', once);
+              location.reload();
+            }
+          });
+        }
+      } else if (!stored) {
+        localStorage.setItem('nlvc_site_version', data.version);
+      }
+    } catch {
+      // silent — version check failures should not break the widget
+    }
+  }
+
+  // ==========================================================================
   // Mount
   // ==========================================================================
   function mount() {
@@ -515,4 +549,8 @@
   } else {
     mount();
   }
+
+  // Start auto-update polling
+  checkForUpdates();
+  setInterval(checkForUpdates, VERSION_CHECK_INTERVAL_MS);
 })();
