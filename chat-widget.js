@@ -44,6 +44,7 @@
       err_rate: "Zu viele Anfragen. Versuch's in ein paar Minuten erneut.",
       err_email: 'Bitte gib eine gültige Email-Adresse ein.',
       err_code: "Code passt nicht. Versuch's nochmal.",
+      tooltip: 'Frag mich was 💬',
     },
     en: {
       consent: "You're about to chat with an AI. Inputs are processed for replies (Mistral AI, EU servers in France) and forwarded to Nina via Nextcloud notification. Email and question stored for 30 days.",
@@ -63,6 +64,7 @@
       err_rate: 'Too many requests. Try again in a few minutes.',
       err_email: 'Please enter a valid email.',
       err_code: "Code doesn't match. Try again.",
+      tooltip: 'Ask me anything 💬',
     },
     fr: {
       consent: "Tu vas chatter avec une IA. Les saisies sont traitées pour répondre (Mistral AI, serveurs EU en France) et transmises à Nina via Nextcloud. Email et question conservés 30 jours.",
@@ -82,6 +84,7 @@
       err_rate: 'Trop de requêtes. Réessaie dans quelques minutes.',
       err_email: 'Email invalide.',
       err_code: 'Code incorrect. Réessaie.',
+      tooltip: 'Pose-moi une question 💬',
     },
     es: {
       consent: 'Vas a chatear con una IA. Las entradas se procesan para responder (Mistral AI, servidores EU en Francia) y se envían a Nina vía Nextcloud. Email y pregunta guardados 30 días.',
@@ -101,6 +104,7 @@
       err_rate: 'Demasiadas solicitudes. Espera unos minutos.',
       err_email: 'Email inválido.',
       err_code: 'Código incorrecto. Inténtalo de nuevo.',
+      tooltip: 'Pregúntame algo 💬',
     },
     it: {
       consent: "Stai per chattare con un'IA. Gli input vengono elaborati per la risposta (Mistral AI, server EU in Francia) e inviati a Nina via Nextcloud. Email e domanda conservati 30 giorni.",
@@ -120,6 +124,7 @@
       err_rate: 'Troppe richieste. Riprova tra qualche minuto.',
       err_email: 'Email non valida.',
       err_code: 'Codice errato. Riprova.',
+      tooltip: 'Chiedimi qualcosa 💬',
     },
   };
 
@@ -527,6 +532,8 @@
       console.error('nlvc-chat: #chat-widget-container not found');
       return;
     }
+    const tooltip = el('div', { class: 'chat-tooltip' }, t().tooltip);
+    container.appendChild(tooltip);
     container.appendChild(build());
   }
 

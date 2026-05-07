@@ -14,7 +14,10 @@
       "name": "Webhook",
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 2,
-      "position": [240, 300],
+      "position": [
+        240,
+        300
+      ],
       "webhookId": "8b1a11fc-6362-44c4-8422-7eb8b13e8d3e"
     },
     {
@@ -25,17 +28,27 @@
       "name": "JWT Validate",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [460, 300]
+      "position": [
+        460,
+        300
+      ]
     },
     {
       "parameters": {
         "conditions": {
-          "options": { "caseSensitive": true, "typeValidation": "strict" },
+          "options": {
+            "caseSensitive": true,
+            "typeValidation": "strict"
+          },
           "conditions": [
             {
               "leftValue": "={{ $json._error }}",
               "rightValue": "",
-              "operator": { "type": "string", "operation": "exists", "singleValue": true }
+              "operator": {
+                "type": "string",
+                "operation": "exists",
+                "singleValue": true
+              }
             }
           ],
           "combinator": "and"
@@ -45,7 +58,10 @@
       "name": "JWT Error?",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2,
-      "position": [680, 300]
+      "position": [
+        680,
+        300
+      ]
     },
     {
       "parameters": {
@@ -55,7 +71,10 @@
           "responseCode": 401,
           "responseHeaders": {
             "entries": [
-              { "name": "Access-Control-Allow-Origin", "value": "https://ninalearnsvibecoding.com" }
+              {
+                "name": "Access-Control-Allow-Origin",
+                "value": "https://ninalearnsvibecoding.com"
+              }
             ]
           }
         }
@@ -64,17 +83,26 @@
       "name": "Respond 401",
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1,
-      "position": [900, 200]
+      "position": [
+        900,
+        200
+      ]
     },
     {
       "parameters": {
         "conditions": {
-          "options": { "caseSensitive": true, "typeValidation": "strict" },
+          "options": {
+            "caseSensitive": true,
+            "typeValidation": "strict"
+          },
           "conditions": [
             {
               "leftValue": "={{ $json.headers.origin }}",
               "rightValue": "={{ $env.ALLOWED_ORIGIN }}",
-              "operator": { "type": "string", "operation": "equals" }
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
             }
           ],
           "combinator": "and"
@@ -84,34 +112,51 @@
       "name": "Origin OK?",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2,
-      "position": [900, 400]
+      "position": [
+        900,
+        400
+      ]
     },
     {
       "parameters": {
         "respondWith": "json",
         "responseBody": "={\"error\":\"forbidden\"}",
-        "options": { "responseCode": 403 }
+        "options": {
+          "responseCode": 403
+        }
       },
       "id": "respond-403",
       "name": "Respond 403",
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1,
-      "position": [1120, 300]
+      "position": [
+        1120,
+        300
+      ]
     },
     {
       "parameters": {
         "conditions": {
-          "options": { "caseSensitive": true, "typeValidation": "strict" },
+          "options": {
+            "caseSensitive": true,
+            "typeValidation": "strict"
+          },
           "conditions": [
             {
               "leftValue": "={{ $json.body.honeypot }}",
               "rightValue": "",
-              "operator": { "type": "string", "operation": "equals" }
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
             },
             {
               "leftValue": "={{ ($json.body.message || '').length }}",
               "rightValue": 1500,
-              "operator": { "type": "number", "operation": "lte" }
+              "operator": {
+                "type": "number",
+                "operation": "lte"
+              }
             }
           ],
           "combinator": "and"
@@ -121,33 +166,44 @@
       "name": "Content OK?",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2,
-      "position": [1120, 500]
+      "position": [
+        1120,
+        500
+      ]
     },
     {
       "parameters": {
         "respondWith": "json",
         "responseBody": "={\"reply\":\"\"}",
-        "options": { "responseCode": 200 }
+        "options": {
+          "responseCode": 200
+        }
       },
       "id": "respond-silent",
       "name": "Silent 200 (bot/long)",
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1,
-      "position": [1340, 400]
+      "position": [
+        1340,
+        400
+      ]
     },
     {
       "parameters": {
         "promptType": "define",
         "text": "={{ $json.body.message }}",
         "options": {
-          "systemMessage": "Du bist der freundliche AI-Assistent auf ninalearnsvibecoding.com — der Lern- und Portfolio-Site von Nina. Antworte in der Sprache des Users (Code: {{ $json.body.lang }}).\n\nÜber Nina:\n- Lernt n8n & Vibecoding (KI-gestütztes Coden), baut öffentlich\n- AI Analyst & AI Consultant aus Berlin\n- Stack: Coolify (Hosting), All-inkl (Domain), Postgres, NocoDB, n8n\n- Aktuelle Projekte: Lern-Site, LinkedIn-Workflow, Mail-Workflow\n- LinkedIn: https://www.linkedin.com/in/ninapankninberlin/\n\nWas die Site bietet:\n- Blog mit Vibe-Coding-Artikeln (Suche via Tool verfügbar)\n- Pablo Player: Spotify-Music-Player im Header mit Ninas Playlists (z.B. 'Nina is coding') + kuratierten Spotify-Playlists (z.B. Venice, Alesis)\n- Mehrsprachig (de/en/fr/es/it)\n\nTonalität: locker, ehrlich, technisch wenn nötig. Sei konkret, nicht marketing-blumig. Erfinde keine Features, die du nicht aus dem Tool ableiten kannst.\n\nVerhalten:\n- Wenn jemand mehr über Nina als Person erfahren möchte, weise auf LinkedIn hin: https://www.linkedin.com/in/ninapankninberlin/\n- Wenn du eine Frage NICHT beantworten kannst, beginne deine Antwort mit dem Marker {{ESCALATE}} gefolgt von: 'Diese Frage kann ich nicht sicher beantworten — Nina meldet sich persönlich bei dir auf {{ $json._jwt_email }}.'"
+          "systemMessage": "LANGUAGE — CRITICAL: Always respond in the user's language. The language code is: {{ $json.body.lang }}\n- \"de\" → Deutsch\n- \"en\" → English\n- \"fr\" → Français\n- \"es\" → Español\n- \"it\" → Italiano\n\nNever switch language mid-conversation unless the user explicitly switches first. If unsure, default to the language code above.\n\n---\n\nYou are the friendly AI assistant on ninalearnsvibecoding.com — Nina's learning and portfolio site.\n\nAbout Nina:\n- From Berlin\n- Currently learning n8n & Vibecoding (AI-assisted coding) — building publicly\n- Tech stack she's working with: Coolify (hosting), All-inkl (domain), Postgres, NocoDB, n8n\n- Current projects she's building: this learning site, a LinkedIn workflow, a mail workflow\n- LinkedIn: https://www.linkedin.com/in/ninapankninberlin/\n\nImportant — what NOT to claim:\n- Don't say Nina is currently working as an Analyst, Consultant, or any professional title — she's in a learning phase\n- Don't mention any specific school, training program, or course — that's not part of her public bio\n- Don't invent specifics about her age, location details, or background she hasn't shared\n\nWhat the site offers:\n- Blog with vibe-coding articles (use the search tool to find relevant ones)\n- Pablo Player: Spotify music player in the header with Nina's playlists (e.g. \"Nina is coding\") + curated Spotify playlists (e.g. Venice, Alesis)\n- Multilingual (de/en/fr/es/it)\n\nTone: casual, honest, technical when needed. Be concrete, not marketing-fluffy.\n\nBehavior:\n- If someone asks personal stuff about Nina, point them to LinkedIn: https://www.linkedin.com/in/ninapankninberlin/\n- If you CANNOT answer a question, respond ONLY with the token {{ESCALATE}} (exactly that, no other text). The system will automatically add an appropriate message with Nina's reply address in the user's language."
         }
       },
       "id": "ai-agent",
       "name": "AI Agent",
       "type": "@n8n/n8n-nodes-langchain.agent",
       "typeVersion": 1.6,
-      "position": [1340, 600]
+      "position": [
+        1340,
+        600
+      ]
     },
     {
       "parameters": {
@@ -158,7 +214,10 @@
       "name": "Mistral Cloud Chat Model",
       "type": "@n8n/n8n-nodes-langchain.lmChatMistralCloud",
       "typeVersion": 1,
-      "position": [1280, 800],
+      "position": [
+        1280,
+        800
+      ],
       "credentials": {
         "mistralCloudApi": {
           "id": "__MISTRAL_CRED_ID__",
@@ -176,7 +235,10 @@
       "name": "Window Buffer Memory",
       "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
       "typeVersion": 1.3,
-      "position": [1440, 800]
+      "position": [
+        1440,
+        800
+      ]
     },
     {
       "parameters": {
@@ -190,26 +252,39 @@
       "name": "search_articles Tool",
       "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
       "typeVersion": 1.1,
-      "position": [1600, 800]
+      "position": [
+        1600,
+        800
+      ]
     },
     {
       "parameters": {
-        "jsCode": "// Strip {{ESCALATE}} marker and set needs_human flag\nconst raw = $json.output || '';\nconst needsHuman = raw.includes('{{ESCALATE}}');\nconst clean = raw.replace(/\\{\\{ESCALATE\\}\\}/g, '').trim();\nreturn [{\n  json: {\n    ...$json,\n    output_clean: clean,\n    needs_human: needsHuman,\n  }\n}];"
+        "jsCode": "// Strip {{ESCALATE}} marker, generate localized fallback, preserve upstream data\nconst raw = $json.output || '';\nconst needsHuman = raw.includes('{{ESCALATE}}');\n\nconst webhook = $('Webhook').first()?.json || {};\nconst jwtData = $('JWT Validate').first()?.json || {};\nconst email = jwtData._jwt_email || '';\nconst lang = (webhook.body || {}).lang || 'en';\n\nconst FALLBACK = {\n  de: `Diese Frage kann ich nicht sicher beantworten — Nina meldet sich persönlich bei dir auf ${email}.`,\n  en: `I'm not sure about that one — Nina will get back to you personally at ${email}.`,\n  fr: `Je ne peux pas répondre à cette question avec certitude — Nina te recontactera personnellement à ${email}.`,\n  es: `No puedo responder esta pregunta con certeza — Nina te contactará personalmente en ${email}.`,\n  it: `Non so rispondere a questa domanda con certezza — Nina ti ricontatterà personalmente a ${email}.`,\n};\n\nlet clean = raw.replace(/\\{\\{ESCALATE\\}\\}/g, '').trim();\nif (needsHuman && !clean) {\n  clean = FALLBACK[lang] || FALLBACK.en;\n}\n\nreturn [{\n  json: {\n    output: raw,\n    output_clean: clean,\n    needs_human: needsHuman,\n    body: webhook.body || {},\n    _jwt_email: email,\n    _jwt_jti: jwtData._jwt_jti || '',\n  }\n}];"
       },
       "id": "escalation-detect",
       "name": "Escalation Detection",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [1700, 600]
+      "position": [
+        1700,
+        600
+      ]
     },
     {
       "parameters": {
-        "respondWith": "json",
-        "responseBody": "={ \"reply\": $json.output_clean }",
+        "respondWith": "text",
+        "responseBody": "={{ JSON.stringify({reply: $json.output_clean || \"\"}) }}",
         "options": {
           "responseHeaders": {
             "entries": [
-              { "name": "Access-Control-Allow-Origin", "value": "https://ninalearnsvibecoding.com" }
+              {
+                "name": "Access-Control-Allow-Origin",
+                "value": "https://ninalearnsvibecoding.com"
+              },
+              {
+                "name": "Content-Type",
+                "value": "application/json"
+              }
             ]
           }
         }
@@ -218,79 +293,30 @@
       "name": "Respond to Webhook",
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1,
-      "position": [1940, 480]
-    },
-    {
-      "parameters": {
-        "method": "POST",
-        "url": "={{ $env.NEXTCLOUD_BASE_URL }}/ocs/v2.php/apps/spreed/api/v1/chat/{{ $env.NEXTCLOUD_TALK_ROOM_TOKEN }}",
-        "authentication": "predefinedCredentialType",
-        "nodeCredentialType": "httpBasicAuth",
-        "sendHeaders": true,
-        "headerParameters": {
-          "parameters": [
-            { "name": "OCS-APIRequest", "value": "true" },
-            { "name": "Accept", "value": "application/json" }
-          ]
-        },
-        "sendBody": true,
-        "bodyParameters": {
-          "parameters": [
-            {
-              "name": "message",
-              "value": "={{ $json.needs_human ? '⚠️ NEEDS HUMAN REPLY' : '💬 Chat-Nachricht' }}\nEmail: {{ $json._jwt_email }}\nSprache: {{ $json.body.lang }}\nFrage: {{ $json.body.message }}\n────\nAI-Antwort: {{ $json.output_clean }}\nSession: {{ $json.body.session_id }}"
-            }
-          ]
-        },
-        "options": {}
-      },
-      "id": "nextcloud-talk",
-      "name": "Nextcloud Talk Bot",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.2,
-      "position": [1940, 600],
-      "credentials": {
-        "httpBasicAuth": {
-          "id": "__NEXTCLOUD_CRED_ID__",
-          "name": "NEXTCLOUD_BOT"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "conditions": {
-          "options": { "caseSensitive": true, "typeValidation": "strict" },
-          "conditions": [
-            {
-              "leftValue": "={{ $json.needs_human }}",
-              "rightValue": true,
-              "operator": { "type": "boolean", "operation": "true", "singleValue": true }
-            }
-          ],
-          "combinator": "and"
-        }
-      },
-      "id": "if-needs-human",
-      "name": "Needs Human?",
-      "type": "n8n-nodes-base.if",
-      "typeVersion": 2,
-      "position": [1940, 720]
+      "position": [
+        1940,
+        480
+      ]
     },
     {
       "parameters": {
         "fromEmail": "ciao@ninalearnsvibecoding.com",
         "toEmail": "ciao@ninalearnsvibecoding.com",
-        "subject": "=[Chat-Widget] Bot braucht Hilfe — {{ $json._jwt_email }}",
-        "html": "=<p>Hi Nina,</p><p>der Chat-Bot konnte einer Anfrage nicht weiterhelfen. Bitte selbst zurückmelden:</p><p><b>Visitor:</b> {{ $json._jwt_email }}<br><b>Sprache:</b> {{ $json.body.lang }}<br><b>Frage:</b> {{ $json.body.message }}</p><p><b>Bot-Antwort:</b> {{ $json.output_clean }}<br><b>Session:</b> {{ $json.body.session_id }}</p><p style=\"color:#888;font-size:12px\">Klick „Antworten\" und schreib direkt zurück — Reply-To zeigt auf den Visitor.</p>",
+        "subject": "={{ $json.needs_human ? '⚠️ Bot braucht Hilfe' : '💬 Chat-Nachricht' }} — {{ $json._jwt_email }}",
+        "html": "=<p style=\"color:{{ $json.needs_human ? '#c62828' : '#0277bd' }};font-weight:600\">{{ $json.needs_human ? '⚠️ Der Bot konnte nicht antworten — bitte selbst zurückmelden!' : '💬 Neue Chat-Nachricht (Bot hat geantwortet)' }}</p><p><b>Visitor:</b> {{ $json._jwt_email }}<br><b>Sprache:</b> {{ $json.body.lang }}<br><b>Frage:</b> {{ $json.body.message }}</p><p><b>Bot-Antwort:</b><br>{{ $json.output_clean }}</p><p style=\"color:#888;font-size:12px\">Session: {{ $json.body.session_id }}<br>Klick „Antworten\" — Reply-To zeigt auf den Visitor.</p>",
         "options": {
-          "replyTo": "={{ $json._jwt_email }}"
+          "replyTo": "={{ $json._jwt_email }}",
+          "appendAttribution": false
         }
       },
       "id": "send-email",
       "name": "Email an ciao@",
       "type": "n8n-nodes-base.emailSend",
       "typeVersion": 2.1,
-      "position": [2180, 720],
+      "position": [
+        2180,
+        720
+      ],
       "credentials": {
         "smtp": {
           "id": "__SMTP_CRED_ID__",
@@ -301,55 +327,144 @@
   ],
   "connections": {
     "Webhook": {
-      "main": [[{ "node": "JWT Validate", "type": "main", "index": 0 }]]
+      "main": [
+        [
+          {
+            "node": "JWT Validate",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     },
     "JWT Validate": {
-      "main": [[{ "node": "JWT Error?", "type": "main", "index": 0 }]]
+      "main": [
+        [
+          {
+            "node": "JWT Error?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     },
     "JWT Error?": {
       "main": [
-        [{ "node": "Respond 401", "type": "main", "index": 0 }],
-        [{ "node": "Origin OK?", "type": "main", "index": 0 }]
+        [
+          {
+            "node": "Respond 401",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Origin OK?",
+            "type": "main",
+            "index": 0
+          }
+        ]
       ]
     },
     "Origin OK?": {
       "main": [
-        [{ "node": "Content OK?", "type": "main", "index": 0 }],
-        [{ "node": "Respond 403", "type": "main", "index": 0 }]
+        [
+          {
+            "node": "Content OK?",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Respond 403",
+            "type": "main",
+            "index": 0
+          }
+        ]
       ]
     },
     "Content OK?": {
       "main": [
-        [{ "node": "AI Agent", "type": "main", "index": 0 }],
-        [{ "node": "Silent 200 (bot/long)", "type": "main", "index": 0 }]
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Silent 200 (bot/long)",
+            "type": "main",
+            "index": 0
+          }
+        ]
       ]
     },
     "Mistral Cloud Chat Model": {
-      "ai_languageModel": [[{ "node": "AI Agent", "type": "ai_languageModel", "index": 0 }]]
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
     },
     "Window Buffer Memory": {
-      "ai_memory": [[{ "node": "AI Agent", "type": "ai_memory", "index": 0 }]]
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
     },
     "search_articles Tool": {
-      "ai_tool": [[{ "node": "AI Agent", "type": "ai_tool", "index": 0 }]]
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
     },
     "AI Agent": {
-      "main": [[{ "node": "Escalation Detection", "type": "main", "index": 0 }]]
+      "main": [
+        [
+          {
+            "node": "Escalation Detection",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     },
     "Escalation Detection": {
-      "main": [[
-        { "node": "Respond to Webhook", "type": "main", "index": 0 },
-        { "node": "Nextcloud Talk Bot", "type": "main", "index": 0 },
-        { "node": "Needs Human?", "type": "main", "index": 0 }
-      ]]
-    },
-    "Needs Human?": {
       "main": [
-        [{ "node": "Email an ciao@", "type": "main", "index": 0 }],
-        []
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Email an ciao@",
+            "type": "main",
+            "index": 0
+          }
+        ]
       ]
     }
   },
-  "settings": { "executionOrder": "v1" },
+  "settings": {
+    "executionOrder": "v1"
+  },
   "tags": []
 }
