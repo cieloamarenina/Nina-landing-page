@@ -335,7 +335,7 @@ if (!slug) {
   applyUI(lang);
   showNotFound(lang);
 } else {
-  fetch('articles.json')
+  fetch('https://raw.githubusercontent.com/cieloamarenina/Nina-landing-page/main/articles.json')
     .then(r => r.json())
     .then(articles => {
       const lang = getLang();

@@ -102,14 +102,21 @@ def main() -> None:
         "mistralCloudApi",
         {"apiKey": env("MISTRAL_API_KEY")},
     )
-    nextcloud_id = create_credential(
-        "NEXTCLOUD_BOT",
-        "httpBasicAuth",
-        {
-            "user": env("NEXTCLOUD_BOT_USER"),
-            "password": env("NEXTCLOUD_BOT_APP_PASSWORD"),
-        },
-    )
+
+    nextcloud_pw = env("NEXTCLOUD_BOT_APP_PASSWORD", required=False)
+    if nextcloud_pw:
+        nextcloud_id = create_credential(
+            "NEXTCLOUD_BOT",
+            "httpBasicAuth",
+            {
+                "user": env("NEXTCLOUD_BOT_USER"),
+                "password": nextcloud_pw,
+            },
+        )
+    else:
+        nextcloud_id = ""
+        print("  · skipping NEXTCLOUD_BOT (no NEXTCLOUD_BOT_APP_PASSWORD set — Email-only mode)")
+
     smtp_id = create_credential(
         "SMTP_AUTH",
         "smtp",
@@ -129,11 +136,11 @@ def main() -> None:
     wf_text = wf_text.replace("__NEXTCLOUD_CRED_ID__", nextcloud_id)
     wf_text = wf_text.replace("__SMTP_CRED_ID__", smtp_id)
     workflow = json.loads(wf_text)
-    # Strip read-only fields if updating
-    workflow.pop("active", None)
-    workflow.pop("id", None)
-    workflow.pop("createdAt", None)
-    workflow.pop("updatedAt", None)
+    # Strip read-only fields the n8n API rejects on create/update
+    for k in ("active", "id", "createdAt", "updatedAt", "tags",
+             "versionId", "triggerCount", "pinData", "staticData",
+             "meta", "shared"):
+        workflow.pop(k, None)
     wid = upload_workflow(workflow)
 
     print("\n3. Activation")
@@ -142,11 +149,12 @@ def main() -> None:
     print("\n✅ Done")
     print(f"   Production webhook: {env('WEBHOOK_PROD_URL')}")
     print(f"   Test webhook:       {env('WEBHOOK_TEST_URL')}")
-    print(f"\n   Next: set env vars in n8n (Settings → Variables):")
-    print(f"     - JWT_SECRET           (must match Auth-Service)")
-    print(f"     - ALLOWED_ORIGIN       = {env('ALLOWED_ORIGIN')}")
-    print(f"     - NEXTCLOUD_BASE_URL   = {env('NEXTCLOUD_BASE_URL')}")
-    print(f"     - NEXTCLOUD_TALK_ROOM_TOKEN = {env('NEXTCLOUD_TALK_ROOM_TOKEN')}")
+    print(f"\n   Next: set env vars on the n8n container (Coolify → n8n app → Environment):")
+    print(f"     - JWT_SECRET     (must match Auth-Service env)")
+    print(f"     - ALLOWED_ORIGIN = {env('ALLOWED_ORIGIN')}")
+    if nextcloud_pw:
+        print(f"     - NEXTCLOUD_BASE_URL        = {env('NEXTCLOUD_BASE_URL')}")
+        print(f"     - NEXTCLOUD_TALK_ROOM_TOKEN = {env('NEXTCLOUD_TALK_ROOM_TOKEN', required=False)}")
 
 
 if __name__ == "__main__":

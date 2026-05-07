@@ -1,0 +1,540 @@
+{
+  "name": "Chat Widget — Mistral Agent + RAG (Duplikat)",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "9c2b22ed-7473-55d5-9533-8fc9c24f9e4f",
+        "responseMode": "responseNode",
+        "options": {
+          "allowedOrigins": "https://ninalearnsvibecoding.com"
+        }
+      },
+      "id": "webhook-trigger",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        240,
+        300
+      ],
+      "webhookId": "9c2b22ed-7473-55d5-9533-8fc9c24f9e4f"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Validate JWT from Authorization header\nconst crypto = require('crypto');\nconst authHeader = $json.headers?.authorization || $json.headers?.Authorization || '';\nif (!authHeader.startsWith('Bearer ')) {\n  return [{ json: { _error: 'missing_jwt', _status: 401 } }];\n}\nconst token = authHeader.slice(7);\nconst parts = token.split('.');\nif (parts.length !== 3) {\n  return [{ json: { _error: 'invalid_jwt', _status: 401 } }];\n}\nconst secret = $env.JWT_SECRET;\nif (!secret) {\n  return [{ json: { _error: 'server_misconfig_no_secret', _status: 500 } }];\n}\nconst signingInput = parts[0] + '.' + parts[1];\nconst expected = crypto.createHmac('sha256', secret).update(signingInput).digest('base64')\n  .replace(/\\+/g, '-').replace(/\\//g, '_').replace(/=+$/, '');\nif (expected !== parts[2]) {\n  return [{ json: { _error: 'bad_signature', _status: 401 } }];\n}\nlet payload;\ntry {\n  const padded = parts[1] + '='.repeat((4 - parts[1].length % 4) % 4);\n  payload = JSON.parse(Buffer.from(padded.replace(/-/g, '+').replace(/_/g, '/'), 'base64').toString());\n} catch (e) {\n  return [{ json: { _error: 'invalid_payload', _status: 401 } }];\n}\nconst now = Math.floor(Date.now() / 1000);\nif (payload.exp && payload.exp < now) {\n  return [{ json: { _error: 'jwt_expired', _status: 401 } }];\n}\nreturn [{ json: { ...$json, _jwt_email: payload.sub, _jwt_jti: payload.jti } }];"
+      },
+      "id": "jwt-validate",
+      "name": "JWT Validate",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        460,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "leftValue": "={{ $json._error }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "exists",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        }
+      },
+      "id": "if-jwt-error",
+      "name": "JWT Error?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        680,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={\"error\":\"unauthorized\"}",
+        "options": {
+          "responseCode": 401,
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "Access-Control-Allow-Origin",
+                "value": "https://ninalearnsvibecoding.com"
+              }
+            ]
+          }
+        }
+      },
+      "id": "respond-401",
+      "name": "Respond 401",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [
+        900,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "leftValue": "={{ $json.headers.origin }}",
+              "rightValue": "={{ $env.ALLOWED_ORIGIN }}",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        }
+      },
+      "id": "if-origin",
+      "name": "Origin OK?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        900,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={\"error\":\"forbidden\"}",
+        "options": {
+          "responseCode": 403
+        }
+      },
+      "id": "respond-403",
+      "name": "Respond 403",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [
+        1120,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "leftValue": "={{ $json.body.honeypot }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            },
+            {
+              "leftValue": "={{ ($json.body.message || '').length }}",
+              "rightValue": 1500,
+              "operator": {
+                "type": "number",
+                "operation": "lte"
+              }
+            }
+          ],
+          "combinator": "and"
+        }
+      },
+      "id": "if-content-ok",
+      "name": "Content OK?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        1120,
+        500
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={\"reply\":\"\"}",
+        "options": {
+          "responseCode": 200
+        }
+      },
+      "id": "respond-silent",
+      "name": "Silent 200 (bot/long)",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [
+        1340,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.body.message }}",
+        "options": {
+          "systemMessage": "LANGUAGE — CRITICAL: Always respond in the user's language. The language code is: {{ $json.body.lang }}\n- \"de\" → Deutsch\n- \"en\" → English\n- \"fr\" → Français\n- \"es\" → Español\n- \"it\" → Italiano\n\nNever switch language mid-conversation unless the user explicitly switches first. If unsure, default to the language code above.\n\n---\n\nYou are the friendly AI assistant on ninalearnsvibecoding.com — Nina's learning and portfolio site.\n\nAbout Nina:\n- From Berlin\n- Currently learning n8n & Vibecoding (AI-assisted coding) — building publicly\n- Tech stack she's working with: Coolify (hosting), All-inkl (domain), Postgres, NocoDB, n8n\n- Current projects she's building: this learning site, a LinkedIn workflow, a mail workflow\n- LinkedIn: https://www.linkedin.com/in/ninapankninberlin/\n\nImportant — what NOT to claim:\n- Don't say Nina is currently working as an Analyst, Consultant, or any professional title — she's in a learning phase\n- Don't mention any specific school, training program, or course — that's not part of her public bio\n- Don't invent specifics about her age, location details, or background she hasn't shared\n\nWhat the site offers:\n- Blog with vibe-coding articles (use the search_articles tool to find relevant ones)\n- Tools & Tech-Stack section (use the landing_page_tools tool to look up specific technologies, frameworks or services Nina uses — this returns rich descriptions from a vector store)\n- Pablo Player: Spotify music player in the header with Nina's playlists (e.g. \"Nina is coding\") + curated Spotify playlists (e.g. Venice, Alesis)\n- Multilingual (de/en/fr/es/it)\n\nTone: casual, honest, technical when needed. Be concrete, not marketing-fluffy.\n\nBehavior:\n- If someone asks about a specific tool, technology, or Nina's stack — ALWAYS call landing_page_tools first.\n- If someone asks about a blog article or topic — call search_articles.\n- If someone asks personal stuff about Nina, point them to LinkedIn: https://www.linkedin.com/in/ninapankninberlin/\n- If you CANNOT answer a question, respond ONLY with the token {{ESCALATE}} (exactly that, no other text). The system will automatically add an appropriate message with Nina's reply address in the user's language."
+        }
+      },
+      "id": "ai-agent",
+      "name": "AI Agent",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.6,
+      "position": [
+        1340,
+        600
+      ]
+    },
+    {
+      "parameters": {
+        "model": "mistral-large-latest",
+        "options": {}
+      },
+      "id": "mistral-model",
+      "name": "Mistral Cloud Chat Model",
+      "type": "@n8n/n8n-nodes-langchain.lmChatMistralCloud",
+      "typeVersion": 1,
+      "position": [
+        1240,
+        800
+      ],
+      "credentials": {
+        "mistralCloudApi": {
+          "id": "U1hko42ZYtcVWI5X",
+          "name": "MISTRAL_API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $json.body.session_id }}",
+        "contextWindowLength": 10
+      },
+      "id": "memory-buffer",
+      "name": "Window Buffer Memory",
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        1380,
+        800
+      ]
+    },
+    {
+      "parameters": {
+        "name": "search_articles",
+        "description": "Sucht in Ninas Blog-Artikeln auf ninalearnsvibecoding.com. Nutze, wenn die Frage zu konkreten Vibe-Coding-Themen, Tools oder Konzepten passt. Input: Stichwort als String. Output: Top-3-Treffer mit Titel, Slug und Excerpt.",
+        "url": "https://ninalearnsvibecoding.com/articles.json",
+        "method": "GET",
+        "jsonExpression": "={{ \n  (() => {\n    const articles = $response.body || [];\n    const q = ($input.query || '').toLowerCase();\n    if (!q) return articles.slice(0, 3).map(a => ({ slug: a.slug, title: (a.translations?.en?.title || a.title), excerpt: (a.translations?.en?.excerpt || a.excerpt) }));\n    const matches = articles.filter(a => {\n      const t = JSON.stringify(a.translations || {}).toLowerCase();\n      return t.includes(q) || (a.title || '').toLowerCase().includes(q);\n    });\n    return matches.slice(0, 3).map(a => ({ slug: a.slug, title: (a.translations?.en?.title || a.title), excerpt: (a.translations?.en?.excerpt || a.excerpt) }));\n  })()\n}}"
+        },
+      "id": "tool-search",
+      "name": "search_articles Tool",
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        1520,
+        800
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "retrieve-as-tool",
+        "toolName": "landing_page_tools",
+        "toolDescription": "Suche Wissen über Tools auf Ninas Landing Page (n8n, Postgres, Coolify, Cursor, Claude AI, Mistral, Telegram, etc.). Immer nutzen, wenn der User nach einem konkreten Tool, einer Technologie oder Ninas Tech-Stack fragt.",
+        "tableName": {
+          "__rl": true,
+          "value": "rag_documents",
+          "mode": "list"
+        },
+        "topK": 4,
+        "options": {}
+      },
+      "id": "tool-pgvector",
+      "name": "landing_page_tools (PGVector)",
+      "type": "@n8n/n8n-nodes-langchain.vectorStorePGVector",
+      "typeVersion": 1.3,
+      "position": [
+        1660,
+        800
+      ],
+      "credentials": {
+        "postgres": {
+          "id": "",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "mistral-embed",
+        "options": {}
+      },
+      "id": "tool-pgvector-embeddings",
+      "name": "Embeddings Mistral Cloud",
+      "type": "@n8n/n8n-nodes-langchain.embeddingsMistralCloud",
+      "typeVersion": 1,
+      "position": [
+        1660,
+        980
+      ],
+      "credentials": {
+        "mistralCloudApi": {
+          "id": "U1hko42ZYtcVWI5X",
+          "name": "MISTRAL_API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Strip {{ESCALATE}} marker, generate localized fallback, preserve upstream data\nconst raw = $json.output || '';\nconst needsHuman = raw.includes('{{ESCALATE}}');\n\nconst webhook = $('Webhook').first()?.json || {};\nconst jwtData = $('JWT Validate').first()?.json || {};\nconst email = jwtData._jwt_email || '';\nconst lang = (webhook.body || {}).lang || 'en';\n\nconst FALLBACK = {\n  de: `Diese Frage kann ich nicht sicher beantworten — Nina meldet sich persönlich bei dir auf ${email}.`,\n  en: `I'm not sure about that one — Nina will get back to you personally at ${email}.`,\n  fr: `Je ne peux pas répondre à cette question avec certitude — Nina te recontactera personnellement à ${email}.`,\n  es: `No puedo responder esta pregunta con certeza — Nina te contactará personalmente en ${email}.`,\n  it: `Non so rispondere a questa domanda con certezza — Nina ti ricontatterà personalmente a ${email}.`,\n};\n\nlet clean = raw.replace(/\\{\\{ESCALATE\\}\\}/g, '').trim();\nif (needsHuman && !clean) {\n  clean = FALLBACK[lang] || FALLBACK.en;\n}\n\nreturn [{\n  json: {\n    output: raw,\n    output_clean: clean,\n    needs_human: needsHuman,\n    body: webhook.body || {},\n    _jwt_email: email,\n    _jwt_jti: jwtData._jwt_jti || '',\n  }\n}];"
+      },
+      "id": "escalation-detect",
+      "name": "Escalation Detection",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1700,
+        600
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "text",
+        "responseBody": "={{ JSON.stringify({reply: $json.output_clean || \"\"}) }}",
+        "options": {
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "Access-Control-Allow-Origin",
+                "value": "https://ninalearnsvibecoding.com"
+              },
+              {
+                "name": "Content-Type",
+                "value": "application/json"
+              }
+            ]
+          }
+        }
+      },
+      "id": "respond-reply",
+      "name": "Respond to Webhook",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [
+        1940,
+        480
+      ]
+    },
+    {
+      "parameters": {
+        "fromEmail": "ciao@ninalearnsvibecoding.com",
+        "toEmail": "ciao@ninalearnsvibecoding.com",
+        "subject": "={{ $json.needs_human ? '⚠️ Bot braucht Hilfe' : '💬 Chat-Nachricht' }} — {{ $json._jwt_email }}",
+        "html": "=<p style=\"color:{{ $json.needs_human ? '#c62828' : '#0277bd' }};font-weight:600\">{{ $json.needs_human ? '⚠️ Der Bot konnte nicht antworten — bitte selbst zurückmelden!' : '💬 Neue Chat-Nachricht (Bot hat geantwortet)' }}</p><p><b>Visitor:</b> {{ $json._jwt_email }}<br><b>Sprache:</b> {{ $json.body.lang }}<br><b>Frage:</b> {{ $json.body.message }}</p><p><b>Bot-Antwort:</b><br>{{ $json.output_clean }}</p><p style=\"color:#888;font-size:12px\">Session: {{ $json.body.session_id }}<br>Klick „Antworten\" — Reply-To zeigt auf den Visitor.</p>",
+        "options": {
+          "replyTo": "={{ $json._jwt_email }}",
+          "appendAttribution": false
+        }
+      },
+      "id": "send-email",
+      "name": "Email an ciao@",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [
+        2180,
+        720
+      ],
+      "credentials": {
+        "smtp": {
+          "id": "jIFEOuSxrqbyVDDm",
+          "name": "SMTP_AUTH"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "JWT Validate",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "JWT Validate": {
+      "main": [
+        [
+          {
+            "node": "JWT Error?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "JWT Error?": {
+      "main": [
+        [
+          {
+            "node": "Respond 401",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Origin OK?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Origin OK?": {
+      "main": [
+        [
+          {
+            "node": "Content OK?",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Respond 403",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Content OK?": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Silent 200 (bot/long)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Mistral Cloud Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Window Buffer Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "search_articles Tool": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "landing_page_tools (PGVector)": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embeddings Mistral Cloud": {
+      "ai_embedding": [
+        [
+          {
+            "node": "landing_page_tools (PGVector)",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Escalation Detection",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Escalation Detection": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Email an ciao@",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "tags": []
+}

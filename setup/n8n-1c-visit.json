@@ -16,7 +16,7 @@
     },
     {
       "parameters": {
-        "jsCode": "const b = $input.first().json.body || {};\nconst clean = s => String(s || '').replace(/[^a-zA-Z0-9 \\-\\.,'éàüöä]/g, '').slice(0, 80);\nconst cleanCity = s => String(s || '').replace(/[^a-zA-Z0-9 \\-\\.,'éàüöä]/g, '').slice(0, 100);\nconst lat = parseFloat(b.lat);\nconst lng = parseFloat(b.lng);\nreturn [{ json: {\n  country_code: clean(b.country_code).toUpperCase().slice(0,2) || 'XX',\n  country_name: clean(b.country_name) || 'Unknown',\n  session_id:   clean(b.session_id).slice(0,128) || 'unknown',\n  city:         cleanCity(b.city) || '',\n  lat:          isNaN(lat) ? null : lat,\n  lng:          isNaN(lng) ? null : lng\n}}];"
+        "jsCode": "const b = $input.first().json.body || {};\nconst clean = s => String(s || '').replace(/[^a-zA-Z0-9 \\-\\.éàüöä]/g, '').slice(0, 80);\nconst cleanCity = s => String(s || '').replace(/[^a-zA-Z0-9 \\-\\.éàüöä]/g, '').slice(0, 100);\nconst lat = parseFloat(b.lat);\nconst lng = parseFloat(b.lng);\nreturn [{ json: {\n  country_code: clean(b.country_code).toUpperCase().slice(0,2) || 'XX',\n  country_name: clean(b.country_name) || 'Unknown',\n  session_id:   clean(b.session_id).slice(0,128) || 'unknown',\n  city:         cleanCity(b.city) || '',\n  lat:          isNaN(lat) ? null : lat,\n  lng:          isNaN(lng) ? null : lng\n}}];"
       },
       "id": "aaa00001-0000-0000-0000-000000000002",
       "name": "Sanitize",

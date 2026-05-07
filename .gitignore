@@ -21,3 +21,7 @@ setup/python/**/__pycache__/
 *.pyc
 .pytest_cache/
 __pycache__/
+
+# Claude Code local settings (per-machine permissions)
+.claude/settings.local.json
+venv/
