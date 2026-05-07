@@ -27,7 +27,7 @@
   // ==========================================================================
   const I18N = {
     de: {
-      consent: 'Du chattest gleich mit einer KI. Eingaben werden zur Beantwortung verarbeitet (Mistral AI, EU-Server in Frankreich) und Nina als Nextcloud-Notification weitergeleitet. Email + Frage werden 30 Tage gespeichert.',
+      consent: 'Du chattest gleich mit einer KI. Eingaben werden zur Beantwortung verarbeitet (Mistral AI, EU-Server in Frankreich) und Nina per Email weitergeleitet. Email + Frage werden 30 Tage gespeichert.',
       consent_accept: 'Akzeptieren & weiter',
       email_label: 'Deine Email-Adresse',
       email_submit: 'Code senden',
@@ -44,10 +44,10 @@
       err_rate: "Zu viele Anfragen. Versuch's in ein paar Minuten erneut.",
       err_email: 'Bitte gib eine gültige Email-Adresse ein.',
       err_code: "Code passt nicht. Versuch's nochmal.",
-      tooltip: 'Frag mich was 💬',
+      tooltip: 'Chat mit mir 💬',
     },
     en: {
-      consent: "You're about to chat with an AI. Inputs are processed for replies (Mistral AI, EU servers in France) and forwarded to Nina via Nextcloud notification. Email and question stored for 30 days.",
+      consent: "You're about to chat with an AI. Inputs are processed for replies (Mistral AI, EU servers in France) and forwarded to Nina by email. Email and question stored for 30 days.",
       consent_accept: 'Accept & continue',
       email_label: 'Your email',
       email_submit: 'Send code',
@@ -64,10 +64,10 @@
       err_rate: 'Too many requests. Try again in a few minutes.',
       err_email: 'Please enter a valid email.',
       err_code: "Code doesn't match. Try again.",
-      tooltip: 'Ask me anything 💬',
+      tooltip: 'Chat with me 💬',
     },
     fr: {
-      consent: "Tu vas chatter avec une IA. Les saisies sont traitées pour répondre (Mistral AI, serveurs EU en France) et transmises à Nina via Nextcloud. Email et question conservés 30 jours.",
+      consent: "Tu vas chatter avec une IA. Les saisies sont traitées pour répondre (Mistral AI, serveurs EU en France) et transmises à Nina par e-mail. Email et question conservés 30 jours.",
       consent_accept: 'Accepter & continuer',
       email_label: 'Ton email',
       email_submit: 'Envoyer le code',
@@ -84,10 +84,10 @@
       err_rate: 'Trop de requêtes. Réessaie dans quelques minutes.',
       err_email: 'Email invalide.',
       err_code: 'Code incorrect. Réessaie.',
-      tooltip: 'Pose-moi une question 💬',
+      tooltip: 'Chatte avec moi 💬',
     },
     es: {
-      consent: 'Vas a chatear con una IA. Las entradas se procesan para responder (Mistral AI, servidores EU en Francia) y se envían a Nina vía Nextcloud. Email y pregunta guardados 30 días.',
+      consent: 'Vas a chatear con una IA. Las entradas se procesan para responder (Mistral AI, servidores EU en Francia) y se envían a Nina por email. Email y pregunta guardados 30 días.',
       consent_accept: 'Aceptar y continuar',
       email_label: 'Tu email',
       email_submit: 'Enviar código',
@@ -104,10 +104,10 @@
       err_rate: 'Demasiadas solicitudes. Espera unos minutos.',
       err_email: 'Email inválido.',
       err_code: 'Código incorrecto. Inténtalo de nuevo.',
-      tooltip: 'Pregúntame algo 💬',
+      tooltip: 'Chatea conmigo 💬',
     },
     it: {
-      consent: "Stai per chattare con un'IA. Gli input vengono elaborati per la risposta (Mistral AI, server EU in Francia) e inviati a Nina via Nextcloud. Email e domanda conservati 30 giorni.",
+      consent: "Stai per chattare con un'IA. Gli input vengono elaborati per la risposta (Mistral AI, server EU in Francia) e inviati a Nina via email. Email e domanda conservati 30 giorni.",
       consent_accept: 'Accetta e continua',
       email_label: 'La tua email',
       email_submit: 'Invia codice',
@@ -124,7 +124,7 @@
       err_rate: 'Troppe richieste. Riprova tra qualche minuto.',
       err_email: 'Email non valida.',
       err_code: 'Codice errato. Riprova.',
-      tooltip: 'Chiedimi qualcosa 💬',
+      tooltip: 'Chatta con me 💬',
     },
   };
 

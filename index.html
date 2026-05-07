@@ -7,7 +7,7 @@
 <title>Nina Learns Vibe Coding</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=JetBrains+Mono:wght@300;400;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="chat-widget.css?v=20260507-0931">
+<link rel="stylesheet" href="chat-widget.css?v=20260507-1833">
 <style>
   :root {
     --bg: #080c14;
@@ -264,9 +264,9 @@
 
   .hero-stats {
     display: flex;
-    gap: 3rem;
-    margin-top: 5rem;
-    padding-top: 3rem;
+    gap: 1.6rem;
+    margin-top: 3rem;
+    padding-top: 2rem;
     border-top: 1px solid var(--border);
   }
 
@@ -1054,10 +1054,10 @@
       <span class="stat-label" data-i18n="hero.stat3">Remote · Berlin</span>
     </div>
   </div>
-</section>
 
-<!-- CHAT WIDGET (Position D) -->
-<div id="chat-widget-container" class="chat-widget-container"></div>
+  <!-- CHAT WIDGET — anchored to hero, scrolls away with the page -->
+  <div id="chat-widget-container" class="chat-widget-container"></div>
+</section>
 
 <!-- ABOUT -->
 <section id="about">
@@ -2299,7 +2299,7 @@ applyLang(detectLang());
     });
 </script>
 
-<script src="chat-widget.js?v=20260507-0931" defer></script>
+<script src="chat-widget.js?v=20260507-1833" defer></script>
 
 <script>
 // n8n public stats
