@@ -188,23 +188,54 @@
 
   .not-found {
     text-align: center;
-    padding: 6rem 0;
+    padding: 8rem 2rem;
+    max-width: 480px;
+    margin: 0 auto;
+  }
+
+  .not-found-code {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--accent);
+    opacity: 0.6;
+    margin-bottom: 1.5rem;
   }
 
   .not-found h1 {
     font-family: var(--font-display);
-    font-size: 3rem;
+    font-size: clamp(5rem, 15vw, 9rem);
+    font-weight: 800;
     color: var(--accent);
+    line-height: 1;
     margin-bottom: 1rem;
+    letter-spacing: -0.04em;
+    text-shadow: 0 0 60px rgba(0,212,255,0.2);
   }
 
-  .not-found p { color: var(--muted); margin-bottom: 2rem; }
+  .not-found p {
+    color: var(--muted);
+    margin-bottom: 2.5rem;
+    font-size: 0.85rem;
+    line-height: 1.8;
+  }
 
   .not-found a {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 24px;
+    border: 1px solid var(--accent);
     color: var(--accent);
     text-decoration: none;
-    border-bottom: 1px solid rgba(0,212,255,0.3);
+    font-size: 0.75rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    transition: background 0.2s;
   }
+
+  .not-found a:hover { background: rgba(0,212,255,0.08); }
 
   footer {
     position: relative;
@@ -314,6 +345,7 @@ function showNotFound(lang) {
   const u = UI[lang] || UI.en;
   main.innerHTML = `
     <div class="not-found">
+      <div class="not-found-code">// error</div>
       <h1>404</h1>
       <p>${u.notFound}</p>
       <a href="blog.html">${u.back}</a>
