@@ -389,7 +389,8 @@
       show('consent');
     } else if (!jwtValid()) {
       clearAuth();
-      show(localStorage.getItem(STORAGE.email) ? 'code' : 'email');
+      localStorage.removeItem(STORAGE.email);
+      show('email');
     } else {
       show('chat');
       ensureGreeting();
