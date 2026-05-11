@@ -25,3 +25,7 @@ __pycache__/
 # Claude Code local settings (per-machine permissions)
 .claude/settings.local.json
 venv/
+services/n8n-proxy/.env
+.superpowers/
+.claude/
+0
