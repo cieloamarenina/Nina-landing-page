@@ -306,7 +306,7 @@ function renderArticle(lang) {
     <div class="article-tag">${t.tag}</div>
     <h1 class="article-title">${t.title}</h1>
     <div class="article-date">${new Date(_article.date).toLocaleDateString(LANG_LOCALE[lang]||'en-GB',{day:'numeric',month:'long',year:'numeric'})}</div>
-    <div class="article-content">${t.content}</div>
+    <div class="article-content">${t.content || t.excerpt || ''}</div>
   `;
 }
 
@@ -335,7 +335,7 @@ if (!slug) {
   applyUI(lang);
   showNotFound(lang);
 } else {
-  fetch('https://raw.githubusercontent.com/cieloamarenina/Nina-landing-page/main/articles.json')
+  fetch('articles.json?v=' + Date.now())
     .then(r => r.json())
     .then(articles => {
       const lang = getLang();
