@@ -1,0 +1,26 @@
+<h2>Wie willst du Artikel schreiben & veröffentlichen?</h2>
+<p class="subtitle">Das bestimmt wie komplex das System wird</p>
+
+<div class="options">
+  <div class="option" data-choice="a" onclick="toggleSelect(this)">
+    <div class="letter">A</div>
+    <div class="content">
+      <h3>Einfach: Statisches HTML</h3>
+      <p>Jeder Artikel ist eine eigene .html-Datei. Neuer Artikel = neue Datei anlegen, Link in blog.html eintragen. Kein Backend, kein CMS, 100% einfach. Perfekt für gelegentliche Posts.</p>
+    </div>
+  </div>
+  <div class="option" data-choice="b" onclick="toggleSelect(this)">
+    <div class="letter">B</div>
+    <div class="content">
+      <h3>Mittel: JSON-Datei als Mini-CMS</h3>
+      <p>Alle Artikel in einer articles.json-Datei gepflegt. JavaScript lädt sie und baut Blog + Teaser dynamisch auf. Neuer Artikel = eine Zeile JSON. Kein Backend nötig.</p>
+    </div>
+  </div>
+  <div class="option" data-choice="c" onclick="toggleSelect(this)">
+    <div class="letter">C</div>
+    <div class="content">
+      <h3>Komplex: n8n / NocoDB Backend</h3>
+      <p>Artikel werden in NocoDB gepflegt, n8n generiert daraus HTML-Seiten. Voll automatisiert, perfekt für häufige Posts — aber deutlich mehr Setup-Aufwand.</p>
+    </div>
+  </div>
+</div>

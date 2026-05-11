@@ -8,7 +8,7 @@
   // CONFIG — replace these URLs in production / staging if different
   // ==========================================================================
   const AUTH_BASE = 'https://auth.ninalearnsvibecoding.com';
-  const WEBHOOK_URL = 'https://n8n.ninalearnsvibecoding.com/webhook/8b1a11fc-6362-44c4-8422-7eb8b13e8d3e';
+  const WEBHOOK_URL = 'https://n8n.ninalearnsvibecoding.com/webhook/9c2b22ed-7473-55d5-9533-8fc9c24f9e4f';
   const CONSENT_VERSION = '1.0';
   const VERSION_URL = '/version.json';
   const VERSION_CHECK_INTERVAL_MS = 60_000;
