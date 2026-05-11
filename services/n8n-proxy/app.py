@@ -142,6 +142,46 @@ def public_stats():
     })
 
 
+@app.route("/api/public-recent-runs")
+def public_recent_runs():
+    try:
+        page = _n8n_get("/executions", params={"limit": 10, "includeData": "false"})
+        executions = page.get("data", [])
+        workflows_cache: dict[str, str] = {}
+
+        def _wf_name(wf_id: str) -> str:
+            if wf_id not in workflows_cache:
+                try:
+                    wf = _n8n_get(f"/workflows/{wf_id}")
+                    workflows_cache[wf_id] = wf.get("name", wf_id)
+                except Exception:
+                    workflows_cache[wf_id] = wf_id
+            return workflows_cache[wf_id]
+
+        runs = []
+        for ex in executions:
+            wf_id = ex.get("workflowId", "")
+            started = ex.get("startedAt")
+            stopped = ex.get("stoppedAt")
+            duration_s = None
+            if started and stopped:
+                try:
+                    duration_s = round(
+                        (_parse_dt(stopped) - _parse_dt(started)).total_seconds(), 1
+                    )
+                except Exception:
+                    pass
+            runs.append({
+                "workflow_name": _wf_name(wf_id),
+                "status": ex.get("status"),
+                "started_at": started,
+                "duration_s": duration_s,
+            })
+        return jsonify({"runs": runs})
+    except Exception as e:
+        return jsonify({"runs": [], "error": str(e)})
+
+
 @app.route("/api/workflows")
 @_require_jwt
 def get_workflows():

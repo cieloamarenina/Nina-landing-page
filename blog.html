@@ -349,7 +349,7 @@ document.querySelectorAll('.lang-btn').forEach(btn => {
   });
 });
 
-fetch('https://raw.githubusercontent.com/cieloamarenina/Nina-landing-page/main/articles.json?v=' + Date.now())
+fetch('articles.json?v=' + Date.now())
   .then(r => r.json())
   .then(articles => {
     _articles = articles;

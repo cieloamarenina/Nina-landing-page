@@ -586,6 +586,53 @@
     color: var(--muted);
   }
 
+  .auto-runs-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-bottom: 2rem;
+  }
+
+  .auto-run-row {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 0.75rem 1rem;
+    font-size: 0.78rem;
+  }
+
+  .auto-run-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .auto-run-name {
+    flex: 1;
+    color: var(--text);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .auto-run-time {
+    color: var(--muted);
+    font-size: 0.7rem;
+    flex-shrink: 0;
+  }
+
+  .auto-run-duration {
+    color: var(--muted);
+    font-size: 0.7rem;
+    flex-shrink: 0;
+    min-width: 4rem;
+    text-align: right;
+  }
+
   .auto-cta {
     display: inline-flex;
     align-items: center;
@@ -1167,6 +1214,34 @@
       <div class="tl-desc" data-i18n="tl9.desc">Automated booking pipeline: Cal.com fires a webhook on every new appointment, an AI agent writes a personalised confirmation email in the guest's language, stores the booking in NocoDB and sends a Pushover push notification — all in n8n.</div>
       <div class="tl-tags"><span class="tag">n8n</span><span class="tag">Cal.com</span><span class="tag">AI</span><span class="tag">NocoDB</span><span class="tag">Pushover</span></div>
     </div>
+    <div class="tl-item reveal">
+      <div class="tl-dot"></div>
+      <div class="tl-date">Apr — May 2026</div>
+      <div class="tl-title" data-i18n="tl10.title">RAG News Pipeline</div>
+      <div class="tl-desc" data-i18n="tl10.desc">Full end-to-end automation: RSS feeds → Mistral RAG → PostgreSQL vector store → AI generates blog article in 5 languages + LinkedIn post → timer-triggered publishing to landing page and LinkedIn.</div>
+      <div class="tl-tags"><span class="tag">RAG</span><span class="tag">Mistral</span><span class="tag">PostgreSQL</span><span class="tag">LinkedIn</span><span class="tag">n8n</span></div>
+    </div>
+    <div class="tl-item reveal">
+      <div class="tl-dot"></div>
+      <div class="tl-date">May 2026</div>
+      <div class="tl-title" data-i18n="tl11.title">Chat Widget — Mistral Agent + RAG</div>
+      <div class="tl-desc" data-i18n="tl11.desc">Built a live chat widget on the landing page powered by a Mistral AI agent with RAG — it answers questions about my projects using a vector knowledge base. First real-time AI product shipped.</div>
+      <div class="tl-tags"><span class="tag">Mistral</span><span class="tag">RAG</span><span class="tag">Chat Widget</span><span class="tag">Vibe Coding</span></div>
+    </div>
+    <div class="tl-item reveal">
+      <div class="tl-dot"></div>
+      <div class="tl-date">May 2026</div>
+      <div class="tl-title" data-i18n="tl12.title">Telegram Bot — KI Agent</div>
+      <div class="tl-desc" data-i18n="tl12.desc">Telegram bot powered by an AI agent that handles text, generates images and responds with voice messages — all in one workflow built in n8n.</div>
+      <div class="tl-tags"><span class="tag">Telegram</span><span class="tag">AI Agent</span><span class="tag">Image</span><span class="tag">Voice</span><span class="tag">n8n</span></div>
+    </div>
+    <div class="tl-item reveal">
+      <div class="tl-dot"></div>
+      <div class="tl-date">May 2026</div>
+      <div class="tl-title" data-i18n="tl13.title">DSGVO & EU AI Act — Compliance Review</div>
+      <div class="tl-desc" data-i18n="tl13.desc">Assessment of all active workflows against GDPR and EU AI Act requirements. Reviewed data flows, storage locations and processing logic — and adapted automations accordingly.</div>
+      <div class="tl-tags"><span class="tag">DSGVO</span><span class="tag">EU AI Act</span><span class="tag">Compliance</span><span class="tag">n8n</span></div>
+    </div>
   </div>
 </section>
 
@@ -1297,6 +1372,12 @@
       <div class="tool-desc" data-i18n="tool.pushover">Push notification service. Workflows send real-time alerts to phone via Pushover.</div>
       <div class="tool-level"><div class="tool-level-fill" style="width:45%"></div></div>
     </div>
+    <div class="tool-card reveal">
+      <img class="tool-icon" src="https://cdn.simpleicons.org/hubspot/FF7A59" alt="HubSpot">
+      <div class="tool-name">HubSpot</div>
+      <div class="tool-desc" data-i18n="tool.hubspot">CRM & contact management. Connected to n8n for automated lead and email workflows.</div>
+      <div class="tool-level"><div class="tool-level-fill" style="width:40%"></div></div>
+    </div>
   </div>
 </section>
 
@@ -1345,6 +1426,7 @@
       <span data-i18n="automations.loading">Loading…</span>
     </div>
   </div>
+  <div class="auto-runs-list reveal" id="auto-runs-list"></div>
   <a href="/dashboard" class="auto-cta reveal" data-i18n="automations.cta">→ View Dashboard</a>
 </section>
 
@@ -1770,6 +1852,14 @@ const TRANSLATIONS = {
     'tl8.desc': 'ninalearnsvibecoding.com is live. Hosted on Hetzner via Coolify. Vibe-coded with Claude as co-pilot. You\'re looking at it right now.',
     'tl9.title': 'Cal.com Booking Agent',
     'tl9.desc': 'Automated booking pipeline: Cal.com fires a webhook on every new appointment, an AI agent writes a personalised confirmation email in the guest\'s language, stores the booking in NocoDB and sends a Pushover push notification — all in n8n.',
+    'tl10.title': 'RAG News Pipeline',
+    'tl10.desc': 'Full end-to-end automation: RSS feeds → Mistral RAG → PostgreSQL vector store → AI generates blog article in 5 languages + LinkedIn post → timer-triggered publishing to landing page and LinkedIn.',
+    'tl11.title': 'Chat Widget — Mistral Agent + RAG',
+    'tl11.desc': 'Built a live chat widget on the landing page powered by a Mistral AI agent with RAG — it answers questions about my projects using a vector knowledge base. First real-time AI product shipped.',
+    'tl12.title': 'Telegram Bot — KI Agent',
+    'tl12.desc': 'Telegram bot powered by an AI agent that handles text, generates images and responds with voice messages — all in one workflow built in n8n.',
+    'tl13.title': 'DSGVO & EU AI Act — Compliance Review',
+    'tl13.desc': 'Assessment of all active workflows against GDPR and EU AI Act requirements. Reviewed data flows, storage locations and processing logic — and adapted automations accordingly.',
     'tools.tag': '// stack',
     'tools.title': 'Tools &amp;<br>Tech Stack',
     'tool.n8n': 'Workflow Automation &amp; AI Agents. My daily tool for No-Code / Low-Code pipelines.',
@@ -1792,6 +1882,7 @@ const TRANSLATIONS = {
     'tool.gdrive': 'File upload automation — Gmail attachments auto-sorted into Drive folders via n8n.',
     'tool.calcom': 'Open-source scheduling tool. Powers the Booking Agent workflow — automated calendar management.',
     'tool.pushover': 'Push notification service. Workflows send real-time alerts to phone via Pushover.',
+    'tool.hubspot': 'CRM & contact management. Connected to n8n for automated lead and email workflows.',
     'visitors.tag': '// visitors',
     'visitors.title': 'Reading this<br>from where?',
     'visitors.online': 'online right now',
@@ -1870,6 +1961,14 @@ const TRANSLATIONS = {
     'tl8.desc': 'ninalearnsvibecoding.com ist live. Gehostet auf Hetzner via Coolify. Vibe-coded mit Claude als Co-Pilot. Du schaust dir das gerade an.',
     'tl9.title': 'Cal.com Booking Agent',
     'tl9.desc': 'Automatisierte Buchungs-Pipeline: Cal.com feuert bei jedem neuen Termin einen Webhook, ein KI-Agent schreibt eine personalisierte Bestätigungsmail in der Sprache des Gastes, speichert die Buchung in NocoDB und sendet eine Pushover-Benachrichtigung — alles in n8n.',
+    'tl10.title': 'RAG News Pipeline',
+    'tl10.desc': 'End-to-End-Automatisierung: RSS-Feeds → Mistral RAG → PostgreSQL-Vektorspeicher → KI generiert Blogartikel in 5 Sprachen + LinkedIn-Post → timer-gesteuertes Veröffentlichen auf der Landing Page und LinkedIn.',
+    'tl11.title': 'Chat-Widget — Mistral Agent + RAG',
+    'tl11.desc': 'Live-Chat-Widget auf der Landing Page — angetrieben von einem Mistral-KI-Agenten mit RAG. Beantwortet Fragen zu meinen Projekten aus einer Vektor-Wissensdatenbank. Erstes echtes Echtzeit-KI-Produkt.',
+    'tl12.title': 'Telegram Bot — KI-Agent',
+    'tl12.desc': 'Telegram-Bot mit KI-Agent: verarbeitet Texte, generiert Bilder und antwortet mit Sprachnachrichten — alles in einem n8n-Workflow gebaut.',
+    'tl13.title': 'DSGVO & EU KI-Gesetz — Compliance-Review',
+    'tl13.desc': 'Prüfung aller aktiven Workflows gegen DSGVO- und EU-KI-Gesetz-Anforderungen. Datenflüsse, Speicherorte und Verarbeitungslogik analysiert — und Automatisierungen entsprechend angepasst.',
     'tools.tag': '// stack',
     'tools.title': 'Tools &amp;<br>Tech Stack',
     'tool.n8n': 'Workflow-Automatisierung &amp; KI-Agenten. Mein tägliches Tool für No-Code / Low-Code-Pipelines.',
@@ -1892,6 +1991,7 @@ const TRANSLATIONS = {
     'tool.gdrive': 'Datei-Upload-Automatisierung — Gmail-Anhänge werden automatisch in Drive-Ordner sortiert.',
     'tool.calcom': 'Open-Source Buchungstool. Treibt den Booking-Agent-Workflow an — automatisches Kalender-Management.',
     'tool.pushover': 'Push-Benachrichtigungs-Service. Workflows senden Echtzeit-Alerts aufs Handy.',
+    'tool.hubspot': 'CRM & Kontaktverwaltung. Mit n8n verbunden für automatisierte Lead- und E-Mail-Workflows.',
     'visitors.tag': '// besucher',
     'visitors.title': 'Von wo aus<br>liest du das?',
     'visitors.online': 'gerade online',
@@ -1970,6 +2070,14 @@ const TRANSLATIONS = {
     'tl8.desc': 'ninalearnsvibecoding.com est en ligne. Hébergé sur Hetzner via Coolify. Vibe-codé avec Claude comme co-pilote. Vous le regardez en ce moment même.',
     'tl9.title': 'Agent de réservation Cal.com',
     'tl9.desc': 'Pipeline de réservation automatisé : Cal.com envoie un webhook à chaque nouveau rendez-vous, un agent IA rédige un e-mail de confirmation personnalisé dans la langue du client, enregistre la réservation dans NocoDB et envoie une notification Pushover — le tout dans n8n.',
+    'tl10.title': 'Pipeline RAG d\'actualités',
+    'tl10.desc': 'Automatisation de bout en bout : flux RSS → RAG Mistral → PostgreSQL vectoriel → l\'IA génère un article de blog en 5 langues + post LinkedIn → publication automatique sur la landing page et LinkedIn.',
+    'tl11.title': 'Chat Widget — Agent Mistral + RAG',
+    'tl11.desc': 'Widget de chat en direct sur la landing page — propulsé par un agent IA Mistral avec RAG. Répond aux questions sur mes projets depuis une base de connaissances vectorielle.',
+    'tl12.title': 'Bot Telegram — Agent KI',
+    'tl12.desc': 'Bot Telegram avec agent IA : traite les textes, génère des images et répond avec des messages vocaux — le tout dans un workflow n8n.',
+    'tl13.title': 'RGPD & Loi IA UE — Revue de conformité',
+    'tl13.desc': 'Évaluation de tous les workflows actifs selon les exigences du RGPD et de la loi européenne sur l\'IA. Analyse des flux de données, lieux de stockage et logique de traitement — et adaptation des automatisations.',
     'tools.tag': '// stack',
     'tools.title': 'Outils &amp;<br>Stack technique',
     'tool.n8n': 'Automatisation de workflows &amp; agents IA. Mon outil quotidien pour les pipelines No-Code / Low-Code.',
@@ -1992,6 +2100,7 @@ const TRANSLATIONS = {
     'tool.gdrive': 'Automatisation d\'upload — pièces jointes Gmail triées automatiquement dans Drive.',
     'tool.calcom': 'Outil de planification open-source. Alimente le Booking Agent — gestion automatique du calendrier.',
     'tool.pushover': 'Service de notifications push. Les workflows envoient des alertes en temps réel sur le téléphone.',
+    'tool.hubspot': 'CRM & gestion des contacts. Connecté à n8n pour les workflows automatisés de leads et d\'emails.',
     'visitors.tag': '// visiteurs',
     'visitors.title': 'Vous lisez ceci<br>depuis où?',
     'visitors.online': 'en ligne maintenant',
@@ -2070,6 +2179,14 @@ const TRANSLATIONS = {
     'tl8.desc': 'ninalearnsvibecoding.com è online. Ospitato su Hetzner tramite Coolify. Vibe-coded con Claude come co-pilota. Lo stai guardando proprio adesso.',
     'tl9.title': 'Agente di prenotazione Cal.com',
     'tl9.desc': 'Pipeline di prenotazione automatizzata: Cal.com invia un webhook ad ogni nuovo appuntamento, un agente AI scrive un\'email di conferma personalizzata nella lingua dell\'ospite, salva la prenotazione in NocoDB e invia una notifica Pushover — tutto in n8n.',
+    'tl10.title': 'Pipeline RAG di notizie',
+    'tl10.desc': 'Automazione end-to-end: feed RSS → RAG Mistral → PostgreSQL vettoriale → l\'IA genera articolo blog in 5 lingue + post LinkedIn → pubblicazione automatica su landing page e LinkedIn.',
+    'tl11.title': 'Chat Widget — Agente Mistral + RAG',
+    'tl11.desc': 'Widget di chat live sulla landing page — alimentato da un agente IA Mistral con RAG. Risponde a domande sui miei progetti da una base di conoscenza vettoriale.',
+    'tl12.title': 'Bot Telegram — Agente KI',
+    'tl12.desc': 'Bot Telegram con agente IA: gestisce testi, genera immagini e risponde con messaggi vocali — tutto in un workflow n8n.',
+    'tl13.title': 'GDPR & Legge UE sull\'IA — Revisione conformità',
+    'tl13.desc': 'Valutazione di tutti i workflow attivi rispetto ai requisiti GDPR e della legge europea sull\'IA. Analizzati flussi di dati, luoghi di archiviazione e logica di elaborazione — e adattate le automazioni.',
     'tools.tag': '// stack',
     'tools.title': 'Strumenti &amp;<br>Tech Stack',
     'tool.n8n': 'Automazione workflow &amp; AI Agents. Il mio strumento quotidiano per pipeline No-Code / Low-Code.',
@@ -2092,6 +2209,7 @@ const TRANSLATIONS = {
     'tool.gdrive': 'Automazione upload file — allegati Gmail ordinati automaticamente nelle cartelle Drive.',
     'tool.calcom': 'Strumento di pianificazione open-source. Alimenta il Booking Agent — gestione calendario automatica.',
     'tool.pushover': 'Servizio di notifiche push. I workflow inviano alert in tempo reale al telefono.',
+    'tool.hubspot': 'CRM & gestione contatti. Collegato a n8n per workflow automatizzati di lead ed email.',
     'visitors.tag': '// visitatori',
     'visitors.title': 'Da dove<br>stai leggendo?',
     'visitors.online': 'online adesso',
@@ -2170,6 +2288,14 @@ const TRANSLATIONS = {
     'tl8.desc': 'ninalearnsvibecoding.com está en vivo. Alojado en Hetzner via Coolify. Vibe-coded con Claude como copiloto. Lo estás viendo ahora mismo.',
     'tl9.title': 'Agente de reservas Cal.com',
     'tl9.desc': 'Pipeline de reservas automatizado: Cal.com dispara un webhook en cada nueva cita, un agente IA escribe un correo de confirmación personalizado en el idioma del invitado, guarda la reserva en NocoDB y envía una notificación Pushover — todo en n8n.',
+    'tl10.title': 'Pipeline RAG de noticias',
+    'tl10.desc': 'Automatización de extremo a extremo: feeds RSS → RAG Mistral → PostgreSQL vectorial → la IA genera artículo de blog en 5 idiomas + post LinkedIn → publicación automática en landing page y LinkedIn.',
+    'tl11.title': 'Chat Widget — Agente Mistral + RAG',
+    'tl11.desc': 'Widget de chat en vivo en la landing page — impulsado por un agente IA Mistral con RAG. Responde preguntas sobre mis proyectos desde una base de conocimiento vectorial.',
+    'tl12.title': 'Bot de Telegram — Agente KI',
+    'tl12.desc': 'Bot de Telegram con agente IA: procesa textos, genera imágenes y responde con mensajes de voz — todo en un workflow de n8n.',
+    'tl13.title': 'RGPD & Ley IA UE — Revisión de cumplimiento',
+    'tl13.desc': 'Evaluación de todos los workflows activos frente a los requisitos del RGPD y la Ley de IA de la UE. Revisados flujos de datos, ubicaciones de almacenamiento y lógica de procesamiento — y adaptadas las automatizaciones.',
     'tools.tag': '// stack',
     'tools.title': 'Herramientas &amp;<br>Tech Stack',
     'tool.n8n': 'Automatización de workflows y agentes IA. Mi herramienta diaria para pipelines No-Code / Low-Code.',
@@ -2192,6 +2318,7 @@ const TRANSLATIONS = {
     'tool.gdrive': 'Automatización de carga — adjuntos de Gmail ordenados automáticamente en carpetas de Drive.',
     'tool.calcom': 'Herramienta de programación open-source. Impulsa el Booking Agent — gestión automática del calendario.',
     'tool.pushover': 'Servicio de notificaciones push. Los workflows envían alertas en tiempo real al teléfono.',
+    'tool.hubspot': 'CRM & gestión de contactos. Conectado a n8n para workflows automatizados de leads y emails.',
     'visitors.tag': '// visitantes',
     'visitors.title': '¿Desde dónde<br>lees esto?',
     'visitors.online': 'en línea ahora',
@@ -2285,7 +2412,7 @@ applyLang(detectLang());
     }).join('');
   }
 
-  fetch('https://raw.githubusercontent.com/cieloamarenina/Nina-landing-page/main/articles.json')
+  fetch('articles.json?v=' + Date.now())
     .then(r => r.json())
     .then(articles => {
       _teaserArticles = articles;
@@ -2334,7 +2461,38 @@ async function loadAutoStats() {
   }
 }
 
+function _timeAgo(isoStr) {
+  if (!isoStr) return '';
+  const diff = Math.floor((Date.now() - new Date(isoStr)) / 1000);
+  if (diff < 60) return `${diff}s ago`;
+  if (diff < 3600) return `${Math.floor(diff / 60)}m ago`;
+  if (diff < 86400) return `${Math.floor(diff / 3600)}h ago`;
+  return `${Math.floor(diff / 86400)}d ago`;
+}
+
+async function loadRecentRuns() {
+  const list = document.getElementById('auto-runs-list');
+  if (!list) return;
+  try {
+    const r = await fetch(`${N8N_PROXY}/api/public-recent-runs`);
+    if (!r.ok) return;
+    const { runs } = await r.json();
+    if (!runs || !runs.length) return;
+    list.innerHTML = runs.map(run => {
+      const color = run.status === 'success' ? '#22c55e' : run.status === 'error' ? '#ef4444' : 'var(--accent)';
+      const dur = run.duration_s != null ? `${run.duration_s}s` : '';
+      return `<div class="auto-run-row">
+        <span class="auto-run-dot" style="background:${color}"></span>
+        <span class="auto-run-name">${run.workflow_name}</span>
+        <span class="auto-run-time">${_timeAgo(run.started_at)}</span>
+        <span class="auto-run-duration">${dur}</span>
+      </div>`;
+    }).join('');
+  } catch {}
+}
+
 loadAutoStats();
+loadRecentRuns();
 
 // Re-run on language switch so labels update
 document.querySelectorAll('.lang-btn').forEach(btn =>
