@@ -5,61 +5,71 @@
     "date": "2026-04-20",
     "translations": {
       "de": {
-        "title": "Erster N8N Workflow",
         "tag": "N8N",
-        "excerpt": "Schritt-für-Schritt Anleitung zur Erstellung deines ersten N8N Workflows - Automatisierung leicht gemacht."
+        "title": "Mein erster n8n Workflow: LinkedIn-Posts automatisieren",
+        "excerpt": "Keine Ahnung von Nodes, trotzdem deployed. So habe ich meinen ersten Workflow gebaut – mit viel Claude und wenig Schlaf.",
+        "content": "<p>Ich erinnere mich noch genau an den Moment, als ich n8n zum ersten Mal geöffnet habe. Überall Nodes, Pfeile, JSON-Felder. Mein erster Gedanke: <em>Das ist nicht für mich.</em></p><p>Spoiler: Doch, ist es.</p><h2>Was ich bauen wollte</h2><p>Mein Ziel war simpel – zumindest auf dem Papier: Jeden Tag automatisch einen LinkedIn-Post generieren und veröffentlichen. Keine manuellen Copy-Paste-Aktionen mehr, kein «Ach, ich poste morgen».</p><p>Was ich unterschätzt hatte: Den Weg dahin.</p><h2>Node für Node</h2><p>Ich habe angefangen mit einem Schedule Trigger – der einfachste Node überhaupt. Dann ein HTTP Request zu einem Mistral-Modell, das mir einen Post-Entwurf liefert. Dann die LinkedIn API. Klingt nach 30 Minuten Arbeit. War es nicht.</p><p>Die LinkedIn API allein hat mich zwei Abende gekostet. OAuth, Token-Refresh, die richtige URN-Struktur für einen Post. Claude Code war dabei mein Co-Pilot: Ich beschrieb das Problem, er lieferte den Fix. Wir haben das zusammen durchgekämpft.</p><h2>Was ich gelernt habe</h2><p>n8n ist mächtiger als ich dachte – und anfangs frustrierender. Aber jede Frustration war ein Lernmoment. Webhooks verstehen, HTTP-Headers richtig setzen, mit Fehler-Outputs umgehen statt sie zu ignorieren.</p><p>Der erste erfolgreiche Post auf LinkedIn – automatisch generiert, automatisch veröffentlicht – war eines der schönsten Gefühle dieser Lernreise.</p><p>Und jetzt? Läuft der Workflow täglich. Ohne mich.</p>"
       },
       "en": {
-        "title": "Your First N8N Workflow",
         "tag": "N8N",
-        "excerpt": "Step-by-step guide to creating your first N8N workflow - automation made easy."
+        "title": "My First N8N Workflow: Automating LinkedIn Posts",
+        "excerpt": "No idea about nodes, deployed anyway. Here's how I built my first workflow – with a lot of Claude and not much sleep.",
+        "content": "<p>I still remember the moment I first opened n8n. Nodes everywhere, arrows, JSON fields. My first thought: <em>This isn't for me.</em></p><p>Spoiler: it is.</p><h2>What I wanted to build</h2><p>My goal was simple – at least on paper: automatically generate and publish a LinkedIn post every day. No more manual copy-paste, no more \"I'll post tomorrow.\"</p><p>What I underestimated: the journey to get there.</p><h2>Node by node</h2><p>I started with a Schedule Trigger – the simplest node of all. Then an HTTP Request to a Mistral model to get a post draft. Then the LinkedIn API. Sounds like 30 minutes of work. It wasn't.</p><p>The LinkedIn API alone cost me two evenings. OAuth, token refresh, the right URN structure for a post. Claude Code was my co-pilot throughout: I described the problem, it delivered the fix. We fought through it together.</p><h2>What I learned</h2><p>n8n is more powerful than I thought – and more frustrating at the start. But every frustration was a learning moment. Understanding webhooks, setting HTTP headers correctly, handling error outputs instead of ignoring them.</p><p>The first successful post on LinkedIn – automatically generated, automatically published – was one of the best feelings of this learning journey.</p><p>And now? The workflow runs daily. Without me.</p>"
       },
       "fr": {
-        "title": "Votre Premier Workflow N8N",
         "tag": "N8N",
-        "excerpt": "Guide étape par étape pour créer votre premier workflow N8N - l'automatisation rendue facile."
-      },
-      "es": {
-        "title": "Tu Primer Flujo de Trabajo N8N",
-        "tag": "N8N",
-        "excerpt": "Guía paso a paso para crear tu primer flujo de trabajo N8N - automatización hecha fácil."
+        "title": "Mon premier workflow N8N : automatiser les posts LinkedIn",
+        "excerpt": "Aucune idée des nodes, déployé quand même. Voici comment j'ai construit mon premier workflow – avec beaucoup de Claude et peu de sommeil.",
+        "content": "<p>Je me souviens encore du moment où j'ai ouvert n8n pour la première fois. Des nodes partout, des flèches, des champs JSON. Ma première pensée : <em>Ce n'est pas pour moi.</em></p><p>Spoiler : si, c'est pour moi.</p><h2>Ce que je voulais construire</h2><p>Mon objectif était simple – sur le papier du moins : générer et publier automatiquement un post LinkedIn chaque jour. Fini le copier-coller manuel, fini le «je posterai demain».</p><p>Ce que j'avais sous-estimé : le chemin pour y arriver.</p><h2>Node par node</h2><p>J'ai commencé avec un Schedule Trigger – le node le plus simple. Ensuite une requête HTTP vers un modèle Mistral pour obtenir un brouillon. Puis l'API LinkedIn. Ça ressemble à 30 minutes de travail. Ça ne l'était pas.</p><p>L'API LinkedIn seule m'a coûté deux soirées. OAuth, refresh de token, la bonne structure URN pour un post. Claude Code était mon copilote : je décrivais le problème, il fournissait la solution.</p><h2>Ce que j'ai appris</h2><p>n8n est plus puissant que je ne le pensais – et plus frustrant au début. Mais chaque frustration était un moment d'apprentissage. Comprendre les webhooks, configurer correctement les headers HTTP, gérer les erreurs au lieu de les ignorer.</p><p>Le premier post réussi sur LinkedIn – généré et publié automatiquement – a été l'un des plus beaux moments de ce parcours d'apprentissage.</p><p>Et maintenant ? Le workflow tourne chaque jour. Sans moi.</p>"
       },
       "it": {
-        "title": "Il Tuo Primo Workflow N8N",
         "tag": "N8N",
-        "excerpt": "Guida passo dopo passo per creare il tuo primo workflow N8N - automazione resa facile."
+        "title": "Il mio primo workflow N8N: automatizzare i post LinkedIn",
+        "excerpt": "Nessuna idea sui nodes, deployato lo stesso. Ecco come ho costruito il mio primo workflow – con molto Claude e poco sonno.",
+        "content": "<p>Ricordo ancora il momento in cui ho aperto n8n per la prima volta. Nodes ovunque, frecce, campi JSON. Il mio primo pensiero: <em>Questo non fa per me.</em></p><p>Spoiler: invece sì.</p><h2>Cosa volevo costruire</h2><p>Il mio obiettivo era semplice – almeno sulla carta: generare e pubblicare automaticamente un post LinkedIn ogni giorno. Niente più copia-incolla manuale, niente più «posterò domani».</p><p>Quello che avevo sottovalutato: il percorso per arrivarci.</p><h2>Node per node</h2><p>Ho iniziato con uno Schedule Trigger – il node più semplice. Poi una richiesta HTTP a un modello Mistral per ottenere una bozza. Poi l'API LinkedIn. Sembra 30 minuti di lavoro. Non lo era.</p><p>L'API LinkedIn da sola mi è costata due serate. OAuth, refresh del token, la giusta struttura URN per un post. Claude Code era il mio co-pilota: descrivevo il problema, lui forniva la soluzione.</p><h2>Cosa ho imparato</h2><p>n8n è più potente di quanto pensassi – e più frustrante all'inizio. Ma ogni frustrazione era un momento di apprendimento. Capire i webhook, impostare correttamente gli header HTTP, gestire gli errori invece di ignorarli.</p><p>Il primo post riuscito su LinkedIn – generato e pubblicato automaticamente – è stata una delle sensazioni più belle di questo percorso.</p><p>E ora? Il workflow gira ogni giorno. Senza di me.</p>"
+      },
+      "es": {
+        "tag": "N8N",
+        "title": "Mi primer workflow de N8N: automatizar posts de LinkedIn",
+        "excerpt": "Sin idea de los nodos, desplegado de todas formas. Así construí mi primer workflow – con mucho Claude y poco sueño.",
+        "content": "<p>Todavía recuerdo el momento en que abrí n8n por primera vez. Nodos por todas partes, flechas, campos JSON. Mi primer pensamiento: <em>Esto no es para mí.</em></p><p>Spoiler: sí lo es.</p><h2>Lo que quería construir</h2><p>Mi objetivo era simple – al menos sobre el papel: generar y publicar automáticamente un post de LinkedIn cada día. Sin más copiar y pegar manual, sin más «ya lo publicaré mañana».</p><p>Lo que subestimé: el camino para llegar allí.</p><h2>Nodo por nodo</h2><p>Empecé con un Schedule Trigger – el nodo más simple de todos. Luego una petición HTTP a un modelo Mistral para obtener un borrador. Luego la API de LinkedIn. Suena a 30 minutos de trabajo. No lo fue.</p><p>La API de LinkedIn sola me costó dos tardes. OAuth, renovación de token, la estructura URN correcta para un post. Claude Code fue mi copiloto: yo describía el problema, él daba la solución.</p><h2>Lo que aprendí</h2><p>n8n es más potente de lo que pensaba – y más frustrante al principio. Pero cada frustración fue un momento de aprendizaje. Entender los webhooks, configurar correctamente los headers HTTP, gestionar los errores en lugar de ignorarlos.</p><p>El primer post exitoso en LinkedIn – generado y publicado automáticamente – fue una de las mejores sensaciones de este camino de aprendizaje.</p><p>¿Y ahora? El workflow funciona cada día. Sin mí.</p>"
       }
     }
   },
   {
     "slug": "claude-code-erste-schritte",
-    "gradient": "135deg, #0a1628 0%, #00d4ff 100%",
+    "gradient": "135deg, #0a1628 0%, #7c3aed 100%",
     "date": "2026-04-15",
     "translations": {
       "de": {
-        "title": "Claude Code: Erste Schritte",
-        "tag": "Claude Code",
-        "excerpt": "Eine Einführung in Claude Code - dem KI-gestützten Codier-Assistenten von Anthropic. Erste Schritte und praktische Tipps."
+        "tag": "CLAUDE CODE",
+        "title": "Claude Code: Meine ersten Wochen mit dem KI-Terminal",
+        "excerpt": "Ein Terminal, das denkt. Claude Code hat mein Verhältnis zum Code-Schreiben komplett verändert. Was ich gelernt habe.",
+        "content": "<p>Ich bin kein klassischer Entwickler. Ich komme aus der Analyse-Welt – Daten, Strukturen, Strategien. Code war immer irgendwie «das Ding der anderen».</p><p>Dann kam Claude Code.</p><h2>Was ist Claude Code überhaupt?</h2><p>Claude Code ist ein KI-gestütztes Terminal-Tool von Anthropic. Kein grafisches Interface, keine Drag-and-Drop-Magie. Du schreibst, was du willst – in normalem Deutsch oder Englisch – und das Tool liest deine Dateien, schreibt Code, führt Befehle aus.</p><p>Klingt futuristisch. Ist es auch.</p><h2>Mein erster echter Einsatz</h2><p>Ich wollte meine Landing Page bauen – ninalearnsvibecoding.com. HTML, CSS, etwas JavaScript. Normalerweise hätte ich Stunden gebraucht, um mich durch Tutorials zu kämpfen.</p><p>Mit Claude Code? Ich habe beschrieben, was ich will. Sektion für Sektion. Das Tool hat gebaut, ich habe geprüft, korrigiert, verfeinert. Die erste Live-Version war in einem einzigen langen Abend fertig.</p><h2>Was mich überrascht hat</h2><p>Claude Code liest den Kontext. Es merkt sich, was in welcher Datei steht. Es macht keine Copy-Paste-Fehler. Und wenn etwas nicht funktioniert, erklärt es warum – ohne mich zu überfordern.</p><p>Das Wichtigste: Ich lerne dabei. Nicht passiv, sondern weil ich jeden Output hinterfrage, verstehe und anpasse.</p><h2>Mein Fazit nach den ersten Wochen</h2><p>Claude Code ist nicht dazu da, Entwickler zu ersetzen. Es ist dazu da, Menschen wie mich zu befähigen – Menschen, die Ideen haben, aber keinen klassischen Dev-Background. Vibe Coding im besten Sinne.</p><p>Ich werde weiter lernen. Und Claude Code wird weiter dabei sein.</p>"
       },
       "en": {
-        "title": "Claude Code: Getting Started",
-        "tag": "Claude Code",
-        "excerpt": "An introduction to Claude Code - Anthropic's AI-powered coding assistant. First steps and practical tips."
+        "tag": "CLAUDE CODE",
+        "title": "Claude Code: My First Weeks with the AI Terminal",
+        "excerpt": "A terminal that thinks. Claude Code completely changed my relationship with writing code. Here's what I learned.",
+        "content": "<p>I'm not a classic developer. I come from the analytics world – data, structures, strategies. Code was always somehow \"the other people's thing.\"</p><p>Then came Claude Code.</p><h2>What is Claude Code anyway?</h2><p>Claude Code is an AI-powered terminal tool from Anthropic. No graphical interface, no drag-and-drop magic. You write what you want – in plain English or German – and the tool reads your files, writes code, runs commands.</p><p>Sounds futuristic. It is.</p><h2>My first real use</h2><p>I wanted to build my landing page – ninalearnsvibecoding.com. HTML, CSS, some JavaScript. Normally I would have spent hours fighting through tutorials.</p><p>With Claude Code? I described what I wanted. Section by section. The tool built, I reviewed, corrected, refined. The first live version was done in a single long evening.</p><h2>What surprised me</h2><p>Claude Code reads context. It remembers what's in which file. It doesn't make copy-paste mistakes. And when something doesn't work, it explains why – without overwhelming me.</p><p>Most importantly: I learn in the process. Not passively, but because I question, understand and adjust every output.</p><h2>My conclusion after the first weeks</h2><p>Claude Code isn't there to replace developers. It's there to empower people like me – people who have ideas but no classic dev background. Vibe Coding at its best.</p><p>I'll keep learning. And Claude Code will keep being there for it.</p>"
       },
       "fr": {
-        "title": "Claude Code: Pour Commencer",
-        "tag": "Claude Code",
-        "excerpt": "Une introduction à Claude Code - l'assistant de codage alimenté par l'IA d'Anthropic. Premiers pas et conseils pratiques."
-      },
-      "es": {
-        "title": "Claude Code: Primeros Pasos",
-        "tag": "Claude Code",
-        "excerpt": "Una introducción a Claude Code - el asistente de codificación impulsado por IA de Anthropic. Primeros pasos y consejos prácticos."
+        "tag": "CLAUDE CODE",
+        "title": "Claude Code : mes premières semaines avec le terminal IA",
+        "excerpt": "Un terminal qui pense. Claude Code a complètement changé mon rapport à l'écriture de code. Ce que j'ai appris.",
+        "content": "<p>Je ne suis pas une développeuse classique. Je viens du monde de l'analyse – données, structures, stratégies. Le code était toujours un peu «le truc des autres».</p><p>Puis Claude Code est arrivé.</p><h2>C'est quoi Claude Code ?</h2><p>Claude Code est un outil terminal propulsé par l'IA d'Anthropic. Pas d'interface graphique, pas de magie drag-and-drop. Tu écris ce que tu veux – en français ou en anglais naturel – et l'outil lit tes fichiers, écrit du code, exécute des commandes.</p><p>Ça semble futuriste. Ça l'est.</p><h2>Ma première vraie utilisation</h2><p>Je voulais construire ma landing page – ninalearnsvibecoding.com. HTML, CSS, un peu de JavaScript. Normalement j'aurais passé des heures à me battre avec des tutoriels.</p><p>Avec Claude Code ? J'ai décrit ce que je voulais. Section par section. L'outil construisait, je vérifiait, corrigeais, affinais. La première version live était prête en une seule longue soirée.</p><h2>Ce qui m'a surprise</h2><p>Claude Code lit le contexte. Il se souvient de ce qui est dans quel fichier. Il ne fait pas d'erreurs de copier-coller. Et quand quelque chose ne fonctionne pas, il explique pourquoi – sans me submerger.</p><p>Le plus important : j'apprends en même temps. Pas passivement, mais parce que je questionne, comprends et ajuste chaque output.</p><h2>Mon bilan après les premières semaines</h2><p>Claude Code n'est pas là pour remplacer les développeurs. Il est là pour autonomiser des gens comme moi – des gens qui ont des idées mais pas de background dev classique. Le Vibe Coding dans tout ce qu'il a de meilleur.</p><p>Je continuerai à apprendre. Et Claude Code sera là pour ça.</p>"
       },
       "it": {
-        "title": "Claude Code: I Primi Passi",
-        "tag": "Claude Code",
-        "excerpt": "Un'introduzione a Claude Code - l'assistente di codifica alimentato da IA di Anthropic. I primi passi e consigli pratici."
+        "tag": "CLAUDE CODE",
+        "title": "Claude Code: le mie prime settimane con il terminale IA",
+        "excerpt": "Un terminale che pensa. Claude Code ha completamente cambiato il mio rapporto con la scrittura del codice. Cosa ho imparato.",
+        "content": "<p>Non sono una sviluppatrice classica. Vengo dal mondo dell'analisi – dati, strutture, strategie. Il codice era sempre in qualche modo «la roba degli altri».</p><p>Poi è arrivato Claude Code.</p><h2>Cos'è Claude Code?</h2><p>Claude Code è uno strumento terminale alimentato dall'IA di Anthropic. Nessuna interfaccia grafica, nessuna magia drag-and-drop. Scrivi quello che vuoi – in italiano o inglese naturale – e lo strumento legge i tuoi file, scrive codice, esegue comandi.</p><p>Sembra futuristico. Lo è.</p><h2>Il mio primo utilizzo reale</h2><p>Volevo costruire la mia landing page – ninalearnsvibecoding.com. HTML, CSS, un po' di JavaScript. Normalmente avrei passato ore a lottare con i tutorial.</p><p>Con Claude Code? Ho descritto cosa volevo. Sezione per sezione. Lo strumento costruiva, io controllavo, correggevo, raffinavo. La prima versione live era pronta in una sola lunga serata.</p><h2>Cosa mi ha sorpreso</h2><p>Claude Code legge il contesto. Ricorda cosa c'è in quale file. Non fa errori di copia-incolla. E quando qualcosa non funziona, spiega perché – senza sopraffarmi.</p><p>La cosa più importante: imparo nel processo. Non passivamente, ma perché metto in discussione, capisco e adatto ogni output.</p><h2>La mia conclusione dopo le prime settimane</h2><p>Claude Code non è lì per sostituire gli sviluppatori. È lì per dare potere a persone come me – persone che hanno idee ma nessun background dev classico. Vibe Coding nel senso migliore.</p><p>Continuerò a imparare. E Claude Code continuerà a esserci.</p>"
+      },
+      "es": {
+        "tag": "CLAUDE CODE",
+        "title": "Claude Code: mis primeras semanas con el terminal IA",
+        "excerpt": "Un terminal que piensa. Claude Code cambió completamente mi relación con escribir código. Lo que aprendí.",
+        "content": "<p>No soy una desarrolladora clásica. Vengo del mundo del análisis – datos, estructuras, estrategias. El código siempre fue de alguna manera «la cosa de los demás».</p><p>Luego llegó Claude Code.</p><h2>¿Qué es Claude Code?</h2><p>Claude Code es una herramienta de terminal impulsada por IA de Anthropic. Sin interfaz gráfica, sin magia de arrastrar y soltar. Escribes lo que quieres – en español o inglés natural – y la herramienta lee tus archivos, escribe código, ejecuta comandos.</p><p>Suena futurista. Lo es.</p><h2>Mi primer uso real</h2><p>Quería construir mi landing page – ninalearnsvibecoding.com. HTML, CSS, algo de JavaScript. Normalmente habría pasado horas luchando con tutoriales.</p><p>¿Con Claude Code? Describí lo que quería. Sección por sección. La herramienta construía, yo revisaba, corregía, refinaba. La primera versión en vivo estuvo lista en una sola larga noche.</p><h2>Lo que me sorprendió</h2><p>Claude Code lee el contexto. Recuerda qué hay en qué archivo. No comete errores de copiar y pegar. Y cuando algo no funciona, explica por qué – sin abrumarme.</p><p>Lo más importante: aprendo en el proceso. No pasivamente, sino porque cuestiono, entiendo y ajusto cada output.</p><h2>Mi conclusión después de las primeras semanas</h2><p>Claude Code no está ahí para reemplazar a los desarrolladores. Está ahí para empoderar a personas como yo – personas que tienen ideas pero ningún background dev clásico. Vibe Coding en su mejor expresión.</p><p>Seguiré aprendiendo. Y Claude Code seguirá estando ahí.</p>"
       }
     }
   }
