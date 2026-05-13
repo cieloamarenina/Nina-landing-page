@@ -142,10 +142,18 @@ def public_stats():
     })
 
 
+HIDDEN_NAME_PATTERNS = ("visitor", "heartbeat", "ping", "cockpit", "stats v")
+
+
+def _is_showcase_workflow(name: str) -> bool:
+    lower = (name or "").lower()
+    return not any(p in lower for p in HIDDEN_NAME_PATTERNS)
+
+
 @app.route("/api/public-recent-runs")
 def public_recent_runs():
     try:
-        page = _n8n_get("/executions", params={"limit": 10, "includeData": "false"})
+        page = _n8n_get("/executions", params={"limit": 50, "includeData": "false"})
         executions = page.get("data", [])
         workflows_cache: dict[str, str] = {}
 
@@ -160,7 +168,12 @@ def public_recent_runs():
 
         runs = []
         for ex in executions:
+            if len(runs) >= 10:
+                break
             wf_id = ex.get("workflowId", "")
+            name = _wf_name(wf_id)
+            if not _is_showcase_workflow(name):
+                continue
             started = ex.get("startedAt")
             stopped = ex.get("stoppedAt")
             duration_s = None
@@ -172,7 +185,7 @@ def public_recent_runs():
                 except Exception:
                     pass
             runs.append({
-                "workflow_name": _wf_name(wf_id),
+                "workflow_name": name,
                 "status": ex.get("status"),
                 "started_at": started,
                 "duration_s": duration_s,
