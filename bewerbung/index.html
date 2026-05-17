@@ -1,0 +1,933 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Bewerbung · Nina Panknin</title>
+<meta name="description" content="Live-Dashboard zur Bewerbung von Nina Panknin — automatisiert generiert mit n8n + Mistral AI.">
+
+<!-- Open Graph -->
+<meta property="og:title" content="Bewerbung · Nina Panknin">
+<meta property="og:description" content="Bewerbung automatisiert via n8n + Mistral AI">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://ninalearnsvibecoding.com/bewerbung/">
+
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%23080c14'/><text x='2' y='22' font-family='monospace' font-weight='bold' font-size='13' fill='%2300d4ff'>NP</text></svg>">
+
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #050810;
+  --bg-2: #0a0f1e;
+  --bg-3: #0c1322;
+  --border: #1a2230;
+  --accent: #00d4ff;
+  --accent-2: #5ec8ff;
+  --accent-glow: rgba(0, 212, 255, 0.4);
+  --text: #ffffff;
+  --text-2: #cbd5e1;
+  --text-3: #94a3b8;
+  --text-4: #6b7484;
+  --text-5: #475569;
+  --pulse: #00d4ff;
+}
+
+html {
+  scroll-behavior: smooth;
+  background: var(--bg);
+}
+
+body {
+  font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", system-ui, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  min-height: 100vh;
+}
+
+/* ============================================
+   TOP STATUS BAR (Sticky)
+============================================ */
+.statusbar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(10, 15, 30, 0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+  padding: 12px 24px;
+}
+.statusbar-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+}
+.status-left, .status-right {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  font-size: 12px;
+  color: var(--text-4);
+}
+.live-pulse {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--accent);
+  font-weight: 600;
+  letter-spacing: 1.5px;
+}
+.live-pulse::before {
+  content: '';
+  width: 8px; height: 8px;
+  background: var(--accent);
+  border-radius: 50%;
+  box-shadow: 0 0 10px var(--accent), 0 0 20px var(--accent-glow);
+  animation: pulse 1.8s infinite;
+}
+@keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.5;transform:scale(0.9)} }
+.status-meta {
+  font-family: ui-monospace, "SF Mono", monospace;
+}
+.status-meta span { color: var(--accent); }
+
+/* ============================================
+   HERO
+============================================ */
+.hero {
+  position: relative;
+  padding: 100px 24px 80px;
+  overflow: hidden;
+  background:
+    radial-gradient(ellipse at 80% 20%, rgba(0, 212, 255, 0.15) 0%, transparent 50%),
+    radial-gradient(ellipse at 20% 80%, rgba(0, 212, 255, 0.08) 0%, transparent 50%),
+    var(--bg-2);
+}
+
+.hero-grid-bg {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(0, 212, 255, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 212, 255, 0.05) 1px, transparent 1px);
+  background-size: 64px 64px;
+  mask-image: radial-gradient(ellipse at center, black 0%, transparent 70%);
+  -webkit-mask-image: radial-gradient(ellipse at center, black 0%, transparent 70%);
+}
+
+.hero-inner {
+  position: relative;
+  z-index: 1;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.hero-grid {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  gap: 64px;
+  align-items: center;
+}
+
+.hero-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--accent-2);
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  margin-bottom: 28px;
+}
+.hero-tag::before { content: '★'; color: var(--accent); font-size: 14px; }
+
+.hero h1 {
+  font-size: 84px;
+  font-weight: 500;
+  line-height: 0.95;
+  letter-spacing: -4.5px;
+  margin-bottom: 28px;
+  color: var(--text);
+}
+.hero h1 .blue {
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.hero-sub {
+  font-size: 19px;
+  line-height: 1.55;
+  color: var(--text-3);
+  margin-bottom: 36px;
+  font-weight: 400;
+  max-width: 90%;
+}
+
+.hero-ctas {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 48px;
+  flex-wrap: wrap;
+}
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--accent);
+  color: var(--bg);
+  padding: 14px 26px;
+  font-size: 15px;
+  font-weight: 600;
+  text-decoration: none;
+  border-radius: 10px;
+  transition: all 0.2s;
+  box-shadow: 0 10px 30px var(--accent-glow);
+}
+.btn-primary:hover { background: var(--accent-2); transform: translateY(-1px); }
+.btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: var(--text);
+  padding: 14px 26px;
+  font-size: 15px;
+  font-weight: 500;
+  text-decoration: none;
+  border-radius: 10px;
+  transition: all 0.2s;
+}
+.btn-secondary:hover { background: rgba(255, 255, 255, 0.08); }
+
+.hero-stats {
+  display: flex;
+  gap: 48px;
+  padding-top: 36px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+.hero-stat .num {
+  font-size: 38px;
+  font-weight: 500;
+  color: var(--text);
+  letter-spacing: -1.5px;
+  line-height: 1;
+}
+.hero-stat .label {
+  font-size: 12px;
+  color: var(--text-4);
+  letter-spacing: 1px;
+  margin-top: 6px;
+  font-weight: 400;
+  text-transform: uppercase;
+}
+
+/* Avatar / Visual */
+.hero-visual {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.hero-avatar {
+  width: 280px;
+  height: 280px;
+  background: linear-gradient(135deg, var(--bg-3) 0%, var(--bg-2) 100%);
+  border: 2px solid var(--accent);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 120px;
+  font-weight: 500;
+  color: var(--accent);
+  letter-spacing: -4px;
+  box-shadow: 0 0 100px var(--accent-glow);
+  position: relative;
+}
+.hero-avatar::before {
+  content: '';
+  position: absolute;
+  inset: -20px;
+  border: 1px dashed rgba(0, 212, 255, 0.3);
+  border-radius: 50%;
+  animation: rotate 30s linear infinite;
+}
+@keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+/* ============================================
+   "I build with" — Tools strip
+============================================ */
+.tools-strip {
+  padding: 32px 24px;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  background: var(--bg);
+}
+.tools-strip-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+.tools-label {
+  text-align: center;
+  font-size: 11px;
+  color: var(--text-5);
+  letter-spacing: 4px;
+  margin-bottom: 20px;
+  text-transform: uppercase;
+  font-weight: 500;
+}
+.tools-row {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 24px;
+}
+.tools-row .tool {
+  color: var(--text-4);
+  font-size: 16px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  opacity: 0.75;
+  transition: opacity 0.2s;
+}
+.tools-row .tool:hover { opacity: 1; }
+.tools-row .tool .icon { font-size: 20px; }
+
+/* ============================================
+   SECTION (shared)
+============================================ */
+.section {
+  padding: 100px 24px;
+  position: relative;
+}
+.section + .section { border-top: 1px solid var(--border); }
+.section-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+.section-tag {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--accent-2);
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  margin-bottom: 18px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.section-tag::before { content: '★'; color: var(--accent); }
+.section-title {
+  font-size: 56px;
+  font-weight: 500;
+  line-height: 1.05;
+  letter-spacing: -2.5px;
+  margin-bottom: 18px;
+  color: var(--text);
+}
+.section-title .blue {
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.section-desc {
+  font-size: 17px;
+  color: var(--text-3);
+  margin-bottom: 48px;
+  line-height: 1.55;
+  font-weight: 400;
+  max-width: 720px;
+}
+
+/* ============================================
+   CARDS — What I built
+============================================ */
+.cards-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+.card {
+  background: linear-gradient(135deg, var(--bg-3) 0%, var(--bg-2) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  padding: 32px;
+  transition: all 0.2s;
+}
+.card:hover {
+  border-color: rgba(0, 212, 255, 0.3);
+  transform: translateY(-2px);
+}
+.card-icon {
+  width: 48px; height: 48px;
+  background: rgba(0, 212, 255, 0.12);
+  border: 1px solid rgba(0, 212, 255, 0.25);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+.card-title {
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.card-title .live {
+  background: rgba(0, 212, 255, 0.1);
+  border: 1px solid rgba(0, 212, 255, 0.3);
+  color: var(--accent);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  padding: 3px 8px;
+  border-radius: 4px;
+  text-transform: uppercase;
+}
+.card-title .live::before { content: '● '; }
+.card-desc {
+  font-size: 14px;
+  color: var(--text-3);
+  line-height: 1.6;
+  font-weight: 400;
+}
+
+/* ============================================
+   JOURNEY TIMELINE
+============================================ */
+.journey {
+  position: relative;
+  margin-top: 32px;
+}
+.journey::before {
+  content: '';
+  position: absolute;
+  left: 23px;
+  top: 12px;
+  bottom: 12px;
+  width: 2px;
+  background: linear-gradient(180deg,
+    rgba(0, 212, 255, 0.15) 0%,
+    rgba(0, 212, 255, 0.5) 50%,
+    rgba(0, 212, 255, 1) 100%);
+}
+.milestone {
+  position: relative;
+  padding: 18px 0 18px 70px;
+}
+.milestone .dot {
+  position: absolute;
+  left: 12px;
+  top: 24px;
+  width: 24px;
+  height: 24px;
+  background: var(--bg-2);
+  border: 2px solid rgba(0, 212, 255, 0.3);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+}
+.milestone.current .dot {
+  background: var(--accent);
+  border-color: var(--accent);
+  box-shadow: 0 0 0 6px rgba(0, 212, 255, 0.15), 0 0 32px var(--accent);
+}
+.milestone .period {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--accent);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+.milestone .role {
+  font-size: 20px;
+  font-weight: 500;
+  color: var(--text);
+  letter-spacing: -0.5px;
+  margin-bottom: 6px;
+}
+.milestone.current .role { color: var(--accent); }
+.milestone .field {
+  font-size: 14px;
+  color: var(--text-3);
+  line-height: 1.55;
+  font-weight: 400;
+}
+
+/* ============================================
+   SKILLS — Highlights
+============================================ */
+.highlights-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+.highlight {
+  background: linear-gradient(135deg, var(--bg-3) 0%, var(--bg-2) 100%);
+  border: 1px solid rgba(0, 212, 255, 0.2);
+  border-radius: 16px;
+  padding: 28px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+.highlight-icon {
+  width: 56px; height: 56px;
+  background: rgba(0, 212, 255, 0.12);
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+  flex-shrink: 0;
+}
+.highlight-text .t1 {
+  font-size: 17px;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 4px;
+}
+.highlight-text .t2 {
+  font-size: 13px;
+  color: var(--text-3);
+  font-weight: 400;
+}
+
+.mini-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+}
+.mini {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 12px;
+  padding: 20px 12px;
+  text-align: center;
+}
+.mini-icon { font-size: 22px; margin-bottom: 6px; }
+.mini-label { font-size: 12px; color: var(--text-3); font-weight: 500; }
+
+/* ============================================
+   ABOUT
+============================================ */
+.about-text {
+  max-width: 760px;
+}
+.about-text p {
+  font-size: 17px;
+  color: var(--text-3);
+  line-height: 1.75;
+  margin-bottom: 18px;
+  font-weight: 400;
+}
+.about-text p em {
+  color: var(--accent);
+  font-style: normal;
+  font-weight: 500;
+}
+
+/* ============================================
+   FINAL CTA
+============================================ */
+.final-cta {
+  padding: 120px 24px;
+  text-align: center;
+  background:
+    radial-gradient(ellipse at center, rgba(0, 212, 255, 0.08) 0%, transparent 60%),
+    var(--bg);
+  border-top: 1px solid var(--border);
+}
+.final-cta h2 {
+  font-size: 64px;
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: -3px;
+  margin-bottom: 24px;
+}
+.final-cta h2 .blue {
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.final-cta p {
+  font-size: 17px;
+  color: var(--text-3);
+  margin-bottom: 36px;
+  font-weight: 400;
+}
+.final-cta-buttons {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+/* ============================================
+   FOOTER
+============================================ */
+.footer {
+  padding: 32px 24px;
+  background: var(--bg);
+  border-top: 1px solid var(--border);
+  text-align: center;
+}
+.footer-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+.footer p {
+  color: var(--text-5);
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1.8;
+}
+.footer a { color: var(--accent); text-decoration: none; }
+.footer .dot {
+  display: inline-block;
+  width: 4px; height: 4px;
+  background: var(--accent);
+  border-radius: 50%;
+  margin: 0 10px;
+  vertical-align: middle;
+}
+
+/* ============================================
+   MOBILE
+============================================ */
+@media (max-width: 768px) {
+  .hero { padding: 60px 20px 50px; }
+  .hero-grid { grid-template-columns: 1fr; gap: 40px; }
+  .hero h1 { font-size: 48px; letter-spacing: -2.5px; }
+  .hero-sub { font-size: 16px; }
+  .hero-avatar { width: 200px; height: 200px; font-size: 80px; }
+  .hero-stats { gap: 24px; flex-wrap: wrap; }
+  .hero-stat .num { font-size: 28px; }
+
+  .section { padding: 60px 20px; }
+  .section-title { font-size: 36px; letter-spacing: -1.5px; }
+  .section-desc { font-size: 15px; }
+
+  .cards-grid, .highlights-row, .mini-row {
+    grid-template-columns: 1fr;
+  }
+  .mini-row { grid-template-columns: 1fr 1fr; }
+
+  .final-cta { padding: 60px 20px; }
+  .final-cta h2 { font-size: 36px; letter-spacing: -1.5px; }
+
+  .statusbar { padding: 10px 16px; }
+  .status-right .status-meta { display: none; }
+}
+</style>
+</head>
+<body>
+
+<!-- STATUS BAR -->
+<div class="statusbar">
+  <div class="statusbar-inner">
+    <div class="status-left">
+      <span class="live-pulse">SYSTEM · ACTIVE</span>
+      <span class="status-meta" id="status-workflow">workflow: bewerbung_v1</span>
+    </div>
+    <div class="status-right">
+      <span class="status-meta">v1.0.0 · <span id="status-date">14.05.2026</span></span>
+    </div>
+  </div>
+</div>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-grid-bg"></div>
+  <div class="hero-inner">
+    <div class="hero-grid">
+      <div>
+        <div class="hero-tag" id="hero-tag">AI ANALYST · CONSULTANT</div>
+        <h1>Bewerbung <span class="blue">deployed</span> für<br><span id="hero-firma">TechStartup GmbH</span>.</h1>
+        <p class="hero-sub" id="hero-sub">Nina Panknin — 6+ Jahre Operations &amp; HR aus Berlin, jetzt zertifizierte KI-Analystin (348/360 — sehr gut) und KI-Beraterin. Seit April entwickle ich produktive n8n-Workflows. Diese Bewerbung ist einer davon.</p>
+        <div class="hero-ctas">
+          <a href="https://ninalearnsvibecoding.com" class="btn-primary">→ Portfolio ansehen</a>
+          <a href="https://www.linkedin.com/in/ninapankninberlin/" target="_blank" rel="noopener" class="btn-secondary">in LinkedIn</a>
+          <a href="mailto:ninapankninberlin@gmail.com" class="btn-secondary">✉ E-Mail</a>
+        </div>
+        <div class="hero-stats">
+          <div class="hero-stat">
+            <div class="num" id="stat-match">98%</div>
+            <div class="label">Match Score</div>
+          </div>
+          <div class="hero-stat">
+            <div class="num">6+</div>
+            <div class="label">Jahre Operations</div>
+          </div>
+          <div class="hero-stat">
+            <div class="num">348</div>
+            <div class="label">/360 Punkte</div>
+          </div>
+        </div>
+      </div>
+      <div class="hero-visual">
+        <div class="hero-avatar">N</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TOOLS STRIP -->
+<section class="tools-strip">
+  <div class="tools-strip-inner">
+    <div class="tools-label">— I build with —</div>
+    <div class="tools-row">
+      <div class="tool"><span class="icon">⚡</span> n8n</div>
+      <div class="tool"><span class="icon">🤖</span> Mistral AI</div>
+      <div class="tool"><span class="icon">🗄️</span> NocoDB</div>
+      <div class="tool"><span class="icon">🐘</span> PostgreSQL</div>
+      <div class="tool"><span class="icon">📱</span> Telegram</div>
+      <div class="tool"><span class="icon">🔗</span> APIs</div>
+    </div>
+  </div>
+</section>
+
+<!-- WHAT I BUILT -->
+<section class="section">
+  <div class="section-inner">
+    <div class="section-tag">What I'm Doing</div>
+    <h2 class="section-title">What I <span class="blue">built</span>.</h2>
+    <p class="section-desc">Diese Bewerbung ist nicht geschrieben — sie wurde von einem n8n-Workflow gebaut. Hier was er kann:</p>
+    <div class="cards-grid">
+      <div class="card">
+        <div class="card-icon">⚡</div>
+        <div class="card-title">Job-Scraper <span class="live">live</span></div>
+        <div class="card-desc">Scannt 3× täglich vier Plattformen (Arbeitsagentur, Arbeitnow, LinkedIn, Indeed) nach passenden Stellen — Remote, Hybrid, Berlin.</div>
+      </div>
+      <div class="card">
+        <div class="card-icon">🤖</div>
+        <div class="card-title">AI-Agent (Mistral) <span class="live">live</span></div>
+        <div class="card-desc">EU-konformer KI-Agent personalisiert für jeden Job Anschreiben, Betreff und Match-Score. Structured Output, kein Free-Text-Chaos.</div>
+      </div>
+      <div class="card">
+        <div class="card-icon">🧹</div>
+        <div class="card-title">Smart Dedup <span class="live">live</span></div>
+        <div class="card-desc">Erkennt automatisch wenn der gleiche Job auf mehreren Plattformen erscheint — keine Doppelbewerbungen, kein Spam.</div>
+      </div>
+      <div class="card">
+        <div class="card-icon">💌</div>
+        <div class="card-title">Human-in-the-Loop <span class="live">live</span></div>
+        <div class="card-desc">Telegram-Vorschau vor jedem Versand. Ich bestätige mit ✅, der Workflow versendet via eigenen SMTP-Server.</div>
+      </div>
+      <div class="card">
+        <div class="card-icon">📊</div>
+        <div class="card-title">Monitoring <span class="live">live</span></div>
+        <div class="card-desc">Jede Bewerbung wird in NocoDB geloggt — Match-Score, Status, Quelle, Execution-ID. Volle Nachverfolgbarkeit.</div>
+      </div>
+      <div class="card">
+        <div class="card-icon">🔒</div>
+        <div class="card-title">DSGVO + EU AI Act</div>
+        <div class="card-desc">Mistral statt OpenAI (EU-Server), eigener SMTP, Daten bleiben auf deutschem Hetzner-Server. Konform by design.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- JOURNEY -->
+<section class="section">
+  <div class="section-inner">
+    <div class="section-tag">My Journey</div>
+    <h2 class="section-title">From Ops to <span class="blue">Building</span>.</h2>
+    <p class="section-desc">Ich habe Prozesse gelebt — jetzt baue ich sie. Von Recht über Real Estate, Production und HR bis Automation.</p>
+    <div class="journey">
+      <div class="milestone">
+        <div class="dot">⚖️</div>
+        <div class="period">Ausbildung</div>
+        <div class="role">Legal &amp; Notary Assistant</div>
+        <div class="field">Präzision, Verträge, juristische Genauigkeit — der Start.</div>
+      </div>
+      <div class="milestone">
+        <div class="dot">🏘️</div>
+        <div class="period">Reingerutscht &amp; befördert</div>
+        <div class="role">Kauffrau Grundstücks- &amp; Wohnungswirtschaft</div>
+        <div class="field">Business-Operations, Verträge, Kund:innen, Verantwortung</div>
+      </div>
+      <div class="milestone">
+        <div class="dot">🎬</div>
+        <div class="period">Production</div>
+        <div class="role">Produktionsassistenz &amp; Producer Assistant</div>
+        <div class="field">Sets, Logistik, Stakeholder-Koordination — alles gleichzeitig, schnelle Entscheidungen</div>
+      </div>
+      <div class="milestone">
+        <div class="dot">🌍</div>
+        <div class="period">2017 — 2018</div>
+        <div class="role">Office &amp; Standortmanagerin · 🇩🇪 🇮🇱</div>
+        <div class="field">CS Compliance Service GmbH — Aufstieg von Teamassistenz zur Standortmanagerin in 3 Monaten. Internationale Standorte Deutschland &amp; Israel.</div>
+      </div>
+      <div class="milestone">
+        <div class="dot">👥</div>
+        <div class="period">2019 — 2025</div>
+        <div class="role">Office &amp; HR Manager</div>
+        <div class="field">Redfish GmbH · später Remote — Onboarding, Payroll, Buchhaltung, Compliance, Prozessoptimierung. Mit kurzen Pausen — Zeit, in der ich strukturiert weitergelernt habe.</div>
+      </div>
+      <div class="milestone">
+        <div class="dot">🧠</div>
+        <div class="period">Feb — März 2026</div>
+        <div class="role">KI-Analystin · Modul 1</div>
+        <div class="field">Abschluss: 348 / 360 Punkte — sehr gut. Generative KI, LLMs, NLP, Prompt Engineering, EU AI Act.</div>
+      </div>
+      <div class="milestone">
+        <div class="dot">🎓</div>
+        <div class="period">März — April 2026</div>
+        <div class="role">KI-Beraterin · Modul 2</div>
+        <div class="field">Strategische KI-Beratung · Abschlussprojekt FEMhit — hervorragend bestanden.</div>
+      </div>
+      <div class="milestone current">
+        <div class="dot">⚡</div>
+        <div class="period">Seit April 2026 · aktuell</div>
+        <div class="role">KI-Agenten &amp; n8n · LIVE</div>
+        <div class="field">Aktuelles Modul bei Marco · Berlin — Entwicklung produktiver Workflows mit n8n + Mistral AI. Diese Bewerbungsseite ist das Ergebnis.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SKILLS -->
+<section class="section">
+  <div class="section-inner">
+    <div class="section-tag">Highlights</div>
+    <h2 class="section-title">Skills &amp; <span class="blue">Stack</span>.</h2>
+    <p class="section-desc">Was ich mitbringe — und in diesem Dashboard bereits anwende:</p>
+    <div class="highlights-row">
+      <div class="highlight">
+        <div class="highlight-icon">⚡</div>
+        <div class="highlight-text">
+          <div class="t1">n8n Automation</div>
+          <div class="t2">Seit April 2026 produktiv im Einsatz</div>
+        </div>
+      </div>
+      <div class="highlight">
+        <div class="highlight-icon">🤖</div>
+        <div class="highlight-text">
+          <div class="t1">KI &amp; Mistral AI</div>
+          <div class="t2">EU AI Act konform · Structured Outputs</div>
+        </div>
+      </div>
+    </div>
+    <div class="mini-row">
+      <div class="mini"><div class="mini-icon">📊</div><div class="mini-label">Prozesse</div></div>
+      <div class="mini"><div class="mini-icon">🗄️</div><div class="mini-label">NocoDB</div></div>
+      <div class="mini"><div class="mini-icon">🔗</div><div class="mini-label">APIs &amp; RSS</div></div>
+      <div class="mini"><div class="mini-icon">📋</div><div class="mini-label">Operations</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section class="section">
+  <div class="section-inner">
+    <div class="section-tag">About</div>
+    <h2 class="section-title">About <span class="blue">Nina</span>.</h2>
+    <div class="about-text">
+      <p>Nina Panknin aus Berlin. 6+ Jahre <em>HR, Office &amp; Operations Management</em> bei Start-ups und KMUs — Onboarding, Payroll, Buchhaltung, Compliance, Prozessoptimierung.</p>
+      <p>Im Februar 2026 startete ich die KI-Weiterbildung: Modul 1 (KI-Analystin) mit <em>348/360 Punkten</em> sehr gut abgeschlossen, Modul 2 (KI-Beraterin) mit Projekt FEMhit hervorragend bestanden.</p>
+      <p>Seit April 2026 baue ich live produktive n8n-Workflows. Diese Bewerbungsseite ist einer davon — vollautomatisiert, DSGVO-konform, dokumentiert, mit Monitoring. <em>Was ich jahrelang gemanagt habe, automatisiere ich jetzt.</em></p>
+    </div>
+  </div>
+</section>
+
+<!-- FINAL CTA -->
+<section class="final-cta">
+  <h2>Lust auf ein <span class="blue">Gespräch</span>?</h2>
+  <p>Ich freue mich auf deine Nachricht.</p>
+  <div class="final-cta-buttons">
+    <a href="mailto:ninapankninberlin@gmail.com" class="btn-primary">✉ ninapankninberlin@gmail.com</a>
+    <a href="https://www.linkedin.com/in/ninapankninberlin/" target="_blank" rel="noopener" class="btn-secondary">in LinkedIn</a>
+    <a href="tel:+491722101191" class="btn-secondary">✆ +49 172 2101191</a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-inner">
+    <p>
+      <span class="dot"></span> DSGVO-konform
+      <span class="dot"></span> SMTP eigener Server
+      <span class="dot"></span> n8n + Mistral AI (EU)
+      <span class="dot"></span> Berlin · 2026
+    </p>
+    <p style="margin-top: 12px;">
+      <a href="https://ninalearnsvibecoding.com">ninalearnsvibecoding.com</a>
+    </p>
+  </div>
+</footer>
+
+<script>
+// ============================================
+// Dynamische Personalisierung via URL-Params
+// Aufruf: /bewerbung/?firma=TechStartup%20GmbH&stelle=Operations%20Manager&match=98
+// ============================================
+(function() {
+  const params = new URLSearchParams(window.location.search);
+
+  // Firma
+  const firma = params.get('firma');
+  if (firma) {
+    document.getElementById('hero-firma').textContent = firma;
+    document.title = `Bewerbung für ${firma} · Nina Panknin`;
+  }
+
+  // Stelle / Position
+  const stelle = params.get('stelle');
+  if (stelle) {
+    const tagEl = document.getElementById('hero-tag');
+    tagEl.textContent = `Bewerbung · ${stelle}`;
+  }
+
+  // Match Score
+  const match = params.get('match');
+  if (match) {
+    document.getElementById('stat-match').textContent = `${match}%`;
+  }
+
+  // Custom Intro / Subtext (optional)
+  const intro = params.get('intro');
+  if (intro) {
+    document.getElementById('hero-sub').textContent = decodeURIComponent(intro);
+  }
+
+  // Datum
+  const now = new Date();
+  const dateStr = now.toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit', year: 'numeric' });
+  document.getElementById('status-date').textContent = dateStr;
+
+  // Workflow-ID (falls von n8n übergeben)
+  const wfid = params.get('wfid');
+  if (wfid) {
+    document.getElementById('status-workflow').textContent = `workflow: ${wfid}`;
+  }
+})();
+</script>
+
+</body>
+</html>

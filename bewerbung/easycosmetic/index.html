@@ -1,0 +1,2249 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Bewerbung · AI Specialist · Nina Panknin → easycosmetic</title>
+<meta name="description" content="Bewerbung von Nina Panknin als AI Specialist (Claude Code / VibeCoding) bei easycosmetic — diese Seite IST die Demo: gebaut mit Claude Code, deployed auf eigener Infrastruktur, Page-Visits live nach Telegram getrackt.">
+
+<!-- Open Graph -->
+<meta property="og:title" content="Bewerbung · AI Specialist · Nina Panknin → easycosmetic">
+<meta property="og:description" content="Diese Bewerbung ist die Demo. Built with Claude Code + n8n. Live page tracking.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://ninalearnsvibecoding.com/bewerbung/easycosmetic/">
+
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%23080c14'/><text x='2' y='22' font-family='monospace' font-weight='bold' font-size='13' fill='%2300d4ff'>NP</text></svg>">
+
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #050810;
+  --bg-2: #0a0f1e;
+  --bg-3: #0c1322;
+  --border: #1a2230;
+  --accent: #00d4ff;
+  --accent-2: #5ec8ff;
+  --accent-glow: rgba(0, 212, 255, 0.4);
+  --ok: #10b981;
+  --text: #ffffff;
+  --text-2: #cbd5e1;
+  --text-3: #94a3b8;
+  --text-4: #6b7484;
+  --text-5: #475569;
+}
+
+html { scroll-behavior: smooth; background: var(--bg); }
+
+body {
+  font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", system-ui, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  min-height: 100vh;
+}
+
+/* ======= STATUS BAR ======= */
+.statusbar {
+  position: sticky; top: 0; z-index: 100;
+  background: rgba(10, 15, 30, 0.85);
+  backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+  padding: 12px 24px;
+}
+.statusbar-inner {
+  max-width: 1200px; margin: 0 auto;
+  display: flex; justify-content: space-between; align-items: center; gap: 16px;
+}
+.status-left, .status-right {
+  display: flex; align-items: center; gap: 16px;
+  font-size: 12px; color: var(--text-4);
+}
+.live-pulse {
+  display: flex; align-items: center; gap: 8px;
+  color: var(--accent); font-weight: 600; letter-spacing: 1.5px;
+}
+.live-pulse::before {
+  content: ''; width: 8px; height: 8px;
+  background: var(--accent); border-radius: 50%;
+  box-shadow: 0 0 10px var(--accent), 0 0 20px var(--accent-glow);
+  animation: pulse 1.8s infinite;
+}
+@keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.5;transform:scale(0.9)} }
+.status-meta { font-family: ui-monospace, "SF Mono", monospace; }
+.status-meta span { color: var(--accent); }
+.lang-switch {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-family: ui-monospace, "SF Mono", monospace;
+  font-size: 12px; padding-left: 12px; margin-left: 4px;
+  border-left: 1px solid rgba(255,255,255,0.08);
+}
+.lang-switch button {
+  background: transparent; border: 0; color: var(--text-4);
+  font-family: inherit; font-size: 12px; font-weight: 600;
+  letter-spacing: 1px; cursor: pointer; padding: 2px 4px;
+  transition: color 0.15s;
+}
+.lang-switch button:hover { color: var(--text-2); }
+.lang-switch button.active { color: var(--accent); }
+.lang-switch .lang-sep { color: var(--text-5); }
+
+.music-toggle {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: transparent; border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 8px; padding: 4px 10px;
+  color: var(--text-4); cursor: pointer;
+  font-family: ui-monospace, "SF Mono", monospace;
+  font-size: 11px; font-weight: 600;
+  letter-spacing: 1px; text-transform: uppercase;
+  transition: all 0.15s;
+}
+.music-toggle:hover {
+  color: var(--text-2); border-color: rgba(0, 212, 255, 0.25);
+}
+.music-toggle.playing {
+  color: var(--accent); border-color: rgba(0, 212, 255, 0.45);
+  background: rgba(0, 212, 255, 0.06);
+}
+.music-toggle.playing .music-icon {
+  animation: musicPulse 1.2s infinite;
+}
+.music-icon { font-size: 14px; }
+@keyframes musicPulse { 0%,100%{opacity:1} 50%{opacity:0.45} }
+
+/* ======= HERO ======= */
+.hero {
+  position: relative; padding: 100px 24px 80px; overflow: hidden;
+  background:
+    radial-gradient(ellipse at 80% 20%, rgba(0, 212, 255, 0.15) 0%, transparent 50%),
+    radial-gradient(ellipse at 20% 80%, rgba(0, 212, 255, 0.08) 0%, transparent 50%),
+    var(--bg-2);
+}
+.hero-grid-bg {
+  position: absolute; inset: 0;
+  background-image:
+    linear-gradient(rgba(0, 212, 255, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 212, 255, 0.05) 1px, transparent 1px);
+  background-size: 64px 64px;
+  mask-image: radial-gradient(ellipse at center, black 0%, transparent 70%);
+  -webkit-mask-image: radial-gradient(ellipse at center, black 0%, transparent 70%);
+}
+.hero-spotlight {
+  position: absolute; inset: 0;
+  pointer-events: none;
+  background: radial-gradient(
+    600px circle at var(--mx, 50%) var(--my, 50%),
+    rgba(0, 212, 255, 0.18) 0%,
+    rgba(0, 212, 255, 0.06) 30%,
+    transparent 60%
+  );
+  opacity: 0; transition: opacity 0.4s;
+  mix-blend-mode: screen;
+}
+.hero:hover .hero-spotlight { opacity: 1; }
+.hero-inner { position: relative; z-index: 1; max-width: 1200px; margin: 0 auto; }
+.hero-grid {
+  display: grid; grid-template-columns: 1.4fr 1fr; gap: 64px; align-items: center;
+}
+.hero-tag {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-size: 13px; font-weight: 500; color: var(--accent-2);
+  letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 28px;
+}
+.hero-tag::before { content: '★'; color: var(--accent); font-size: 14px; }
+.hero-stack {
+  font-family: ui-monospace, "SF Mono", monospace;
+  font-size: 13px; font-weight: 500;
+  color: var(--text-3); letter-spacing: 0.5px;
+  margin-bottom: 24px;
+  padding: 8px 14px;
+  background: rgba(0, 212, 255, 0.06);
+  border: 1px solid rgba(0, 212, 255, 0.18);
+  border-radius: 8px;
+  display: inline-block;
+}
+.hero h1 {
+  font-size: 80px; font-weight: 500; line-height: 0.95;
+  letter-spacing: -4.5px; margin-bottom: 28px; color: var(--text);
+}
+.hero h1 .blue {
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+}
+.hero-sub {
+  font-size: 19px; line-height: 1.55; color: var(--text-3);
+  margin-bottom: 36px; font-weight: 400; max-width: 92%;
+}
+.hero-ctas { display: flex; gap: 12px; margin-bottom: 48px; flex-wrap: wrap; }
+.btn-primary {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: var(--accent); color: var(--bg);
+  padding: 14px 26px; font-size: 15px; font-weight: 600;
+  text-decoration: none; border-radius: 10px; transition: all 0.2s;
+  box-shadow: 0 10px 30px var(--accent-glow);
+}
+.btn-primary:hover { background: var(--accent-2); transform: translateY(-1px); }
+.btn-secondary {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: var(--text); padding: 14px 26px;
+  font-size: 15px; font-weight: 500; text-decoration: none;
+  border-radius: 10px; transition: all 0.2s;
+}
+.btn-secondary:hover { background: rgba(255, 255, 255, 0.08); }
+.hero-stats {
+  display: flex; gap: 48px; padding-top: 36px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+.hero-stat .num {
+  font-size: 38px; font-weight: 500; color: var(--text);
+  letter-spacing: -1.5px; line-height: 1;
+}
+.hero-stat .label {
+  font-size: 12px; color: var(--text-4);
+  letter-spacing: 1px; margin-top: 6px;
+  font-weight: 400; text-transform: uppercase;
+}
+
+/* Avatar */
+.hero-visual { position: relative; display: flex; align-items: center; justify-content: center; }
+.hero-avatar {
+  width: 280px; height: 280px;
+  background: linear-gradient(135deg, var(--bg-3) 0%, var(--bg-2) 100%);
+  border: 2px solid var(--accent); border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 92px; font-weight: 500; color: var(--accent);
+  letter-spacing: -2px; box-shadow: 0 0 100px var(--accent-glow);
+  position: relative;
+}
+.hero-avatar::before {
+  content: ''; position: absolute; inset: -20px;
+  border: 1px dashed rgba(0, 212, 255, 0.3); border-radius: 50%;
+  animation: rotate 30s linear infinite;
+}
+@keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+/* ======= LIVE BUILD BANNER ======= */
+.build-banner {
+  margin-top: 28px;
+  padding: 18px 22px;
+  background: linear-gradient(90deg, rgba(0, 212, 255, 0.08), rgba(0, 212, 255, 0.02));
+  border: 1px solid rgba(0, 212, 255, 0.25);
+  border-radius: 12px;
+  font-size: 13px; color: var(--text-2); line-height: 1.6;
+  font-family: ui-monospace, "SF Mono", monospace;
+  display: flex; gap: 14px; align-items: flex-start;
+}
+.build-banner .bb-dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--ok); box-shadow: 0 0 8px var(--ok);
+  flex-shrink: 0; margin-top: 6px;
+  animation: pulse 1.8s infinite;
+}
+.build-banner code { color: var(--accent); }
+
+/* ======= PERSONAL NOTE ======= */
+.note-section {
+  padding: 48px 24px 16px;
+  background: var(--bg-2);
+  border-top: 1px solid var(--border);
+}
+.note-inner { max-width: 880px; margin: 0 auto; }
+.note-card {
+  background: linear-gradient(135deg, rgba(0, 212, 255, 0.04), rgba(0, 212, 255, 0.01));
+  border: 1px solid rgba(0, 212, 255, 0.18);
+  border-radius: 16px;
+  padding: 36px 40px;
+  position: relative;
+}
+.note-card::before {
+  content: '“'; position: absolute;
+  top: 8px; left: 18px;
+  font-size: 64px; line-height: 1;
+  color: rgba(0, 212, 255, 0.18);
+  font-family: Georgia, serif;
+}
+.note-handwritten {
+  font-family: "Bradley Hand", "Snell Roundhand", "Brush Script MT", cursive;
+  font-size: 32px; font-weight: 500;
+  color: var(--accent-2);
+  letter-spacing: -0.5px; margin-bottom: 18px;
+}
+.note-body {
+  font-size: 16px; line-height: 1.7;
+  color: var(--text-2); font-weight: 400;
+}
+.note-body em { color: var(--accent); font-style: normal; font-weight: 500; }
+.note-sign {
+  margin-top: 22px; padding-top: 18px;
+  border-top: 1px dashed rgba(0, 212, 255, 0.15);
+  display: flex; justify-content: space-between; align-items: center;
+  font-size: 13px; color: var(--text-4);
+  font-family: ui-monospace, "SF Mono", monospace;
+}
+.note-pablo {
+  cursor: pointer; user-select: none;
+  display: inline-flex; align-items: center;
+  transition: transform 0.2s;
+  filter: drop-shadow(0 4px 12px rgba(0, 212, 255, 0.18));
+}
+.note-pablo svg { display: block; transition: transform 0.2s; }
+.note-pablo:hover svg { transform: scale(1.15) rotate(-6deg); }
+.note-pablo.bark svg {
+  animation: bark 0.6s ease-in-out;
+}
+@keyframes bark {
+  0%, 100% { transform: scale(1) rotate(0); }
+  20% { transform: scale(1.4) rotate(-12deg); }
+  40% { transform: scale(1.2) rotate(8deg); }
+  60% { transform: scale(1.35) rotate(-6deg); }
+}
+.pablo-speech {
+  position: fixed; bottom: 32px; right: 32px;
+  background: var(--accent); color: var(--bg);
+  padding: 14px 18px; border-radius: 14px;
+  font-weight: 600; font-size: 14px;
+  box-shadow: 0 12px 32px var(--accent-glow);
+  z-index: 200;
+  opacity: 0; transform: translateY(20px);
+  transition: opacity 0.3s, transform 0.3s;
+  pointer-events: none;
+}
+.pablo-speech.show { opacity: 1; transform: translateY(0); }
+.pablo-speech::after {
+  content: '🐕'; margin-left: 6px;
+}
+
+/* ======= TOOLS STRIP ======= */
+.tools-strip {
+  padding: 32px 24px;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  background: var(--bg);
+}
+.tools-strip-inner { max-width: 1200px; margin: 0 auto; }
+.tools-label {
+  text-align: center; font-size: 11px;
+  color: var(--text-5); letter-spacing: 4px;
+  margin-bottom: 20px; text-transform: uppercase; font-weight: 500;
+}
+.tools-row {
+  display: flex; justify-content: space-around; align-items: center;
+  flex-wrap: wrap; gap: 24px;
+}
+.tools-row .tool {
+  color: var(--text-4); font-size: 16px; font-weight: 500;
+  display: flex; align-items: center; gap: 10px;
+  opacity: 0.75; transition: opacity 0.2s;
+}
+.tools-row .tool:hover { opacity: 1; }
+.tools-row .tool .icon { font-size: 20px; }
+.tools-row .tool.featured { color: var(--accent); opacity: 1; }
+
+/* ======= SECTION (shared) ======= */
+.section { padding: 100px 24px; position: relative; }
+.section + .section { border-top: 1px solid var(--border); }
+.section-inner { max-width: 1200px; margin: 0 auto; }
+.section-tag {
+  font-size: 13px; font-weight: 500; color: var(--accent-2);
+  letter-spacing: 1.5px; text-transform: uppercase;
+  margin-bottom: 18px; display: inline-flex; align-items: center; gap: 8px;
+}
+.section-tag::before { content: '★'; color: var(--accent); }
+.section-title {
+  font-size: 56px; font-weight: 500; line-height: 1.05;
+  letter-spacing: -2.5px; margin-bottom: 18px; color: var(--text);
+}
+.section-title .blue {
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+}
+.section-desc {
+  font-size: 17px; color: var(--text-3); margin-bottom: 48px;
+  line-height: 1.55; font-weight: 400; max-width: 760px;
+}
+
+/* ======= SKILL MATRIX (NEU) ======= */
+.matrix {
+  display: grid; grid-template-columns: 1fr; gap: 12px;
+}
+.matrix-row {
+  display: grid;
+  grid-template-columns: 1fr 1.4fr auto;
+  gap: 24px; align-items: center;
+  background: linear-gradient(135deg, var(--bg-3) 0%, var(--bg-2) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 12px; padding: 20px 24px;
+  transition: border-color 0.2s;
+}
+.matrix-row:hover { border-color: rgba(0, 212, 255, 0.3); }
+.matrix-req {
+  font-size: 15px; font-weight: 600; color: var(--text);
+  display: flex; align-items: center; gap: 10px;
+}
+.matrix-req .arr { color: var(--text-5); }
+.matrix-proof {
+  font-size: 14px; color: var(--text-3); line-height: 1.55;
+}
+.matrix-proof strong { color: var(--accent-2); font-weight: 500; }
+.matrix-tick {
+  width: 32px; height: 32px; border-radius: 50%;
+  background: rgba(16, 185, 129, 0.12);
+  border: 1px solid rgba(16, 185, 129, 0.35);
+  display: flex; align-items: center; justify-content: center;
+  color: var(--ok); font-weight: 700; font-size: 14px;
+}
+.matrix-foot {
+  margin-top: 24px; padding: 18px 22px;
+  background: rgba(0, 212, 255, 0.05);
+  border: 1px solid rgba(0, 212, 255, 0.18);
+  border-radius: 12px;
+  font-size: 14px; color: var(--text-2); line-height: 1.6;
+}
+.matrix-foot strong { color: var(--accent); }
+
+/* ======= CARDS ======= */
+.cards-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 16px;
+}
+.card {
+  background: linear-gradient(135deg, var(--bg-3) 0%, var(--bg-2) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px; padding: 32px; transition: all 0.2s;
+  display: flex; flex-direction: column;
+}
+.card:hover { border-color: rgba(0, 212, 255, 0.3); transform: translateY(-2px); }
+.card.spotlight {
+  border-color: rgba(0, 212, 255, 0.4);
+  box-shadow: 0 0 32px rgba(0, 212, 255, 0.08);
+}
+.card-icon {
+  width: 48px; height: 48px;
+  background: rgba(0, 212, 255, 0.12);
+  border: 1px solid rgba(0, 212, 255, 0.25);
+  border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 24px; margin-bottom: 20px;
+}
+.card-icon--logo {
+  background: rgba(255, 255, 255, 0.06);
+  padding: 6px;
+}
+.card-icon--logo img {
+  width: 100%; height: 100%;
+  object-fit: contain;
+  filter: brightness(1.1);
+}
+.card-title {
+  font-size: 20px; font-weight: 600; color: var(--text);
+  margin-bottom: 12px; display: flex; align-items: center; gap: 12px;
+}
+.card-title .live {
+  background: rgba(0, 212, 255, 0.1);
+  border: 1px solid rgba(0, 212, 255, 0.3);
+  color: var(--accent);
+  font-size: 10px; font-weight: 600; letter-spacing: 1px;
+  padding: 3px 8px; border-radius: 4px; text-transform: uppercase;
+}
+.card-title .live::before { content: '● '; }
+.card-desc {
+  font-size: 14px; color: var(--text-3); line-height: 1.6; font-weight: 400;
+}
+.card-meta {
+  margin-top: auto; padding-top: 16px;
+  font-size: 12px; color: var(--text-5);
+  font-family: ui-monospace, "SF Mono", monospace;
+}
+
+/* ======= SELECTED PROJECTS ======= */
+.proj-list {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 16px;
+}
+.proj-item {
+  background: linear-gradient(135deg, var(--bg-3) 0%, var(--bg-2) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px; padding: 28px;
+  display: flex; flex-direction: column; gap: 16px;
+  transition: all 0.2s;
+}
+.proj-item:hover {
+  border-color: rgba(0, 212, 255, 0.3);
+  transform: translateY(-2px);
+}
+.proj-item--current {
+  border-color: rgba(0, 212, 255, 0.4);
+  box-shadow: 0 0 32px rgba(0, 212, 255, 0.08);
+}
+.proj-item--link {
+  text-decoration: none; color: inherit; cursor: pointer;
+}
+.proj-item--link:hover {
+  border-color: rgba(0, 212, 255, 0.5);
+  box-shadow: 0 12px 32px rgba(0, 212, 255, 0.12);
+}
+.proj-live--ext { background: rgba(16, 185, 129, 0.1); border-color: rgba(16, 185, 129, 0.3); color: var(--ok); }
+.proj-live--ext::before { content: ''; }
+.proj-head { display: flex; gap: 18px; align-items: flex-start; }
+.proj-num {
+  font-family: ui-monospace, "SF Mono", monospace;
+  font-size: 28px; font-weight: 500;
+  color: var(--accent);
+  letter-spacing: -1px; line-height: 1;
+  width: 48px; flex-shrink: 0;
+  border-right: 1px solid rgba(0, 212, 255, 0.2);
+  padding-right: 14px;
+}
+.proj-title {
+  font-size: 19px; font-weight: 600;
+  color: var(--text); margin-bottom: 6px;
+  display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+}
+.proj-live {
+  background: rgba(0, 212, 255, 0.1);
+  border: 1px solid rgba(0, 212, 255, 0.3);
+  color: var(--accent);
+  font-size: 10px; font-weight: 600;
+  letter-spacing: 1px; padding: 3px 8px;
+  border-radius: 4px; text-transform: uppercase;
+}
+.proj-live::before { content: '● '; }
+.proj-sub {
+  font-size: 13px; color: var(--text-3);
+  font-weight: 400; line-height: 1.4;
+}
+.proj-body {
+  font-size: 14px; color: var(--text-2);
+  line-height: 1.65; font-weight: 400;
+}
+.proj-tech {
+  display: flex; flex-wrap: wrap; gap: 6px;
+  margin-top: auto; padding-top: 4px;
+}
+.proj-tech span {
+  font-family: ui-monospace, "SF Mono", monospace;
+  font-size: 11px; font-weight: 500;
+  color: var(--text-4);
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  padding: 3px 9px; border-radius: 5px;
+}
+
+/* ======= EU COMPLIANCE ======= */
+.eu-section {
+  background:
+    radial-gradient(ellipse at 90% 10%, rgba(0, 102, 255, 0.06) 0%, transparent 50%),
+    radial-gradient(ellipse at 10% 90%, rgba(255, 215, 0, 0.04) 0%, transparent 50%),
+    var(--bg);
+}
+.eu-grid {
+  display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px;
+}
+@media (max-width: 1100px) {
+  .eu-grid { grid-template-columns: repeat(3, 1fr); }
+}
+.eu-card {
+  background: linear-gradient(160deg, var(--bg-3) 0%, var(--bg-2) 100%);
+  border: 1px solid rgba(0, 212, 255, 0.18);
+  border-radius: 16px; padding: 26px 22px;
+  display: flex; flex-direction: column; gap: 10px;
+  transition: all 0.2s;
+  position: relative; overflow: hidden;
+}
+.eu-card::before {
+  content: ''; position: absolute;
+  top: -1px; left: -1px; right: -1px; height: 3px;
+  background: linear-gradient(90deg, #003399 0%, #FFCC00 100%);
+  border-radius: 16px 16px 0 0;
+  opacity: 0.7;
+}
+.eu-card:hover {
+  border-color: rgba(0, 212, 255, 0.4);
+  transform: translateY(-2px);
+  box-shadow: 0 12px 32px rgba(0, 102, 255, 0.08);
+}
+.eu-flag {
+  font-size: 28px; line-height: 1;
+}
+.eu-t1 {
+  font-size: 17px; font-weight: 600; color: var(--text);
+  letter-spacing: -0.3px;
+}
+.eu-t2 {
+  font-size: 13px; color: var(--text-3);
+  line-height: 1.55; font-weight: 400;
+  flex: 1;
+}
+.eu-tag-pill {
+  font-family: ui-monospace, "SF Mono", monospace;
+  font-size: 10px; font-weight: 600;
+  color: var(--accent); letter-spacing: 1px;
+  text-transform: uppercase;
+  padding: 4px 8px;
+  background: rgba(0, 212, 255, 0.08);
+  border: 1px solid rgba(0, 212, 255, 0.2);
+  border-radius: 5px;
+  align-self: flex-start;
+}
+.eu-foot {
+  margin-top: 24px; padding: 18px 22px;
+  background: rgba(0, 212, 255, 0.04);
+  border: 1px solid rgba(0, 212, 255, 0.18);
+  border-radius: 12px;
+  font-size: 14px; color: var(--text-2); line-height: 1.65;
+}
+.eu-foot strong { color: var(--accent); }
+
+/* ======= JOURNEY ======= */
+.journey { position: relative; margin-top: 32px; }
+.journey::before {
+  content: ''; position: absolute; left: 23px; top: 12px; bottom: 12px;
+  width: 2px;
+  background: linear-gradient(180deg,
+    rgba(0, 212, 255, 0.15) 0%,
+    rgba(0, 212, 255, 0.5) 50%,
+    rgba(0, 212, 255, 1) 100%);
+}
+.milestone { position: relative; padding: 18px 0 18px 70px; }
+.milestone .dot {
+  position: absolute; left: 12px; top: 24px;
+  width: 24px; height: 24px;
+  background: var(--bg-2);
+  border: 2px solid rgba(0, 212, 255, 0.3);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px;
+}
+.milestone.current .dot {
+  background: var(--accent); border-color: var(--accent);
+  box-shadow: 0 0 0 6px rgba(0, 212, 255, 0.15), 0 0 32px var(--accent);
+}
+.milestone .period {
+  font-size: 11px; font-weight: 500; color: var(--accent);
+  letter-spacing: 1px; text-transform: uppercase; margin-bottom: 4px;
+}
+.milestone .role {
+  font-size: 20px; font-weight: 500; color: var(--text);
+  letter-spacing: -0.5px; margin-bottom: 6px;
+}
+.milestone.current .role { color: var(--accent); }
+.milestone .field { font-size: 14px; color: var(--text-3); line-height: 1.55; font-weight: 400; }
+
+/* ======= ABOUT ======= */
+.about-text { max-width: 760px; }
+.about-text p {
+  font-size: 17px; color: var(--text-3); line-height: 1.75;
+  margin-bottom: 18px; font-weight: 400;
+}
+.about-text p em { color: var(--accent); font-style: normal; font-weight: 500; }
+
+/* ======= FINAL CTA ======= */
+.final-cta {
+  padding: 120px 24px; text-align: center;
+  background:
+    radial-gradient(ellipse at center, rgba(0, 212, 255, 0.08) 0%, transparent 60%),
+    var(--bg);
+  border-top: 1px solid var(--border);
+}
+.final-cta h2 {
+  font-size: 64px; font-weight: 500; line-height: 1;
+  letter-spacing: -3px; margin-bottom: 24px;
+}
+.final-cta h2 .blue {
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+}
+.final-cta p { font-size: 17px; color: var(--text-3); margin-bottom: 36px; font-weight: 400; }
+.final-cta-buttons { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+
+/* ======= CV + QR ======= */
+.cv-grid {
+  display: grid; grid-template-columns: 1.4fr 1fr; gap: 16px;
+}
+.cv-box {
+  background: linear-gradient(135deg, var(--bg-3) 0%, var(--bg-2) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px; padding: 32px;
+  display: flex; align-items: center; gap: 24px;
+  flex-wrap: wrap;
+}
+.cv-box:hover { border-color: rgba(0, 212, 255, 0.3); }
+.cv-icon {
+  width: 64px; height: 64px;
+  background: rgba(0, 212, 255, 0.12);
+  border: 1px solid rgba(0, 212, 255, 0.25);
+  border-radius: 14px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 32px; flex-shrink: 0;
+}
+.cv-text { flex: 1; min-width: 200px; }
+.cv-t1 { font-size: 18px; font-weight: 600; color: var(--text); margin-bottom: 4px; }
+.cv-t2 { font-size: 13px; color: var(--text-3); line-height: 1.5; }
+.cv-box .btn-primary { margin-left: auto; }
+
+.cv-box--qr { flex-direction: row; align-items: center; }
+.qr-canvas {
+  width: 140px; height: 140px;
+  background: #ffffff; border-radius: 10px;
+  padding: 8px; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 8px 24px rgba(0, 212, 255, 0.18);
+}
+.qr-canvas img { width: 100%; height: 100%; display: block; border-radius: 6px; }
+
+/* ======= ZERTIFIKATE ======= */
+.certs-row {
+  margin-top: 24px;
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px;
+}
+.cert-card {
+  display: flex; align-items: center; gap: 16px;
+  padding: 22px 24px;
+  background: linear-gradient(135deg, var(--bg-3) 0%, var(--bg-2) 100%);
+  border: 1px solid rgba(0, 212, 255, 0.18);
+  border-radius: 14px;
+  text-decoration: none; color: inherit;
+  transition: all 0.2s;
+}
+.cert-card:hover {
+  border-color: rgba(0, 212, 255, 0.45);
+  transform: translateY(-2px);
+  box-shadow: 0 12px 28px rgba(0, 212, 255, 0.08);
+}
+.cert-badge {
+  width: 44px; height: 44px;
+  background: rgba(0, 212, 255, 0.12);
+  border: 1px solid rgba(0, 212, 255, 0.3);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 22px; flex-shrink: 0;
+}
+.cert-text { flex: 1; min-width: 0; }
+.cert-t1 {
+  font-size: 14px; font-weight: 600;
+  color: var(--text); margin-bottom: 4px;
+}
+.cert-t2 {
+  font-size: 12px; color: var(--text-3); line-height: 1.45;
+}
+.cert-t2 strong { color: var(--accent-2); font-weight: 500; }
+.cert-cta {
+  font-family: ui-monospace, "SF Mono", monospace;
+  font-size: 11px; font-weight: 600;
+  color: var(--accent); letter-spacing: 1px;
+  flex-shrink: 0;
+}
+.cert-card--pending {
+  opacity: 0.85;
+  border-style: dashed;
+  border-color: rgba(0, 212, 255, 0.25);
+}
+.cert-cta--soon {
+  color: var(--text-4);
+  background: rgba(255,255,255,0.04);
+  padding: 4px 8px; border-radius: 6px;
+  text-transform: uppercase;
+}
+
+/* ======= CAL.COM EMBED ======= */
+.cal-wrap {
+  max-width: 720px; margin: 48px auto 0;
+  border: 1px solid rgba(0, 212, 255, 0.25);
+  border-radius: 16px; overflow: hidden;
+  background: var(--bg-2);
+  box-shadow: 0 20px 60px rgba(0, 212, 255, 0.08);
+}
+.cal-placeholder {
+  padding: 40px; text-align: center;
+  color: var(--text-3); font-size: 14px;
+}
+.cal-placeholder a { color: var(--accent); }
+
+/* ======= FOOTER ======= */
+.footer {
+  padding: 32px 24px; background: var(--bg);
+  border-top: 1px solid var(--border); text-align: center;
+}
+.footer-inner { max-width: 1200px; margin: 0 auto; }
+.footer p {
+  color: var(--text-5); font-size: 12px;
+  font-weight: 400; line-height: 1.8;
+}
+.footer a { color: var(--accent); text-decoration: none; }
+.footer .dot {
+  display: inline-block; width: 4px; height: 4px;
+  background: var(--accent); border-radius: 50%;
+  margin: 0 10px; vertical-align: middle;
+}
+.footer .meta {
+  margin-top: 16px; font-family: ui-monospace, "SF Mono", monospace;
+  font-size: 11px; color: var(--text-5);
+}
+.footer .meta code { color: var(--accent); }
+
+/* ======= MOBILE ======= */
+@media (max-width: 768px) {
+  .hero { padding: 60px 20px 50px; }
+  .hero-grid { grid-template-columns: 1fr; gap: 40px; }
+  .hero h1 { font-size: 44px; letter-spacing: -2px; }
+  .hero-sub { font-size: 16px; }
+  .hero-avatar { width: 200px; height: 200px; font-size: 64px; }
+  .hero-stats { gap: 24px; flex-wrap: wrap; }
+  .hero-stat .num { font-size: 28px; }
+
+  .section { padding: 60px 20px; }
+  .section-title { font-size: 34px; letter-spacing: -1.5px; }
+  .section-desc { font-size: 15px; }
+
+  .matrix-row {
+    grid-template-columns: 1fr;
+    gap: 8px; padding: 18px;
+  }
+  .matrix-tick { margin-top: 4px; }
+
+  .cards-grid { grid-template-columns: 1fr; }
+  .cv-grid { grid-template-columns: 1fr; }
+  .cv-box { padding: 22px; }
+  .cv-box .btn-primary { margin-left: 0; }
+  .certs-row { grid-template-columns: 1fr; }
+  .proj-list { grid-template-columns: 1fr; }
+  .proj-item { padding: 22px; }
+  .proj-num { font-size: 22px; width: 36px; padding-right: 10px; }
+  .hero-stack { font-size: 11px; padding: 6px 10px; }
+  .eu-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
+  .eu-card { padding: 20px 18px; }
+
+  .final-cta { padding: 60px 20px; }
+  .final-cta h2 { font-size: 36px; letter-spacing: -1.5px; }
+
+  .statusbar { padding: 10px 16px; }
+  .status-right .status-meta { display: none; }
+}
+</style>
+</head>
+<body>
+
+<!-- STATUS BAR -->
+<div class="statusbar">
+  <div class="statusbar-inner">
+    <div class="status-left">
+      <span class="live-pulse">PAGE-VISIT TRACKED</span>
+      <span class="status-meta">target: <span>easycosmetic</span></span>
+      <span class="status-meta" id="status-visitor"></span>
+    </div>
+    <div class="status-right">
+      <span class="status-meta">built with <span>Claude Code</span> · uptime <span id="status-uptime">…</span></span>
+      <button type="button" id="music-toggle" class="music-toggle" aria-label="Toggle background music" title="Lo-Fi Hintergrundmusik">
+        <span class="music-icon">♪</span><span class="music-label">music</span>
+      </button>
+      <span class="lang-switch">
+        <button type="button" data-set-lang="de" class="active">DE</button>
+        <span class="lang-sep">·</span>
+        <button type="button" data-set-lang="en">EN</button>
+      </span>
+    </div>
+  </div>
+</div>
+
+<!-- HERO -->
+<section class="hero" id="hero">
+  <div class="hero-grid-bg"></div>
+  <div class="hero-spotlight"></div>
+  <div class="hero-inner">
+    <div class="hero-grid">
+      <div>
+        <div class="hero-tag" data-i18n="hero-tag">AI AUTOMATION SPECIALIST</div>
+        <div class="hero-stack" data-i18n="hero-stack">Claude Code · n8n · API Integrations · AI Workflows · VibeCoding</div>
+        <h1 data-i18n="hero-h1">Bewerbung <span class="blue">deployed</span> für<br>easycosmetic.</h1>
+        <p class="hero-sub" data-i18n="hero-sub">
+          Du suchst jemanden, der mit <strong style="color:var(--text-2)">Claude Code &amp; Vibecoding</strong>
+          automatisierte Workflows baut, APIs verbindet und Prozesse mit KI optimiert.
+          Genau dort stecke ich gerade tief drin — KI-Weiterbildung seit Februar 2026,
+          aktuell im dritten Modul (n8n &amp; AI Agents bis 21.05.). Diese Bewerbung selbst ist die Demo.
+        </p>
+        <div class="hero-ctas">
+          <a href="#match" class="btn-primary" data-i18n="cta-matrix">→ Skill-Matrix anzeigen</a>
+          <a href="#gespraech" class="btn-secondary" data-i18n="cta-book">📅 Direkt Termin buchen</a>
+          <a href="https://www.linkedin.com/in/ninapankninberlin/" target="_blank" rel="noopener" class="btn-secondary">in LinkedIn</a>
+        </div>
+        <div class="hero-stats">
+          <div class="hero-stat">
+            <div class="num">98%</div>
+            <div class="label" data-i18n="stat-match">Match Score</div>
+          </div>
+          <div class="hero-stat">
+            <div class="num">7+</div>
+            <div class="label" data-i18n="stat-years">Jahre Operations</div>
+          </div>
+          <div class="hero-stat">
+            <div class="num">348</div>
+            <div class="label" data-i18n="stat-grade">/360 · KI-Analystin</div>
+          </div>
+        </div>
+
+        <div class="build-banner">
+          <div class="bb-dot"></div>
+          <div data-i18n="build-banner">
+            <strong style="color:var(--text)">Diese Seite ist live getrackt.</strong><br>
+            <code>POST /webhook/page-visit</code> → n8n → Push-Notification an mich.
+            Ich weiß, wann du sie öffnest. Bei euch würde dieselbe Logik
+            über DSGVO-konforme Channels (E-Mail · Slack EU · Mattermost) laufen.
+          </div>
+        </div>
+      </div>
+      <div class="hero-visual">
+        <div class="hero-avatar">NP</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PERSONAL NOTE -->
+<section class="note-section">
+  <div class="note-inner">
+    <div class="note-card">
+      <div class="note-handwritten" data-i18n="note-greeting">Liebes easycosmetic-Team,</div>
+      <div class="note-body" data-i18n="note-body">
+        ich habe diese Seite <em>extra für eure Stelle</em> gebaut — mit genau dem Stack,
+        den ihr sucht: Claude Code, n8n, Docker, APIs, automatisierte Workflows.
+        Statt einer Word-Datei zeige ich euch lieber direkt, wie ich arbeite.
+        Falls eine Sektion fehlt, scrollt einfach weiter — oder bucht direkt einen Slot unten.
+        Würde mich riesig freuen.
+      </div>
+      <div class="note-sign">
+        <span data-i18n="note-sign">Nina · Berlin · Mai 2026</span>
+        <span class="note-pablo" id="pablo-trigger" title="Pablo says hi" role="button" tabindex="0" aria-label="Pablo">
+          <svg viewBox="0 0 64 64" width="44" height="44" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <!-- ears -->
+            <path d="M14 18 C 8 26, 8 38, 14 44 L 22 36 Z" fill="#7a4a2b" stroke="#3d2515" stroke-width="1.5" stroke-linejoin="round"/>
+            <path d="M50 18 C 56 26, 56 38, 50 44 L 42 36 Z" fill="#7a4a2b" stroke="#3d2515" stroke-width="1.5" stroke-linejoin="round"/>
+            <!-- head -->
+            <ellipse cx="32" cy="34" rx="20" ry="18" fill="#a87246" stroke="#3d2515" stroke-width="1.8"/>
+            <!-- muzzle -->
+            <ellipse cx="32" cy="42" rx="11" ry="8" fill="#d5a877"/>
+            <!-- eyes -->
+            <circle cx="25" cy="30" r="2.4" fill="#1a1208"/>
+            <circle cx="39" cy="30" r="2.4" fill="#1a1208"/>
+            <circle cx="25.7" cy="29.3" r="0.7" fill="#fff"/>
+            <circle cx="39.7" cy="29.3" r="0.7" fill="#fff"/>
+            <!-- nose -->
+            <ellipse cx="32" cy="39" rx="3" ry="2.2" fill="#1a1208"/>
+            <!-- mouth -->
+            <path d="M32 42 Q 30 46 27 45" stroke="#3d2515" stroke-width="1.4" fill="none" stroke-linecap="round"/>
+            <path d="M32 42 Q 34 46 37 45" stroke="#3d2515" stroke-width="1.4" fill="none" stroke-linecap="round"/>
+            <!-- tongue -->
+            <path d="M31 45 Q 32 49 33 45 Z" fill="#e07a8a"/>
+          </svg>
+        </span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TOOLS STRIP -->
+<section class="tools-strip">
+  <div class="tools-strip-inner">
+    <div class="tools-label" data-i18n="tools-label">— I build with —</div>
+    <div class="tools-row">
+      <div class="tool featured"><span class="icon">🤖</span> Claude Code</div>
+      <div class="tool"><span class="icon">⚡</span> n8n</div>
+      <div class="tool"><span class="icon">🐳</span> Docker</div>
+      <div class="tool"><span class="icon">☁️</span> Coolify</div>
+      <div class="tool"><span class="icon">🐘</span> PostgreSQL</div>
+      <div class="tool"><span class="icon">🗄️</span> NocoDB</div>
+      <div class="tool"><span class="icon">🔗</span> REST / Webhooks</div>
+      <div class="tool"><span class="icon">🟢</span> Node.js</div>
+      <div class="tool"><span class="icon">🇪🇺</span> Mistral AI</div>
+    </div>
+  </div>
+</section>
+
+<!-- SKILL MATRIX — DER BAAM-MOMENT -->
+<section class="section" id="match">
+  <div class="section-inner">
+    <div class="section-tag" data-i18n="matrix-tag">Skill-Matrix · 1:1 zur Anzeige</div>
+    <h2 class="section-title" data-i18n="matrix-title">Eure Anforderung. <span class="blue">Mein Beleg.</span></h2>
+    <p class="section-desc" data-i18n="matrix-desc">
+      Jeder Punkt aus eurer Stellenanzeige — und genau das Projekt, an dem ich das schon gebaut habe.
+      Keine Floskeln. Konkret.
+    </p>
+
+    <div class="matrix">
+
+      <div class="matrix-row">
+        <div class="matrix-req"><span class="arr">→</span> AI-gestützte Entwicklung mit Claude Code &amp; VibeCoding</div>
+        <div class="matrix-proof"><strong>Diese Seite</strong> wurde live mit <strong>Claude Code</strong> gebaut. Bewerbungs-Workflow und n8n-Cockpit ebenfalls. Vibecoding ist seit April 2026 mein täglicher Arbeitsmodus.</div>
+        <div class="matrix-tick">✓</div>
+      </div>
+
+      <div class="matrix-row">
+        <div class="matrix-req"><span class="arr">→</span> Automatisierte Workflows entwickeln &amp; pflegen</div>
+        <div class="matrix-proof">Aktuell live: <strong>Bewerbungs-Workflow</strong> (3× täglich Jobs scrapen → Mistral AI → Telegram-Approval → SMTP), <strong>LinkedIn-Content-Workflow</strong>, <strong>RAG-News-Sammler</strong> mit Publisher. Alles native n8n, ohne Code-Nodes.</div>
+        <div class="matrix-tick">✓</div>
+      </div>
+
+      <div class="matrix-row">
+        <div class="matrix-req"><span class="arr">→</span> Anbindung &amp; Integration verschiedener APIs / Systeme</div>
+        <div class="matrix-proof">Aktiv integriert: <strong>Mistral, Cal.com, SMTP, RSS-Feeds, Arbeitnow-API, HubSpot, LinkedIn, Slack/Mattermost</strong>. Webhooks abgesichert mit Header-Auth-Token bzw. HMAC.</div>
+        <div class="matrix-tick">✓</div>
+      </div>
+
+      <div class="matrix-row">
+        <div class="matrix-req"><span class="arr">→</span> Prozessoptimierung mit AI-gestützten Ansätzen</div>
+        <div class="matrix-proof">7+ Jahre HR/Operations bei <strong>Remote, Redfish, CS&nbsp;Compliance</strong> — Startups &amp; KMUs. Ich habe Prozesse gelebt, bevor ich sie automatisiert habe. Genau diese Kombi macht den Unterschied.</div>
+        <div class="matrix-tick">✓</div>
+      </div>
+
+      <div class="matrix-row">
+        <div class="matrix-req"><span class="arr">→</span> Monitoring &amp; Fehleranalyse</div>
+        <div class="matrix-proof">Eigenes <strong>n8n-Cockpit</strong> mit Health-Checks, Error-Trigger, NocoDB-Logging und Telegram-Alarmen. Jeder Workflow ist nachverfolgbar.</div>
+        <div class="matrix-tick">✓</div>
+      </div>
+
+      <div class="matrix-row">
+        <div class="matrix-req"><span class="arr">→</span> APIs, Datenbanken (SQL/NoSQL), Datenintegration</div>
+        <div class="matrix-proof"><strong>PostgreSQL</strong> + <strong>NocoDB</strong> als Frontend, Adminer für direkten DB-Zugang. Datenmodellierung, Schema-Design, Import/Export laufen produktiv.</div>
+        <div class="matrix-tick">✓</div>
+      </div>
+
+      <div class="matrix-row">
+        <div class="matrix-req"><span class="arr">→</span> Zusammenarbeit mit Fachabteilungen → neue Use Cases</div>
+        <div class="matrix-proof">Genau mein HR/Operations-Hintergrund. Ich übersetze zwischen Fachsprache und Technik — als KI-Beraterin (Modul 2 hervorragend) ist das mein Kerngeschäft.</div>
+        <div class="matrix-tick">✓</div>
+      </div>
+
+      <div class="matrix-row">
+        <div class="matrix-req"><span class="arr">→</span> Dokumentation &amp; Wissenstransfer</div>
+        <div class="matrix-proof">Jeder meiner Workflows hat <strong>Sticky Notes, README, Schema-Doku</strong>. Plus: ich blogge auf <a href="https://ninalearnsvibecoding.com" style="color:var(--accent)">ninalearnsvibecoding.com</a> öffentlich über das, was ich lerne.</div>
+        <div class="matrix-tick">✓</div>
+      </div>
+
+      <div class="matrix-row">
+        <div class="matrix-req"><span class="arr">★</span> Bonus: n8n, Docker, Node.js, Cloud</div>
+        <div class="matrix-proof"><strong>n8n</strong> hauptberuflich (1.490+ Nodes sortiert &amp; übersetzt) · <strong>Docker</strong> über Coolify produktiv · <strong>Node.js</strong> als n8n-Runtime + Code-Nodes · eigener <strong>Hetzner-Cloud-Server</strong> für mehrere Projekte (Website, n8n, Adminer, NocoDB).</div>
+        <div class="matrix-tick">✓</div>
+      </div>
+
+      <div class="matrix-row">
+        <div class="matrix-req"><span class="arr">★</span> Bürohund-Bonus 🐕</div>
+        <div class="matrix-proof"><strong>Pablo</strong> würde sich freuen. Hat schon Erfahrung im Home-Office-Setup.</div>
+        <div class="matrix-tick">✓</div>
+      </div>
+
+    </div>
+
+    <div class="matrix-foot" data-i18n="matrix-foot">
+      <strong>10/10 Anforderungen</strong> erfüllt — inkl. aller Bonus-Punkte.
+      Gehaltsvorstellung: <strong>60.000 € brutto/Jahr</strong> · Verhandelbar.
+    </div>
+  </div>
+</section>
+
+<!-- WHAT I BUILT -->
+<section class="section">
+  <div class="section-inner">
+    <div class="section-tag" data-i18n="built-tag">What I'm Doing</div>
+    <h2 class="section-title" data-i18n="built-title">What I <span class="blue">built</span>.</h2>
+    <p class="section-desc" data-i18n="built-desc">
+      Vier produktive Workflows, die gerade live laufen. Plus diese Bewerbungs-Seite,
+      die selbst Teil davon ist.
+    </p>
+    <div class="cards-grid">
+
+      <div class="card spotlight">
+        <div class="card-icon">🎯</div>
+        <div class="card-title">Diese Bewerbung <span class="live">live</span></div>
+        <div class="card-desc">
+          Eigene Subseite für jede Bewerbung, parametrisiert oder maßgeschneidert.
+          Page-Visit-Tracking via n8n-Webhook → Telegram-Push.
+          QR-Code zum CV-PDF, Cal.com inline für direkten Termin.
+        </div>
+        <div class="card-meta">stack · Claude Code + n8n + Cal.com + Coolify</div>
+      </div>
+
+      <div class="card">
+        <div class="card-icon">⚡</div>
+        <div class="card-title">Bewerbungs-Scraper <span class="live">live</span></div>
+        <div class="card-desc">
+          3× täglich vier Plattformen scannen, Mistral-AI bewertet
+          Match-Score &amp; Personalisierung, Human-in-the-Loop via Telegram,
+          Versand über eigenen SMTP. NocoDB-Logging.
+        </div>
+        <div class="card-meta">stack · n8n + Mistral + Telegram + SMTP + NocoDB</div>
+      </div>
+
+      <div class="card">
+        <div class="card-icon">📰</div>
+        <div class="card-title">RAG-News-Pipeline <span class="live">live</span></div>
+        <div class="card-desc">
+          KI-News werden gesammelt, embedded, retrieved und
+          automatisch als LinkedIn-Post + Blog-Artikel publiziert.
+          Multilingual (DE/EN/FR/IT/ES).
+        </div>
+        <div class="card-meta">stack · n8n + Vector-Search + LinkedIn API</div>
+      </div>
+
+      <div class="card spotlight">
+        <div class="card-icon card-icon--logo"><img src="./femhit-logo.svg" alt="FEMhit Logo"></div>
+        <div class="card-title">FEMhit · KI-Beratung für The Apex Protocol</div>
+        <div class="card-desc">
+          <strong>Modul-2-Abschlussprojekt</strong> als KI-Beraterin (340/360, Auszeichnung):
+          Komplettes Enterprise-Beratungskonzept für ein <em>intelligentes Finanzassistenzsystem</em> —
+          Langdock-basiert, EU-AI-Act-Risikoklassifizierung (Limited Risk · Art. 50),
+          DSFA &amp; AVV, Verantwortungsmatrix mit DPO / IT / Fachbereich / KI-Governance,
+          KPI-Framework und 4-Phasen-Umsetzungsplan.
+        </div>
+        <div class="card-meta">stack · Langdock + DSGVO/EU AI Act + Governance-Framework</div>
+      </div>
+
+      <div class="card">
+        <div class="card-icon">🖥️</div>
+        <div class="card-title">n8n-Cockpit <span class="live">live</span></div>
+        <div class="card-desc">
+          Eigenes Monitoring-Dashboard für alle Workflows.
+          Error-Trigger, Health-Checks, Status-Übersicht.
+          Header-Auth-abgesichert.
+        </div>
+        <div class="card-meta">stack · n8n + Header-Auth + SMTP-Alarm</div>
+      </div>
+
+      <div class="card">
+        <div class="card-icon">🔒</div>
+        <div class="card-title">DSGVO &amp; EU AI Act</div>
+        <div class="card-desc">
+          Mistral statt OpenAI (EU-Server), eigener SMTP, eigene Datenbank,
+          alles auf deutschem Hetzner. Compliance ist nicht Nachgedanke,
+          sondern Designprinzip.
+        </div>
+        <div class="card-meta">stack · Hetzner DE + Mistral EU + eigene Infra</div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- SELECTED PROJECTS -->
+<section class="section" id="projects">
+  <div class="section-inner">
+    <div class="section-tag" data-i18n="proj-tag">Selected Projects · 2026</div>
+    <h2 class="section-title" data-i18n="proj-title">What I <span class="blue">shipped</span>.</h2>
+    <p class="section-desc" data-i18n="proj-desc">
+      Vier konkrete Projekte aus den letzten Monaten — nicht „nice ideas",
+      sondern Code &amp; Workflows, die laufen.
+    </p>
+
+    <div class="proj-list">
+
+      <a class="proj-item proj-item--link" href="https://ninalearnsvibecoding.com" target="_blank" rel="noopener">
+        <div class="proj-head">
+          <div class="proj-num">01</div>
+          <div>
+            <div class="proj-title" data-i18n="proj-1-title">n8n Node Explorer <span class="proj-live proj-live--ext">live ↗</span></div>
+            <div class="proj-sub" data-i18n="proj-1-sub">Interaktives Such- und Filtertool für 1.490+ n8n-Nodes</div>
+          </div>
+        </div>
+        <div class="proj-body" data-i18n="proj-1-body">
+          Aktuell live auf <strong>ninalearnsvibecoding.com</strong> — Fulltext-Suche
+          mit Highlighting, deutsche Übersetzungen, Filterlogik für Trigger / Core / AI Nodes,
+          offlinefähig, UI im Stil einer modernen AI-Learning-Plattform.
+        </div>
+        <div class="proj-tech">
+          <span>HTML</span><span>JavaScript</span><span>JSON</span><span>n8n-Strukturdaten</span>
+        </div>
+      </a>
+
+      <div class="proj-item">
+        <div class="proj-head">
+          <div class="proj-num">02</div>
+          <div>
+            <div class="proj-title" data-i18n="proj-2-title">Self-Hosted AI Workflow Environment</div>
+            <div class="proj-sub" data-i18n="proj-2-sub">Eigene n8n-Instanz auf Hetzner/Coolify</div>
+          </div>
+        </div>
+        <div class="proj-body" data-i18n="proj-2-body">
+          Komplett selbst aufgebaut: API-Integrationen, Workflow-Orchestrierung,
+          AI-Agent-Logiken, automatisierte Prozessketten, Claude-Code-basierte
+          Automatisierung. Header-Auth, HMAC-Webhooks, eigener SMTP-Server.
+        </div>
+        <div class="proj-tech">
+          <span>n8n</span><span>Docker</span><span>Coolify</span><span>Hetzner</span><span>PostgreSQL</span><span>NocoDB</span>
+        </div>
+      </div>
+
+      <div class="proj-item">
+        <div class="proj-head">
+          <div class="proj-num">03</div>
+          <div>
+            <div class="proj-title" data-i18n="proj-3-title">AI-Bewerbungs-Workflow</div>
+            <div class="proj-sub" data-i18n="proj-3-sub">Automatisiertes Job-Scraping → AI-Personalisierung → Versand</div>
+          </div>
+        </div>
+        <div class="proj-body" data-i18n="proj-3-body">
+          3× täglich vier Plattformen scrapen, Mistral AI bewertet Match-Score
+          und personalisiert das Anschreiben, Human-in-the-Loop via Messenger-Approval,
+          Versand über eigenen SMTP, NocoDB-Logging mit Execution-IDs.
+        </div>
+        <div class="proj-tech">
+          <span>n8n</span><span>Mistral AI</span><span>SMTP</span><span>NocoDB</span>
+        </div>
+      </div>
+
+      <div class="proj-item proj-item--current">
+        <div class="proj-head">
+          <div class="proj-num">04</div>
+          <div>
+            <div class="proj-title" data-i18n="proj-4-title">Live-Bewerbungs-Dashboard <span class="proj-live">you are here</span></div>
+            <div class="proj-sub" data-i18n="proj-4-sub">Genau diese Seite — personalisiert pro Firma</div>
+          </div>
+        </div>
+        <div class="proj-body" data-i18n="proj-4-body">
+          Personalisierte Bewerbungs-Seite je Empfänger, Page-Visit-Tracking via n8n-Webhook,
+          Push-Notification beim Öffnen, QR-Code zum CV, Cal.com-Embed für direkte Terminbuchung.
+          Bilingual DE/EN, Visitor-Counter, mit Claude Code gebaut.
+        </div>
+        <div class="proj-tech">
+          <span>Claude Code</span><span>n8n</span><span>Coolify</span><span>Cal.com</span><span>Web Audio</span>
+        </div>
+      </div>
+
+      <div class="proj-item">
+        <div class="proj-head">
+          <div class="proj-num">05</div>
+          <div>
+            <div class="proj-title" data-i18n="proj-5-title">Börsentracker Dashboard</div>
+            <div class="proj-sub" data-i18n="proj-5-sub">Eigenes Portfolio · Krypto, Aktien, ETF · Suche &amp; AI-Vorschläge</div>
+          </div>
+        </div>
+        <div class="proj-body" data-i18n="proj-5-body">
+          Privates Multi-Asset-Dashboard: Live-Kurse für Krypto, Aktien und ETFs in einem Portfolio,
+          Suche über alle Tickers, AI-gestützte Investment-Vorschläge basierend auf Marktdaten.
+          Lehrprojekt mit echten APIs und reaktivem UI.
+        </div>
+        <div class="proj-tech">
+          <span>Claude Code</span><span>JavaScript</span><span>Crypto APIs</span><span>Stock APIs</span><span>AI Suggestions</span>
+        </div>
+      </div>
+
+      <div class="proj-item">
+        <div class="proj-head">
+          <div class="proj-num">06</div>
+          <div>
+            <div class="proj-title" data-i18n="proj-6-title">n8n Cockpit · Workflow-Monitoring</div>
+            <div class="proj-sub" data-i18n="proj-6-sub">Eigenes Dashboard über alle Workflows + Bewerber-Scraping</div>
+          </div>
+        </div>
+        <div class="proj-body" data-i18n="proj-6-body">
+          Privates Cockpit mit Health-Checks aller produktiven Workflows, Error-Trigger,
+          Status-Übersicht, Execution-Logs. Bewerber-Scraping läuft im selben Canvas
+          mit Cron-Triggern und HMAC-abgesicherten Webhooks.
+        </div>
+        <div class="proj-tech">
+          <span>n8n</span><span>Header Auth</span><span>HMAC</span><span>NocoDB</span><span>SMTP Alarm</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- EU COMPLIANCE -->
+<section class="section eu-section" id="eu">
+  <div class="section-inner">
+    <div class="section-tag" data-i18n="eu-tag">🇪🇺 EU AI Act &amp; DSGVO · by Design</div>
+    <h2 class="section-title" data-i18n="eu-title">Daten bleiben in <span class="blue">Europa</span>.</h2>
+    <p class="section-desc" data-i18n="eu-desc">
+      <strong style="color:var(--text-2)">DSGVO und EU AI Act</strong> sind bei mir keine Add-ons, sondern Designprinzip.
+      Für DACH-E-Commerce mit Kundendaten relevant — und ein klares Differenzierungsmerkmal gegenüber US-AI-Stacks.
+    </p>
+
+    <div class="eu-grid">
+      <div class="eu-card">
+        <div class="eu-flag">🇫🇷</div>
+        <div class="eu-t1" data-i18n="eu-mistral-t1">Mistral AI</div>
+        <div class="eu-t2" data-i18n="eu-mistral-t2">Default-LLM statt OpenAI. Französischer Anbieter, Server in der EU, transparente Modelle.</div>
+        <div class="eu-tag-pill" data-i18n="eu-mistral-pill">EU-LLM · Production</div>
+      </div>
+      <div class="eu-card">
+        <div class="eu-flag">🇩🇪</div>
+        <div class="eu-t1" data-i18n="eu-langdock-t1">Langdock</div>
+        <div class="eu-t2" data-i18n="eu-langdock-t2">Berliner Enterprise-AI-Layer. Mehrere Modelle hinter einer DSGVO-Schicht — ideal für interne Roll-outs.</div>
+        <div class="eu-tag-pill" data-i18n="eu-langdock-pill">Berlin · Enterprise</div>
+      </div>
+      <div class="eu-card">
+        <div class="eu-flag">🇩🇪</div>
+        <div class="eu-t1" data-i18n="eu-infra-t1">Eigene Infrastruktur</div>
+        <div class="eu-t2" data-i18n="eu-infra-t2">Hetzner-Server in Deutschland, Coolify-Deploys, eigener SMTP, eigene PostgreSQL. Kein US-Cloud-Lock-in.</div>
+        <div class="eu-tag-pill" data-i18n="eu-infra-pill">DE-Hosting · Self-Hosted</div>
+      </div>
+      <div class="eu-card">
+        <div class="eu-flag">⚖️</div>
+        <div class="eu-t1" data-i18n="eu-act-t1">DSGVO &amp; EU AI Act</div>
+        <div class="eu-t2" data-i18n="eu-act-t2">DSGVO-konforme Datenverarbeitung, Risikoklassifizierung pro Workflow, Audit-Trail in NocoDB mit Execution-IDs, Human-in-the-Loop bei jedem AI-Output. Aus Modul 1+2 mit Auszeichnung belegt.</div>
+        <div class="eu-tag-pill" data-i18n="eu-act-pill">Audit-Ready · HITL</div>
+      </div>
+      <div class="eu-card">
+        <div class="eu-flag">📡</div>
+        <div class="eu-t1" data-i18n="eu-channels-t1">Notification-Channels</div>
+        <div class="eu-t2" data-i18n="eu-channels-t2">Für DACH-Geschäftsdaten: eigener SMTP, Slack EU oder Mattermost — DSGVO-konform. Telegram nur für meine eigene Infrastruktur, nie für Kundendaten.</div>
+        <div class="eu-tag-pill" data-i18n="eu-channels-pill">DSGVO-First</div>
+      </div>
+    </div>
+
+    <div class="eu-foot" data-i18n="eu-foot">
+      <strong>Im Klartext:</strong> Jeder Workflow, den ich baue, ist standardmäßig EU-konform.
+      Ich muss nicht nachträglich auf DSGVO „upgraden" — die Stack-Auswahl macht es per Default.
+    </div>
+  </div>
+</section>
+
+<!-- JOURNEY -->
+<section class="section">
+  <div class="section-inner">
+    <div class="section-tag" data-i18n="journey-tag">My Journey</div>
+    <h2 class="section-title" data-i18n="journey-title">From Ops to <span class="blue">Building</span>.</h2>
+    <p class="section-desc" data-i18n="journey-desc">
+      Ich habe Prozesse gelebt — jetzt baue ich sie.
+      Von Recht über Real Estate, Produktion und HR bis Automation mit KI.
+    </p>
+    <div class="journey">
+      <div class="milestone">
+        <div class="dot">🎬</div>
+        <div class="period">vor 2017</div>
+        <div class="role">Produktionsassistenz &amp; Producer Assistant</div>
+        <div class="field">Sets, Logistik, Stakeholder-Koordination — alles gleichzeitig, schnelle Entscheidungen unter Zeitdruck.</div>
+      </div>
+      <div class="milestone">
+        <div class="dot">🌍</div>
+        <div class="period">05/2017 — 09/2018</div>
+        <div class="role">Office &amp; Standortmanagerin · CS&nbsp;Compliance Service GmbH</div>
+        <div class="field">Berlin — Aufstieg zur Standortmanagerin in 3 Monaten. Internationale Mitarbeiter-Relocation &amp; Onboarding. Verhandlung neuer Büroflächen mit Kostenreduktion &gt; 10 %.</div>
+      </div>
+      <div class="milestone">
+        <div class="dot">📋</div>
+        <div class="period">04/2019 — 04/2023</div>
+        <div class="role">HR, Office &amp; Accounting Managerin · Redfish GmbH</div>
+        <div class="field">Berlin — Verantwortung für HR-, Office- und Finanzadministration. Gehaltsabrechnungen, Cashflow-Überwachung, Vertragsmanagement, Mitwirkung an Unternehmensliquidation.</div>
+      </div>
+      <div class="milestone">
+        <div class="dot">👥</div>
+        <div class="period">04/2023 — 06/2025</div>
+        <div class="role">HR &amp; Office Managerin · Remote</div>
+        <div class="field">Berlin — Ganzheitliche HR-Administration und Prozesskoordination. Optimierung administrativer Abläufe mit messbarer Zeitersparnis. Strukturierung und Digitalisierung operativer Prozesse.</div>
+      </div>
+      <div class="milestone">
+        <div class="dot">📊</div>
+        <div class="period">2022</div>
+        <div class="role">DATEV Lohn &amp; Gehalt Zertifikat</div>
+        <div class="field">Europäischer Hochschulverband.</div>
+      </div>
+      <div class="milestone">
+        <div class="dot">🧠</div>
+        <div class="period">02/2026 — 03/2026</div>
+        <div class="role">Modul 1 · KI-Analyst</div>
+        <div class="field">HERZBLUT Training &amp; Coaching (AZAV) · <strong>348/360 Punkte · Auszeichnung</strong>. Generative KI, LLMs, NLP, Prompt Engineering, EU AI Act.</div>
+      </div>
+      <div class="milestone">
+        <div class="dot">🎓</div>
+        <div class="period">03/2026 — 04/2026</div>
+        <div class="role">Modul 2 · KI-Berater</div>
+        <div class="field">HERZBLUT Training &amp; Coaching (AZAV) · <strong>340/360 Punkte · Auszeichnung</strong>. Strategische KI-Beratung · Abschlussprojekt FEMhit.</div>
+      </div>
+      <div class="milestone current">
+        <div class="dot">⚡</div>
+        <div class="period">04/2026 — 21.05.2026 · läuft gerade</div>
+        <div class="role">Modul 3 · n8n AI Agents &amp; VibeCoding</div>
+        <div class="field">HERZBLUT Training &amp; Coaching (AZAV) · Entwicklung produktiver Workflows mit n8n, Mistral, Claude Code. Diese Bewerbungsseite ist eines der Ergebnisse. Abschluss in wenigen Tagen — und dann Vollgas.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section class="section">
+  <div class="section-inner">
+    <div class="section-tag" data-i18n="about-tag">About</div>
+    <h2 class="section-title" data-i18n="about-title">About <span class="blue">Nina</span>.</h2>
+    <div class="about-text" data-i18n="about-body">
+      <p>
+        Nina Panknin aus Berlin. 7+ Jahre <em>HR, Office &amp; Operations Management</em>
+        bei Start-ups und KMUs — Onboarding, Payroll, Buchhaltung, Compliance, Prozessoptimierung.
+        Genau die Prozesse, die jedes wachsende E-Commerce-Unternehmen kennt.
+      </p>
+      <p>
+        Im Februar 2026 startete ich die KI-Weiterbildung: Modul 1 (KI-Analystin) mit
+        <em>348/360 Punkten</em> sehr gut, Modul 2 (KI-Beraterin) mit
+        Abschlussprojekt FEMhit hervorragend abgeschlossen.
+      </p>
+      <p>
+        Seit April 2026 baue ich live produktive Workflows mit
+        <em>Claude Code, n8n und Mistral AI</em>. Diese Bewerbungsseite ist einer davon —
+        vollautomatisiert, DSGVO-konform, dokumentiert, mit Monitoring.
+        <em>Was ich jahrelang gemanagt habe, automatisiere ich jetzt.</em>
+        Bei easycosmetic würde ich genau das tun — für ein Team, das E-Commerce, Technologie
+        und Datenorientierung schon lebt.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- CV DOWNLOAD + QR + ZERTIFIKATE -->
+<section class="section" id="cv">
+  <div class="section-inner">
+    <div class="section-tag" data-i18n="cv-tag">CV &amp; Zertifikate</div>
+    <h2 class="section-title" data-i18n="cv-title">Belege · <span class="blue">PDF, QR &amp; Zertifikate</span>.</h2>
+    <p class="section-desc" data-i18n="cv-desc">
+      Lebenslauf als PDF, QR-Code aufs Handy, und beide Zertifikate offiziell beglaubigt — direkt zum Download.
+    </p>
+    <div class="cv-grid">
+      <div class="cv-box">
+        <div class="cv-icon">📄</div>
+        <div class="cv-text">
+          <div class="cv-t1" data-i18n="cv-pdf-title">Lebenslauf · PDF</div>
+          <div class="cv-t2" data-i18n="cv-pdf-sub">2 Seiten · DSGVO-konform · kein Tracking-Pixel im PDF</div>
+        </div>
+        <a id="cv-download" href="./cv-nina-panknin.pdf" download class="btn-primary" data-i18n="cv-download-btn">↓ Download PDF</a>
+      </div>
+      <div class="cv-box cv-box--qr">
+        <div id="qr-code" class="qr-canvas"></div>
+        <div class="cv-text">
+          <div class="cv-t1" data-i18n="qr-title">Mobil scannen</div>
+          <div class="cv-t2" data-i18n="qr-sub">QR-Code mit Handy scannen → CV direkt aufs Phone.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="certs-row">
+      <a href="./zertifikat-ki-analyst.pdf" target="_blank" rel="noopener" class="cert-card">
+        <div class="cert-badge">🎓</div>
+        <div class="cert-text">
+          <div class="cert-t1" data-i18n="cert-analyst-t1">Zertifikat · KI-Analystin</div>
+          <div class="cert-t2" data-i18n="cert-analyst-t2">Modul 1 · <strong>348/360 Punkte</strong> · sehr gut</div>
+        </div>
+        <div class="cert-cta" data-i18n="cert-open">↗ PDF</div>
+      </a>
+      <a href="./zertifikat-ki-berater.pdf" target="_blank" rel="noopener" class="cert-card">
+        <div class="cert-badge">🎓</div>
+        <div class="cert-text">
+          <div class="cert-t1" data-i18n="cert-berater-t1">Zertifikat · KI-Beraterin</div>
+          <div class="cert-t2" data-i18n="cert-berater-t2">Modul 2 · Abschlussprojekt FEMhit · <strong>hervorragend</strong></div>
+        </div>
+        <div class="cert-cta" data-i18n="cert-open">↗ PDF</div>
+      </a>
+      <div class="cert-card cert-card--pending">
+        <div class="cert-badge">⏳</div>
+        <div class="cert-text">
+          <div class="cert-t1" data-i18n="cert-m3-t1">Modul 3 · n8n &amp; AI Agents</div>
+          <div class="cert-t2" data-i18n="cert-m3-t2">läuft bis <strong>21. Mai 2026</strong> · Abschluss in wenigen Tagen</div>
+        </div>
+        <div class="cert-cta cert-cta--soon" data-i18n="cert-soon">soon</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FINAL CTA -->
+<section class="final-cta" id="gespraech">
+  <h2 data-i18n="cta-title">Lass uns <span class="blue">sprechen</span>.</h2>
+  <p data-i18n="cta-sub">
+    Direkt einen 30-Min-Slot buchen — oder per Mail melden.
+    Ich melde mich innerhalb von 24 Stunden.
+  </p>
+  <div class="final-cta-buttons">
+    <a href="mailto:ninapankninberlin@gmail.com" class="btn-primary">✉ ninapankninberlin@gmail.com</a>
+    <a href="https://www.linkedin.com/in/ninapankninberlin/" target="_blank" rel="noopener" class="btn-secondary">in LinkedIn</a>
+    <a href="tel:+491722101191" class="btn-secondary">✆ +49 172 2101191</a>
+  </div>
+
+  <div class="cal-wrap">
+    <div class="cal-placeholder" id="cal-placeholder">
+      📅 <strong data-i18n="cal-title">Termin direkt buchen</strong><br><br>
+      <span style="font-size:13px" data-i18n="cal-sub">
+        Wird hier eingebettet — Cal.com-URL eintragen in <code>data-cal-link</code>.<br>
+        <a href="https://cal.com" target="_blank" rel="noopener">→ Cal.com manuell öffnen</a>
+      </span>
+    </div>
+    <!-- Cal.com inline embed — sobald URL gesetzt -->
+    <div id="cal-inline" data-cal-link="" style="height:680px; display:none;"></div>
+  </div>
+</section>
+
+<!-- AUDIO ELEMENT (hidden) -->
+<audio id="bg-music" loop preload="none">
+  <!-- MP3-Dateipfad in CONFIG.MUSIC_URL eintragen — z.B. ./lofi-loop.mp3 -->
+</audio>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-inner">
+    <p>
+      <span class="dot"></span> DSGVO &amp; EU AI Act
+      <span class="dot"></span> Eigener SMTP &amp; Hetzner DE
+      <span class="dot"></span> Mistral AI (EU)
+      <span class="dot"></span> Berlin · Mai 2026
+    </p>
+    <p style="margin-top: 12px;">
+      <a href="https://ninalearnsvibecoding.com">ninalearnsvibecoding.com</a>
+    </p>
+    <p class="meta">
+      this page · built with <code>Claude Code</code> · deployed via <code>Coolify</code> · tracked via <code>n8n → Telegram</code>
+    </p>
+  </div>
+</footer>
+
+<script>
+// ============================================
+// KONFIG — hier deine URLs eintragen
+// ============================================
+const CONFIG = {
+  // n8n Webhook für Page-Visit-Tracking (live)
+  TRACKING_WEBHOOK: 'https://n8n.ninalearnsvibecoding.com/webhook/page-visit-easycosmetic',
+
+  // Cal.com Buchungs-URL (deine self-hosted Instanz)
+  CAL_LINK: '', // z.B. 'https://cal.ninalearnsvibecoding.com/nina/30min?embed=true&theme=dark'
+
+  // CV-Download via n8n (mit Push-Notification beim Download)
+  CV_DOWNLOAD_URL: 'https://n8n.ninalearnsvibecoding.com/webhook/cv-easycosmetic',
+
+  // QR-Code via n8n (server-side generation)
+  QR_API_URL: 'https://n8n.ninalearnsvibecoding.com/webhook/qr-easycosmetic',
+
+  // Öffentliche Seiten-URL für QR-Code-Daten
+  PAGE_URL: 'https://ninalearnsvibecoding.com/bewerbung/easycosmetic/',
+
+  // Hintergrundmusik (optional, off-by-default)
+  // MP3 in den Ordner legen oder eine externe URL setzen.
+  // Lo-Fi-Loops lizenzfrei z.B. von pixabay.com/music/
+  MUSIC_URL: '', // z.B. './lofi-loop.mp3'
+  MUSIC_VOLUME: 0.18 // 0.0 - 1.0
+};
+
+// ============================================
+// i18n — Übersetzungen DE / EN
+// ============================================
+const I18N = {
+  de: {
+    'hero-tag': 'AI AUTOMATION SPECIALIST',
+    'hero-stack': 'Claude Code · n8n · API Integrations · AI Workflows · VibeCoding',
+    'hero-h1': 'Bewerbung <span class="blue">deployed</span> für<br>easycosmetic.',
+    'hero-sub': 'Du suchst jemanden, der mit <strong style="color:var(--text-2)">Claude Code &amp; Vibecoding</strong> automatisierte Workflows baut, APIs verbindet und Prozesse mit KI optimiert. Genau dort stecke ich gerade tief drin — KI-Weiterbildung seit Februar 2026, aktuell im dritten Modul (n8n &amp; AI Agents bis 21.05.). Diese Bewerbung selbst ist die Demo.',
+    'cta-matrix': '→ Skill-Matrix anzeigen',
+    'cta-book': '📅 Direkt Termin buchen',
+    'stat-match': 'Match Score',
+    'stat-years': 'Jahre Operations',
+    'stat-grade': '/360 · KI-Analystin',
+    'build-banner': '<strong style="color:var(--text)">Diese Seite ist live getrackt.</strong><br><code>POST /webhook/page-visit</code> → n8n → Push-Notification an mich. Ich weiß, wann du sie öffnest. Bei euch würde dieselbe Logik über DSGVO-konforme Channels (E-Mail · Slack EU · Mattermost) laufen.',
+    'tools-label': '— I build with —',
+    'note-greeting': 'Liebes easycosmetic-Team,',
+    'note-body': 'ich habe diese Seite <em>extra für eure Stelle</em> gebaut — mit genau dem Stack, den ihr sucht: Claude Code, n8n, Docker, APIs, automatisierte Workflows. Statt einer Word-Datei zeige ich euch lieber direkt, wie ich arbeite. Falls eine Sektion fehlt, scrollt einfach weiter — oder bucht direkt einen Slot unten. Würde mich riesig freuen.',
+    'note-sign': 'Nina · Berlin · Mai 2026',
+    'matrix-tag': 'Skill-Matrix · 1:1 zur Anzeige',
+    'matrix-title': 'Eure Anforderung. <span class="blue">Mein Beleg.</span>',
+    'matrix-desc': 'Jeder Punkt aus eurer Stellenanzeige — und genau das Projekt, an dem ich das schon gebaut habe. Keine Floskeln. Konkret.',
+    'matrix-foot': '<strong>10/10 Anforderungen</strong> erfüllt — inkl. aller Bonus-Punkte. Gehaltsvorstellung: <strong>60.000 € brutto/Jahr</strong> · Verhandelbar.',
+    'built-tag': 'What I\'m Doing',
+    'built-title': 'What I <span class="blue">built</span>.',
+    'built-desc': 'Vier produktive Workflows, die gerade live laufen. Plus diese Bewerbungs-Seite, die selbst Teil davon ist.',
+    'proj-tag': 'Selected Projects · 2026',
+    'proj-title': 'What I <span class="blue">shipped</span>.',
+    'proj-desc': 'Vier konkrete Projekte aus den letzten Monaten — nicht „nice ideas", sondern Code &amp; Workflows, die laufen.',
+    'proj-1-title': 'n8n Node Explorer <span class="proj-live proj-live--ext">live ↗</span>',
+    'proj-1-sub': 'Interaktives Such- und Filtertool für 1.490+ n8n-Nodes',
+    'proj-1-body': 'Aktuell live auf <strong>ninalearnsvibecoding.com</strong> — Fulltext-Suche mit Highlighting, deutsche Übersetzungen, Filterlogik für Trigger / Core / AI Nodes, offlinefähig, UI im Stil einer modernen AI-Learning-Plattform.',
+    'proj-2-title': 'Self-Hosted AI Workflow Environment',
+    'proj-2-sub': 'Eigene n8n-Instanz auf Hetzner/Coolify',
+    'proj-2-body': 'Komplett selbst aufgebaut: API-Integrationen, Workflow-Orchestrierung, AI-Agent-Logiken, automatisierte Prozessketten, Claude-Code-basierte Automatisierung. Header-Auth, HMAC-Webhooks, eigener SMTP-Server.',
+    'proj-3-title': 'AI-Bewerbungs-Workflow',
+    'proj-3-sub': 'Automatisiertes Job-Scraping → AI-Personalisierung → Versand',
+    'proj-3-body': '3× täglich vier Plattformen scrapen, Mistral AI bewertet Match-Score und personalisiert das Anschreiben, Human-in-the-Loop via Messenger-Approval, Versand über eigenen SMTP, NocoDB-Logging mit Execution-IDs.',
+    'proj-4-title': 'Live-Bewerbungs-Dashboard <span class="proj-live">you are here</span>',
+    'proj-4-sub': 'Genau diese Seite — personalisiert pro Firma',
+    'proj-4-body': 'Personalisierte Bewerbungs-Seite je Empfänger, Page-Visit-Tracking via n8n-Webhook, Push-Notification beim Öffnen, QR-Code zum CV, Cal.com-Embed für direkte Terminbuchung. Bilingual DE/EN, Visitor-Counter, mit Claude Code gebaut.',
+    'proj-5-title': 'Börsentracker Dashboard',
+    'proj-5-sub': 'Eigenes Portfolio · Krypto, Aktien, ETF · Suche &amp; AI-Vorschläge',
+    'proj-5-body': 'Privates Multi-Asset-Dashboard: Live-Kurse für Krypto, Aktien und ETFs in einem Portfolio, Suche über alle Tickers, AI-gestützte Investment-Vorschläge basierend auf Marktdaten. Lehrprojekt mit echten APIs und reaktivem UI.',
+    'proj-6-title': 'n8n Cockpit · Workflow-Monitoring',
+    'proj-6-sub': 'Eigenes Dashboard über alle Workflows + Bewerber-Scraping',
+    'proj-6-body': 'Privates Cockpit mit Health-Checks aller produktiven Workflows, Error-Trigger, Status-Übersicht, Execution-Logs. Bewerber-Scraping läuft im selben Canvas mit Cron-Triggern und HMAC-abgesicherten Webhooks.',
+    'eu-tag': '🇪🇺 EU AI Act &amp; DSGVO · by Design',
+    'eu-title': 'Daten bleiben in <span class="blue">Europa</span>.',
+    'eu-desc': '<strong style="color:var(--text-2)">DSGVO und EU AI Act</strong> sind bei mir keine Add-ons, sondern Designprinzip. Für DACH-E-Commerce mit Kundendaten relevant — und ein klares Differenzierungsmerkmal gegenüber US-AI-Stacks.',
+    'eu-mistral-t1': 'Mistral AI',
+    'eu-mistral-t2': 'Default-LLM statt OpenAI. Französischer Anbieter, Server in der EU, transparente Modelle.',
+    'eu-mistral-pill': 'EU-LLM · Production',
+    'eu-langdock-t1': 'Langdock',
+    'eu-langdock-t2': 'Berliner Enterprise-AI-Layer. Mehrere Modelle hinter einer DSGVO-Schicht — ideal für interne Roll-outs.',
+    'eu-langdock-pill': 'Berlin · Enterprise',
+    'eu-infra-t1': 'Eigene Infrastruktur',
+    'eu-infra-t2': 'Hetzner-Server in Deutschland, Coolify-Deploys, eigener SMTP, eigene PostgreSQL. Kein US-Cloud-Lock-in.',
+    'eu-infra-pill': 'DE-Hosting · Self-Hosted',
+    'eu-act-t1': 'DSGVO &amp; EU AI Act',
+    'eu-act-t2': 'DSGVO-konforme Datenverarbeitung, Risikoklassifizierung pro Workflow, Audit-Trail in NocoDB mit Execution-IDs, Human-in-the-Loop bei jedem AI-Output. Aus Modul 1+2 mit Auszeichnung belegt.',
+    'eu-act-pill': 'Audit-Ready · HITL',
+    'eu-channels-t1': 'Notification-Channels',
+    'eu-channels-t2': 'Für DACH-Geschäftsdaten: eigener SMTP, Slack EU oder Mattermost — DSGVO-konform. Telegram nur für meine eigene Infrastruktur, nie für Kundendaten.',
+    'eu-channels-pill': 'DSGVO-First',
+    'eu-foot': '<strong>Im Klartext:</strong> Jeder Workflow, den ich baue, ist standardmäßig EU-konform. Ich muss nicht nachträglich auf DSGVO „upgraden" — die Stack-Auswahl macht es per Default.',
+    'journey-tag': 'My Journey',
+    'journey-title': 'From Ops to <span class="blue">Building</span>.',
+    'journey-desc': 'Ich habe Prozesse gelebt — jetzt baue ich sie. Von Recht über Real Estate, Produktion und HR bis Automation mit KI.',
+    'about-tag': 'About',
+    'about-title': 'About <span class="blue">Nina</span>.',
+    'cv-tag': 'CV &amp; Zertifikate',
+    'cv-title': 'Belege · <span class="blue">PDF, QR &amp; Zertifikate</span>.',
+    'cv-desc': 'Lebenslauf als PDF, QR-Code aufs Handy, und beide Zertifikate offiziell beglaubigt — direkt zum Download.',
+    'cert-analyst-t1': 'Zertifikat · KI-Analystin',
+    'cert-analyst-t2': 'Modul 1 · <strong>348/360 Punkte</strong> · sehr gut',
+    'cert-berater-t1': 'Zertifikat · KI-Beraterin',
+    'cert-berater-t2': 'Modul 2 · <strong>340/360 Punkte</strong> · Auszeichnung · Projekt FEMhit',
+    'cert-m3-t1': 'Modul 3 · n8n &amp; AI Agents',
+    'cert-m3-t2': 'läuft bis <strong>21. Mai 2026</strong> · Abschluss in wenigen Tagen',
+    'cert-open': '↗ PDF',
+    'cert-soon': 'soon',
+    'cv-pdf-title': 'Lebenslauf · PDF',
+    'cv-pdf-sub': '2 Seiten · DSGVO-konform · kein Tracking-Pixel im PDF',
+    'cv-download-btn': '↓ Download PDF',
+    'qr-title': 'Mobil scannen',
+    'qr-sub': 'QR-Code mit Handy scannen → CV direkt aufs Phone.',
+    'cta-title': 'Lass uns <span class="blue">sprechen</span>.',
+    'cta-sub': 'Direkt einen 30-Min-Slot buchen — oder per Mail melden. Ich melde mich innerhalb von 24 Stunden.',
+    'cal-title': 'Termin direkt buchen',
+    'cal-sub': 'Wird hier eingebettet — Cal.com-URL in <code>CONFIG.CAL_LINK</code> oben im Script eintragen.<br><a href="https://cal.com" target="_blank" rel="noopener">→ Cal.com manuell öffnen</a>'
+  },
+  en: {
+    'hero-tag': 'AI AUTOMATION SPECIALIST',
+    'hero-stack': 'Claude Code · n8n · API Integrations · AI Workflows · VibeCoding',
+    'hero-h1': 'Application <span class="blue">deployed</span> for<br>easycosmetic.',
+    'hero-sub': 'You\'re looking for someone who builds automated workflows with <strong style="color:var(--text-2)">Claude Code &amp; Vibecoding</strong>, connects APIs and optimizes processes with AI. That\'s exactly where I\'m deep right now — AI training since February 2026, currently in module 3 (n8n &amp; AI Agents until May 21). This application page itself is the demo.',
+    'cta-matrix': '→ Show skill matrix',
+    'cta-book': '📅 Book a slot',
+    'stat-match': 'Match score',
+    'stat-years': 'Years operations',
+    'stat-grade': '/360 · AI Analyst',
+    'build-banner': '<strong style="color:var(--text)">This page is tracked live.</strong><br><code>POST /webhook/page-visit</code> → n8n → push notification to me. I know when you open it. At easycosmetic, the same logic would run via GDPR-compliant channels (E-Mail · Slack EU · Mattermost).',
+    'tools-label': '— I build with —',
+    'note-greeting': 'Dear easycosmetic team,',
+    'note-body': 'I built this page <em>specifically for your role</em> — using exactly the stack you\'re looking for: Claude Code, n8n, Docker, APIs, automated workflows. Instead of sending a Word file, I\'d rather show you directly how I work. If a section is missing, scroll on — or just book a slot below. Would love to hear from you.',
+    'note-sign': 'Nina · Berlin · May 2026',
+    'matrix-tag': 'Skill matrix · 1:1 to the job posting',
+    'matrix-title': 'Your requirement. <span class="blue">My proof.</span>',
+    'matrix-desc': 'Every bullet point from your job posting — and the exact project where I\'ve already built it. No fluff. Concrete.',
+    'matrix-foot': '<strong>10/10 requirements</strong> covered — including all bonus points. Salary expectation: <strong>€60,000 gross/year</strong> · Negotiable.',
+    'built-tag': 'What I\'m doing',
+    'built-title': 'What I <span class="blue">built</span>.',
+    'built-desc': 'Four production workflows running live. Plus this application page, which is itself one of them.',
+    'proj-tag': 'Selected Projects · 2026',
+    'proj-title': 'What I <span class="blue">shipped</span>.',
+    'proj-desc': 'Four concrete projects from the last months — not “nice ideas”, but code &amp; workflows that actually run.',
+    'proj-1-title': 'n8n Node Explorer <span class="proj-live proj-live--ext">live ↗</span>',
+    'proj-1-sub': 'Interactive search &amp; filter tool for 1,490+ n8n nodes',
+    'proj-1-body': 'Currently live on <strong>ninalearnsvibecoding.com</strong> — full-text search with highlighting, German translations, filter logic for Trigger / Core / AI nodes, offline-capable, UI inspired by modern AI learning platforms.',
+    'proj-2-title': 'Self-Hosted AI Workflow Environment',
+    'proj-2-sub': 'Own n8n instance on Hetzner/Coolify',
+    'proj-2-body': 'Built from scratch: API integrations, workflow orchestration, AI agent logic, automated process chains, Claude-Code-based automation. Header auth, HMAC webhooks, own SMTP server.',
+    'proj-3-title': 'AI Application Workflow',
+    'proj-3-sub': 'Automated job scraping → AI personalization → send-out',
+    'proj-3-body': '3× daily scraping of four platforms, Mistral AI scores match and personalizes the cover letter, human-in-the-loop via messenger approval, send via own SMTP, NocoDB logging with execution IDs.',
+    'proj-4-title': 'Live Application Dashboard <span class="proj-live">you are here</span>',
+    'proj-4-sub': 'Exactly this page — personalized per company',
+    'proj-4-body': 'Personalized application page per recipient, page-visit tracking via n8n webhook, push notification on open, QR code to CV, Cal.com embed for direct booking. Bilingual DE/EN, visitor counter, built with Claude Code.',
+    'proj-5-title': 'Stock Tracker Dashboard',
+    'proj-5-sub': 'Personal portfolio · crypto, stocks, ETF · search &amp; AI suggestions',
+    'proj-5-body': 'Private multi-asset dashboard: live quotes for crypto, stocks and ETFs in one portfolio, full-search across all tickers, AI-driven investment suggestions based on market data. Learning project with real APIs and reactive UI.',
+    'proj-6-title': 'n8n Cockpit · Workflow Monitoring',
+    'proj-6-sub': 'Own dashboard over all workflows + applicant scraping',
+    'proj-6-body': 'Private cockpit with health-checks for all production workflows, error trigger, status overview, execution logs. Applicant scraping runs in the same canvas with cron triggers and HMAC-secured webhooks.',
+    'eu-tag': '🇪🇺 EU AI Act &amp; GDPR · by Design',
+    'eu-title': 'Data stays in <span class="blue">Europe</span>.',
+    'eu-desc': '<strong style="color:var(--text-2)">GDPR and EU AI Act</strong> aren\'t add-ons for me — they\'re design principles. Relevant for DACH e-commerce with customer data, and a clear differentiator from US AI stacks.',
+    'eu-mistral-t1': 'Mistral AI',
+    'eu-mistral-t2': 'Default LLM instead of OpenAI. French vendor, EU-based servers, transparent models.',
+    'eu-mistral-pill': 'EU-LLM · Production',
+    'eu-langdock-t1': 'Langdock',
+    'eu-langdock-t2': 'Berlin-based enterprise AI layer. Multiple models behind a GDPR-compliant gateway — ideal for internal roll-outs.',
+    'eu-langdock-pill': 'Berlin · Enterprise',
+    'eu-infra-t1': 'Own Infrastructure',
+    'eu-infra-t2': 'Hetzner servers in Germany, Coolify deploys, own SMTP, own PostgreSQL. No US cloud lock-in.',
+    'eu-infra-pill': 'DE-Hosting · Self-Hosted',
+    'eu-act-t1': 'GDPR &amp; EU AI Act',
+    'eu-act-t2': 'GDPR-compliant data processing, risk classification per workflow, audit trail in NocoDB with execution IDs, human-in-the-loop on every AI output. Backed by Module 1+2 with distinction.',
+    'eu-act-pill': 'Audit-Ready · HITL',
+    'eu-channels-t1': 'Notification Channels',
+    'eu-channels-t2': 'For DACH business data: own SMTP, Slack EU or Mattermost — GDPR-compliant. Telegram only for my own infrastructure, never for customer data.',
+    'eu-channels-pill': 'GDPR-First',
+    'eu-foot': '<strong>Plain English:</strong> Every workflow I build is EU-compliant by default. No need to retrofit GDPR — the stack choice handles it.',
+    'journey-tag': 'My journey',
+    'journey-title': 'From ops to <span class="blue">building</span>.',
+    'journey-desc': 'I\'ve lived processes — now I build them. From law through real estate, production and HR to AI automation.',
+    'about-tag': 'About',
+    'about-title': 'About <span class="blue">Nina</span>.',
+    'cv-tag': 'CV &amp; certificates',
+    'cv-title': 'Proof · <span class="blue">PDF, QR &amp; certificates</span>.',
+    'cv-desc': 'Résumé as PDF, QR code to your phone, and both certificates officially issued — direct download.',
+    'cert-analyst-t1': 'Certificate · AI Analyst',
+    'cert-analyst-t2': 'Module 1 · <strong>348/360 points</strong> · very good',
+    'cert-berater-t1': 'Certificate · AI Consultant',
+    'cert-berater-t2': 'Module 2 · <strong>340/360 points</strong> · distinction · FEMhit project',
+    'cert-m3-t1': 'Module 3 · n8n &amp; AI Agents',
+    'cert-m3-t2': 'until <strong>May 21st, 2026</strong> · finishing in days',
+    'cert-open': '↗ PDF',
+    'cert-soon': 'soon',
+    'cv-pdf-title': 'Résumé · PDF',
+    'cv-pdf-sub': '2 pages · GDPR-compliant · no tracking pixel inside the PDF',
+    'cv-download-btn': '↓ Download PDF',
+    'qr-title': 'Scan on mobile',
+    'qr-sub': 'Scan the QR code with your phone → résumé straight to the device.',
+    'cta-title': 'Let\'s <span class="blue">talk</span>.',
+    'cta-sub': 'Book a 30-min slot directly — or just send a mail. I reply within 24 hours.',
+    'cal-title': 'Book a slot',
+    'cal-sub': 'Will be embedded here — set the Cal.com URL in <code>CONFIG.CAL_LINK</code> at the top of the script.<br><a href="https://cal.com" target="_blank" rel="noopener">→ Open Cal.com manually</a>'
+  }
+};
+
+// About body — DE and EN separately (multi-paragraph)
+const ABOUT_BODY = {
+  de: `
+    <p>Nina Panknin aus Berlin. 7+ Jahre <em>HR, Office &amp; Operations Management</em> bei <strong>Remote, Redfish, CS&nbsp;Compliance</strong> — Onboarding, Payroll, Buchhaltung, Compliance, Prozessoptimierung. Genau die Prozesse, die jedes wachsende E-Commerce-Unternehmen kennt.</p>
+    <p>Im Februar 2026 startete ich die KI-Weiterbildung bei <em>HERZBLUT Training &amp; Coaching</em> (AZAV — vorher schon im Selbststudium): Modul 1 KI-Analystin mit <em>348/360 Punkten</em> · Auszeichnung, Modul 2 KI-Beraterin mit <em>340/360 Punkten</em> · Auszeichnung (Abschlussprojekt FEMhit). Aktuell <em>Modul 3 · n8n &amp; AI Agents</em> bis 21. Mai 2026.</p>
+    <p>Seit April 2026 baue ich live produktive Workflows mit <em>Claude Code, n8n und Mistral AI</em>. Diese Bewerbungsseite ist einer davon — DSGVO-konform, dokumentiert, mit Monitoring. <em>Was ich jahrelang gemanagt habe, automatisiere ich jetzt.</em> Ich starte am Anfang meiner Tech-Karriere — aber mit 7+ Jahren Operations-Erfahrung, die andere Junior-AI-Specialists nicht mitbringen.</p>
+  `,
+  en: `
+    <p>Nina Panknin from Berlin. 6+ years of <em>HR, office &amp; operations management</em> at <strong>Remote, Redfish, CS&nbsp;Compliance</strong> — onboarding, payroll, accounting, compliance, process optimization. Exactly the kind of processes every growing e-commerce company knows.</p>
+    <p>In February 2026 I started the AI track at <em>HERZBLUT Training &amp; Coaching</em> (AZAV — after self-study before): Module 1 AI Analyst with <em>348/360 points</em> · distinction, Module 2 AI Consultant with <em>340/360 points</em> · distinction (final project FEMhit). Currently in <em>Module 3 · n8n &amp; AI Agents</em> until May 21st 2026.</p>
+    <p>Since April 2026 I\'ve been building production workflows with <em>Claude Code, n8n and Mistral AI</em>. This application page is one of them — GDPR-compliant, documented, with monitoring. <em>What I\'ve managed for years, I now automate.</em> I\'m at the start of my tech career — but with 6+ years of operations experience that other junior AI specialists don\'t bring.</p>
+  `
+};
+
+// ============================================
+// APPLY LANGUAGE
+// ============================================
+function applyLang(lang) {
+  if (!I18N[lang]) lang = 'de';
+  document.documentElement.lang = lang;
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.getAttribute('data-i18n');
+    if (key === 'about-body') {
+      el.innerHTML = ABOUT_BODY[lang];
+    } else if (I18N[lang][key] !== undefined) {
+      el.innerHTML = I18N[lang][key];
+    }
+  });
+  document.querySelectorAll('[data-set-lang]').forEach(b => {
+    b.classList.toggle('active', b.getAttribute('data-set-lang') === lang);
+  });
+  try { localStorage.setItem('nv_lang', lang); } catch (e) {}
+}
+
+document.querySelectorAll('[data-set-lang]').forEach(btn => {
+  btn.addEventListener('click', () => applyLang(btn.getAttribute('data-set-lang')));
+});
+
+// Initial language: stored → browser → de
+(function() {
+  let stored = null;
+  try { stored = localStorage.getItem('nv_lang'); } catch (e) {}
+  const browser = (navigator.language || 'de').toLowerCase().startsWith('en') ? 'en' : 'de';
+  applyLang(stored || browser);
+})();
+
+// ============================================
+// QR-CODE — bevorzugt via eigenen n8n-Endpoint
+// Fallback: api.qrserver.com falls QR_API_URL leer
+// → QR zeigt auf CV-Download (mit src=qr für Tracking)
+// ============================================
+(function() {
+  const el = document.getElementById('qr-code');
+  if (!el) return;
+
+  // Ziel des QR-Codes: bevorzugt CV-Download-URL mit src=qr, sonst Page-URL
+  const qrTarget = CONFIG.CV_DOWNLOAD_URL
+    ? CONFIG.CV_DOWNLOAD_URL + (CONFIG.CV_DOWNLOAD_URL.includes('?') ? '&' : '?') + 'src=qr'
+    : CONFIG.PAGE_URL;
+
+  // Primäre QR-Quelle
+  function buildSrc(useFallback) {
+    if (!useFallback && CONFIG.QR_API_URL) {
+      const sep = CONFIG.QR_API_URL.includes('?') ? '&' : '?';
+      return `${CONFIG.QR_API_URL}${sep}data=${encodeURIComponent(qrTarget)}&size=240&color=050810&bgcolor=ffffff`;
+    }
+    return `https://api.qrserver.com/v1/create-qr-code/?size=240x240&margin=4&data=${encodeURIComponent(qrTarget)}&bgcolor=ffffff&color=050810`;
+  }
+
+  const img = new Image();
+  img.alt = 'QR-Code → ' + qrTarget;
+  img.loading = 'lazy';
+  img.style.cssText = 'width:100%;height:100%;display:block;border-radius:6px;';
+
+  let triedFallback = false;
+  img.onerror = function() {
+    if (!triedFallback && CONFIG.QR_API_URL) {
+      triedFallback = true;
+      console.warn('[QR] Primary source failed, trying fallback');
+      img.src = buildSrc(true);
+      return;
+    }
+    // Beide Quellen weg → textueller Fallback
+    el.innerHTML = `<a href="${qrTarget}" target="_blank" rel="noopener" style="display:flex;align-items:center;justify-content:center;width:100%;height:100%;color:#050810;font-family:monospace;font-size:10px;text-align:center;padding:8px;text-decoration:none;">QR offline<br>→ Link klicken</a>`;
+    console.error('[QR] Both sources failed');
+  };
+  img.onload = function() { console.log('[QR] loaded ok:', img.src); };
+
+  el.innerHTML = '';
+  el.appendChild(img);
+  img.src = buildSrc(false);
+})();
+
+// ============================================
+// CV-Download-Link
+// → bevorzugt n8n-Endpoint (mit Telegram-Push beim Klick)
+// Fallback: statisches PDF
+// ============================================
+(function() {
+  const a = document.getElementById('cv-download');
+  if (!a) return;
+  if (CONFIG.CV_DOWNLOAD_URL) {
+    const sep = CONFIG.CV_DOWNLOAD_URL.includes('?') ? '&' : '?';
+    a.setAttribute('href', CONFIG.CV_DOWNLOAD_URL + sep + 'src=button');
+    a.removeAttribute('download'); // n8n setzt Content-Disposition selbst
+  } else if (CONFIG.CV_URL) {
+    a.setAttribute('href', CONFIG.CV_URL);
+  }
+})();
+
+// ============================================
+// PAGE-VISIT-TRACKING → n8n → Telegram
+// ============================================
+(function() {
+  if (!CONFIG.TRACKING_WEBHOOK) return; // skip until configured
+
+  const visitorToken = (function() {
+    try {
+      let t = localStorage.getItem('nv_visitor');
+      if (!t) {
+        t = 'v_' + Math.random().toString(36).slice(2) + Date.now().toString(36);
+        localStorage.setItem('nv_visitor', t);
+      }
+      return t;
+    } catch (e) { return 'anon_' + Date.now(); }
+  })();
+
+  const visitCount = (function() {
+    try {
+      const n = (parseInt(localStorage.getItem('nv_visits') || '0', 10) || 0) + 1;
+      localStorage.setItem('nv_visits', String(n));
+      return n;
+    } catch (e) { return 1; }
+  })();
+
+  // Visitor-Counter in Statusbar zeigen
+  const vEl = document.getElementById('status-visitor');
+  if (vEl) {
+    vEl.innerHTML = (document.documentElement.lang === 'en' ? 'visit #' : 'visit #') + '<span>' + visitCount + '</span>';
+  }
+
+  const payload = {
+    page: 'easycosmetic',
+    timestamp: new Date().toISOString(),
+    referrer: document.referrer || 'direct',
+    user_agent: navigator.userAgent,
+    screen: window.screen.width + 'x' + window.screen.height,
+    language: navigator.language,
+    visitor_token: visitorToken,
+    visit_count: visitCount
+  };
+
+  try {
+    if (navigator.sendBeacon) {
+      const blob = new Blob([JSON.stringify(payload)], { type: 'application/json' });
+      navigator.sendBeacon(CONFIG.TRACKING_WEBHOOK, blob);
+    } else {
+      fetch(CONFIG.TRACKING_WEBHOOK, {
+        method: 'POST',
+        body: JSON.stringify(payload),
+        headers: { 'Content-Type': 'application/json' },
+        keepalive: true
+      }).catch(() => {});
+    }
+  } catch (e) { /* silent */ }
+})();
+
+// ============================================
+// BACKGROUND MUSIC — zwei Modi:
+// (A) MP3 aus CONFIG.MUSIC_URL (falls gesetzt)
+// (B) Web Audio Lo-Fi-Pad-Synth — live generiert, keine MP3 nötig (default)
+// ============================================
+(function() {
+  const btn = document.getElementById('music-toggle');
+  const audio = document.getElementById('bg-music');
+  if (!btn) return;
+
+  // ---------- MODE A: MP3 ----------
+  if (CONFIG.MUSIC_URL && audio) {
+    audio.src = CONFIG.MUSIC_URL;
+    audio.volume = CONFIG.MUSIC_VOLUME || 0.18;
+    let isPlaying = false;
+    btn.addEventListener('click', () => {
+      if (isPlaying) {
+        audio.pause(); btn.classList.remove('playing'); isPlaying = false;
+      } else {
+        audio.play().then(() => {
+          btn.classList.add('playing'); isPlaying = true;
+        }).catch(() => {});
+      }
+    });
+    return;
+  }
+
+  // ---------- MODE B: Web Audio Lo-Fi-Pad ----------
+  // Lo-Fi Cafe Progression: Cmaj9 → Em9 → Fmaj9 → G6sus
+  // Warm, hopeful, not funeral-y
+  const CHORDS = [
+    [130.81, 329.63, 392.00, 493.88, 587.33], // Cmaj9: C3 E4 G4 B4 D5 (heitere Wärme)
+    [164.81, 329.63, 392.00, 493.88, 587.33], // Em9: E3 E4 G4 B4 D5 (lyrisch)
+    [174.61, 349.23, 440.00, 523.25, 659.25], // Fmaj9: F3 F4 A4 C5 E5 (offen)
+    [196.00, 392.00, 493.88, 587.33, 659.25]  // G6sus: G3 G4 B4 D5 E5 (auflösend, optimistisch)
+  ];
+
+  let ctx = null;
+  let master = null;
+  let chordIndex = 0;
+  let loopTimer = null;
+  let activeNodes = [];
+
+  function startChord(time) {
+    const freqs = CHORDS[chordIndex % CHORDS.length];
+    chordIndex++;
+    const attack = 2.2, hold = 5.5, release = 4.0;
+    freqs.forEach((f, i) => {
+      // Pad-Voice: triangle (warm) + leichtes Detune
+      const osc = ctx.createOscillator();
+      osc.type = i === 0 ? 'sine' : 'triangle';
+      osc.frequency.value = f;
+      osc.detune.value = (Math.random() - 0.5) * 8;
+
+      // Lowpass um das Brillante zu zähmen
+      const filter = ctx.createBiquadFilter();
+      filter.type = 'lowpass';
+      filter.frequency.value = 1400 + i * 200;
+      filter.Q.value = 0.6;
+
+      // Envelope
+      const gain = ctx.createGain();
+      gain.gain.setValueAtTime(0.0001, time);
+      gain.gain.exponentialRampToValueAtTime(0.045, time + attack);
+      gain.gain.setValueAtTime(0.045, time + attack + hold);
+      gain.gain.exponentialRampToValueAtTime(0.0001, time + attack + hold + release);
+
+      osc.connect(filter); filter.connect(gain); gain.connect(master);
+      osc.start(time);
+      osc.stop(time + attack + hold + release + 0.1);
+      activeNodes.push(osc);
+    });
+  }
+
+  function startSynth() {
+    if (ctx) return;
+    ctx = new (window.AudioContext || window.webkitAudioContext)();
+
+    // Master mit subtilem Delay-Reverb
+    master = ctx.createGain();
+    master.gain.value = (CONFIG.MUSIC_VOLUME || 0.18);
+
+    const delay = ctx.createDelay(2.0);
+    delay.delayTime.value = 0.42;
+    const feedback = ctx.createGain();
+    feedback.gain.value = 0.32;
+    const wet = ctx.createGain();
+    wet.gain.value = 0.35;
+
+    master.connect(ctx.destination);
+    master.connect(delay);
+    delay.connect(feedback); feedback.connect(delay);
+    delay.connect(wet); wet.connect(ctx.destination);
+
+    // Erster Chord sofort, dann alle 8s
+    startChord(ctx.currentTime + 0.1);
+    loopTimer = setInterval(() => {
+      if (ctx) startChord(ctx.currentTime + 0.05);
+    }, 8000);
+  }
+
+  function stopSynth() {
+    if (loopTimer) { clearInterval(loopTimer); loopTimer = null; }
+    if (ctx) {
+      const t = ctx.currentTime;
+      master.gain.cancelScheduledValues(t);
+      master.gain.setValueAtTime(master.gain.value, t);
+      master.gain.exponentialRampToValueAtTime(0.0001, t + 0.6);
+      const ctxToClose = ctx;
+      setTimeout(() => { try { ctxToClose.close(); } catch (e) {} }, 800);
+      ctx = null; master = null; activeNodes = [];
+    }
+  }
+
+  let playing = false;
+  btn.addEventListener('click', () => {
+    if (playing) {
+      stopSynth(); btn.classList.remove('playing'); playing = false;
+    } else {
+      try {
+        startSynth(); btn.classList.add('playing'); playing = true;
+      } catch (e) {
+        // Audio blocked or unsupported — fall back to wiggle
+        btn.animate(
+          [{ transform: 'translateX(0)' }, { transform: 'translateX(-3px)' }, { transform: 'translateX(3px)' }, { transform: 'translateX(0)' }],
+          { duration: 240 }
+        );
+      }
+    }
+  });
+})();
+
+// ============================================
+// CONFETTI — beim Klick auf "Termin buchen" oder Cal.com-Button
+// → reine Freude, kein npm-Package, alles handgemacht
+// ============================================
+const confetti = (function() {
+  function burst(originX, originY) {
+    const colors = ['#00d4ff', '#5ec8ff', '#10b981', '#ffcc00', '#ff6b9d', '#ffffff'];
+    const N = 80;
+    const container = document.createElement('div');
+    container.style.cssText = 'position:fixed;inset:0;pointer-events:none;z-index:9999;overflow:hidden;';
+    document.body.appendChild(container);
+
+    for (let i = 0; i < N; i++) {
+      const p = document.createElement('div');
+      const size = 6 + Math.random() * 8;
+      const angle = Math.random() * Math.PI * 2;
+      const velocity = 240 + Math.random() * 480;
+      const vx = Math.cos(angle) * velocity;
+      const vy = Math.sin(angle) * velocity - 120; // bias upwards
+      const rotate = (Math.random() - 0.5) * 720;
+      const dur = 1400 + Math.random() * 1200;
+
+      p.style.cssText = `
+        position:absolute;
+        left:${originX}px; top:${originY}px;
+        width:${size}px; height:${size * (0.4 + Math.random() * 0.8)}px;
+        background:${colors[i % colors.length]};
+        border-radius:${Math.random() > 0.5 ? '50%' : '2px'};
+        opacity:1;
+        transform:translate(-50%,-50%);
+        will-change:transform,opacity;
+      `;
+      container.appendChild(p);
+
+      p.animate(
+        [
+          { transform: 'translate(-50%, -50%) rotate(0deg)', opacity: 1 },
+          { transform: `translate(calc(-50% + ${vx}px), calc(-50% + ${vy + 400}px)) rotate(${rotate}deg)`, opacity: 0 }
+        ],
+        { duration: dur, easing: 'cubic-bezier(.15,.85,.35,1)', fill: 'forwards' }
+      );
+    }
+    setTimeout(() => container.remove(), 3000);
+  }
+
+  function fromEl(el) {
+    const r = el.getBoundingClientRect();
+    burst(r.left + r.width / 2, r.top + r.height / 2);
+  }
+
+  // Trigger on CTA-Book Click
+  const bookBtn = document.querySelector('[data-i18n="cta-book"]');
+  if (bookBtn) {
+    bookBtn.addEventListener('click', () => fromEl(bookBtn));
+  }
+
+  // Public API für Konami / andere Trigger
+  return { burst, fromEl };
+})();
+
+// ============================================
+// KONAMI-CODE EASTER EGG
+// → ↑↑↓↓←→←→ B A → Party-Mode: Confetti + Pablo wird wild + Logo dreht sich
+// ============================================
+(function() {
+  const sequence = ['ArrowUp','ArrowUp','ArrowDown','ArrowDown','ArrowLeft','ArrowRight','ArrowLeft','ArrowRight','b','a'];
+  let pos = 0;
+
+  document.addEventListener('keydown', (e) => {
+    const key = e.key.length === 1 ? e.key.toLowerCase() : e.key;
+    if (key === sequence[pos]) {
+      pos++;
+      if (pos === sequence.length) {
+        triggerPartyMode();
+        pos = 0;
+      }
+    } else {
+      pos = key === sequence[0] ? 1 : 0;
+    }
+  });
+
+  function triggerPartyMode() {
+    // 1) Confetti aus 3 Punkten
+    const w = window.innerWidth, h = window.innerHeight;
+    confetti.burst(w * 0.2, h * 0.4);
+    setTimeout(() => confetti.burst(w * 0.8, h * 0.4), 200);
+    setTimeout(() => confetti.burst(w * 0.5, h * 0.2), 400);
+    setTimeout(() => confetti.burst(w * 0.5, h * 0.6), 600);
+
+    // 2) Pablo bark
+    const pablo = document.getElementById('pablo-trigger');
+    if (pablo) {
+      pablo.classList.remove('bark'); void pablo.offsetWidth; pablo.classList.add('bark');
+      pablo.click();
+    }
+
+    // 3) Avatar spinnt einmal
+    const avatar = document.querySelector('.hero-avatar');
+    if (avatar) {
+      avatar.animate(
+        [{ transform: 'rotate(0)' }, { transform: 'rotate(360deg)' }],
+        { duration: 1200, easing: 'cubic-bezier(.34,1.56,.64,1)' }
+      );
+    }
+
+    // 4) Toast-Message
+    const toast = document.createElement('div');
+    toast.textContent = '🎉 Konami unlocked — welcome to the hidden room';
+    toast.style.cssText = 'position:fixed;left:50%;top:24px;transform:translateX(-50%);background:linear-gradient(90deg,#00d4ff,#10b981);color:#050810;padding:14px 22px;border-radius:12px;font-weight:700;font-size:14px;letter-spacing:0.5px;box-shadow:0 16px 40px rgba(0,212,255,0.4);z-index:10000;opacity:0;transition:opacity 0.3s;';
+    document.body.appendChild(toast);
+    requestAnimationFrame(() => { toast.style.opacity = '1'; });
+    setTimeout(() => { toast.style.opacity = '0'; setTimeout(() => toast.remove(), 400); }, 3500);
+  }
+})();
+
+// ============================================
+// HERO MOUSE-FOLLOW SPOTLIGHT
+// → Linear/Vercel-Style ambient light follows cursor
+// ============================================
+(function() {
+  const hero = document.getElementById('hero');
+  if (!hero) return;
+  hero.addEventListener('mousemove', (e) => {
+    const rect = hero.getBoundingClientRect();
+    hero.style.setProperty('--mx', `${e.clientX - rect.left}px`);
+    hero.style.setProperty('--my', `${e.clientY - rect.top}px`);
+  });
+})();
+
+// ============================================
+// PABLO PHOTO AUTO-DETECTION
+// → Wenn pablo.jpg oder pablo.png im Ordner liegt → ersetze SVG
+// ============================================
+(function() {
+  const btn = document.getElementById('pablo-trigger');
+  if (!btn) return;
+  // Cache-Bust mit timestamp damit immer das aktuelle Pablo-Bild geladen wird
+  const cacheBust = '?v=' + Date.now();
+  const tries = [
+    './pablo.jpg' + cacheBust,
+    './pablo.jpeg' + cacheBust,
+    './pablo.png' + cacheBust,
+    './pablo.webp' + cacheBust
+  ];
+
+  function trySwap(i) {
+    if (i >= tries.length) return; // alle versucht → SVG bleibt sichtbar (war ja schon „Bär", aber wenn Bild komplett fehlt, ist das das Beste)
+    const img = new Image();
+    img.onload = function() {
+      // Pablo-Bild geladen → ersetze SVG durch echtes Foto
+      const svg = btn.querySelector('svg');
+      if (svg) svg.remove();
+      const el = document.createElement('img');
+      el.src = tries[i];
+      el.alt = 'Pablo · Jack Russell';
+      el.style.cssText = 'width:54px;height:54px;border-radius:50%;object-fit:cover;box-shadow:0 0 0 2px var(--accent),0 4px 14px rgba(0,212,255,0.35);display:block;';
+      btn.appendChild(el);
+    };
+    img.onerror = function() { trySwap(i + 1); };
+    img.src = tries[i];
+  }
+  trySwap(0);
+})();
+
+// ============================================
+// PABLO EASTER EGG 🐕
+// → click on pablo-icon → playful speech bubble
+// ============================================
+(function() {
+  const btn = document.getElementById('pablo-trigger');
+  if (!btn) return;
+  const messages = {
+    de: ['Wuff! Ich bin Pablo. 🐾', 'Bürohunde willkommen? Ich bin dabei!', 'Nina ist meine Lieblingsmenschin.', 'Wuff wuff — auch ich kann Workflows.'],
+    en: ['Woof! I\'m Pablo. 🐾', 'Office dogs welcome? Count me in!', 'Nina is my favourite human.', 'Woof woof — I do workflows too.']
+  };
+  let idx = 0;
+  const bubble = document.createElement('div');
+  bubble.className = 'pablo-speech';
+  document.body.appendChild(bubble);
+  let hideTimer;
+
+  function trigger() {
+    const lang = document.documentElement.lang === 'en' ? 'en' : 'de';
+    const list = messages[lang];
+    bubble.textContent = list[idx % list.length];
+    idx++;
+    bubble.classList.add('show');
+    btn.classList.remove('bark'); void btn.offsetWidth; btn.classList.add('bark');
+    clearTimeout(hideTimer);
+    hideTimer = setTimeout(() => bubble.classList.remove('show'), 2400);
+  }
+  btn.addEventListener('click', trigger);
+  btn.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); trigger(); }});
+})();
+
+// ============================================
+// CAL.COM EMBED
+// ============================================
+(function() {
+  if (!CONFIG.CAL_LINK) return;
+  const el = document.getElementById('cal-inline');
+  const ph = document.getElementById('cal-placeholder');
+  if (!el) return;
+  el.setAttribute('data-cal-link', CONFIG.CAL_LINK);
+  if (ph) ph.style.display = 'none';
+  el.style.display = 'block';
+  el.innerHTML = `<iframe src="${CONFIG.CAL_LINK}" style="width:100%; height:100%; border:0;" loading="lazy" title="Termin buchen"></iframe>`;
+})();
+
+// ============================================
+// UPTIME-COUNTER · zeigt wie lange die Seite "live" ist seit Build
+// Wirkt wie ein Monitoring-Dashboard
+// ============================================
+(function() {
+  // Build-Timestamp = wenn diese Seite zuletzt deployed wurde
+  // Bei jedem Re-Deploy in Coolify aktualisieren
+  const BUILD = new Date('2026-05-17T07:00:00+02:00');
+  const el = document.getElementById('status-uptime');
+  if (!el) return;
+
+  function format(diffMs) {
+    const lang = document.documentElement.lang === 'en' ? 'en' : 'de';
+    const min = Math.floor(diffMs / 60000);
+    const hours = Math.floor(min / 60);
+    const days = Math.floor(hours / 24);
+    if (days >= 1) {
+      return lang === 'en' ? `${days}d ${hours % 24}h` : `${days}T ${hours % 24}h`;
+    }
+    if (hours >= 1) {
+      return lang === 'en' ? `${hours}h ${min % 60}m` : `${hours}h ${min % 60}min`;
+    }
+    if (min >= 1) {
+      return lang === 'en' ? `${min}m` : `${min}min`;
+    }
+    return lang === 'en' ? 'just now' : 'gerade live';
+  }
+
+  function tick() {
+    el.textContent = format(Date.now() - BUILD.getTime());
+  }
+  tick();
+  setInterval(tick, 30000);
+})();
+</script>
+
+</body>
+</html>
