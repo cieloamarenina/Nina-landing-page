@@ -1823,10 +1823,10 @@ document.querySelectorAll('[data-set-lang]').forEach(btn => {
 
   const visitorToken = (function() {
     try {
-      let t = localStorage.getItem('nv_visitor_live');
+      let t = localStorage.getItem('nv_visitor_v2');
       if (!t) {
         t = 'v_' + Math.random().toString(36).slice(2) + Date.now().toString(36);
-        localStorage.setItem('nv_visitor_live', t);
+        localStorage.setItem('nv_visitor_v2', t);
       }
       return t;
     } catch (e) { return 'anon_' + Date.now(); }
@@ -1834,8 +1834,8 @@ document.querySelectorAll('[data-set-lang]').forEach(btn => {
 
   const visitCount = (function() {
     try {
-      const n = (parseInt(localStorage.getItem('nv_visits_live') || '0', 10) || 0) + 1;
-      localStorage.setItem('nv_visits_live', String(n));
+      const n = (parseInt(localStorage.getItem('nv_visits_v2') || '0', 10) || 0) + 1;
+      localStorage.setItem('nv_visits_v2', String(n));
       return n;
     } catch (e) { return 1; }
   })();
