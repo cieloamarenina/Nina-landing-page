@@ -1756,9 +1756,13 @@ document.querySelectorAll('[data-set-lang]').forEach(btn => {
   const el = document.getElementById('qr-code');
   if (!el) return;
 
-  // Ziel des QR-Codes: bevorzugt CV-Download-URL mit src=qr, sonst Page-URL
-  const qrTarget = CONFIG.CV_DOWNLOAD_URL
-    ? CONFIG.CV_DOWNLOAD_URL + (CONFIG.CV_DOWNLOAD_URL.includes('?') ? '&' : '?') + 'src=qr'
+  // Ziel des QR-Codes: Bewerbungs-Seite mit src=qr Parameter und #cv Anker
+  // Direkt aufs n8n-CV-Webhook zu zeigen ist Mobile-Browser-feindlich (iOS Safari
+  // ignoriert Content-Disposition: attachment, zeigt PDF inline oder gar nicht).
+  // Stattdessen: QR → Bewerbungs-Seite → User klickt Download. Mehr Engagement,
+  // funktioniert auf jedem Mobile-Browser, Page-Visit-Tracking triggert.
+  const qrTarget = CONFIG.PAGE_URL
+    ? CONFIG.PAGE_URL + (CONFIG.PAGE_URL.includes('?') ? '&' : '?') + 'src=qr#cv'
     : CONFIG.PAGE_URL;
 
   // Primäre QR-Quelle
@@ -1842,10 +1846,15 @@ document.querySelectorAll('[data-set-lang]').forEach(btn => {
     vEl.innerHTML = (document.documentElement.lang === 'en' ? 'visit #' : 'visit #') + '<span>' + visitCount + '</span>';
   }
 
+  // Source aus URL-Parameter holen (?src=qr, ?src=mail, etc.)
+  const urlParams = new URLSearchParams(window.location.search);
+  const visitSource = urlParams.get('src') || 'direct';
+
   const payload = {
     page: 'easycosmetic',
     timestamp: new Date().toISOString(),
     referrer: document.referrer || 'direct',
+    source: visitSource,
     user_agent: navigator.userAgent,
     screen: window.screen.width + 'x' + window.screen.height,
     language: navigator.language,
