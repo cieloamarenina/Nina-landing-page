@@ -1542,12 +1542,12 @@ const I18N = {
     'matrix-title': 'Eure Anforderung. <span class="blue">Mein Beleg.</span>',
     'matrix-desc': 'Jeder Punkt aus eurer Stellenanzeige — und genau das Projekt, an dem ich das schon gebaut habe. Keine Floskeln. Konkret.',
     'matrix-foot': '<strong>10/10 Anforderungen</strong> erfüllt — inkl. aller Bonus-Punkte. Gehaltsvorstellung: <strong>60.000 € brutto/Jahr</strong> · Verhandelbar.',
-    'built-tag': 'What I\'m Doing',
-    'built-title': 'What I <span class="blue">built</span>.',
+    'built-tag': 'Was läuft',
+    'built-title': 'Live im <span class="blue">Einsatz</span>.',
     'built-desc': 'Vier produktive Workflows, die gerade live laufen. Plus diese Bewerbungs-Seite, die selbst Teil davon ist.',
-    'proj-tag': 'Selected Projects · 2026',
-    'proj-title': 'What I <span class="blue">shipped</span>.',
-    'proj-desc': 'Vier konkrete Projekte aus den letzten Monaten — nicht „nice ideas", sondern Code &amp; Workflows, die laufen.',
+    'proj-tag': 'Ausgewählte Projekte · 2026',
+    'proj-title': 'Was ich <span class="blue">gebaut</span> habe.',
+    'proj-desc': 'Sechs konkrete Projekte aus den letzten Monaten — nicht „nice ideas", sondern Code &amp; Workflows, die laufen.',
     'proj-1-title': 'n8n Node Explorer <span class="proj-live proj-live--ext">live ↗</span>',
     'proj-1-sub': 'Interaktives Such- und Filtertool für 1.490+ n8n-Nodes',
     'proj-1-body': 'Aktuell live auf <strong>ninalearnsvibecoding.com</strong> — Fulltext-Suche mit Highlighting, deutsche Übersetzungen, Filterlogik für Trigger / Core / AI Nodes, offlinefähig, UI im Stil einer modernen AI-Learning-Plattform.',
@@ -1585,11 +1585,11 @@ const I18N = {
     'eu-channels-t2': 'Für DACH-Geschäftsdaten: eigener SMTP, Slack EU oder Mattermost — DSGVO-konform. Telegram nur für meine eigene Infrastruktur, nie für Kundendaten.',
     'eu-channels-pill': 'DSGVO-First',
     'eu-foot': '<strong>Im Klartext:</strong> Jeder Workflow, den ich baue, ist standardmäßig EU-konform. Ich muss nicht nachträglich auf DSGVO „upgraden" — die Stack-Auswahl macht es per Default.',
-    'journey-tag': 'My Journey',
-    'journey-title': 'From Ops to <span class="blue">Building</span>.',
+    'journey-tag': 'Mein Weg',
+    'journey-title': 'Von Ops zum <span class="blue">Bauen</span>.',
     'journey-desc': 'Ich habe Prozesse gelebt — jetzt baue ich sie. Von Recht über Real Estate, Produktion und HR bis Automation mit KI.',
-    'about-tag': 'About',
-    'about-title': 'About <span class="blue">Nina</span>.',
+    'about-tag': 'Über mich',
+    'about-title': 'Über <span class="blue">Nina</span>.',
     'cv-tag': 'CV &amp; Zertifikate',
     'cv-title': 'Belege · <span class="blue">PDF, QR &amp; Zertifikate</span>.',
     'cv-desc': 'Lebenslauf als PDF, QR-Code aufs Handy, und beide Zertifikate offiziell beglaubigt — direkt zum Download.',
@@ -1896,77 +1896,101 @@ document.querySelectorAll('[data-set-lang]').forEach(btn => {
   }
 
   // ---------- MODE B: Web Audio Lo-Fi-Pad ----------
-  // Lo-Fi Cafe Progression: Cmaj9 → Em9 → Fmaj9 → G6sus
-  // Warm, hopeful, not funeral-y
-  const CHORDS = [
-    [130.81, 329.63, 392.00, 493.88, 587.33], // Cmaj9: C3 E4 G4 B4 D5 (heitere Wärme)
-    [164.81, 329.63, 392.00, 493.88, 587.33], // Em9: E3 E4 G4 B4 D5 (lyrisch)
-    [174.61, 349.23, 440.00, 523.25, 659.25], // Fmaj9: F3 F4 A4 C5 E5 (offen)
-    [196.00, 392.00, 493.88, 587.33, 659.25]  // G6sus: G3 G4 B4 D5 E5 (auflösend, optimistisch)
+  // Happy Bells · helles Glockenspiel-Arpeggio in C-Dur
+  // Tempo: 120 BPM, achtel Noten = 250ms pro Note
+  // Pattern: 8-step arpeggio, je 4 Pattern in Dur-Dreiklangs-Loops
+  const PATTERNS = [
+    // C-Dur: C E G C · E G C E (steigend, fröhlich)
+    [523.25, 659.25, 783.99, 1046.50, 659.25, 783.99, 1046.50, 1318.51],
+    // F-Dur: F A C F · A C F A
+    [698.46, 880.00, 1046.50, 1396.91, 880.00, 1046.50, 1396.91, 1760.00],
+    // G-Dur: G B D G · B D G B
+    [783.99, 987.77, 1174.66, 1567.98, 987.77, 1174.66, 1567.98, 1975.53],
+    // C-Dur Auflösung: C E G C · G E C G
+    [523.25, 659.25, 783.99, 1046.50, 783.99, 659.25, 523.25, 783.99]
   ];
+
+  // Bass-Note pro Pattern (lange Note, dezent)
+  const BASS = [130.81, 174.61, 196.00, 130.81]; // C3 F3 G3 C3
 
   let ctx = null;
   let master = null;
-  let chordIndex = 0;
+  let stepIndex = 0;
   let loopTimer = null;
-  let activeNodes = [];
+  const STEP_MS = 250; // 120 BPM, 8th notes
 
-  function startChord(time) {
-    const freqs = CHORDS[chordIndex % CHORDS.length];
-    chordIndex++;
-    const attack = 2.2, hold = 5.5, release = 4.0;
-    freqs.forEach((f, i) => {
-      // Pad-Voice: triangle (warm) + leichtes Detune
-      const osc = ctx.createOscillator();
-      osc.type = i === 0 ? 'sine' : 'triangle';
-      osc.frequency.value = f;
-      osc.detune.value = (Math.random() - 0.5) * 8;
+  function playBell(time, freq, dur = 0.6) {
+    // Glockenspiel: sine + leichter triangle, schneller Attack, langer Release
+    const osc = ctx.createOscillator();
+    osc.type = 'triangle';
+    osc.frequency.value = freq;
 
-      // Lowpass um das Brillante zu zähmen
-      const filter = ctx.createBiquadFilter();
-      filter.type = 'lowpass';
-      filter.frequency.value = 1400 + i * 200;
-      filter.Q.value = 0.6;
+    const gain = ctx.createGain();
+    gain.gain.setValueAtTime(0.0001, time);
+    gain.gain.exponentialRampToValueAtTime(0.06, time + 0.005);
+    gain.gain.exponentialRampToValueAtTime(0.0001, time + dur);
 
-      // Envelope
-      const gain = ctx.createGain();
-      gain.gain.setValueAtTime(0.0001, time);
-      gain.gain.exponentialRampToValueAtTime(0.045, time + attack);
-      gain.gain.setValueAtTime(0.045, time + attack + hold);
-      gain.gain.exponentialRampToValueAtTime(0.0001, time + attack + hold + release);
+    // Hochpass damit's hell klingt
+    const filter = ctx.createBiquadFilter();
+    filter.type = 'highpass';
+    filter.frequency.value = 400;
 
-      osc.connect(filter); filter.connect(gain); gain.connect(master);
-      osc.start(time);
-      osc.stop(time + attack + hold + release + 0.1);
-      activeNodes.push(osc);
-    });
+    osc.connect(filter); filter.connect(gain); gain.connect(master);
+    osc.start(time);
+    osc.stop(time + dur + 0.05);
+  }
+
+  function playBass(time, freq) {
+    const osc = ctx.createOscillator();
+    osc.type = 'sine';
+    osc.frequency.value = freq;
+    const gain = ctx.createGain();
+    gain.gain.setValueAtTime(0.0001, time);
+    gain.gain.exponentialRampToValueAtTime(0.025, time + 0.05);
+    gain.gain.setValueAtTime(0.025, time + 1.6);
+    gain.gain.exponentialRampToValueAtTime(0.0001, time + 2.0);
+    osc.connect(gain); gain.connect(master);
+    osc.start(time);
+    osc.stop(time + 2.1);
+  }
+
+  function tick() {
+    if (!ctx) return;
+    const t = ctx.currentTime + 0.02;
+    const patternIdx = Math.floor(stepIndex / 8) % PATTERNS.length;
+    const noteIdx = stepIndex % 8;
+    const pattern = PATTERNS[patternIdx];
+    // Note spielen
+    playBell(t, pattern[noteIdx], 0.55);
+    // Bass nur am Anfang jedes Patterns
+    if (noteIdx === 0) {
+      playBass(t, BASS[patternIdx]);
+    }
+    stepIndex++;
   }
 
   function startSynth() {
     if (ctx) return;
     ctx = new (window.AudioContext || window.webkitAudioContext)();
-
-    // Master mit subtilem Delay-Reverb
     master = ctx.createGain();
     master.gain.value = (CONFIG.MUSIC_VOLUME || 0.18);
 
-    const delay = ctx.createDelay(2.0);
-    delay.delayTime.value = 0.42;
+    // Sehr subtiles Delay für "Glas-Ping"-Feel
+    const delay = ctx.createDelay(1.0);
+    delay.delayTime.value = 0.18;
     const feedback = ctx.createGain();
-    feedback.gain.value = 0.32;
+    feedback.gain.value = 0.22;
     const wet = ctx.createGain();
-    wet.gain.value = 0.35;
+    wet.gain.value = 0.25;
 
     master.connect(ctx.destination);
     master.connect(delay);
     delay.connect(feedback); feedback.connect(delay);
     delay.connect(wet); wet.connect(ctx.destination);
 
-    // Erster Chord sofort, dann alle 8s
-    startChord(ctx.currentTime + 0.1);
-    loopTimer = setInterval(() => {
-      if (ctx) startChord(ctx.currentTime + 0.05);
-    }, 8000);
+    stepIndex = 0;
+    tick();
+    loopTimer = setInterval(tick, STEP_MS);
   }
 
   function stopSynth() {
@@ -1975,10 +1999,10 @@ document.querySelectorAll('[data-set-lang]').forEach(btn => {
       const t = ctx.currentTime;
       master.gain.cancelScheduledValues(t);
       master.gain.setValueAtTime(master.gain.value, t);
-      master.gain.exponentialRampToValueAtTime(0.0001, t + 0.6);
+      master.gain.exponentialRampToValueAtTime(0.0001, t + 0.4);
       const ctxToClose = ctx;
-      setTimeout(() => { try { ctxToClose.close(); } catch (e) {} }, 800);
-      ctx = null; master = null; activeNodes = [];
+      setTimeout(() => { try { ctxToClose.close(); } catch (e) {} }, 600);
+      ctx = null; master = null;
     }
   }
 
