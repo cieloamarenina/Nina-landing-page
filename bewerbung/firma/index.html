@@ -1497,20 +1497,21 @@ body {
 // KONFIG — hier deine URLs eintragen
 // ============================================
 const CONFIG = {
-  // n8n Webhook für Page-Visit-Tracking (live)
-  TRACKING_WEBHOOK: 'https://n8n.ninalearnsvibecoding.com/webhook/page-visit-easycosmetic',
+  // n8n Webhooks für GENERIC firma-Template (slug-aware)
+  // Slug wird via URL-Param-Loader an alle URLs angehängt
+  TRACKING_WEBHOOK: 'https://n8n.ninalearnsvibecoding.com/webhook/page-visit-firma',
 
   // Cal.com Buchungs-URL (deine self-hosted Instanz)
   CAL_LINK: '', // z.B. 'https://cal.ninalearnsvibecoding.com/nina/30min?embed=true&theme=dark'
 
   // CV-Download via n8n (mit Push-Notification beim Download)
-  CV_DOWNLOAD_URL: 'https://n8n.ninalearnsvibecoding.com/webhook/cv-easycosmetic',
+  CV_DOWNLOAD_URL: 'https://n8n.ninalearnsvibecoding.com/webhook/cv-firma',
 
   // QR-Code via n8n (server-side generation)
-  QR_API_URL: 'https://n8n.ninalearnsvibecoding.com/webhook/qr-easycosmetic',
+  QR_API_URL: 'https://n8n.ninalearnsvibecoding.com/webhook/qr-firma',
 
-  // Öffentliche Seiten-URL für QR-Code-Daten
-  PAGE_URL: 'https://ninalearnsvibecoding.com/bewerbung/easycosmetic/',
+  // Öffentliche Seiten-URL (wird vom URL-Loader pro Firma überschrieben)
+  PAGE_URL: 'https://ninalearnsvibecoding.com/bewerbung/firma/',
 
   // Hintergrundmusik (optional, off-by-default)
   // MP3 in den Ordner legen oder eine externe URL setzen.
