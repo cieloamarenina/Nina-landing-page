@@ -114,6 +114,35 @@
   }
   .subtitle span { color: var(--accent); }
 
+  .update-note {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.6rem;
+    margin-bottom: 2.5rem;
+    padding: 0.6rem 1rem;
+    background: rgba(0,212,255,0.05);
+    border: 1px solid rgba(0,212,255,0.2);
+    border-left: 3px solid var(--accent);
+    font-size: 0.75rem;
+    color: var(--muted);
+    width: fit-content;
+    max-width: 100%;
+  }
+  .update-label {
+    color: var(--accent);
+    font-weight: 600;
+    letter-spacing: 0.15em;
+  }
+  .update-date {
+    color: var(--text);
+    font-weight: 600;
+  }
+  .update-text {
+    color: var(--muted);
+    font-style: italic;
+  }
+
   .controls {
     position: sticky;
     top: 70px;
@@ -306,6 +335,12 @@
     Filter nach Integration, Trigger, Core oder KI/LangChain.
     <span>Komplett offline-fähig</span>.
   </p>
+
+  <div class="update-note">
+    <span class="update-label">LAST UPDATE</span>
+    <span class="update-date">16-Feb-2026</span>
+    <span class="update-text">LIVE UPDATE: completed compiling the LATEST n8n Master List of Nodes :)</span>
+  </div>
 
   <div class="controls">
     <input type="text" id="search" placeholder="// search nodes · z.B. 'PDF', 'CRM', 'OpenAI'..." autofocus>
