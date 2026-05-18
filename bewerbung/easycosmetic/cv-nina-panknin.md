@@ -91,7 +91,7 @@ HERZBLUT Training & Coaching (AZAV)
 340/360 Punkte · Auszeichnung
 03/2026 – 04/2026
 
-*Abschlussprojekt: FEMhit · KI-Beratung für The Apex Protocol* — Enterprise-Beratungskonzept für ein intelligentes Finanzassistenzsystem (Langdock-basiert). Umfasste EU-AI-Act-Risikoklassifizierung (Limited Risk · Art. 50), DSFA & AVV, Verantwortungsmatrix (DPO, IT, Fachbereich, KI-Governance, Eskalation), KPI-Framework und 4-Phasen-Umsetzungsplan (Analyse → Pilot → Governance → Roll-out).
+*Abschlussprojekt: FEMhit · KI-Beratung für The Apex Protocol* — beide Marken von mir entworfen (FEMhit als eigene Beratungsmarke, The Apex Protocol als fiktive Klient-Organisation). Enterprise-Beratungskonzept für ein intelligentes Finanzassistenzsystem (Langdock-basiert). Umfasste EU-AI-Act-Risikoklassifizierung (Limited Risk · Art. 50), DSFA & AVV, Verantwortungsmatrix (DPO, IT, Fachbereich, KI-Governance, Eskalation), KPI-Framework und 4-Phasen-Umsetzungsplan (Analyse → Pilot → Governance → Roll-out).
 
 **Modul 1 – KI-Analyst**
 HERZBLUT Training & Coaching (AZAV)

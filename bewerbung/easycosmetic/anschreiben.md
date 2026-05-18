@@ -34,7 +34,7 @@ Für euch als DACH-E-Commerce-Unternehmen mit Kundendaten in mehreren Märkten d
 - **EU AI Act**-konforme Risikoklassifizierung & Human-in-the-Loop
 - **Audit-Trail** für jeden AI-Output (NocoDB-Logging mit Execution-IDs)
 
-Belegt: Mein **Modul-2-Abschlussprojekt** war ein komplettes Beratungskonzept für ein intelligentes Finanzassistenzsystem (Kunde: *The Apex Protocol*) — inklusive EU-AI-Act-Risikoklassifizierung (Limited Risk, Art. 50), DSFA & AVV, Verantwortungsmatrix (DPO / IT / Fachbereich / KI-Governance / Eskalation) und KPI-Framework. Bewertet mit Auszeichnung. Genau diese Denke bringe ich zu jedem AI-Workflow mit.
+Belegt: Mein **Modul-2-Abschlussprojekt** war ein komplettes Beratungskonzept für ein intelligentes Finanzassistenzsystem — entworfen für die selbst-konzipierte fiktive Klient-Organisation *The Apex Protocol*, ausgeführt unter meiner eigenen Beratungsmarke *FEMhit*. Inklusive EU-AI-Act-Risikoklassifizierung (Limited Risk, Art. 50), DSFA & AVV, Verantwortungsmatrix (DPO / IT / Fachbereich / KI-Governance / Eskalation) und KPI-Framework. Bewertet mit Auszeichnung. Genau diese Denke bringe ich zu jedem AI-Workflow mit.
 
 ---
 
