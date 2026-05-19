@@ -1,0 +1,137 @@
+{
+  "name": "Bewerbung · QR-Code Generator · lemon-markets",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "GET",
+        "path": "qr-lemon-markets",
+        "responseMode": "responseNode",
+        "options": {
+          "allowedOrigins": "https://ninalearnsvibecoding.com",
+          "responseData": "noData"
+        }
+      },
+      "id": "webhook-qr",
+      "name": "Webhook · QR Request",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [240, 320],
+      "webhookId": "qr-lemon-markets"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "data",
+              "name": "data",
+              "value": "={{ $json.query.data || 'https://ninalearnsvibecoding.com/bewerbung/lemon-markets/' }}",
+              "type": "string"
+            },
+            {
+              "id": "size",
+              "name": "size",
+              "value": "={{ $json.query.size || '240' }}",
+              "type": "string"
+            },
+            {
+              "id": "color",
+              "name": "color",
+              "value": "={{ $json.query.color || '050810' }}",
+              "type": "string"
+            },
+            {
+              "id": "bgcolor",
+              "name": "bgcolor",
+              "value": "={{ $json.query.bgcolor || 'ffffff' }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "normalize-params",
+      "name": "Parse Query Params",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [460, 320]
+    },
+    {
+      "parameters": {
+        "url": "=https://api.qrserver.com/v1/create-qr-code/?size={{ $json.size }}x{{ $json.size }}&margin=4&data={{ encodeURIComponent($json.data) }}&bgcolor={{ $json.bgcolor }}&color={{ $json.color }}&format=png",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "file",
+              "outputPropertyName": "qrImage"
+            }
+          }
+        }
+      },
+      "id": "fetch-qr",
+      "name": "Fetch QR Image",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [680, 320]
+    },
+    {
+      "parameters": {
+        "respondWith": "binary",
+        "responseBody": "={{ $binary.qrImage }}",
+        "options": {
+          "responseCode": 200,
+          "responseHeaders": {
+            "entries": [
+              { "name": "Content-Type", "value": "image/png" },
+              { "name": "Cache-Control", "value": "public, max-age=86400" },
+              { "name": "Access-Control-Allow-Origin", "value": "https://ninalearnsvibecoding.com" },
+              { "name": "X-Generated-By", "value": "n8n · ninalearnsvibecoding" }
+            ]
+          }
+        }
+      },
+      "id": "respond-image",
+      "name": "Respond QR Image",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [900, 320]
+    },
+    {
+      "parameters": {
+        "content": "## 🔲 QR-Code Generator · lemon-markets\n\n**Flow:**\n1. Browser ruft `GET /webhook/qr-lemon-markets?data=<url>`\n2. n8n holt QR von Service (server-side, cache-fähig)\n3. n8n liefert PNG direkt zurück mit 24h Cache-Header\n\n**Vorteile gegenüber direktem Browser-Call zu qrserver.com:**\n- Eigene URL → wirkt professionell, kein Vendor in der Source\n- Server-side Caching möglich\n- Späterer Wechsel zu Self-Hosted QR-Service ohne HTML-Änderung\n- DSGVO: Datenpfad bleibt unter unserer Kontrolle\n\n**Query-Params (optional):**\n- `data` — URL/Text für QR\n- `size` — Pixel (Default 240)\n- `color` — Vordergrund-Hex (Default 050810)\n- `bgcolor` — Hintergrund-Hex (Default ffffff)\n\n_Beispiel-Aufruf:_\n```\nhttps://n8n.ninalearnsvibecoding.com/webhook/qr-lemon-markets?data=https://ninalearnsvibecoding.com/bewerbung/lemon-markets/\n```",
+        "height": 320,
+        "width": 540,
+        "color": 6
+      },
+      "id": "note-1",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [120, 100]
+    }
+  ],
+  "connections": {
+    "Webhook · QR Request": {
+      "main": [
+        [{ "node": "Parse Query Params", "type": "main", "index": 0 }]
+      ]
+    },
+    "Parse Query Params": {
+      "main": [
+        [{ "node": "Fetch QR Image", "type": "main", "index": 0 }]
+      ]
+    },
+    "Fetch QR Image": {
+      "main": [
+        [{ "node": "Respond QR Image", "type": "main", "index": 0 }]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "tags": [
+    { "name": "bewerbung" },
+    { "name": "qr" }
+  ]
+}

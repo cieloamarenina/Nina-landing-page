@@ -1,0 +1,224 @@
+{
+  "name": "Bewerbung · Page-Visit Tracker · lemon-markets",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "page-visit-lemon-markets",
+        "responseMode": "responseNode",
+        "options": {
+          "allowedOrigins": "https://ninalearnsvibecoding.com",
+          "rawBody": false
+        }
+      },
+      "id": "webhook-page-visit",
+      "name": "Webhook · Page Visit",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [240, 320],
+      "webhookId": "page-visit-lemon-markets"
+    },
+    {
+      "parameters": {
+        "respondWith": "noData",
+        "responseCode": 204,
+        "options": {
+          "responseHeaders": {
+            "entries": [
+              { "name": "Access-Control-Allow-Origin", "value": "https://ninalearnsvibecoding.com" }
+            ]
+          }
+        }
+      },
+      "id": "respond-204",
+      "name": "Respond 204",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [460, 320]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "page",
+              "name": "page",
+              "value": "={{ $json.body.page || 'unknown' }}",
+              "type": "string"
+            },
+            {
+              "id": "timestamp",
+              "name": "timestamp",
+              "value": "={{ $json.body.timestamp || $now.toISO() }}",
+              "type": "string"
+            },
+            {
+              "id": "referrer",
+              "name": "referrer",
+              "value": "={{ $json.body.referrer || 'direct' }}",
+              "type": "string"
+            },
+            {
+              "id": "user_agent",
+              "name": "user_agent",
+              "value": "={{ $json.body.user_agent || '' }}",
+              "type": "string"
+            },
+            {
+              "id": "screen",
+              "name": "screen",
+              "value": "={{ $json.body.screen || '' }}",
+              "type": "string"
+            },
+            {
+              "id": "language",
+              "name": "language",
+              "value": "={{ $json.body.language || '' }}",
+              "type": "string"
+            },
+            {
+              "id": "visitor_token",
+              "name": "visitor_token",
+              "value": "={{ $json.body.visitor_token || 'anon' }}",
+              "type": "string"
+            },
+            {
+              "id": "visit_count",
+              "name": "visit_count",
+              "value": "={{ $json.body.visit_count || 1 }}",
+              "type": "number"
+            },
+            {
+              "id": "ip_hint",
+              "name": "ip_hint",
+              "value": "={{ $json.headers['x-forwarded-for'] || $json.headers['cf-connecting-ip'] || 'unknown' }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "normalize",
+      "name": "Normalize Payload",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [240, 540]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "is-first",
+              "leftValue": "={{ $json.visit_count }}",
+              "rightValue": 1,
+              "operator": { "type": "number", "operation": "equals" }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "is-first-visit",
+      "name": "Is First Visit?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [460, 540]
+    },
+    {
+      "parameters": {
+        "chatId": "486622230",
+        "text": "=🔥 *lemon-markets-Bewerbung gerade geöffnet!*\n\n👀 *Visit:* #{{ $json.visit_count }} (erster Besuch)\n🕒 {{ $now.setZone('Europe/Berlin').toFormat('dd.MM.yyyy · HH:mm') }}\n🔗 Quelle: `{{ $json.referrer }}`\n💻 {{ $json.screen }} · {{ $json.language }}\n🆔 `{{ $json.visitor_token }}`\n\n→ ninalearnsvibecoding.com/bewerbung/lemon-markets/",
+        "additionalFields": {
+          "parse_mode": "Markdown",
+          "disable_web_page_preview": true
+        }
+      },
+      "id": "telegram-first",
+      "name": "Telegram · First Visit",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [680, 440],
+      "credentials": {
+        "telegramApi": { "name": "Telegram account 2" }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "486622230",
+        "text": "=👁  lemon-markets-Bewerbung · Visit #{{ $json.visit_count }}\n🕒 {{ $now.setZone('Europe/Berlin').toFormat('dd.MM. · HH:mm') }} · 🆔 `{{ $json.visitor_token }}`",
+        "additionalFields": {
+          "parse_mode": "Markdown",
+          "disable_web_page_preview": true,
+          "disable_notification": true
+        }
+      },
+      "id": "telegram-repeat",
+      "name": "Telegram · Repeat Visit",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [680, 640],
+      "credentials": {
+        "telegramApi": { "name": "Telegram account 2" }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## 📊 Page-Visit-Tracker · lemon-markets\n\n**Flow:**\n1. Bewerbungs-Seite ruft `POST /webhook/page-visit-lemon-markets`\n2. Wir antworten sofort mit `204` (kein blocking)\n3. Parallel: Payload normalisieren → Telegram-Push an Nina\n4. Erster Visit = laute Notification mit Vollkontext\n5. Folge-Visits = stille Push (no notification)\n\n**Aufruf von Frontend:**\n```\nnavigator.sendBeacon(URL, JSON.stringify(payload))\n```\n\n**Optional:** Anhängen an NocoDB-Tabelle `page_visits` für Analytics.\n\n_Sicherheit:_ CORS auf `ninalearnsvibecoding.com` beschränkt. Kein Token nötig — Endpoint ist read-only und rate-limited via n8n.",
+        "height": 280,
+        "width": 540,
+        "color": 5
+      },
+      "id": "note-1",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [120, 100]
+    }
+  ],
+  "connections": {
+    "Webhook · Page Visit": {
+      "main": [
+        [
+          { "node": "Respond 204", "type": "main", "index": 0 },
+          { "node": "Normalize Payload", "type": "main", "index": 0 }
+        ]
+      ]
+    },
+    "Normalize Payload": {
+      "main": [
+        [
+          { "node": "Is First Visit?", "type": "main", "index": 0 }
+        ]
+      ]
+    },
+    "Is First Visit?": {
+      "main": [
+        [
+          { "node": "Telegram · First Visit", "type": "main", "index": 0 }
+        ],
+        [
+          { "node": "Telegram · Repeat Visit", "type": "main", "index": 0 }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "saveExecutionProgress": true,
+    "saveDataSuccessExecution": "all",
+    "saveDataErrorExecution": "all"
+  },
+  "tags": [
+    { "name": "bewerbung" },
+    { "name": "tracking" }
+  ],
+  "meta": {
+    "templateId": "page-visit-tracker-v1"
+  }
+}
