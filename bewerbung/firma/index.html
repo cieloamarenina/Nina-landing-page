@@ -923,27 +923,7 @@ body {
       <div class="note-sign">
         <span data-i18n="note-sign">Nina · Berlin · Mai 2026</span>
         <span class="note-pablo" id="pablo-trigger" title="Pablo says hi" role="button" tabindex="0" aria-label="Pablo">
-          <svg viewBox="0 0 64 64" width="44" height="44" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-            <!-- ears -->
-            <path d="M14 18 C 8 26, 8 38, 14 44 L 22 36 Z" fill="#7a4a2b" stroke="#3d2515" stroke-width="1.5" stroke-linejoin="round"/>
-            <path d="M50 18 C 56 26, 56 38, 50 44 L 42 36 Z" fill="#7a4a2b" stroke="#3d2515" stroke-width="1.5" stroke-linejoin="round"/>
-            <!-- head -->
-            <ellipse cx="32" cy="34" rx="20" ry="18" fill="#a87246" stroke="#3d2515" stroke-width="1.8"/>
-            <!-- muzzle -->
-            <ellipse cx="32" cy="42" rx="11" ry="8" fill="#d5a877"/>
-            <!-- eyes -->
-            <circle cx="25" cy="30" r="2.4" fill="#1a1208"/>
-            <circle cx="39" cy="30" r="2.4" fill="#1a1208"/>
-            <circle cx="25.7" cy="29.3" r="0.7" fill="#fff"/>
-            <circle cx="39.7" cy="29.3" r="0.7" fill="#fff"/>
-            <!-- nose -->
-            <ellipse cx="32" cy="39" rx="3" ry="2.2" fill="#1a1208"/>
-            <!-- mouth -->
-            <path d="M32 42 Q 30 46 27 45" stroke="#3d2515" stroke-width="1.4" fill="none" stroke-linecap="round"/>
-            <path d="M32 42 Q 34 46 37 45" stroke="#3d2515" stroke-width="1.4" fill="none" stroke-linecap="round"/>
-            <!-- tongue -->
-            <path d="M31 45 Q 32 49 33 45 Z" fill="#e07a8a"/>
-          </svg>
+          <img src="./pablo.png" alt="Pablo · Jack Russell" style="width:54px;height:54px;border-radius:50%;object-fit:cover;box-shadow:0 0 0 2px var(--accent),0 4px 14px rgba(0,212,255,0.35);display:block;">
         </span>
       </div>
     </div>
@@ -2203,36 +2183,7 @@ const confetti = (function() {
 // PABLO PHOTO AUTO-DETECTION
 // → Wenn pablo.jpg oder pablo.png im Ordner liegt → ersetze SVG
 // ============================================
-(function() {
-  const btn = document.getElementById('pablo-trigger');
-  if (!btn) return;
-  // Cache-Bust mit timestamp damit immer das aktuelle Pablo-Bild geladen wird
-  const cacheBust = '?v=' + Date.now();
-  const tries = [
-    './pablo.jpg' + cacheBust,
-    './pablo.jpeg' + cacheBust,
-    './pablo.png' + cacheBust,
-    './pablo.webp' + cacheBust
-  ];
-
-  function trySwap(i) {
-    if (i >= tries.length) return; // alle versucht → SVG bleibt sichtbar (war ja schon „Bär", aber wenn Bild komplett fehlt, ist das das Beste)
-    const img = new Image();
-    img.onload = function() {
-      // Pablo-Bild geladen → ersetze SVG durch echtes Foto
-      const svg = btn.querySelector('svg');
-      if (svg) svg.remove();
-      const el = document.createElement('img');
-      el.src = tries[i];
-      el.alt = 'Pablo · Jack Russell';
-      el.style.cssText = 'width:54px;height:54px;border-radius:50%;object-fit:cover;box-shadow:0 0 0 2px var(--accent),0 4px 14px rgba(0,212,255,0.35);display:block;';
-      btn.appendChild(el);
-    };
-    img.onerror = function() { trySwap(i + 1); };
-    img.src = tries[i];
-  }
-  trySwap(0);
-})();
+// Pablo: hardcoded <img> im HTML, keine Auto-Detection mehr (verhinderte Duplikate)
 
 // ============================================
 // PABLO EASTER EGG 🐕
@@ -2344,12 +2295,20 @@ const confetti = (function() {
   const SLUG = slug || 'easycosmetic';
   const STELLE = stelle || 'AI Automation Specialist';
 
-  // Helper: base64-decode UTF-8 safely
+  // Helper: decode safely — base64 ZUERST, fallback auf plain URL-decoded
   const decodeB64 = (s) => {
     if (!s) return null;
-    try { return decodeURIComponent(escape(atob(s))); } catch(e) {
-      try { return atob(s); } catch(e2) { return null; }
-    }
+    // 1) base64 versuchen
+    try {
+      const decoded = decodeURIComponent(escape(atob(s)));
+      // Sanity-Check: nach base64-Decode sollte sinnvoller Text rauskommen
+      // Wenn der String original schon Text war (kein base64), failed atob oder produziert Müll
+      if (decoded && decoded.length > 0 && /[a-zA-ZäöüÄÖÜß]/.test(decoded)) return decoded;
+    } catch(e) { /* nicht base64 — Fallback */ }
+    // 2) Plain URL-decoded (wenn Workflow encodeURIComponent ohne base64 nutzt)
+    try { return decodeURIComponent(s); } catch(e) { /* fall through */ }
+    // 3) As-is
+    return s;
   };
 
   // 1) Title + Meta-Tags
