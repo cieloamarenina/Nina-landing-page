@@ -66,15 +66,15 @@ Berlin · vor 2017
 ## Aus- & Weiterbildung
 
 ### KI-Berater · 340/360 Punkte · Auszeichnung
-HERZBLUT Training & Coaching (AZAV) · 03/2026 – 04/2026
+AZAV-zertifizierte KI-Weiterbildung · 03/2026 – 04/2026
 
 *Abschlussprojekt:* EU-AI-Act-konformes Beratungskonzept für ein Finanzassistenzsystem — inkl. Risikoklassifizierung (Limited Risk, Art. 50), DSFA & AVV, Verantwortungsmatrix (DPO / IT / Fachbereich / KI-Governance / Eskalation), KPI-Framework.
 
 ### KI-Analyst · 348/360 Punkte · Auszeichnung
-HERZBLUT Training & Coaching (AZAV) · 02/2026 – 03/2026
+AZAV-zertifizierte KI-Weiterbildung · 02/2026 – 03/2026
 
 ### Modul 3 – n8n AI Agents & VibeCoding *(läuft, Abschluss 21.05.2026)*
-HERZBLUT Training & Coaching (AZAV)
+AZAV-zertifizierte KI-Weiterbildung
 
 ### DATEV Lohn & Gehalt – Zertifikat
 Europäischer Hochschulverband · 2022
@@ -132,4 +132,4 @@ Referenzen gerne auf Anfrage.
 
 ## Stichworte / Keywords
 
-*People Operations · People Ops · HR Operations · HR Manager · HR Administration · Employee Lifecycle · Onboarding · Offboarding · Personalwesen · Personaladministration · Payroll · Lohn und Gehalt · DATEV · Vorbereitende Buchhaltung · Vertragswesen · Personalakten · Urlaubsverwaltung · Office Management · Compliance · DSGVO · GDPR · Audit · Dokumentenmanagement · Personio · HRIS · HR-Systeme · Confluence · Slack · Notion · n8n · AI Automation · Claude Code · Workflow Automation · Process Optimization · Prozessoptimierung · Standardisierung · Hiring Support · Recruiting Coordination · Internationale Zusammenarbeit · Deutsch · Englisch · Berlin · Hybrid · Remote · FinTech · Brokerage · Scale-up · Startup · Bitkom KI · HERZBLUT · KI-Berater · KI-Analyst*
+*People Operations · People Ops · HR Operations · HR Manager · HR Administration · Employee Lifecycle · Onboarding · Offboarding · Personalwesen · Personaladministration · Payroll · Lohn und Gehalt · DATEV · Vorbereitende Buchhaltung · Vertragswesen · Personalakten · Urlaubsverwaltung · Office Management · Compliance · DSGVO · GDPR · Audit · Dokumentenmanagement · Personio · HRIS · HR-Systeme · Confluence · Slack · Notion · n8n · AI Automation · Claude Code · Workflow Automation · Process Optimization · Prozessoptimierung · Standardisierung · Hiring Support · Recruiting Coordination · Internationale Zusammenarbeit · Deutsch · Englisch · Berlin · Hybrid · Remote · FinTech · Brokerage · Scale-up · Startup · Bitkom KI · AZAV · KI-Berater · KI-Analyst*

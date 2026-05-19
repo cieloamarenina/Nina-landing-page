@@ -22,7 +22,7 @@ Die Seite ist gleichzeitig Bewerbung **und** Demo: So denke ich People Operation
 
 Ich bringe **7+ Jahre End-to-End-People-Operations** mit: Employee Lifecycle (Onboarding, Vertragswesen, Personalakten, Offboarding), Payroll-Koordination mit externen Steuerberatungen, vorbereitende Buchhaltung — alles in dynamischen, internationalen Umfeldern (Remote, Redfish, CS Compliance). Plus **DATEV-Zertifikat Lohn & Gehalt** und ein klares GDPR-first-Mindset, das ich aus meiner Zeit bei CS Compliance Service mitbringe.
 
-Was bei einer People-Ops-Bewerberin selten zusammenkommt: Ich habe parallel **drei AZAV-zertifizierte KI-Module bei HERZBLUT** absolviert (KI-Analystin · 348/360 · Auszeichnung, KI-Beraterin · 340/360 · Auszeichnung, n8n AI Agents läuft bis 21.05.2026) und betreibe eine eigene self-hosted n8n-Instanz mit produktiven Automation-Workflows.
+Was bei einer People-Ops-Bewerberin selten zusammenkommt: Ich habe parallel **drei AZAV-zertifizierte KI-Module** absolviert (KI-Analystin · 348/360 · Auszeichnung, KI-Beraterin · 340/360 · Auszeichnung, n8n AI Agents läuft bis 21.05.2026) und betreibe eine eigene self-hosted n8n-Instanz mit produktiven Automation-Workflows.
 
 Genau das ist, was ihr unter „**Automation & project improvements**" sucht: jemand, der People Ops nicht nur ausführt, sondern auch erweitert.
 

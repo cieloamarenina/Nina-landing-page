@@ -103,10 +103,18 @@ Nina-landing-page/bewerbung/lemon-markets/
 
 ---
 
-## 5 · Deployment (Coolify)
+## 5 · Deployment (Coolify via Git)
 
-Wie üblich — direkt im Coolify-Interface deployen, **kein git push**.
-Endpoint sollte sein: `https://ninalearnsvibecoding.com/bewerbung/lemon-markets/`
+```bash
+git add bewerbung/lemon-markets/
+git commit -m "Add lemon-markets application"
+git push origin main
+```
+
+Coolify pullt automatisch von `cieloamarenina/Nina-landing-page:main` und baut (~15-30 Sek).
+**Webhook triggert oft nicht zuverlässig** → in Coolify-UI „Redeploy" klicken, wenn der neue Commit-SHA dort nicht innerhalb 1 Min auftaucht.
+
+Endpoint danach: `https://ninalearnsvibecoding.com/bewerbung/lemon-markets/`
 
 ---
 
