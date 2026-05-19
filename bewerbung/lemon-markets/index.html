@@ -1465,13 +1465,12 @@ body {
 
   <div class="cal-wrap">
     <div class="cal-placeholder" id="cal-placeholder">
-      📅 <strong data-i18n="cal-title">Termin direkt buchen</strong><br><br>
+      📅 <strong data-i18n="cal-title">Direkt einen Slot abstimmen</strong><br><br>
       <span style="font-size:13px" data-i18n="cal-sub">
-        Wird hier eingebettet — Cal.com-URL eintragen in <code>data-cal-link</code>.<br>
-        <a href="https://cal.com" target="_blank" rel="noopener">→ Cal.com manuell öffnen</a>
+        Eine kurze Mail oder ein Anruf reicht — ich melde mich innerhalb von 24 Stunden mit drei Vorschlägen zurück.
       </span>
     </div>
-    <!-- Cal.com inline embed — sobald URL gesetzt -->
+    <!-- Cal.com inline embed — aktiv sobald cal-Subdomain auf Hetzner geroutet ist -->
     <div id="cal-inline" data-cal-link="" style="height:680px; display:none;"></div>
   </div>
 </section>
@@ -1507,8 +1506,8 @@ const CONFIG = {
   // n8n Webhook für Page-Visit-Tracking — leer bis Workflows importiert
   TRACKING_WEBHOOK: '',
 
-  // Cal.com Buchungs-URL (deine self-hosted Instanz)
-  CAL_LINK: 'https://cal.ninalearnsvibecoding.com/nina/30min?embed=true&theme=dark',
+  // Cal.com Buchungs-URL (self-hosted) — leer bis cal-Subdomain auf Hetzner geroutet ist
+  CAL_LINK: '',
 
   // CV-Download via n8n — leer bis Workflow importiert; Fallback auf statisches PDF (./cv-nina-panknin.pdf)
   CV_DOWNLOAD_URL: '',
@@ -1614,8 +1613,8 @@ const I18N = {
     'qr-sub': 'QR-Code mit Handy scannen → CV direkt aufs Phone.',
     'cta-title': 'Lass uns <span class="blue">sprechen</span>.',
     'cta-sub': 'Direkt einen 30-Min-Slot buchen — oder per Mail melden. Ich melde mich innerhalb von 24 Stunden.',
-    'cal-title': 'Termin direkt buchen',
-    'cal-sub': 'Wird hier eingebettet — Cal.com-URL in <code>CONFIG.CAL_LINK</code> oben im Script eintragen.<br><a href="https://cal.com" target="_blank" rel="noopener">→ Cal.com manuell öffnen</a>'
+    'cal-title': 'Direkt einen Slot abstimmen',
+    'cal-sub': 'Eine kurze Mail oder ein Anruf reicht — ich melde mich innerhalb von 24 Stunden mit drei Vorschlägen zurück.'
   },
   en: {
     'hero-tag': 'PEOPLE OPERATIONS SPECIALIST',
@@ -1701,8 +1700,8 @@ const I18N = {
     'qr-sub': 'Scan the QR code with your phone → résumé straight to the device.',
     'cta-title': 'Let\'s <span class="blue">talk</span>.',
     'cta-sub': 'Book a 30-min slot directly — or just send a mail. I reply within 24 hours.',
-    'cal-title': 'Book a slot',
-    'cal-sub': 'Will be embedded here — set the Cal.com URL in <code>CONFIG.CAL_LINK</code> at the top of the script.<br><a href="https://cal.com" target="_blank" rel="noopener">→ Open Cal.com manually</a>'
+    'cal-title': 'Let\'s find a slot',
+    'cal-sub': 'A short mail or call is enough — I\'ll get back to you within 24 hours with three time suggestions.'
   }
 };
 
