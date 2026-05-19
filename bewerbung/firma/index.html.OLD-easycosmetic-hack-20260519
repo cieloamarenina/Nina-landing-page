@@ -879,15 +879,7 @@ body {
           </div>
           <div class="hero-stat">
             <div class="num">348</div>
-            <div class="label" data-i18n="stat-grade-1">/360 · KI-Analystin</div>
-          </div>
-          <div class="hero-stat">
-            <div class="num">340</div>
-            <div class="label" data-i18n="stat-grade-2">/360 · KI-Beraterin</div>
-          </div>
-          <div class="hero-stat">
-            <div class="num">M3</div>
-            <div class="label" data-i18n="stat-modul3">n8n + AI Agents · läuft</div>
+            <div class="label" data-i18n="stat-grade">/360 · KI-Analystin</div>
           </div>
         </div>
 
@@ -897,7 +889,7 @@ body {
             <strong style="color:var(--text)">Diese Seite ist live getrackt.</strong><br>
             <code>POST /webhook/page-visit</code> → n8n → Push-Notification an mich.
             Ich weiß, wann du sie öffnest. Bei euch würde dieselbe Logik
-            über DSGVO-konforme Channels (E-Mail · Mattermost) laufen.
+            über DSGVO-konforme Channels (E-Mail · Slack EU · Mattermost) laufen.
           </div>
         </div>
       </div>
@@ -1263,13 +1255,13 @@ body {
     </p>
 
     <div class="eu-grid">
-      <div class="eu-card eu-card--tech" data-tech-only="true">
+      <div class="eu-card">
         <div class="eu-flag">🇫🇷</div>
         <div class="eu-t1" data-i18n="eu-mistral-t1">Mistral AI</div>
         <div class="eu-t2" data-i18n="eu-mistral-t2">Default-LLM statt OpenAI. Französischer Anbieter, Server in der EU, transparente Modelle.</div>
         <div class="eu-tag-pill" data-i18n="eu-mistral-pill">EU-LLM · Production</div>
       </div>
-      <div class="eu-card eu-card--tech" data-tech-only="true">
+      <div class="eu-card">
         <div class="eu-flag">🇩🇪</div>
         <div class="eu-t1" data-i18n="eu-langdock-t1">Langdock</div>
         <div class="eu-t2" data-i18n="eu-langdock-t2">Berliner Enterprise-AI-Layer. Mehrere Modelle hinter einer DSGVO-Schicht — ideal für interne Roll-outs.</div>
@@ -1277,8 +1269,8 @@ body {
       </div>
       <div class="eu-card">
         <div class="eu-flag">🇩🇪</div>
-        <div class="eu-t1" data-i18n="eu-infra-t1">Hetzner · Eigene Infrastruktur</div>
-        <div class="eu-t2" data-i18n="eu-infra-t2">Server in Deutschland, Coolify-Deploys, eigener SMTP, eigene PostgreSQL. Kein US-Cloud-Lock-in.</div>
+        <div class="eu-t1" data-i18n="eu-infra-t1">Eigene Infrastruktur</div>
+        <div class="eu-t2" data-i18n="eu-infra-t2">Hetzner-Server in Deutschland, Coolify-Deploys, eigener SMTP, eigene PostgreSQL. Kein US-Cloud-Lock-in.</div>
         <div class="eu-tag-pill" data-i18n="eu-infra-pill">DE-Hosting · Self-Hosted</div>
       </div>
       <div class="eu-card">
@@ -1290,7 +1282,7 @@ body {
       <div class="eu-card">
         <div class="eu-flag">📡</div>
         <div class="eu-t1" data-i18n="eu-channels-t1">Notification-Channels</div>
-        <div class="eu-t2" data-i18n="eu-channels-t2">Für DACH-Geschäftsdaten: eigener SMTP oder Mattermost — DSGVO-konform. Telegram nur für meine eigene Infrastruktur, nie für Kundendaten.</div>
+        <div class="eu-t2" data-i18n="eu-channels-t2">Für DACH-Geschäftsdaten: eigener SMTP, Slack EU oder Mattermost — DSGVO-konform. Telegram nur für meine eigene Infrastruktur, nie für Kundendaten.</div>
         <div class="eu-tag-pill" data-i18n="eu-channels-pill">DSGVO-First</div>
       </div>
     </div>
@@ -1483,7 +1475,8 @@ body {
   <div class="footer-inner">
     <p>
       <span class="dot"></span> DSGVO &amp; EU AI Act
-      <span class="dot"></span> Hetzner DE · Eigene Infrastruktur
+      <span class="dot"></span> Eigener SMTP &amp; Hetzner DE
+      <span class="dot"></span> Mistral AI (EU)
       <span class="dot"></span> Berlin · Mai 2026
     </p>
     <p style="margin-top: 12px;">
@@ -1502,16 +1495,16 @@ body {
 const CONFIG = {
   // n8n Webhooks für GENERIC firma-Template (slug-aware)
   // Slug wird via URL-Param-Loader an alle URLs angehängt
-  TRACKING_WEBHOOK: 'https://n8n.ninalearnsvibecoding.com/webhook/page-visit-firma', // generisch, slug-aware via Query-Param
+  TRACKING_WEBHOOK: 'https://n8n.ninalearnsvibecoding.com/webhook/page-visit-firma',
 
   // Cal.com Buchungs-URL (deine self-hosted Instanz)
-  CAL_LINK: 'https://cal.ninalearnsvibecoding.com/nina/30min?embed=true&theme=dark', // self-hosted Cal.com
+  CAL_LINK: '', // z.B. 'https://cal.ninalearnsvibecoding.com/nina/30min?embed=true&theme=dark'
 
   // CV-Download via n8n (mit Push-Notification beim Download)
-  CV_DOWNLOAD_URL: '', // leer → Template nutzt statisches ./cv-nina-panknin.pdf als Fallback
+  CV_DOWNLOAD_URL: 'https://n8n.ninalearnsvibecoding.com/webhook/cv-firma',
 
   // QR-Code via n8n (server-side generation)
-  QR_API_URL: '', // leer → Template nutzt api.qrserver.com Direct-Service als Fallback
+  QR_API_URL: 'https://n8n.ninalearnsvibecoding.com/webhook/qr-firma',
 
   // Öffentliche Seiten-URL (wird vom URL-Loader pro Firma überschrieben)
   PAGE_URL: 'https://ninalearnsvibecoding.com/bewerbung/firma/',
@@ -1537,10 +1530,7 @@ const I18N = {
     'stat-match': 'Match Score',
     'stat-years': 'Jahre Operations',
     'stat-grade': '/360 · KI-Analystin',
-    'stat-grade-1': '/360 · KI-Analystin',
-    'stat-grade-2': '/360 · KI-Beraterin',
-    'stat-modul3': 'n8n + AI Agents · läuft',
-    'build-banner': '<strong style="color:var(--text)">Diese Seite ist live getrackt.</strong><br><code>POST /webhook/page-visit</code> → n8n → Push-Notification an mich. Ich weiß, wann du sie öffnest. Bei euch würde dieselbe Logik über DSGVO-konforme Channels (E-Mail · Mattermost) laufen.',
+    'build-banner': '<strong style="color:var(--text)">Diese Seite ist live getrackt.</strong><br><code>POST /webhook/page-visit</code> → n8n → Push-Notification an mich. Ich weiß, wann du sie öffnest. Bei euch würde dieselbe Logik über DSGVO-konforme Channels (E-Mail · Slack EU · Mattermost) laufen.',
     'tools-label': '— I build with —',
     'note-greeting': 'Liebes easycosmetic-Team,',
     'note-body': 'ich habe diese Seite <em>extra für eure Stelle</em> gebaut — mit genau dem Stack, den ihr sucht: Claude Code, n8n, Docker, APIs, automatisierte Workflows. Statt einer Word-Datei zeige ich euch lieber direkt, wie ich arbeite. Falls eine Sektion fehlt, scrollt einfach weiter — oder bucht direkt einen Slot unten. Würde mich riesig freuen.',
@@ -1589,7 +1579,7 @@ const I18N = {
     'eu-act-t2': 'DSGVO-konforme Datenverarbeitung, Risikoklassifizierung pro Workflow, Audit-Trail in NocoDB mit Execution-IDs, Human-in-the-Loop bei jedem AI-Output. Aus Modul 1+2 mit Auszeichnung belegt.',
     'eu-act-pill': 'Audit-Ready · HITL',
     'eu-channels-t1': 'Notification-Channels',
-    'eu-channels-t2': 'Für DACH-Geschäftsdaten: eigener SMTP oder Mattermost — DSGVO-konform. Telegram nur für meine eigene Infrastruktur, nie für Kundendaten.',
+    'eu-channels-t2': 'Für DACH-Geschäftsdaten: eigener SMTP, Slack EU oder Mattermost — DSGVO-konform. Telegram nur für meine eigene Infrastruktur, nie für Kundendaten.',
     'eu-channels-pill': 'DSGVO-First',
     'eu-foot': '<strong>Im Klartext:</strong> Jeder Workflow, den ich baue, ist standardmäßig EU-konform. Ich muss nicht nachträglich auf DSGVO „upgraden" — die Stack-Auswahl macht es per Default.',
     'journey-tag': 'Mein Weg',
@@ -1628,10 +1618,7 @@ const I18N = {
     'stat-match': 'Match score',
     'stat-years': 'Years operations',
     'stat-grade': '/360 · AI Analyst',
-    'stat-grade-1': '/360 · AI Analyst',
-    'stat-grade-2': '/360 · AI Consultant',
-    'stat-modul3': 'n8n + AI Agents · in progress',
-    'build-banner': '<strong style="color:var(--text)">This page is tracked live.</strong><br><code>POST /webhook/page-visit</code> → n8n → push notification to me. I know when you open it. At easycosmetic, the same logic would run via GDPR-compliant channels (E-Mail · Mattermost).',
+    'build-banner': '<strong style="color:var(--text)">This page is tracked live.</strong><br><code>POST /webhook/page-visit</code> → n8n → push notification to me. I know when you open it. At easycosmetic, the same logic would run via GDPR-compliant channels (E-Mail · Slack EU · Mattermost).',
     'tools-label': '— I build with —',
     'note-greeting': 'Dear easycosmetic team,',
     'note-body': 'I built this page <em>specifically for your role</em> — using exactly the stack you\'re looking for: Claude Code, n8n, Docker, APIs, automated workflows. Instead of sending a Word file, I\'d rather show you directly how I work. If a section is missing, scroll on — or just book a slot below. Would love to hear from you.',
@@ -1680,7 +1667,7 @@ const I18N = {
     'eu-act-t2': 'GDPR-compliant data processing, risk classification per workflow, audit trail in NocoDB with execution IDs, human-in-the-loop on every AI output. Backed by Module 1+2 with distinction.',
     'eu-act-pill': 'Audit-Ready · HITL',
     'eu-channels-t1': 'Notification Channels',
-    'eu-channels-t2': 'For DACH business data: own SMTP or Mattermost — GDPR-compliant. Telegram only for my own infrastructure, never for customer data.',
+    'eu-channels-t2': 'For DACH business data: own SMTP, Slack EU or Mattermost — GDPR-compliant. Telegram only for my own infrastructure, never for customer data.',
     'eu-channels-pill': 'GDPR-First',
     'eu-foot': '<strong>Plain English:</strong> Every workflow I build is EU-compliant by default. No need to retrofit GDPR — the stack choice handles it.',
     'journey-tag': 'My journey',
@@ -1859,59 +1846,32 @@ document.querySelectorAll('[data-set-lang]').forEach(btn => {
   // Source aus URL-Parameter holen (?src=qr, ?src=mail, etc.)
   const urlParams = new URLSearchParams(window.location.search);
   const visitSource = urlParams.get('src') || 'direct';
-  // Slug + Firma dynamisch (statt hardcoded 'easycosmetic')
-  const pageSlug = urlParams.get('slug') || 'firma';
-  const pageFirma = urlParams.get('firma') || pageSlug;
 
-  // Reusable: schickt Tracking-Event an Webhook
-  function trackEvent(eventType, extra) {
-    if (!CONFIG.TRACKING_WEBHOOK) return;
-    const payload = Object.assign({
-      page: pageSlug,
-      firma: pageFirma,
-      event: eventType,
-      timestamp: new Date().toISOString(),
-      referrer: document.referrer || 'direct',
-      source: visitSource,
-      user_agent: navigator.userAgent,
-      screen: window.screen.width + 'x' + window.screen.height,
-      language: navigator.language,
-      visitor_token: visitorToken,
-      visit_count: visitCount
-    }, extra || {});
-    try {
-      if (navigator.sendBeacon) {
-        const blob = new Blob([JSON.stringify(payload)], { type: 'application/json' });
-        navigator.sendBeacon(CONFIG.TRACKING_WEBHOOK, blob);
-      } else {
-        fetch(CONFIG.TRACKING_WEBHOOK, {
-          method: 'POST', body: JSON.stringify(payload),
-          headers: { 'Content-Type': 'application/json' }, keepalive: true
-        }).catch(() => {});
-      }
-    } catch (e) { /* silent */ }
-  }
+  const payload = {
+    page: 'easycosmetic',
+    timestamp: new Date().toISOString(),
+    referrer: document.referrer || 'direct',
+    source: visitSource,
+    user_agent: navigator.userAgent,
+    screen: window.screen.width + 'x' + window.screen.height,
+    language: navigator.language,
+    visitor_token: visitorToken,
+    visit_count: visitCount
+  };
 
-  // 1) Page-Visit
-  trackEvent('page-visit');
-
-  // 2) Click-Tracking: CV-PDF-Download
-  document.querySelectorAll('a[href$="cv-nina-panknin.pdf"], a[href*="cv-nina-panknin"]').forEach(a => {
-    a.addEventListener('click', () => trackEvent('cv-download', { cv_source: 'button' }));
-  });
-  // 3) Click-Tracking: Zertifikat-PDFs
-  document.querySelectorAll('a[href*="zertifikat-ki"]').forEach(a => {
-    const cert = a.href.includes('analyst') ? 'analyst' : 'berater';
-    a.addEventListener('click', () => trackEvent('cert-download', { cert: cert }));
-  });
-  // 4) Click-Tracking: Cal.com / Termin-Buttons
-  document.querySelectorAll('a[href*="cal."], button[id*="cal"], a[data-i18n="cta-cal"]').forEach(a => {
-    a.addEventListener('click', () => trackEvent('cal-click', {}));
-  });
-  // 5) Click-Tracking: LinkedIn
-  document.querySelectorAll('a[href*="linkedin.com"]').forEach(a => {
-    a.addEventListener('click', () => trackEvent('linkedin-click', {}));
-  });
+  try {
+    if (navigator.sendBeacon) {
+      const blob = new Blob([JSON.stringify(payload)], { type: 'application/json' });
+      navigator.sendBeacon(CONFIG.TRACKING_WEBHOOK, blob);
+    } else {
+      fetch(CONFIG.TRACKING_WEBHOOK, {
+        method: 'POST',
+        body: JSON.stringify(payload),
+        headers: { 'Content-Type': 'application/json' },
+        keepalive: true
+      }).catch(() => {});
+    }
+  } catch (e) { /* silent */ }
 })();
 
 // ============================================
@@ -2331,26 +2291,12 @@ const confetti = (function() {
   const match = params.get('match');
   const slug = params.get('slug') || (firma ? firma.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') : null);
   const anschreiben = params.get('anschreiben');
-  // Neue Params (2026-05-19): pro Stelle dynamisch
-  const stack = params.get('stack');
-  const pitch = params.get('pitch'); // base64-encoded UTF-8 HTML
-  const matrix = params.get('matrix'); // base64-encoded JSON array
-  const salary = params.get('salary');
-  const isTechRole = params.get('tech') === '1'; // Tech-Sektionen nur bei AI/n8n/Automation-Stellen anzeigen
 
   if (!firma && !slug) return; // Kein Param → Default bleibt
 
   const FIRMA = firma || 'easycosmetic';
   const SLUG = slug || 'easycosmetic';
   const STELLE = stelle || 'AI Automation Specialist';
-
-  // Helper: base64-decode UTF-8 safely
-  const decodeB64 = (s) => {
-    if (!s) return null;
-    try { return decodeURIComponent(escape(atob(s))); } catch(e) {
-      try { return atob(s); } catch(e2) { return null; }
-    }
-  };
 
   // 1) Title + Meta-Tags
   document.title = `Bewerbung · ${STELLE} · Nina Panknin → ${FIRMA}`;
@@ -2404,20 +2350,6 @@ const confetti = (function() {
     if (I18N.de) {
       I18N.de['hero-h1'] = `Bewerbung <span class="blue">deployed</span> für<br>${FIRMA}.`;
       I18N.de['note-greeting'] = `Liebes ${FIRMA}-Team,`;
-      // Position dynamisch (Stellenbezeichnung aus URL-Param)
-      if (stelle) I18N.de['hero-tag'] = stelle.toUpperCase();
-      // Stack dynamisch
-      if (stack) I18N.de['hero-stack'] = stack;
-      // Pitch dynamisch — patcht den Hero-Sub-Bereich (Haupt-Pitch über die Stelle)
-      const pitchDecoded = decodeB64(pitch);
-      if (pitchDecoded) {
-        I18N.de['hero-sub'] = pitchDecoded;
-        I18N.de['note-body'] = pitchDecoded; // auch im handgeschriebenen Brief
-      }
-      // Salary dynamisch (matrix-foot patchen)
-      if (salary && I18N.de['matrix-foot']) {
-        I18N.de['matrix-foot'] = I18N.de['matrix-foot'].replace(/<strong>[\d\.]+\s*€[^<]*<\/strong>/, `<strong>${salary}</strong>`);
-      }
       // Alle anderen Strings die "easycosmetic" enthalten → FIRMA
       Object.keys(I18N.de).forEach(k => {
         if (typeof I18N.de[k] === 'string' && I18N.de[k].includes('easycosmetic')) {
@@ -2429,69 +2361,11 @@ const confetti = (function() {
     if (I18N.en) {
       I18N.en['hero-h1'] = `Application <span class="blue">deployed</span> for<br>${FIRMA}.`;
       I18N.en['note-greeting'] = `Dear ${FIRMA} team,`;
-      if (stelle) I18N.en['hero-tag'] = stelle.toUpperCase();
-      if (stack) I18N.en['hero-stack'] = stack;
-      const pitchDecodedEn = decodeB64(pitch);
-      if (pitchDecodedEn) {
-        I18N.en['hero-sub'] = pitchDecodedEn;
-        I18N.en['note-body'] = pitchDecodedEn;
-      }
-      if (salary && I18N.en['matrix-foot']) {
-        I18N.en['matrix-foot'] = I18N.en['matrix-foot'].replace(/<strong>€[\d,]+[^<]*<\/strong>/, `<strong>${salary}</strong>`);
-      }
       Object.keys(I18N.en).forEach(k => {
         if (typeof I18N.en[k] === 'string' && I18N.en[k].includes('easycosmetic')) {
           I18N.en[k] = I18N.en[k].replace(/easycosmetic/g, FIRMA);
         }
       });
-    }
-  }
-
-  // 6a) Tech-Sektionen verstecken wenn KEINE AI/n8n/Automation-Stelle
-  // (Stellen wie Operations / People-Ops sollen nicht mit Tech-Projekten ueberwaeltigt werden)
-  if (!isTechRole) {
-    // Tools-Strip ("I build with" Stack-Logos)
-    document.querySelectorAll('.tools-strip').forEach(el => el.style.display = 'none');
-    // "What I built" Sektion
-    const builtTag = document.querySelector('[data-i18n="built-tag"]');
-    if (builtTag) {
-      const sec = builtTag.closest('section');
-      if (sec) sec.style.display = 'none';
-    }
-    // "Selected Projects" Sektion
-    const projTag = document.querySelector('[data-i18n="proj-tag"]');
-    if (projTag) {
-      const sec = projTag.closest('section');
-      if (sec) sec.style.display = 'none';
-    }
-    // Tech-only Cards in DSGVO-Sektion (Mistral, Langdock)
-    document.querySelectorAll('[data-tech-only="true"]').forEach(el => el.style.display = 'none');
-    console.log('[firma-template] Tech-Sektionen + tech-only-Cards versteckt (kein tech=1 Param)');
-  }
-
-  // 6b) Skill-Matrix dynamisch (aus base64-JSON-Array)
-  const matrixDecoded = decodeB64(matrix);
-  if (matrixDecoded) {
-    try {
-      const items = JSON.parse(matrixDecoded);
-      const container = document.querySelector('.matrix');
-      if (container && Array.isArray(items) && items.length > 0) {
-        container.innerHTML = items.map(item => {
-          const isNinaFirst = item.source === 'nina_first';
-          const arr = isNinaFirst ? '★' : '→';
-          const tick = isNinaFirst ? '★' : '✓';
-          const req = (item.req || '').replace(/</g, '&lt;');
-          const proof = item.proof || '';
-          return `<div class="matrix-row">
-            <div class="matrix-req"><span class="arr">${arr}</span> ${req}</div>
-            <div class="matrix-proof">${proof}</div>
-            <div class="matrix-tick">${tick}</div>
-          </div>`;
-        }).join('\n');
-        console.log(`[firma-template] Skill-Matrix mit ${items.length} Items gerendert`);
-      }
-    } catch(e) {
-      console.warn('[firma-template] matrix parse failed:', e);
     }
   }
   // ABOUT_BODY (kein i18n-Key, separates Object) — auch FIRMA-replace
