@@ -745,6 +745,14 @@ body {
   border-style: dashed;
   border-color: rgba(0, 212, 255, 0.25);
 }
+.cert-card--info {
+  cursor: default;
+}
+.cert-card--info:hover {
+  transform: none;
+  box-shadow: none;
+  border-color: rgba(0, 212, 255, 0.18);
+}
 .cert-cta--soon {
   color: var(--text-4);
   background: rgba(255,255,255,0.04);
@@ -1422,13 +1430,12 @@ body {
     </div>
 
     <div class="certs-row">
-      <div class="cert-card">
+      <div class="cert-card cert-card--info">
         <div class="cert-badge">💶</div>
         <div class="cert-text">
           <div class="cert-t1" data-i18n="cert-datev-t1">DATEV Lohn &amp; Gehalt</div>
           <div class="cert-t2" data-i18n="cert-datev-t2">Europäischer Hochschulverband · <strong>2022</strong> · Payroll-Grundlagen</div>
         </div>
-        <div class="cert-cta">📄</div>
       </div>
       <a href="./zertifikat-ki-analyst.pdf" target="_blank" rel="noopener" class="cert-card">
         <div class="cert-badge">🎓</div>
@@ -1506,8 +1513,8 @@ const CONFIG = {
   // n8n Webhook für Page-Visit-Tracking — leer bis Workflows importiert
   TRACKING_WEBHOOK: '',
 
-  // Cal.com Buchungs-URL (self-hosted) — leer bis cal-Subdomain auf Hetzner geroutet ist
-  CAL_LINK: '',
+  // Cal.com Buchungs-URL (self-hosted auf Hetzner via Coolify)
+  CAL_LINK: 'https://calcom.ninalearnsvibecoding.com/nina/30min?embed=true&theme=dark',
 
   // CV-Download via n8n — leer bis Workflow importiert; Fallback auf statisches PDF (./cv-nina-panknin.pdf)
   CV_DOWNLOAD_URL: '',
@@ -2209,7 +2216,7 @@ const confetti = (function() {
   const btn = document.getElementById('pablo-trigger');
   if (!btn) return;
   const messages = {
-    de: ['Wuff! Ich bin Pablo. 🐾', 'Bürohunde willkommen? Ich bin dabei!', 'Nina ist meine Lieblingsmenschin.', 'Wuff wuff — auch ich kann Workflows.'],
+    de: ['Wuff! Ich bin Pablo. 🐾', 'Bürohunde willkommen? Ich bin dabei!', 'Nina ist mein Lieblingsmensch.', 'Wuff wuff — auch ich kann Workflows.'],
     en: ['Woof! I\'m Pablo. 🐾', 'Office dogs welcome? Count me in!', 'Nina is my favourite human.', 'Woof woof — I do workflows too.']
   };
   let idx = 0;
