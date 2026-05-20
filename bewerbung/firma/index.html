@@ -878,12 +878,12 @@ body {
             <div class="label" data-i18n="stat-years">Jahre Operations</div>
           </div>
           <div class="hero-stat">
-            <div class="num">348</div>
-            <div class="label" data-i18n="stat-grade-1">/360 · KI-Analystin</div>
+            <div class="num">348<span style="font-size:0.5em; color:var(--text-3); font-weight:400;">/360</span></div>
+            <div class="label" data-i18n="stat-grade-1">KI-Analystin · AZAV · Auszeichnung</div>
           </div>
           <div class="hero-stat">
-            <div class="num">340</div>
-            <div class="label" data-i18n="stat-grade-2">/360 · KI-Beraterin</div>
+            <div class="num">340<span style="font-size:0.5em; color:var(--text-3); font-weight:400;">/360</span></div>
+            <div class="label" data-i18n="stat-grade-2">KI-Beraterin · AZAV · Auszeichnung</div>
           </div>
           <div class="hero-stat">
             <div class="num">M3</div>
@@ -1441,14 +1441,15 @@ body {
   </div>
 
   <div class="cal-wrap">
-    <div class="cal-placeholder" id="cal-placeholder">
+    <div class="cal-placeholder" id="cal-placeholder" style="text-align:center; padding:32px 24px;">
       📅 <strong data-i18n="cal-title">Termin direkt buchen</strong><br><br>
-      <span style="font-size:13px" data-i18n="cal-sub">
-        Wird hier eingebettet — Cal.com-URL eintragen in <code>data-cal-link</code>.<br>
-        <a href="https://cal.com" target="_blank" rel="noopener">→ Cal.com manuell öffnen</a>
+      <span style="font-size:14px; line-height:1.6;" data-i18n="cal-sub">
+        Schreib mir eine kurze Mail mit deinen Wunschterminen —<br>
+        ich melde mich innerhalb von 24 Stunden mit 3 freien Slots zurück.<br><br>
+        <a href="mailto:ninapankninberlin@gmail.com?subject=Termin-Anfrage&amp;body=Hallo Nina,%0D%0A%0D%0Aich würde gerne einen 30-Min-Slot buchen. Meine Wunschtermine:%0D%0A- ...%0D%0A- ...%0D%0A%0D%0AViele Grüße" class="btn-primary" style="margin-top:8px;">✉ Termin per Mail anfragen</a>
       </span>
     </div>
-    <!-- Cal.com inline embed — sobald URL gesetzt -->
+    <!-- Cal.com inline embed — wird aktiviert sobald CONFIG.CAL_LINK gesetzt ist -->
     <div id="cal-inline" data-cal-link="" style="height:680px; display:none;"></div>
   </div>
 </section>
@@ -1484,8 +1485,9 @@ const CONFIG = {
   // Slug wird via URL-Param-Loader an alle URLs angehängt
   TRACKING_WEBHOOK: 'https://n8n.ninalearnsvibecoding.com/webhook/page-visit-firma', // generisch, slug-aware via Query-Param
 
-  // Cal.com Buchungs-URL (deine self-hosted Instanz)
-  CAL_LINK: 'https://cal.ninalearnsvibecoding.com/nina/30min?embed=true&theme=dark', // self-hosted Cal.com
+  // Cal.com Buchungs-URL — self-hosted Setup pending (DNS + Coolify-Deploy noch nicht live)
+  // Bis dahin: leer lassen → Placeholder mit Mail/Telefon-CTA wird gezeigt
+  CAL_LINK: '', // 'https://cal.ninalearnsvibecoding.com/nina/30min?embed=true&theme=dark'
 
   // CV-Download via n8n (mit Push-Notification beim Download)
   CV_DOWNLOAD_URL: '', // leer → Template nutzt statisches ./cv-nina-panknin.pdf als Fallback
@@ -1516,9 +1518,9 @@ const I18N = {
     'cta-book': '📅 Direkt Termin buchen',
     'stat-match': 'Match Score',
     'stat-years': 'Jahre Operations',
-    'stat-grade': '/360 · KI-Analystin',
-    'stat-grade-1': '/360 · KI-Analystin',
-    'stat-grade-2': '/360 · KI-Beraterin',
+    'stat-grade': 'KI-Analystin · AZAV · Auszeichnung',
+    'stat-grade-1': 'KI-Analystin · AZAV · Auszeichnung',
+    'stat-grade-2': 'KI-Beraterin · AZAV · Auszeichnung',
     'stat-modul3': 'n8n + AI Agents · läuft',
     'build-banner': '<strong style="color:var(--text)">Diese Seite ist live getrackt.</strong><br><code>POST /webhook/page-visit</code> → n8n → Push-Notification an mich. Ich weiß, wann du sie öffnest. Bei euch würde dieselbe Logik über DSGVO-konforme Channels (E-Mail · Mattermost) laufen.',
     'tools-label': '— I build with —',
@@ -1596,7 +1598,7 @@ const I18N = {
     'cta-title': 'Lass uns <span class="blue">sprechen</span>.',
     'cta-sub': 'Direkt einen 30-Min-Slot buchen — oder per Mail melden. Ich melde mich innerhalb von 24 Stunden.',
     'cal-title': 'Termin direkt buchen',
-    'cal-sub': 'Wird hier eingebettet — Cal.com-URL in <code>CONFIG.CAL_LINK</code> oben im Script eintragen.<br><a href="https://cal.com" target="_blank" rel="noopener">→ Cal.com manuell öffnen</a>'
+    'cal-sub': 'Schreib mir eine kurze Mail mit deinen Wunschterminen — ich melde mich innerhalb von 24 Stunden mit 3 freien Slots zurück.<br><br><a href="mailto:ninapankninberlin@gmail.com?subject=Termin-Anfrage" class="btn-primary" style="margin-top:8px;">✉ Termin per Mail anfragen</a>'
   },
   en: {
     'hero-tag': 'AI AUTOMATION SPECIALIST',
@@ -1607,9 +1609,9 @@ const I18N = {
     'cta-book': '📅 Book a slot',
     'stat-match': 'Match score',
     'stat-years': 'Years operations',
-    'stat-grade': '/360 · AI Analyst',
-    'stat-grade-1': '/360 · AI Analyst',
-    'stat-grade-2': '/360 · AI Consultant',
+    'stat-grade': 'AI Analyst · AZAV · Distinction',
+    'stat-grade-1': 'AI Analyst · AZAV · Distinction',
+    'stat-grade-2': 'AI Consultant · AZAV · Distinction',
     'stat-modul3': 'n8n + AI Agents · in progress',
     'build-banner': '<strong style="color:var(--text)">This page is tracked live.</strong><br><code>POST /webhook/page-visit</code> → n8n → push notification to me. I know when you open it. At easycosmetic, the same logic would run via GDPR-compliant channels (E-Mail · Mattermost).',
     'tools-label': '— I build with —',
@@ -1687,7 +1689,7 @@ const I18N = {
     'cta-title': 'Let\'s <span class="blue">talk</span>.',
     'cta-sub': 'Book a 30-min slot directly — or just send a mail. I reply within 24 hours.',
     'cal-title': 'Book a slot',
-    'cal-sub': 'Will be embedded here — set the Cal.com URL in <code>CONFIG.CAL_LINK</code> at the top of the script.<br><a href="https://cal.com" target="_blank" rel="noopener">→ Open Cal.com manually</a>'
+    'cal-sub': 'Send me a short mail with your preferred time slots — I will get back within 24 hours with 3 available options.<br><br><a href="mailto:ninapankninberlin@gmail.com?subject=Meeting Request" class="btn-primary" style="margin-top:8px;">✉ Request meeting by mail</a>'
   }
 };
 
