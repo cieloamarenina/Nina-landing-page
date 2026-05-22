@@ -1758,14 +1758,12 @@ document.querySelectorAll('[data-set-lang]').forEach(btn => {
   const el = document.getElementById('qr-code');
   if (!el) return;
 
-  // Ziel des QR-Codes: Bewerbungs-Seite mit src=qr Parameter und #cv Anker
-  // Direkt aufs n8n-CV-Webhook zu zeigen ist Mobile-Browser-feindlich (iOS Safari
-  // ignoriert Content-Disposition: attachment, zeigt PDF inline oder gar nicht).
-  // Stattdessen: QR → Bewerbungs-Seite → User klickt Download. Mehr Engagement,
-  // funktioniert auf jedem Mobile-Browser, Page-Visit-Tracking triggert.
-  const qrTarget = CONFIG.PAGE_URL
-    ? CONFIG.PAGE_URL + (CONFIG.PAGE_URL.includes('?') ? '&' : '?') + 'src=qr#cv'
-    : CONFIG.PAGE_URL;
+  // Ziel des QR-Codes: n8n-Webhook → CV-PDF (mit src=qr für Tracking)
+  // n8n liefert das PDF mit Tracking-Logging, Mobile-Browser zeigen PDF inline
+  // oder bieten Download-Dialog an. "CV direkt aufs Phone" — wie versprochen.
+  const qrTarget = CONFIG.CV_DOWNLOAD_URL
+    ? CONFIG.CV_DOWNLOAD_URL + (CONFIG.CV_DOWNLOAD_URL.includes('?') ? '&' : '?') + 'src=qr'
+    : (CONFIG.PAGE_URL || '');
 
   // Primäre QR-Quelle
   function buildSrc(useFallback) {
