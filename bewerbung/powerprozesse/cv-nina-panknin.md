@@ -20,7 +20,7 @@ AI Automation Specialist mit 7+ Jahren Operations-Hintergrund. Ich automatisiere
 - **7+ Jahre echte Business-Prozesse** aus HR, Office, Accounting bei Remote, Redfish und CS Compliance Service GmbH
 - **EU AI Act & DSGVO als Designprinzip** — Mistral statt OpenAI, eigene Infrastruktur in Deutschland
 - **Komplette Stack-Souveränität** — Hetzner + Coolify + n8n + PostgreSQL, kein Cloud-Lock-in, kein Vendor-Risiko
-- **Belegt:** 348/360 (KI-Analyst) + 340/360 (KI-Berater) · AZAV-zertifiziert · beides mit Auszeichnung · plus Modul 3 (n8n & KI-Agenten) 88/90
+- **Belegt:** 348/360 (KI-Analyst) + 340/360 (KI-Berater) + 88/90 (n8n & KI-Agenten) · AZAV-zertifiziert · alle drei Module mit Auszeichnung
 
 ---
 
@@ -84,7 +84,7 @@ Personalisierte Bewerbungs-Seiten pro Firma, mit Page-Visit-Tracking, QR-Code, C
 
 **Modul 3 – KI-Agenten & n8n**
 AZAV-zertifizierte Weiterbildung
-88/90 Punkte
+88/90 Punkte · Auszeichnung
 04/2026 – 21.05.2026
 
 **Modul 2 – KI-Berater**
