@@ -4,7 +4,7 @@
 **CC (optional):** jobs@powerprozesse.de
 **Betreff:** Bewerbung als n8n Developer · Mit-Aufbauerin · Nina Panknin
 **Position:** n8n Developer / Automation Developer (m/w/d) · Junior · Remote
-**Bewerberin:** Nina Panknin · Berlin · 26. Mai 2026
+**Bewerberin:** Nina Panknin · Berlin · 27. Mai 2026
 
 ---
 
@@ -55,7 +55,7 @@ Das heißt: ich kann mit euren Hausverwaltungs-Kunden reden, nicht nur Workflows
 - **Gehaltsvorstellung:** 55.000 € brutto/Jahr im Idealfall — sitzt mittig in eurer veröffentlichten Range (48-66k). Bei einem starken Gesamt-Paket (Mentoring, Stack-Tiefe, klare Weiterbildungs-Pfade) bin ich auch im unteren Drittel eurer Range verhandlungsbereit. Long-Term-Match ist mir wichtiger als das letzte Tausend.
 - **Start:** ab sofort. Modul 3 ist seit 21.05.2026 abgeschlossen.
 - **Arbeitsmodell:** Remote in Deutschland · Berlin GMT+1 = perfekt in eurer GMT±2h-Range. 7+ Jahre Remote-Erfahrung, eigenes Home-Office-Setup.
-- **Hausverwaltungs-Domain:** lern ich in den ersten 4 Wochen — alles andere ist Day-1.
+- **Hausverwaltungs-Domain:** kenn ich aus eigener Erfahrung (siehe oben). Den Stack — n8n, Claude, OpenAI, REST, OAuth — habt ihr ab Tag 1.
 - **Pablo:** mein Hund. Office-Manager im Home-Office. Würde sich freuen, im Team-Slack vorgestellt zu werden 🐕.
 
 ---
@@ -72,4 +72,4 @@ Beste Grüße
 
 ---
 
-*Anlagen: Lebenslauf (PDF) · Zertifikat KI-Analystin · Zertifikat KI-Beraterin · Live-Bewerbungs-Dashboard mit INFP-A-Screenshot eingebettet*
+*Anlagen: Lebenslauf (PDF) · Zertifikat KI-Analystin · Zertifikat KI-Beraterin · Zertifikat KI-Agenten & n8n (Modul 3) · Live-Bewerbungs-Dashboard mit INFP-A-Screenshot eingebettet*
