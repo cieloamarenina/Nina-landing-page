@@ -52,7 +52,7 @@ Das heißt: ich kann mit euren Hausverwaltungs-Kunden reden, nicht nur Workflows
 
 **Rahmen**
 
-- **Gehaltsvorstellung:** 55.000 € brutto/Jahr — sitzt mittig in eurer veröffentlichten Range (48-66k), verhandelbar nach Onboarding.
+- **Gehaltsvorstellung:** 55.000 € brutto/Jahr im Idealfall — sitzt mittig in eurer veröffentlichten Range (48-66k). Bei einem starken Gesamt-Paket (Mentoring, Stack-Tiefe, klare Weiterbildungs-Pfade) bin ich auch im unteren Drittel eurer Range verhandlungsbereit. Long-Term-Match ist mir wichtiger als das letzte Tausend.
 - **Start:** ab sofort. Modul 3 ist seit 21.05.2026 abgeschlossen.
 - **Arbeitsmodell:** Remote in Deutschland · Berlin GMT+1 = perfekt in eurer GMT±2h-Range. 7+ Jahre Remote-Erfahrung, eigenes Home-Office-Setup.
 - **Hausverwaltungs-Domain:** lern ich in den ersten 4 Wochen — alles andere ist Day-1.
