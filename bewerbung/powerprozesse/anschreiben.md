@@ -34,7 +34,9 @@ Ich hab eure Anzeige zweimal gelesen — beim zweiten Mal stand „anpacken & la
 
 **Was ich an meinem Profil ungewöhnlich find**
 
-Vor dem Switch in die KI-Automation: **7+ Jahre Operations, HR & Accounting** bei Redfish, Remote (Office Managerin bis 06/2025) und CS Compliance. Ich kenn die Prozesse, die in jedem wachsenden Unternehmen rumpeln — genau die, die Hausverwaltungen automatisiert haben wollen. Plus: Beratungs-DNA aus Modul 2 (Abschlussprojekt war ein komplettes KI-Adoption-Konzept inkl. DSGVO, Shadow-IT-Mapping, Verantwortungsmatrix).
+Vor dem Switch in die KI-Automation: **7+ Jahre Operations, HR & Accounting** bei Redfish, Remote (Office Managerin bis 06/2025) und CS Compliance. Ich kenn die Prozesse, die in jedem wachsenden Unternehmen rumpeln. Plus: Beratungs-DNA aus Modul 2 (Abschlussprojekt war ein komplettes KI-Adoption-Konzept inkl. DSGVO, Shadow-IT-Mapping, Verantwortungsmatrix).
+
+Und noch ein Punkt, der hier vielleicht relevant ist: **vor meiner Operations-Zeit hab ich in der Immobilienbranche selbst Häuser verwaltet** — Mietverwaltung, Eigentümer-Kommunikation, Rechnungsfreigaben. Ist eine Weile her, aber ich kenn den Workflow und die typischen Pain-Points eurer Ziel-Branche nicht nur aus dem Lehrbuch.
 
 Das heißt: ich kann mit euren Hausverwaltungs-Kunden reden, nicht nur Workflows bauen.
 
