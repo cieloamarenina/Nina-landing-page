@@ -1635,9 +1635,10 @@ body {
 // KONFIG — hier deine URLs eintragen
 // ============================================
 const CONFIG = {
-  // n8n Webhook für Page-Visit-Tracking — TODO: Powerprozesse-Endpoint in n8n anlegen,
-  // dann hier eintragen. Solange leer: kein Tracking, dafür keine falsche „easycosmetic"-Attribution.
-  TRACKING_WEBHOOK: '',
+  // n8n Webhook für Page-Visit-Tracking — nutzt den existierenden easycosmetic-Endpoint.
+  // Payload sendet 'page: powerprozesse' — n8n-Workflow muss das JSON-Feld auslesen
+  // um in Telegram korrekt "powerprozesse" statt "easycosmetic" anzuzeigen.
+  TRACKING_WEBHOOK: 'https://n8n.ninalearnsvibecoding.com/webhook/page-visit-easycosmetic',
 
   // Cal.com Buchungs-URL (deine self-hosted Instanz)
   CAL_LINK: 'https://calcom.ninalearnsvibecoding.com/nina/30min?embed=true&theme=dark',
