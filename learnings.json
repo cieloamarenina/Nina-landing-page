@@ -1,0 +1,672 @@
+{
+  "version": 1,
+  "ui": {
+    "en": { "title": "Learning", "sub": "What I learn while vibe coding — sorted by topic. Tap an entry and the text unfolds.", "entries": "entries", "takeaway": "Key Takeaway", "source": "Source", "back": "← back to nlc", "footer": "Built with Claude as co-pilot · part of my public learning journey." },
+    "de": { "title": "Lernen", "sub": "Was ich beim Vibe Coding lerne — nach Themen sortiert. Tippe auf einen Eintrag, der Text klappt auf.", "entries": "Einträge", "takeaway": "Key Takeaway", "source": "Quelle", "back": "← zurück zu nlc", "footer": "Gebaut mit Claude als Co-Pilot · Teil meiner öffentlichen Lernreise." },
+    "fr": { "title": "Apprentissage", "sub": "Ce que j'apprends en codant avec l'IA — trié par thème. Touchez une entrée, le texte se déplie.", "entries": "entrées", "takeaway": "À retenir", "source": "Source", "back": "← retour à nlc", "footer": "Conçu avec Claude comme copilote · partie de mon apprentissage public." },
+    "it": { "title": "Apprendimento", "sub": "Cosa imparo facendo vibe coding — ordinato per tema. Tocca una voce e il testo si apre.", "entries": "voci", "takeaway": "Da ricordare", "source": "Fonte", "back": "← torna a nlc", "footer": "Realizzato con Claude come copilota · parte del mio percorso di apprendimento pubblico." },
+    "es": { "title": "Aprendizaje", "sub": "Lo que aprendo mientras programo con IA — ordenado por tema. Toca una entrada y el texto se despliega.", "entries": "entradas", "takeaway": "Para recordar", "source": "Fuente", "back": "← volver a nlc", "footer": "Creado con Claude como copiloto · parte de mi aprendizaje público." }
+  },
+  "categories": [
+    { "key": "ai-news", "label": { "en": "AI News & Automation", "de": "KI-News & Automatisierung", "fr": "Actu IA & Automatisation", "it": "News IA & Automazione", "es": "Noticias IA & Automatización" } },
+    { "key": "claude-code", "label": { "en": "Claude Code", "de": "Claude Code", "fr": "Claude Code", "it": "Claude Code", "es": "Claude Code" } },
+    { "key": "n8n", "label": { "en": "n8n", "de": "n8n", "fr": "n8n", "it": "n8n", "es": "n8n" } },
+    { "key": "ai-skills", "label": { "en": "AI Skills & Frameworks", "de": "AI-Skills & Frameworks", "fr": "Compétences & Frameworks IA", "it": "Competenze & Framework IA", "es": "Habilidades & Frameworks IA" } }
+  ],
+  "learnings": [
+    {
+      "id": "ai-news-rss-system",
+      "category": "ai-news",
+      "tags": ["RSS", "Claude", "n8n"],
+      "date": "2026-05-27",
+      "translations": {
+        "en": {
+          "title": "Global AI News RSS System", "meta": "Free · Daily",
+          "lead": "300 curated RSS feeds plus a master prompt for daily, global AI intelligence — no manual reading.",
+          "steps": [
+            { "t": "Paste", "d": "Master prompt first, then the curated RSS list below it — into Claude, n8n or any other AI tool." },
+            { "t": "Fetch", "d": "The AI pulls every RSS feed and gathers the day's news." },
+            { "t": "Dedupe", "d": "Duplicate and similar stories are clustered, overlapping coverage merged." },
+            { "t": "Rank", "d": "The most important stories first — sorted by strategic relevance (Top N)." }
+          ],
+          "takeaway": "300 feeds become one curated top list every day — fully automated."
+        },
+        "de": {
+          "title": "Global AI News RSS System", "meta": "Gratis · Täglich",
+          "lead": "300 kuratierte RSS-Feeds plus ein Master-Prompt für tägliche, globale KI-Nachrichten — ohne manuelles Lesen.",
+          "steps": [
+            { "t": "Einfügen", "d": "Master-Prompt zuerst, darunter die kuratierte RSS-Liste — in Claude, n8n oder ein anderes KI-Tool." },
+            { "t": "Abrufen", "d": "Die KI zieht jeden RSS-Feed und sammelt die News des Tages." },
+            { "t": "Entdoppeln", "d": "Doppelte und ähnliche Stories werden geclustert, Mehrfach-Coverage zusammengefasst." },
+            { "t": "Ranken", "d": "Die wichtigsten Stories zuerst — sortiert nach strategischer Relevanz (Top N)." }
+          ],
+          "takeaway": "Aus 300 Feeds wird täglich eine kuratierte Top-Liste — voll automatisch."
+        },
+        "fr": {
+          "title": "Global AI News RSS System", "meta": "Gratuit · Quotidien",
+          "lead": "300 flux RSS sélectionnés et un prompt maître pour une veille IA mondiale quotidienne — sans lecture manuelle.",
+          "steps": [
+            { "t": "Coller", "d": "Le prompt maître d'abord, puis la liste RSS en dessous — dans Claude, n8n ou un autre outil IA." },
+            { "t": "Récupérer", "d": "L'IA interroge chaque flux RSS et rassemble l'actu du jour." },
+            { "t": "Dédupliquer", "d": "Les articles en double ou similaires sont regroupés, les couvertures redondantes fusionnées." },
+            { "t": "Classer", "d": "Les articles les plus importants en premier — triés par pertinence stratégique (Top N)." }
+          ],
+          "takeaway": "300 flux deviennent une liste top sélectionnée chaque jour — entièrement automatisé."
+        },
+        "it": {
+          "title": "Global AI News RSS System", "meta": "Gratis · Quotidiano",
+          "lead": "300 feed RSS selezionati più un master prompt per un'intelligence IA globale quotidiana — senza lettura manuale.",
+          "steps": [
+            { "t": "Incolla", "d": "Prima il master prompt, sotto la lista RSS selezionata — in Claude, n8n o un altro strumento IA." },
+            { "t": "Recupera", "d": "L'IA interroga ogni feed RSS e raccoglie le notizie del giorno." },
+            { "t": "Deduplica", "d": "Le notizie doppie o simili vengono raggruppate, le coperture sovrapposte unite." },
+            { "t": "Classifica", "d": "Le notizie più importanti per prime — ordinate per rilevanza strategica (Top N)." }
+          ],
+          "takeaway": "300 feed diventano ogni giorno una lista top selezionata — completamente automatico."
+        },
+        "es": {
+          "title": "Global AI News RSS System", "meta": "Gratis · Diario",
+          "lead": "300 feeds RSS seleccionados más un master prompt para inteligencia de IA global diaria — sin lectura manual.",
+          "steps": [
+            { "t": "Pegar", "d": "Primero el master prompt, debajo la lista RSS seleccionada — en Claude, n8n o cualquier otra herramienta de IA." },
+            { "t": "Recuperar", "d": "La IA consulta cada feed RSS y reúne las noticias del día." },
+            { "t": "Deduplicar", "d": "Las noticias duplicadas o similares se agrupan, las coberturas solapadas se fusionan." },
+            { "t": "Clasificar", "d": "Las noticias más importantes primero — ordenadas por relevancia estratégica (Top N)." }
+          ],
+          "takeaway": "300 feeds se convierten cada día en una lista top seleccionada — totalmente automático."
+        }
+      }
+    },
+    {
+      "id": "claude-code-tools",
+      "category": "claude-code",
+      "tags": ["Claude Code", "Tools"],
+      "source": { "name": "Anthropic — Claude Code in Action" },
+      "translations": {
+        "en": {
+          "title": "Tools with Claude Code", "meta": "Reference",
+          "lead": "The core built-in tools Claude Code uses to get work done — knowing them means steering it better.",
+          "table": [
+            ["Agent", "Launch a subagent to handle a task"],
+            ["Bash", "Run a shell command"],
+            ["Edit / MultiEdit", "Edit a file (or make several edits at once)"],
+            ["Glob", "Find files based on a pattern"],
+            ["Grep", "Search the contents of a file"],
+            ["LS", "List files and directories"],
+            ["Read / Write", "Read a file or write to a file"],
+            ["NotebookEdit / NotebookRead", "Write to or read a Jupyter notebook cell"],
+            ["TodoWrite", "Update the list of to-dos"],
+            ["WebFetch / WebSearch", "Fetch from a URL or search the web"]
+          ],
+          "takeaway": "Claude Code acts through well-defined tools — these are the verbs behind every action."
+        },
+        "de": {
+          "title": "Tools mit Claude Code", "meta": "Referenz",
+          "lead": "Die wichtigsten eingebauten Werkzeuge, mit denen Claude Code arbeitet — wer sie kennt, steuert gezielter.",
+          "table": [
+            ["Agent", "Startet einen Subagenten für eine Aufgabe"],
+            ["Bash", "Führt einen Shell-Befehl aus"],
+            ["Edit / MultiEdit", "Bearbeitet eine Datei (oder mehrere Stellen auf einmal)"],
+            ["Glob", "Findet Dateien anhand eines Musters"],
+            ["Grep", "Durchsucht den Inhalt einer Datei"],
+            ["LS", "Listet Dateien und Ordner auf"],
+            ["Read / Write", "Liest eine Datei bzw. schreibt in eine Datei"],
+            ["NotebookEdit / NotebookRead", "Schreibt in eine bzw. liest eine Jupyter-Notebook-Zelle"],
+            ["TodoWrite", "Aktualisiert die To-do-Liste"],
+            ["WebFetch / WebSearch", "Holt eine URL bzw. durchsucht das Web"]
+          ],
+          "takeaway": "Claude Code handelt über klar definierte Tools — das sind die Verben hinter jeder Aktion."
+        },
+        "fr": {
+          "title": "Outils de Claude Code", "meta": "Référence",
+          "lead": "Les outils intégrés que Claude Code utilise pour travailler — les connaître, c'est mieux le piloter.",
+          "table": [
+            ["Agent", "Lance un sous-agent pour une tâche"],
+            ["Bash", "Exécute une commande shell"],
+            ["Edit / MultiEdit", "Modifie un fichier (ou plusieurs endroits à la fois)"],
+            ["Glob", "Trouve des fichiers selon un motif"],
+            ["Grep", "Recherche dans le contenu d'un fichier"],
+            ["LS", "Liste fichiers et dossiers"],
+            ["Read / Write", "Lit un fichier ou écrit dans un fichier"],
+            ["NotebookEdit / NotebookRead", "Écrit ou lit une cellule de notebook Jupyter"],
+            ["TodoWrite", "Met à jour la liste des tâches"],
+            ["WebFetch / WebSearch", "Récupère une URL ou recherche sur le web"]
+          ],
+          "takeaway": "Claude Code agit via des outils bien définis — ce sont les verbes de chaque action."
+        },
+        "it": {
+          "title": "Strumenti di Claude Code", "meta": "Riferimento",
+          "lead": "Gli strumenti integrati che Claude Code usa per lavorare — conoscerli significa guidarlo meglio.",
+          "table": [
+            ["Agent", "Avvia un subagente per un compito"],
+            ["Bash", "Esegue un comando shell"],
+            ["Edit / MultiEdit", "Modifica un file (o più punti insieme)"],
+            ["Glob", "Trova file in base a un pattern"],
+            ["Grep", "Cerca nel contenuto di un file"],
+            ["LS", "Elenca file e cartelle"],
+            ["Read / Write", "Legge un file o scrive su un file"],
+            ["NotebookEdit / NotebookRead", "Scrive o legge una cella di notebook Jupyter"],
+            ["TodoWrite", "Aggiorna la lista delle attività"],
+            ["WebFetch / WebSearch", "Recupera un URL o cerca sul web"]
+          ],
+          "takeaway": "Claude Code agisce tramite strumenti ben definiti — sono i verbi dietro ogni azione."
+        },
+        "es": {
+          "title": "Herramientas de Claude Code", "meta": "Referencia",
+          "lead": "Las herramientas integradas que Claude Code usa para trabajar — conocerlas es dirigirlo mejor.",
+          "table": [
+            ["Agent", "Lanza un subagente para una tarea"],
+            ["Bash", "Ejecuta un comando de shell"],
+            ["Edit / MultiEdit", "Edita un archivo (o varios puntos a la vez)"],
+            ["Glob", "Encuentra archivos según un patrón"],
+            ["Grep", "Busca en el contenido de un archivo"],
+            ["LS", "Lista archivos y carpetas"],
+            ["Read / Write", "Lee un archivo o escribe en un archivo"],
+            ["NotebookEdit / NotebookRead", "Escribe o lee una celda de notebook Jupyter"],
+            ["TodoWrite", "Actualiza la lista de tareas"],
+            ["WebFetch / WebSearch", "Obtiene una URL o busca en la web"]
+          ],
+          "takeaway": "Claude Code actúa mediante herramientas bien definidas — son los verbos tras cada acción."
+        }
+      }
+    },
+    {
+      "id": "claude-code-setup-hooks-mcp",
+      "category": "claude-code",
+      "tags": ["Claude Code", "Hooks", "MCP", "SDK"],
+      "source": { "name": "Anthropic — Claude Code in Action" },
+      "translations": {
+        "en": {
+          "title": "Claude Code — Setup, Hooks & MCP", "meta": "Course overview",
+          "lead": "The thread of Anthropic's course \"Claude Code in Action\", from first install to custom automation.",
+          "steps": [
+            { "t": "Setup", "d": "Install Claude Code, set up the project, add context." },
+            { "t": "Working", "d": "Make changes, control context, create custom commands." },
+            { "t": "Hooks", "d": "Define and implement hooks — automation at the right spots, plus the gotchas." },
+            { "t": "MCP & SDK", "d": "Connect MCP servers, GitHub integration, and the Claude Code SDK." }
+          ],
+          "takeaway": "From first setup to custom hooks and MCP servers — Claude Code grows with you."
+        },
+        "de": {
+          "title": "Claude Code — Setup, Hooks & MCP", "meta": "Kurs-Überblick",
+          "lead": "Roter Faden des Anthropic-Kurses „Claude Code in Action“, vom ersten Install bis zur eigenen Automatik.",
+          "steps": [
+            { "t": "Setup", "d": "Claude Code installieren, Projekt einrichten, Kontext hinzufügen." },
+            { "t": "Arbeiten", "d": "Änderungen machen, Kontext steuern, eigene Commands anlegen." },
+            { "t": "Hooks", "d": "Hooks definieren und implementieren — Automatik an den richtigen Stellen, samt Stolperfallen." },
+            { "t": "MCP & SDK", "d": "MCP-Server anbinden, GitHub-Integration und das Claude Code SDK." }
+          ],
+          "takeaway": "Vom ersten Setup bis zu eigenen Hooks und MCP-Servern — Claude Code wächst mit."
+        },
+        "fr": {
+          "title": "Claude Code — Setup, Hooks & MCP", "meta": "Aperçu du cours",
+          "lead": "Le fil du cours Anthropic « Claude Code in Action », de l'installation à l'automatisation sur mesure.",
+          "steps": [
+            { "t": "Installation", "d": "Installer Claude Code, configurer le projet, ajouter du contexte." },
+            { "t": "Travailler", "d": "Faire des changements, gérer le contexte, créer des commandes personnalisées." },
+            { "t": "Hooks", "d": "Définir et implémenter des hooks — l'automatisation au bon endroit, et les pièges." },
+            { "t": "MCP & SDK", "d": "Connecter des serveurs MCP, l'intégration GitHub et le SDK Claude Code." }
+          ],
+          "takeaway": "De la première install aux hooks et serveurs MCP — Claude Code évolue avec vous."
+        },
+        "it": {
+          "title": "Claude Code — Setup, Hook & MCP", "meta": "Panoramica del corso",
+          "lead": "Il filo del corso Anthropic \"Claude Code in Action\", dall'installazione all'automazione su misura.",
+          "steps": [
+            { "t": "Setup", "d": "Installare Claude Code, configurare il progetto, aggiungere contesto." },
+            { "t": "Lavorare", "d": "Fare modifiche, gestire il contesto, creare comandi personalizzati." },
+            { "t": "Hook", "d": "Definire e implementare gli hook — automazione nei punti giusti, con le insidie." },
+            { "t": "MCP & SDK", "d": "Collegare server MCP, integrazione GitHub e l'SDK di Claude Code." }
+          ],
+          "takeaway": "Dal primo setup agli hook e ai server MCP — Claude Code cresce con te."
+        },
+        "es": {
+          "title": "Claude Code — Setup, Hooks & MCP", "meta": "Resumen del curso",
+          "lead": "El hilo del curso de Anthropic \"Claude Code in Action\", desde la instalación hasta la automatización a medida.",
+          "steps": [
+            { "t": "Setup", "d": "Instalar Claude Code, configurar el proyecto, añadir contexto." },
+            { "t": "Trabajar", "d": "Hacer cambios, controlar el contexto, crear comandos personalizados." },
+            { "t": "Hooks", "d": "Definir e implementar hooks — automatización en los puntos correctos, con sus trampas." },
+            { "t": "MCP & SDK", "d": "Conectar servidores MCP, integración con GitHub y el SDK de Claude Code." }
+          ],
+          "takeaway": "Del primer setup a hooks y servidores MCP propios — Claude Code crece contigo."
+        }
+      }
+    },
+    {
+      "id": "three-ways-run-agents",
+      "category": "claude-code",
+      "tags": ["Claude Code", "Agents", "Workflow"],
+      "source": { "name": "Charlie Hills", "url": "https://charliehills.substack.com" },
+      "translations": {
+        "en": {
+          "title": "Three Ways to Run Agents in Claude Code", "meta": "Concept",
+          "lead": "Same workers, different boss. Who controls the flow is the whole story.",
+          "steps": [
+            { "t": "Sub-Agent", "d": "Claude spins up a quick worker, hands it one job, gets the answer back. Type \"use subagents\". Claude decides on the fly — best for quick parallel delegation that keeps the main chat clean." },
+            { "t": "Agent Team", "d": "A fixed line-up of named specialists, run in the order you set (one .md file per role). You set the roster — best for repeatable pipelines that run the same roles every time." },
+            { "t": "Dynamic Workflow", "d": "A script runs the machine in the background, fanning work out and looping until done (up to ~100 agents). Your code holds the loops and conditionals — best for scale plus independent checks you can trust." }
+          ],
+          "takeaway": "Pick by control: Claude decides (sub-agent), you decide the order (team), or a script decides at scale (workflow)."
+        },
+        "de": {
+          "title": "Drei Wege, Agenten in Claude Code zu starten", "meta": "Konzept",
+          "lead": "Gleiche Arbeiter, anderer Chef. Wer den Ablauf steuert, ist der ganze Unterschied.",
+          "steps": [
+            { "t": "Sub-Agent", "d": "Claude startet schnell einen Helfer, gibt ihm eine Aufgabe, bekommt die Antwort zurück. „use subagents“ tippen. Claude entscheidet spontan — ideal für schnelle, parallele Delegation, die den Hauptchat sauber hält." },
+            { "t": "Agent Team", "d": "Eine feste Aufstellung benannter Spezialisten, in deiner Reihenfolge (eine .md-Datei pro Rolle). Du legst das Team fest — ideal für wiederholbare Pipelines mit immer gleichen Rollen." },
+            { "t": "Dynamic Workflow", "d": "Ein Skript steuert die Maschine im Hintergrund, verteilt Arbeit und loopt bis fertig (bis ~100 Agenten). Dein Code hält Schleifen und Bedingungen — ideal für Skalierung plus unabhängige, verlässliche Checks." }
+          ],
+          "takeaway": "Wähle nach Steuerung: Claude entscheidet (Sub-Agent), du bestimmst die Reihenfolge (Team) oder ein Skript steuert im großen Maßstab (Workflow)."
+        },
+        "fr": {
+          "title": "Trois façons de lancer des agents dans Claude Code", "meta": "Concept",
+          "lead": "Mêmes ouvriers, patron différent. Qui contrôle le flux, c'est toute l'histoire.",
+          "steps": [
+            { "t": "Sous-agent", "d": "Claude crée un assistant rapide, lui confie une tâche et récupère la réponse. Tapez « use subagents ». Claude décide à la volée — idéal pour une délégation parallèle rapide qui garde le chat principal propre." },
+            { "t": "Équipe d'agents", "d": "Une équipe fixe de spécialistes nommés, exécutés dans l'ordre choisi (un fichier .md par rôle). Vous fixez l'équipe — idéal pour des pipelines répétables aux mêmes rôles." },
+            { "t": "Workflow dynamique", "d": "Un script pilote la machine en arrière-plan, répartit le travail et boucle jusqu'à la fin (jusqu'à ~100 agents). Votre code gère les boucles et conditions — idéal pour l'échelle et des vérifications indépendantes fiables." }
+          ],
+          "takeaway": "Choisissez selon le contrôle : Claude décide (sous-agent), vous décidez l'ordre (équipe), ou un script décide à l'échelle (workflow)."
+        },
+        "it": {
+          "title": "Tre modi per eseguire agenti in Claude Code", "meta": "Concetto",
+          "lead": "Stessi lavoratori, capo diverso. Chi controlla il flusso è tutta la storia.",
+          "steps": [
+            { "t": "Sub-agente", "d": "Claude avvia un aiutante veloce, gli affida un compito e riceve la risposta. Scrivi \"use subagents\". Claude decide al volo — ideale per delega parallela rapida che mantiene pulita la chat principale." },
+            { "t": "Team di agenti", "d": "Una formazione fissa di specialisti, eseguiti nell'ordine che imposti (un file .md per ruolo). Decidi tu la squadra — ideale per pipeline ripetibili con gli stessi ruoli." },
+            { "t": "Workflow dinamico", "d": "Uno script guida la macchina in background, distribuisce il lavoro e cicla fino al termine (fino a ~100 agenti). Il tuo codice gestisce cicli e condizioni — ideale per la scala più controlli indipendenti affidabili." }
+          ],
+          "takeaway": "Scegli in base al controllo: decide Claude (sub-agente), decidi tu l'ordine (team) o decide uno script su larga scala (workflow)."
+        },
+        "es": {
+          "title": "Tres formas de ejecutar agentes en Claude Code", "meta": "Concepto",
+          "lead": "Mismos trabajadores, distinto jefe. Quién controla el flujo lo es todo.",
+          "steps": [
+            { "t": "Subagente", "d": "Claude crea un ayudante rápido, le da una tarea y recibe la respuesta. Escribe \"use subagents\". Claude decide sobre la marcha — ideal para delegación paralela rápida que mantiene limpio el chat principal." },
+            { "t": "Equipo de agentes", "d": "Un elenco fijo de especialistas, ejecutados en el orden que fijes (un archivo .md por rol). Tú fijas el equipo — ideal para pipelines repetibles con los mismos roles." },
+            { "t": "Workflow dinámico", "d": "Un script maneja la máquina en segundo plano, reparte el trabajo y repite hasta terminar (hasta ~100 agentes). Tu código tiene los bucles y condiciones — ideal para escalar con verificaciones independientes fiables." }
+          ],
+          "takeaway": "Elige según el control: decide Claude (subagente), decides el orden (equipo) o decide un script a escala (workflow)."
+        }
+      }
+    },
+    {
+      "id": "n8n-ai-chatbot-zero-code",
+      "category": "n8n",
+      "tags": ["n8n", "Claude", "RAG"],
+      "translations": {
+        "en": {
+          "title": "AI Chatbot — Zero Code with n8n", "meta": "Free · 30 min",
+          "lead": "Build your own RAG chatbot in 7 steps, with zero code.",
+          "steps": [
+            { "t": "Install n8n", "d": "Docker or cloud — ready in 5 minutes." },
+            { "t": "Add Chat Trigger", "d": "The entry point for all messages." },
+            { "t": "Connect your LLM", "d": "OpenAI, Claude or Gemini." },
+            { "t": "Add a Knowledge Base", "d": "Connect your docs via RAG." },
+            { "t": "Add Memory", "d": "So it remembers the conversation." },
+            { "t": "Add Tools", "d": "Web search, email, calendar." },
+            { "t": "Go Live", "d": "Embed on your website or connect to WhatsApp." }
+          ],
+          "takeaway": "A working RAG chatbot in ~30 minutes — fully no-code."
+        },
+        "de": {
+          "title": "AI Chatbot — Zero Code mit n8n", "meta": "Gratis · 30 Min",
+          "lead": "Bau deinen eigenen RAG-Chatbot in 7 Schritten, komplett ohne Code.",
+          "steps": [
+            { "t": "n8n installieren", "d": "Docker oder Cloud — in 5 Minuten startklar." },
+            { "t": "Chat-Trigger hinzufügen", "d": "Der Einstiegspunkt für alle Nachrichten." },
+            { "t": "LLM verbinden", "d": "OpenAI, Claude oder Gemini." },
+            { "t": "Knowledge Base anbinden", "d": "Eigene Docs per RAG einbinden." },
+            { "t": "Memory ergänzen", "d": "Damit der Bot sich ans Gespräch erinnert." },
+            { "t": "Tools ergänzen", "d": "Websuche, E-Mail, Kalender." },
+            { "t": "Go Live", "d": "Auf der Website einbetten oder mit WhatsApp verbinden." }
+          ],
+          "takeaway": "Ein funktionierender RAG-Chatbot in ~30 Minuten — komplett No-Code."
+        },
+        "fr": {
+          "title": "Chatbot IA — Zéro code avec n8n", "meta": "Gratuit · 30 min",
+          "lead": "Construisez votre propre chatbot RAG en 7 étapes, sans aucun code.",
+          "steps": [
+            { "t": "Installer n8n", "d": "Docker ou cloud — prêt en 5 minutes." },
+            { "t": "Ajouter un Chat Trigger", "d": "Le point d'entrée de tous les messages." },
+            { "t": "Connecter votre LLM", "d": "OpenAI, Claude ou Gemini." },
+            { "t": "Ajouter une base de connaissances", "d": "Connectez vos docs via RAG." },
+            { "t": "Ajouter la mémoire", "d": "Pour qu'il se souvienne de la conversation." },
+            { "t": "Ajouter des outils", "d": "Recherche web, e-mail, agenda." },
+            { "t": "Mise en ligne", "d": "Intégrez-le sur votre site ou connectez WhatsApp." }
+          ],
+          "takeaway": "Un chatbot RAG fonctionnel en ~30 minutes — entièrement sans code."
+        },
+        "it": {
+          "title": "Chatbot IA — Zero Code con n8n", "meta": "Gratis · 30 min",
+          "lead": "Costruisci il tuo chatbot RAG in 7 passi, senza scrivere codice.",
+          "steps": [
+            { "t": "Installa n8n", "d": "Docker o cloud — pronto in 5 minuti." },
+            { "t": "Aggiungi Chat Trigger", "d": "Il punto d'ingresso per tutti i messaggi." },
+            { "t": "Collega il tuo LLM", "d": "OpenAI, Claude o Gemini." },
+            { "t": "Aggiungi una Knowledge Base", "d": "Collega i tuoi documenti via RAG." },
+            { "t": "Aggiungi la memoria", "d": "Così ricorda la conversazione." },
+            { "t": "Aggiungi strumenti", "d": "Ricerca web, email, calendario." },
+            { "t": "Vai online", "d": "Incorpora sul sito o collega WhatsApp." }
+          ],
+          "takeaway": "Un chatbot RAG funzionante in ~30 minuti — completamente no-code."
+        },
+        "es": {
+          "title": "Chatbot IA — Cero código con n8n", "meta": "Gratis · 30 min",
+          "lead": "Crea tu propio chatbot RAG en 7 pasos, sin escribir código.",
+          "steps": [
+            { "t": "Instalar n8n", "d": "Docker o nube — listo en 5 minutos." },
+            { "t": "Añadir Chat Trigger", "d": "El punto de entrada de todos los mensajes." },
+            { "t": "Conectar tu LLM", "d": "OpenAI, Claude o Gemini." },
+            { "t": "Añadir una base de conocimiento", "d": "Conecta tus documentos vía RAG." },
+            { "t": "Añadir memoria", "d": "Para que recuerde la conversación." },
+            { "t": "Añadir herramientas", "d": "Búsqueda web, correo, calendario." },
+            { "t": "Publicar", "d": "Insértalo en tu web o conéctalo a WhatsApp." }
+          ],
+          "takeaway": "Un chatbot RAG funcional en ~30 minutos — totalmente sin código."
+        }
+      }
+    },
+    {
+      "id": "skill-scqa", "category": "ai-skills", "tags": ["Writing", "Framework"],
+      "translations": {
+        "en": { "title": "SCQA Writing Framework", "meta": "Writing & Content", "lead": "Structure any message as Situation → Complication → Question → Answer for a clear, logical narrative.", "bullets": ["Use for: threads, articles, reports, pitches", "Turns messy ideas into a story with built-in logic"] },
+        "de": { "title": "SCQA Writing Framework", "meta": "Writing & Content", "lead": "Strukturiere jede Botschaft als Situation → Komplikation → Frage → Antwort für eine klare, logische Erzählung.", "bullets": ["Einsatz: Threads, Artikel, Reports, Pitches", "Macht aus wirren Ideen eine Story mit eingebauter Logik"] },
+        "fr": { "title": "SCQA Writing Framework", "meta": "Écriture & Contenu", "lead": "Structurez tout message en Situation → Complication → Question → Réponse pour un récit clair et logique.", "bullets": ["Idéal pour : threads, articles, rapports, pitchs", "Transforme des idées en vrac en une histoire logique"] },
+        "it": { "title": "SCQA Writing Framework", "meta": "Scrittura & Contenuti", "lead": "Struttura ogni messaggio come Situazione → Complicazione → Domanda → Risposta per una narrazione chiara e logica.", "bullets": ["Ideale per: thread, articoli, report, pitch", "Trasforma idee confuse in una storia con logica integrata"] },
+        "es": { "title": "SCQA Writing Framework", "meta": "Escritura & Contenido", "lead": "Estructura cualquier mensaje como Situación → Complicación → Pregunta → Respuesta para una narrativa clara y lógica.", "bullets": ["Ideal para: hilos, artículos, informes, pitches", "Convierte ideas dispersas en una historia con lógica"] }
+      }
+    },
+    {
+      "id": "skill-repurposing", "category": "ai-skills", "tags": ["Writing", "Content"],
+      "translations": {
+        "en": { "title": "Content Repurposing Engine", "meta": "Writing & Content", "lead": "Turn one long-form piece into many formats — threads, scripts, summaries — without losing the core message.", "bullets": ["Use for: blog → social, video script, newsletter", "Keeps tone and key points consistent across channels"] },
+        "de": { "title": "Content Repurposing Engine", "meta": "Writing & Content", "lead": "Mach aus einem Long-Form-Stück viele Formate — Threads, Skripte, Summaries — ohne die Kernbotschaft zu verlieren.", "bullets": ["Einsatz: Blog → Social, Video-Skript, Newsletter", "Hält Ton und Kernpunkte über alle Kanäle konsistent"] },
+        "fr": { "title": "Content Repurposing Engine", "meta": "Écriture & Contenu", "lead": "Transformez un contenu long en plusieurs formats — threads, scripts, résumés — sans perdre le message clé.", "bullets": ["Idéal pour : blog → social, script vidéo, newsletter", "Garde le ton et les points clés cohérents partout"] },
+        "it": { "title": "Content Repurposing Engine", "meta": "Scrittura & Contenuti", "lead": "Trasforma un contenuto lungo in tanti formati — thread, script, riassunti — senza perdere il messaggio chiave.", "bullets": ["Ideale per: blog → social, script video, newsletter", "Mantiene tono e punti chiave coerenti su ogni canale"] },
+        "es": { "title": "Content Repurposing Engine", "meta": "Escritura & Contenido", "lead": "Convierte un contenido largo en muchos formatos — hilos, guiones, resúmenes — sin perder el mensaje clave.", "bullets": ["Ideal para: blog → social, guion de vídeo, newsletter", "Mantiene el tono y los puntos clave coherentes en cada canal"] }
+      }
+    },
+    {
+      "id": "skill-tone-style", "category": "ai-skills", "tags": ["Writing", "Brand"],
+      "translations": {
+        "en": { "title": "Tone & Style Enforcer", "meta": "Writing & Content", "lead": "Keep every output in one consistent brand or personal voice.", "bullets": ["Use for: multi-output campaigns, team writing", "Checks and fixes style drift automatically"] },
+        "de": { "title": "Tone & Style Enforcer", "meta": "Writing & Content", "lead": "Halte jeden Output in einer konsistenten Marken- oder persönlichen Stimme.", "bullets": ["Einsatz: Kampagnen mit vielen Outputs, Team-Texte", "Erkennt und korrigiert Stil-Abweichungen automatisch"] },
+        "fr": { "title": "Tone & Style Enforcer", "meta": "Écriture & Contenu", "lead": "Gardez chaque sortie dans une voix de marque ou personnelle cohérente.", "bullets": ["Idéal pour : campagnes multi-sorties, écriture d'équipe", "Détecte et corrige les écarts de style automatiquement"] },
+        "it": { "title": "Tone & Style Enforcer", "meta": "Scrittura & Contenuti", "lead": "Mantieni ogni output in una voce di marca o personale coerente.", "bullets": ["Ideale per: campagne multi-output, scrittura di team", "Rileva e corregge le derive di stile automaticamente"] },
+        "es": { "title": "Tone & Style Enforcer", "meta": "Escritura & Contenido", "lead": "Mantén cada salida en una voz de marca o personal coherente.", "bullets": ["Ideal para: campañas con muchas salidas, escritura en equipo", "Detecta y corrige las desviaciones de estilo automáticamente"] }
+      }
+    },
+    {
+      "id": "skill-summary-compressor", "category": "ai-skills", "tags": ["Writing", "Summary"],
+      "translations": {
+        "en": { "title": "Long-Form to Summary Compressor", "meta": "Writing & Content", "lead": "Condense long text into a tight summary that keeps the essential ideas.", "bullets": ["Use for: reports, research, meeting notes", "Bullet or paragraph output, no filler"] },
+        "de": { "title": "Long-Form to Summary Compressor", "meta": "Writing & Content", "lead": "Verdichte lange Texte zu einer knappen Zusammenfassung, die das Wesentliche behält.", "bullets": ["Einsatz: Reports, Recherche, Meeting-Notizen", "Stichpunkte oder Absatz, ohne Füllwörter"] },
+        "fr": { "title": "Long-Form to Summary Compressor", "meta": "Écriture & Contenu", "lead": "Condensez un texte long en un résumé serré qui garde l'essentiel.", "bullets": ["Idéal pour : rapports, recherche, notes de réunion", "Puces ou paragraphe, sans remplissage"] },
+        "it": { "title": "Long-Form to Summary Compressor", "meta": "Scrittura & Contenuti", "lead": "Condensa testi lunghi in un riassunto essenziale che conserva le idee chiave.", "bullets": ["Ideale per: report, ricerca, note di riunione", "Output a punti o paragrafo, senza riempitivi"] },
+        "es": { "title": "Long-Form to Summary Compressor", "meta": "Escritura & Contenido", "lead": "Condensa textos largos en un resumen ajustado que conserva las ideas esenciales.", "bullets": ["Ideal para: informes, investigación, notas de reunión", "Salida en viñetas o párrafo, sin relleno"] }
+      }
+    },
+    {
+      "id": "skill-structured-copywriting", "category": "ai-skills", "tags": ["Writing", "Copywriting"],
+      "translations": {
+        "en": { "title": "Structured Copywriting", "meta": "Writing & Content", "lead": "Write persuasive copy with a strong hook, clear flow and a call to action.", "bullets": ["Use for: landing pages, ads, social posts", "Hook → value → CTA, no fluff"] },
+        "de": { "title": "Structured Copywriting", "meta": "Writing & Content", "lead": "Schreibe überzeugende Texte mit starkem Hook, klarem Aufbau und Call-to-Action.", "bullets": ["Einsatz: Landingpages, Ads, Social Posts", "Hook → Nutzen → CTA, ohne Geschwafel"] },
+        "fr": { "title": "Structured Copywriting", "meta": "Écriture & Contenu", "lead": "Rédigez un texte persuasif avec un hook fort, un déroulé clair et un appel à l'action.", "bullets": ["Idéal pour : landing pages, pubs, posts sociaux", "Hook → valeur → CTA, sans blabla"] },
+        "it": { "title": "Structured Copywriting", "meta": "Scrittura & Contenuti", "lead": "Scrivi testi persuasivi con un hook forte, un flusso chiaro e una call to action.", "bullets": ["Ideale per: landing page, annunci, post social", "Hook → valore → CTA, senza fronzoli"] },
+        "es": { "title": "Structured Copywriting", "meta": "Escritura & Contenido", "lead": "Escribe textos persuasivos con un buen gancho, flujo claro y llamada a la acción.", "bullets": ["Ideal para: landing pages, anuncios, posts sociales", "Gancho → valor → CTA, sin paja"] }
+      }
+    },
+    {
+      "id": "skill-excalidraw", "category": "ai-skills", "tags": ["Visual", "Diagram"],
+      "translations": {
+        "en": { "title": "Excalidraw Diagram Generator", "meta": "Visual & Infographic", "lead": "Turn concepts or workflows into diagram instructions for Excalidraw and similar tools.", "bullets": ["Use for: architecture, flows, mind maps", "Nodes + connectors + layout, kept clutter-free"] },
+        "de": { "title": "Excalidraw Diagram Generator", "meta": "Visual & Infographic", "lead": "Mach aus Konzepten oder Workflows Diagramm-Anweisungen für Excalidraw & ähnliche Tools.", "bullets": ["Einsatz: Architektur, Flows, Mindmaps", "Knoten + Verbindungen + Layout, ohne Überladung"] },
+        "fr": { "title": "Excalidraw Diagram Generator", "meta": "Visuel & Infographie", "lead": "Transformez concepts ou workflows en instructions de diagramme pour Excalidraw et outils similaires.", "bullets": ["Idéal pour : architecture, flux, mind maps", "Nœuds + connecteurs + mise en page, sans surcharge"] },
+        "it": { "title": "Excalidraw Diagram Generator", "meta": "Visual & Infografica", "lead": "Trasforma concetti o workflow in istruzioni per diagrammi su Excalidraw e strumenti simili.", "bullets": ["Ideale per: architettura, flussi, mappe mentali", "Nodi + connettori + layout, senza confusione"] },
+        "es": { "title": "Excalidraw Diagram Generator", "meta": "Visual & Infografía", "lead": "Convierte conceptos o flujos en instrucciones de diagrama para Excalidraw y herramientas similares.", "bullets": ["Ideal para: arquitectura, flujos, mapas mentales", "Nodos + conectores + diseño, sin saturación"] }
+      }
+    },
+    {
+      "id": "skill-infographic", "category": "ai-skills", "tags": ["Visual", "Infographic"],
+      "translations": {
+        "en": { "title": "Infographic Builder", "meta": "Visual & Infographic", "lead": "Turn text into a visual-friendly breakdown of steps, processes or data points.", "bullets": ["Use for: reports, slides, teaching material", "Sectioned, icon-ready, low text density"] },
+        "de": { "title": "Infographic Builder", "meta": "Visual & Infographic", "lead": "Mach aus Text eine visuelle Aufbereitung von Schritten, Prozessen oder Datenpunkten.", "bullets": ["Einsatz: Reports, Slides, Lernmaterial", "In Abschnitten, icon-tauglich, wenig Textdichte"] },
+        "fr": { "title": "Infographic Builder", "meta": "Visuel & Infographie", "lead": "Transformez du texte en une présentation visuelle d'étapes, processus ou données.", "bullets": ["Idéal pour : rapports, slides, supports pédagogiques", "En sections, prêt pour icônes, peu de texte"] },
+        "it": { "title": "Infographic Builder", "meta": "Visual & Infografica", "lead": "Trasforma il testo in una presentazione visiva di passi, processi o dati.", "bullets": ["Ideale per: report, slide, materiale didattico", "A sezioni, pronto per icone, poco testo"] },
+        "es": { "title": "Infographic Builder", "meta": "Visual & Infografía", "lead": "Convierte texto en un desglose visual de pasos, procesos o datos.", "bullets": ["Ideal para: informes, diapositivas, material didáctico", "Por secciones, listo para iconos, poco texto"] }
+      }
+    },
+    {
+      "id": "skill-flowchart", "category": "ai-skills", "tags": ["Visual", "Flowchart"],
+      "translations": {
+        "en": { "title": "Flowchart Decision Builder", "meta": "Visual & Infographic", "lead": "Turn a process into a decision tree with clear conditional branches.", "bullets": ["Use for: decision logic, onboarding, troubleshooting", "Nodes, branches, simple labels"] },
+        "de": { "title": "Flowchart Decision Builder", "meta": "Visual & Infographic", "lead": "Mach aus einem Prozess einen Entscheidungsbaum mit klaren Verzweigungen.", "bullets": ["Einsatz: Entscheidungslogik, Onboarding, Troubleshooting", "Knoten, Zweige, einfache Labels"] },
+        "fr": { "title": "Flowchart Decision Builder", "meta": "Visuel & Infographie", "lead": "Transformez un processus en arbre de décision avec des branches conditionnelles claires.", "bullets": ["Idéal pour : logique de décision, onboarding, dépannage", "Nœuds, branches, libellés simples"] },
+        "it": { "title": "Flowchart Decision Builder", "meta": "Visual & Infografica", "lead": "Trasforma un processo in un albero decisionale con rami condizionali chiari.", "bullets": ["Ideale per: logica decisionale, onboarding, troubleshooting", "Nodi, rami, etichette semplici"] },
+        "es": { "title": "Flowchart Decision Builder", "meta": "Visual & Infografía", "lead": "Convierte un proceso en un árbol de decisión con ramas condicionales claras.", "bullets": ["Ideal para: lógica de decisión, onboarding, resolución de problemas", "Nodos, ramas, etiquetas simples"] }
+      }
+    },
+    {
+      "id": "skill-uiux-advisor", "category": "ai-skills", "tags": ["Visual", "UI/UX"],
+      "translations": {
+        "en": { "title": "UI/UX Layout Advisor", "meta": "Visual & Infographic", "lead": "Get structured advice on layout, spacing, hierarchy and usability.", "bullets": ["Use for: screens, components, design reviews", "Considers accessibility and clarity"] },
+        "de": { "title": "UI/UX Layout Advisor", "meta": "Visual & Infographic", "lead": "Bekomme strukturierte Tipps zu Layout, Abständen, Hierarchie und Usability.", "bullets": ["Einsatz: Screens, Komponenten, Design-Reviews", "Berücksichtigt Barrierefreiheit und Klarheit"] },
+        "fr": { "title": "UI/UX Layout Advisor", "meta": "Visuel & Infographie", "lead": "Obtenez des conseils structurés sur la mise en page, l'espacement, la hiérarchie et l'ergonomie.", "bullets": ["Idéal pour : écrans, composants, revues de design", "Tient compte de l'accessibilité et de la clarté"] },
+        "it": { "title": "UI/UX Layout Advisor", "meta": "Visual & Infografica", "lead": "Ricevi consigli strutturati su layout, spaziatura, gerarchia e usabilità.", "bullets": ["Ideale per: schermate, componenti, design review", "Considera accessibilità e chiarezza"] },
+        "es": { "title": "UI/UX Layout Advisor", "meta": "Visual & Infografía", "lead": "Recibe consejos estructurados sobre diseño, espaciado, jerarquía y usabilidad.", "bullets": ["Ideal para: pantallas, componentes, revisiones de diseño", "Considera la accesibilidad y la claridad"] }
+      }
+    },
+    {
+      "id": "skill-deep-research", "category": "ai-skills", "tags": ["Research", "Synthesis"],
+      "translations": {
+        "en": { "title": "Deep Research Synthesizer", "meta": "Research & Analysis", "lead": "Turn large amounts of text into structured insights and actionable takeaways.", "bullets": ["Use for: market scans, literature, raw notes", "Filters low-value info, surfaces patterns"] },
+        "de": { "title": "Deep Research Synthesizer", "meta": "Research & Analysis", "lead": "Mach aus großen Textmengen strukturierte Erkenntnisse und umsetzbare Takeaways.", "bullets": ["Einsatz: Markt-Scans, Literatur, Rohnotizen", "Filtert Belangloses, hebt Muster hervor"] },
+        "fr": { "title": "Deep Research Synthesizer", "meta": "Recherche & Analyse", "lead": "Transformez de grandes quantités de texte en insights structurés et exploitables.", "bullets": ["Idéal pour : veille marché, littérature, notes brutes", "Filtre le superflu, révèle les tendances"] },
+        "it": { "title": "Deep Research Synthesizer", "meta": "Ricerca & Analisi", "lead": "Trasforma grandi quantità di testo in insight strutturati e azioni concrete.", "bullets": ["Ideale per: scansioni di mercato, letteratura, note grezze", "Filtra il superfluo, evidenzia i pattern"] },
+        "es": { "title": "Deep Research Synthesizer", "meta": "Investigación & Análisis", "lead": "Convierte grandes cantidades de texto en ideas estructuradas y accionables.", "bullets": ["Ideal para: análisis de mercado, literatura, notas en bruto", "Filtra lo irrelevante, revela patrones"] }
+      }
+    },
+    {
+      "id": "skill-onchain", "category": "ai-skills", "tags": ["Research", "Crypto"],
+      "translations": {
+        "en": { "title": "Onchain Transaction Analyzer", "meta": "Research & Analysis", "lead": "Decode blockchain transactions into plain-language explanations.", "bullets": ["Use for: wallet tracing, token flows, contracts", "Explains key actors and actions, no jargon"] },
+        "de": { "title": "Onchain Transaction Analyzer", "meta": "Research & Analysis", "lead": "Übersetze Blockchain-Transaktionen in verständliche Erklärungen.", "bullets": ["Einsatz: Wallet-Tracking, Token-Flüsse, Contracts", "Erklärt Akteure und Aktionen, ohne Fachjargon"] },
+        "fr": { "title": "Onchain Transaction Analyzer", "meta": "Recherche & Analyse", "lead": "Décodez les transactions blockchain en explications en langage clair.", "bullets": ["Idéal pour : traçage de wallets, flux de tokens, contrats", "Explique acteurs et actions, sans jargon"] },
+        "it": { "title": "Onchain Transaction Analyzer", "meta": "Ricerca & Analisi", "lead": "Decodifica le transazioni blockchain in spiegazioni in linguaggio semplice.", "bullets": ["Ideale per: tracciamento wallet, flussi di token, contratti", "Spiega attori e azioni, senza gergo"] },
+        "es": { "title": "Onchain Transaction Analyzer", "meta": "Investigación & Análisis", "lead": "Decodifica transacciones blockchain en explicaciones en lenguaje claro.", "bullets": ["Ideal para: rastreo de wallets, flujos de tokens, contratos", "Explica actores y acciones, sin jerga"] }
+      }
+    },
+    {
+      "id": "skill-source-validation", "category": "ai-skills", "tags": ["Research", "Credibility"],
+      "translations": {
+        "en": { "title": "Source Validation Skill", "meta": "Research & Analysis", "lead": "Check sources for credibility, relevance and bias before you trust them.", "bullets": ["Use for: research, fact-checking", "Scores reliability, flags bias"] },
+        "de": { "title": "Source Validation Skill", "meta": "Research & Analysis", "lead": "Prüfe Quellen auf Glaubwürdigkeit, Relevanz und Bias, bevor du ihnen traust.", "bullets": ["Einsatz: Recherche, Fact-Checking", "Bewertet Verlässlichkeit, markiert Bias"] },
+        "fr": { "title": "Source Validation Skill", "meta": "Recherche & Analyse", "lead": "Vérifiez la crédibilité, la pertinence et les biais des sources avant d'y faire confiance.", "bullets": ["Idéal pour : recherche, fact-checking", "Note la fiabilité, signale les biais"] },
+        "it": { "title": "Source Validation Skill", "meta": "Ricerca & Analisi", "lead": "Verifica credibilità, rilevanza e bias delle fonti prima di fidarti.", "bullets": ["Ideale per: ricerca, fact-checking", "Valuta l'affidabilità, segnala i bias"] },
+        "es": { "title": "Source Validation Skill", "meta": "Investigación & Análisis", "lead": "Comprueba la credibilidad, relevancia y sesgo de las fuentes antes de confiar.", "bullets": ["Ideal para: investigación, verificación de datos", "Puntúa la fiabilidad, señala el sesgo"] }
+      }
+    },
+    {
+      "id": "skill-competitive-intel", "category": "ai-skills", "tags": ["Research", "Strategy"],
+      "translations": {
+        "en": { "title": "Competitive Intelligence Skill", "meta": "Research & Analysis", "lead": "Compare products, tools or protocols with a structured strengths/weaknesses view.", "bullets": ["Use for: tool choice, market positioning", "SWOT-style, actionable recommendations"] },
+        "de": { "title": "Competitive Intelligence Skill", "meta": "Research & Analysis", "lead": "Vergleiche Produkte, Tools oder Protokolle mit strukturierter Stärken-/Schwächen-Sicht.", "bullets": ["Einsatz: Tool-Wahl, Marktpositionierung", "SWOT-Stil, umsetzbare Empfehlungen"] },
+        "fr": { "title": "Competitive Intelligence Skill", "meta": "Recherche & Analyse", "lead": "Comparez produits, outils ou protocoles avec une vue forces/faiblesses structurée.", "bullets": ["Idéal pour : choix d'outils, positionnement marché", "Style SWOT, recommandations exploitables"] },
+        "it": { "title": "Competitive Intelligence Skill", "meta": "Ricerca & Analisi", "lead": "Confronta prodotti, strumenti o protocolli con una vista strutturata di punti di forza/debolezza.", "bullets": ["Ideale per: scelta strumenti, posizionamento di mercato", "Stile SWOT, raccomandazioni concrete"] },
+        "es": { "title": "Competitive Intelligence Skill", "meta": "Investigación & Análisis", "lead": "Compara productos, herramientas o protocolos con una vista estructurada de fortalezas/debilidades.", "bullets": ["Ideal para: elección de herramientas, posicionamiento de mercado", "Estilo DAFO, recomendaciones accionables"] }
+      }
+    },
+    {
+      "id": "skill-knowledge-structuring", "category": "ai-skills", "tags": ["Research", "Knowledge"],
+      "translations": {
+        "en": { "title": "Knowledge Structuring Skill", "meta": "Research & Analysis", "lead": "Organise messy information into clear frameworks, hierarchies and notes.", "bullets": ["Use for: notes, wikis, learning material", "Groups related ideas, removes ambiguity"] },
+        "de": { "title": "Knowledge Structuring Skill", "meta": "Research & Analysis", "lead": "Bring chaotische Infos in klare Frameworks, Hierarchien und Notizen.", "bullets": ["Einsatz: Notizen, Wikis, Lernmaterial", "Gruppiert verwandte Ideen, beseitigt Unklarheit"] },
+        "fr": { "title": "Knowledge Structuring Skill", "meta": "Recherche & Analyse", "lead": "Organisez des informations désordonnées en frameworks, hiérarchies et notes clairs.", "bullets": ["Idéal pour : notes, wikis, supports d'apprentissage", "Regroupe les idées liées, lève l'ambiguïté"] },
+        "it": { "title": "Knowledge Structuring Skill", "meta": "Ricerca & Analisi", "lead": "Organizza informazioni disordinate in framework, gerarchie e note chiari.", "bullets": ["Ideale per: note, wiki, materiale di studio", "Raggruppa idee correlate, elimina l'ambiguità"] },
+        "es": { "title": "Knowledge Structuring Skill", "meta": "Investigación & Análisis", "lead": "Organiza información desordenada en marcos, jerarquías y notas claras.", "bullets": ["Ideal para: notas, wikis, material de aprendizaje", "Agrupa ideas relacionadas, elimina ambigüedad"] }
+      }
+    },
+    {
+      "id": "skill-video-script", "category": "ai-skills", "tags": ["Video", "Script"],
+      "translations": {
+        "en": { "title": "Video Script Generator", "meta": "Video", "lead": "Write video scripts with a hook, structured sections and a call to action.", "bullets": ["Use for: shorts and long-form video", "Paced for retention, ends with a CTA"] },
+        "de": { "title": "Video Script Generator", "meta": "Video", "lead": "Schreibe Video-Skripte mit Hook, klaren Abschnitten und Call-to-Action.", "bullets": ["Einsatz: Shorts und Long-Form-Video", "Auf Retention getaktet, endet mit CTA"] },
+        "fr": { "title": "Video Script Generator", "meta": "Vidéo", "lead": "Rédigez des scripts vidéo avec un hook, des sections structurées et un appel à l'action.", "bullets": ["Idéal pour : shorts et vidéos longues", "Rythmé pour la rétention, finit par un CTA"] },
+        "it": { "title": "Video Script Generator", "meta": "Video", "lead": "Scrivi script video con hook, sezioni strutturate e call to action.", "bullets": ["Ideale per: short e video long-form", "Ritmato per la retention, finisce con una CTA"] },
+        "es": { "title": "Video Script Generator", "meta": "Vídeo", "lead": "Escribe guiones de vídeo con gancho, secciones estructuradas y llamada a la acción.", "bullets": ["Ideal para: shorts y vídeo largo", "Con ritmo para la retención, termina con CTA"] }
+      }
+    },
+    {
+      "id": "skill-video-editing", "category": "ai-skills", "tags": ["Video", "Editing"],
+      "translations": {
+        "en": { "title": "Video Editing Planner", "meta": "Video", "lead": "Plan scene cuts, transitions and pacing for a tighter edit.", "bullets": ["Use for: edit prep, storyboarding", "Scene breakdown + transition plan"] },
+        "de": { "title": "Video Editing Planner", "meta": "Video", "lead": "Plane Schnitte, Übergänge und Tempo für einen knackigeren Edit.", "bullets": ["Einsatz: Schnitt-Vorbereitung, Storyboarding", "Szenen-Breakdown + Übergangsplan"] },
+        "fr": { "title": "Video Editing Planner", "meta": "Vidéo", "lead": "Planifiez coupes, transitions et rythme pour un montage plus serré.", "bullets": ["Idéal pour : préparation du montage, storyboard", "Découpage des scènes + plan de transitions"] },
+        "it": { "title": "Video Editing Planner", "meta": "Video", "lead": "Pianifica tagli, transizioni e ritmo per un montaggio più incisivo.", "bullets": ["Ideale per: preparazione montaggio, storyboard", "Scomposizione scene + piano transizioni"] },
+        "es": { "title": "Video Editing Planner", "meta": "Vídeo", "lead": "Planifica cortes, transiciones y ritmo para un montaje más ágil.", "bullets": ["Ideal para: preparación de montaje, storyboard", "Desglose de escenas + plan de transiciones"] }
+      }
+    },
+    {
+      "id": "skill-hook-generator", "category": "ai-skills", "tags": ["Video", "Hook"],
+      "translations": {
+        "en": { "title": "Hook Generator", "meta": "Video", "lead": "Produce attention-grabbing openings for videos, posts and intros.", "bullets": ["Use for: first 3 seconds, post openers", "Short, curiosity-driven, on-topic"] },
+        "de": { "title": "Hook Generator", "meta": "Video", "lead": "Erzeuge fesselnde Einstiege für Videos, Posts und Intros.", "bullets": ["Einsatz: erste 3 Sekunden, Post-Opener", "Kurz, neugierig machend, themennah"] },
+        "fr": { "title": "Hook Generator", "meta": "Vidéo", "lead": "Créez des accroches captivantes pour vidéos, posts et intros.", "bullets": ["Idéal pour : 3 premières secondes, ouvertures de post", "Court, attise la curiosité, dans le sujet"] },
+        "it": { "title": "Hook Generator", "meta": "Video", "lead": "Crea aperture accattivanti per video, post e intro.", "bullets": ["Ideale per: primi 3 secondi, aperture di post", "Breve, stuzzica la curiosità, in tema"] },
+        "es": { "title": "Hook Generator", "meta": "Vídeo", "lead": "Crea aperturas que captan la atención para vídeos, posts e intros.", "bullets": ["Ideal para: primeros 3 segundos, aperturas de post", "Corto, despierta curiosidad, al tema"] }
+      }
+    },
+    {
+      "id": "skill-caption-formatter", "category": "ai-skills", "tags": ["Video", "Captions"],
+      "translations": {
+        "en": { "title": "Caption & Subtitle Formatter", "meta": "Video", "lead": "Format captions and subtitles for readability, timing and accessibility.", "bullets": ["Use for: video subtitles, reels", "Clean line breaks, timed to speech"] },
+        "de": { "title": "Caption & Subtitle Formatter", "meta": "Video", "lead": "Formatiere Untertitel für Lesbarkeit, Timing und Barrierefreiheit.", "bullets": ["Einsatz: Video-Untertitel, Reels", "Saubere Zeilenumbrüche, auf die Sprache getimt"] },
+        "fr": { "title": "Caption & Subtitle Formatter", "meta": "Vidéo", "lead": "Formatez sous-titres et légendes pour lisibilité, timing et accessibilité.", "bullets": ["Idéal pour : sous-titres vidéo, reels", "Sauts de ligne nets, calés sur la parole"] },
+        "it": { "title": "Caption & Subtitle Formatter", "meta": "Video", "lead": "Formatta sottotitoli e didascalie per leggibilità, timing e accessibilità.", "bullets": ["Ideale per: sottotitoli video, reel", "Interruzioni di riga pulite, sincronizzate al parlato"] },
+        "es": { "title": "Caption & Subtitle Formatter", "meta": "Vídeo", "lead": "Formatea subtítulos y leyendas para legibilidad, sincronización y accesibilidad.", "bullets": ["Ideal para: subtítulos de vídeo, reels", "Saltos de línea limpios, sincronizados con el habla"] }
+      }
+    },
+    {
+      "id": "skill-code-review", "category": "ai-skills", "tags": ["Coding", "Review"],
+      "translations": {
+        "en": { "title": "Code Review Skill", "meta": "Coding & Automation", "lead": "Review code for bugs, inefficiencies and best-practice violations with actionable fixes.", "bullets": ["Use for: PRs, refactors, quality checks", "Flags issues, suggests fixes"] },
+        "de": { "title": "Code Review Skill", "meta": "Coding & Automation", "lead": "Prüfe Code auf Bugs, Ineffizienzen und Best-Practice-Verstöße mit konkreten Fixes.", "bullets": ["Einsatz: PRs, Refactorings, Qualitätschecks", "Markiert Probleme, schlägt Fixes vor"] },
+        "fr": { "title": "Code Review Skill", "meta": "Code & Automatisation", "lead": "Relisez le code pour bugs, inefficacités et écarts aux bonnes pratiques, avec des correctifs concrets.", "bullets": ["Idéal pour : PRs, refactors, contrôles qualité", "Repère les problèmes, propose des correctifs"] },
+        "it": { "title": "Code Review Skill", "meta": "Codice & Automazione", "lead": "Rivedi il codice per bug, inefficienze e violazioni di best practice con fix concreti.", "bullets": ["Ideale per: PR, refactoring, controlli qualità", "Segnala i problemi, propone soluzioni"] },
+        "es": { "title": "Code Review Skill", "meta": "Código & Automatización", "lead": "Revisa el código en busca de bugs, ineficiencias y malas prácticas con correcciones accionables.", "bullets": ["Ideal para: PRs, refactors, controles de calidad", "Señala problemas, sugiere correcciones"] }
+      }
+    },
+    {
+      "id": "skill-workflow-automation", "category": "ai-skills", "tags": ["Coding", "Automation"],
+      "translations": {
+        "en": { "title": "Workflow Automation Agent", "meta": "Coding & Automation", "lead": "Break a goal into a step-by-step workflow and map each step to a tool.", "bullets": ["Use for: automations, repeatable processes", "Decomposes tasks, assigns tools"] },
+        "de": { "title": "Workflow Automation Agent", "meta": "Coding & Automation", "lead": "Zerlege ein Ziel in einen Schritt-für-Schritt-Workflow und ordne jedem Schritt ein Tool zu.", "bullets": ["Einsatz: Automatisierungen, wiederholbare Prozesse", "Zerlegt Aufgaben, weist Tools zu"] },
+        "fr": { "title": "Workflow Automation Agent", "meta": "Code & Automatisation", "lead": "Décomposez un objectif en workflow étape par étape et associez chaque étape à un outil.", "bullets": ["Idéal pour : automatisations, processus répétables", "Décompose les tâches, attribue les outils"] },
+        "it": { "title": "Workflow Automation Agent", "meta": "Codice & Automazione", "lead": "Scomponi un obiettivo in un workflow passo-passo e associa a ogni passo uno strumento.", "bullets": ["Ideale per: automazioni, processi ripetibili", "Scompone i compiti, assegna gli strumenti"] },
+        "es": { "title": "Workflow Automation Agent", "meta": "Código & Automatización", "lead": "Descompón un objetivo en un workflow paso a paso y asigna una herramienta a cada paso.", "bullets": ["Ideal para: automatizaciones, procesos repetibles", "Descompone tareas, asigna herramientas"] }
+      }
+    },
+    {
+      "id": "skill-creator", "category": "ai-skills", "tags": ["Coding", "Meta"],
+      "translations": {
+        "en": { "title": "Skill Creator (Meta Skill)", "meta": "Coding & Automation", "lead": "Generate new AI skills as structured .md files, ready to reuse.", "bullets": ["Use for: building your own skill library", "Name + description + instructions"] },
+        "de": { "title": "Skill Creator (Meta Skill)", "meta": "Coding & Automation", "lead": "Erzeuge neue AI-Skills als strukturierte .md-Dateien, direkt wiederverwendbar.", "bullets": ["Einsatz: eigene Skill-Bibliothek aufbauen", "Name + Beschreibung + Anweisungen"] },
+        "fr": { "title": "Skill Creator (Meta Skill)", "meta": "Code & Automatisation", "lead": "Générez de nouvelles compétences IA en fichiers .md structurés, prêts à réutiliser.", "bullets": ["Idéal pour : créer votre bibliothèque de skills", "Nom + description + instructions"] },
+        "it": { "title": "Skill Creator (Meta Skill)", "meta": "Codice & Automazione", "lead": "Genera nuove skill IA come file .md strutturati, pronti al riuso.", "bullets": ["Ideale per: costruire la tua libreria di skill", "Nome + descrizione + istruzioni"] },
+        "es": { "title": "Skill Creator (Meta Skill)", "meta": "Código & Automatización", "lead": "Genera nuevas habilidades de IA como archivos .md estructurados, listos para reutilizar.", "bullets": ["Ideal para: crear tu propia biblioteca de skills", "Nombre + descripción + instrucciones"] }
+      }
+    },
+    {
+      "id": "skill-devops", "category": "ai-skills", "tags": ["Coding", "DevOps"],
+      "translations": {
+        "en": { "title": "DevOps Assistant", "meta": "Coding & Automation", "lead": "Help with version control, deployment and automation across your workflow.", "bullets": ["Use for: git, deploys, CI steps", "Stepwise guidance, no redundant steps"] },
+        "de": { "title": "DevOps Assistant", "meta": "Coding & Automation", "lead": "Unterstützung bei Versionskontrolle, Deployment und Automatisierung im ganzen Workflow.", "bullets": ["Einsatz: Git, Deploys, CI-Schritte", "Schrittweise Anleitung, ohne überflüssige Schritte"] },
+        "fr": { "title": "DevOps Assistant", "meta": "Code & Automatisation", "lead": "Aide au contrôle de version, au déploiement et à l'automatisation dans tout le workflow.", "bullets": ["Idéal pour : git, déploiements, étapes CI", "Guidage pas à pas, sans étapes redondantes"] },
+        "it": { "title": "DevOps Assistant", "meta": "Codice & Automazione", "lead": "Aiuto per controllo versione, deployment e automazione in tutto il workflow.", "bullets": ["Ideale per: git, deploy, step CI", "Guida passo-passo, senza passaggi ridondanti"] },
+        "es": { "title": "DevOps Assistant", "meta": "Código & Automatización", "lead": "Ayuda con control de versiones, despliegue y automatización en todo tu flujo.", "bullets": ["Ideal para: git, despliegues, pasos de CI", "Guía paso a paso, sin pasos redundantes"] }
+      }
+    },
+    {
+      "id": "claude-code-project-structure", "category": "claude-code", "tags": ["Claude Code", "Config", "Project"],
+      "translations": {
+        "en": {
+          "title": "Claude Code — Project Structure", "meta": "Reference",
+          "lead": "How a Claude Code project is laid out — what each file and folder does.",
+          "table": [
+            ["CLAUDE.md", "Loaded every session: project overview, tech stack, conventions, architecture."],
+            ["CLAUDE.local.md", "Personal overrides — not shared."],
+            [".mcp.json", "MCP server integrations (GitHub, JIRA, Slack, DBs), shared via git."],
+            [".claude/settings.json", "Permissions, tool access, env vars, hooks (PreToolUse / PostToolUse)."],
+            [".claude/settings.local.json", "Personal overrides for settings."],
+            [".claude/commands/*.md", "Custom commands (/project:name), each file becomes a command, supports $ARGUMENTS."],
+            [".claude/skills/<name>/SKILL.md", "Auto-triggered by task context or /skill-name; loads only when needed."],
+            [".claude/agents/*.md", "Specialized sub-agents with isolated context, own tools & permissions (@agent-name)."]
+          ],
+          "takeaway": "CLAUDE.md sets the context, .claude/ holds the config — commands, skills and agents keep each session lean."
+        },
+        "de": {
+          "title": "Claude Code — Project Structure", "meta": "Referenz",
+          "lead": "Wie ein Claude-Code-Projekt aufgebaut ist — was jede Datei und jeder Ordner tut.",
+          "table": [
+            ["CLAUDE.md", "Jede Session geladen: Projekt-Überblick, Tech-Stack, Konventionen, Architektur."],
+            ["CLAUDE.local.md", "Persönliche Overrides — nicht geteilt."],
+            [".mcp.json", "MCP-Server-Integrationen (GitHub, JIRA, Slack, DBs), per git geteilt."],
+            [".claude/settings.json", "Berechtigungen, Tool-Zugriff, Env-Variablen, Hooks (PreToolUse / PostToolUse)."],
+            [".claude/settings.local.json", "Persönliche Overrides für die Settings."],
+            [".claude/commands/*.md", "Eigene Commands (/project:name), jede Datei wird ein Command, mit $ARGUMENTS."],
+            [".claude/skills/<name>/SKILL.md", "Automatisch je nach Kontext oder per /skill-name; lädt nur bei Bedarf."],
+            [".claude/agents/*.md", "Spezialisierte Sub-Agenten mit isoliertem Kontext, eigenen Tools & Rechten (@agent-name)."]
+          ],
+          "takeaway": "CLAUDE.md setzt den Kontext, .claude/ hält die Konfiguration — Commands, Skills und Agenten halten jede Session schlank."
+        },
+        "fr": {
+          "title": "Claude Code — Structure de projet", "meta": "Référence",
+          "lead": "Comment un projet Claude Code est organisé — le rôle de chaque fichier et dossier.",
+          "table": [
+            ["CLAUDE.md", "Chargé à chaque session : aperçu du projet, stack, conventions, architecture."],
+            ["CLAUDE.local.md", "Surcharges personnelles — non partagées."],
+            [".mcp.json", "Intégrations de serveurs MCP (GitHub, JIRA, Slack, BDD), partagées via git."],
+            [".claude/settings.json", "Permissions, accès aux outils, variables d'env, hooks (PreToolUse / PostToolUse)."],
+            [".claude/settings.local.json", "Surcharges personnelles des réglages."],
+            [".claude/commands/*.md", "Commandes personnalisées (/project:name), chaque fichier devient une commande, gère $ARGUMENTS."],
+            [".claude/skills/<name>/SKILL.md", "Déclenché par le contexte ou /skill-name ; chargé seulement si besoin."],
+            [".claude/agents/*.md", "Sous-agents spécialisés à contexte isolé, outils & permissions propres (@agent-name)."]
+          ],
+          "takeaway": "CLAUDE.md pose le contexte, .claude/ tient la config — commandes, skills et agents gardent chaque session légère."
+        },
+        "it": {
+          "title": "Claude Code — Struttura del progetto", "meta": "Riferimento",
+          "lead": "Com'è organizzato un progetto Claude Code — cosa fa ogni file e cartella.",
+          "table": [
+            ["CLAUDE.md", "Caricato a ogni sessione: panoramica progetto, stack, convenzioni, architettura."],
+            ["CLAUDE.local.md", "Override personali — non condivisi."],
+            [".mcp.json", "Integrazioni server MCP (GitHub, JIRA, Slack, DB), condivise via git."],
+            [".claude/settings.json", "Permessi, accesso agli strumenti, variabili env, hook (PreToolUse / PostToolUse)."],
+            [".claude/settings.local.json", "Override personali delle impostazioni."],
+            [".claude/commands/*.md", "Comandi personalizzati (/project:name), ogni file diventa un comando, supporta $ARGUMENTS."],
+            [".claude/skills/<name>/SKILL.md", "Attivato dal contesto o con /skill-name; caricato solo se serve."],
+            [".claude/agents/*.md", "Sub-agenti specializzati a contesto isolato, strumenti e permessi propri (@agent-name)."]
+          ],
+          "takeaway": "CLAUDE.md imposta il contesto, .claude/ contiene la config — comandi, skill e agenti mantengono ogni sessione leggera."
+        },
+        "es": {
+          "title": "Claude Code — Estructura del proyecto", "meta": "Referencia",
+          "lead": "Cómo se organiza un proyecto de Claude Code — qué hace cada archivo y carpeta.",
+          "table": [
+            ["CLAUDE.md", "Cargado cada sesión: resumen del proyecto, stack, convenciones, arquitectura."],
+            ["CLAUDE.local.md", "Anulaciones personales — no se comparten."],
+            [".mcp.json", "Integraciones de servidores MCP (GitHub, JIRA, Slack, BDs), compartidas vía git."],
+            [".claude/settings.json", "Permisos, acceso a herramientas, variables de entorno, hooks (PreToolUse / PostToolUse)."],
+            [".claude/settings.local.json", "Anulaciones personales de la configuración."],
+            [".claude/commands/*.md", "Comandos personalizados (/project:name), cada archivo es un comando, admite $ARGUMENTS."],
+            [".claude/skills/<name>/SKILL.md", "Se activa por contexto o con /skill-name; se carga solo cuando hace falta."],
+            [".claude/agents/*.md", "Subagentes especializados con contexto aislado, herramientas y permisos propios (@agent-name)."]
+          ],
+          "takeaway": "CLAUDE.md fija el contexto, .claude/ guarda la config — comandos, skills y agentes mantienen ligera cada sesión."
+        }
+      }
+    }
+  ]
+}
