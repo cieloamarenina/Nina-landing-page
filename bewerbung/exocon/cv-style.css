@@ -142,3 +142,7 @@ h2:last-of-type + p em {
   font-size: 8.5pt;
   line-height: 1.55;
 }
+
+/* Links: klickbar, aber dezent (CV-clean) */
+a { color: #1a4f8a; text-decoration: none; }
+a:hover { text-decoration: underline; }

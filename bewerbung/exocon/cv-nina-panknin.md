@@ -4,8 +4,8 @@
 Claude Code · n8n · AI Agents · Prompt Engineering · Workflow-Automatisierung · AI Governance
 
 Begasstraße 7 · 12157 Berlin
-ninapankninberlin@gmail.com · +49 172 2101191
-linkedin.com/in/ninapankninberlin · ninalearnsvibecoding.com
+[ninapankninberlin@gmail.com](mailto:ninapankninberlin@gmail.com) · +49 172 2101191
+[linkedin.com/in/ninapankninberlin](https://www.linkedin.com/in/ninapankninberlin/) · [ninalearnsvibecoding.com](https://ninalearnsvibecoding.com)
 
 ---
 

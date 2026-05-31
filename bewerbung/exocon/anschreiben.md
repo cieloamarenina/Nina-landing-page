@@ -58,10 +58,10 @@ Einen 30-Minuten-Slot können Sie direkt auf dem Dashboard buchen, oder wir find
 Mit freundlichen Grüßen
 **Nina Panknin**
 
-📧 ninapankninberlin@gmail.com
+📧 [ninapankninberlin@gmail.com](mailto:ninapankninberlin@gmail.com)
 📱 +49 172 2101191
-🔗 linkedin.com/in/ninapankninberlin
-🌐 ninalearnsvibecoding.com
+🔗 [linkedin.com/in/ninapankninberlin](https://www.linkedin.com/in/ninapankninberlin/)
+🌐 [ninalearnsvibecoding.com](https://ninalearnsvibecoding.com)
 
 ---
 
