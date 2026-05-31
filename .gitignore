@@ -32,3 +32,6 @@ services/n8n-proxy/.env
 
 # Bewerbung — Pablo-Foto Original (1.9MB Backup, optimiert in pablo.png)
 bewerbung/**/pablo-original.png
+
+# Hanteltraining — lokale Env (Template: .env.example)
+.env
