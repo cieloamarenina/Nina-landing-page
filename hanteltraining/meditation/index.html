@@ -142,6 +142,12 @@
     #pablo-player { top: auto; bottom: 80px; right: 16px; }
     .breath-wrap { width: 260px; height: 260px; }
   }
+
+  /* ── SEITEN-NAVIGATION ──────────────────────── */
+  .page-nav { display: flex; gap: 8px; justify-content: center; margin: 14px auto 0; flex-wrap: wrap; }
+  .page-nav a { display: inline-flex; align-items: center; gap: 6px; background: var(--bg-card); border: 1px solid var(--border); color: var(--muted); padding: 0.4rem 0.9rem; border-radius: 999px; font-size: 0.8rem; font-weight: 700; text-decoration: none; transition: all 0.18s; }
+  .page-nav a:hover { border-color: var(--blue); color: var(--text); transform: translateY(-1px); }
+  .page-nav a.active { background: rgba(56,189,248,0.16); border-color: rgba(56,189,248,0.55); color: var(--accent); }
 </style>
 </head>
 <body>
@@ -150,6 +156,11 @@
   <header>
     <h1>Meditation</h1>
     <div class="subtitle">Nina · Atem & Ruhe</div>
+    <nav class="page-nav">
+      <a href="../index.html">💪 Training</a>
+      <a href="../yoga/index.html">🧘 Yoga</a>
+      <a href="index.html" class="active">🌬️ Meditation</a>
+    </nav>
   </header>
 
   <div class="medi-card">
