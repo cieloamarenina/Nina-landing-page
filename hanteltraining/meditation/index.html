@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Meditation — Nina</title>
+<style>
+  :root {
+    --bg: #0A1628;
+    --bg-card: #142640;
+    --bg-elevated: #1B3252;
+    --blue: #3B82F6;
+    --blue-bright: #60A5FA;
+    --accent: #38BDF8;
+    --warm: #F59E0B;
+    --text: #F8FAFC;
+    --muted: #94A3B8;
+    --border: #1E3A5F;
+    --success: #10B981;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: Arial, sans-serif;
+    background: var(--bg);
+    background-image:
+      radial-gradient(circle at 20% 0%, rgba(59, 130, 246, 0.15), transparent 50%),
+      radial-gradient(circle at 80% 100%, rgba(56, 189, 248, 0.1), transparent 50%);
+    background-attachment: fixed;
+    color: var(--text);
+    min-height: 100vh;
+    padding: 20px;
+    line-height: 1.5;
+  }
+  .container { max-width: 900px; margin: 0 auto; }
+  header { text-align: center; padding: 32px 20px 16px; }
+  h1 {
+    font-size: 44px; font-weight: 900; letter-spacing: -1.5px; margin-bottom: 6px;
+    background: linear-gradient(135deg, var(--text) 0%, var(--accent) 100%);
+    -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+  }
+  .subtitle { color: var(--muted); font-size: 13px; letter-spacing: 3px; text-transform: uppercase; font-weight: 700; }
+
+  /* ── MEDITATIONS-BÜHNE ───────────────────────── */
+  .medi-stage { display: flex; flex-direction: column; align-items: center; gap: 26px; padding: 18px 0 8px; }
+
+  .breath-wrap { position: relative; width: 300px; height: 300px; display: flex; align-items: center; justify-content: center; }
+  .breath-glow {
+    position: absolute; width: 220px; height: 220px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(56,189,248,0.22), transparent 70%);
+    transition: transform 4s ease-in-out; transform: scale(0.7);
+  }
+  .breath-circle {
+    position: relative; width: 120px; height: 120px; border-radius: 50%;
+    background: radial-gradient(circle at 35% 30%, var(--blue-bright), var(--blue));
+    box-shadow: 0 0 40px rgba(56,189,248,0.45), inset 0 0 30px rgba(255,255,255,0.15);
+    display: flex; align-items: center; justify-content: center;
+    transform: scale(1); transition: transform 4s ease-in-out;
+  }
+  .breath-circle.big { transform: scale(2.05); }
+  .breath-circle.big ~ .breath-glow, .breath-wrap.inhale .breath-glow { transform: scale(1.1); }
+  #breath-count { font-size: 2rem; font-weight: 900; color: #fff; font-variant-numeric: tabular-nums; }
+  #breath-phase { font-size: 1.3rem; font-weight: 800; color: var(--text); letter-spacing: 0.04em; min-height: 1.6em; }
+
+  .medi-remaining {
+    font-size: 1.6rem; font-weight: 800; color: var(--accent);
+    font-variant-numeric: tabular-nums; letter-spacing: 0.06em;
+  }
+  .medi-remaining .lbl { display: block; font-size: 0.6rem; color: var(--muted); letter-spacing: 0.16em; text-transform: uppercase; font-weight: 700; }
+
+  .pill-row { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; }
+  .pill-group-label { font-size: 0.65rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--muted); font-weight: 700; margin-bottom: 8px; text-align: center; }
+  .medi-pill {
+    background: var(--bg-card); border: 1px solid var(--border); color: var(--muted);
+    border-radius: 999px; padding: 0.45rem 1rem; font-size: 0.8rem; font-weight: 700;
+    cursor: pointer; transition: all 0.18s; font-family: Arial;
+  }
+  .medi-pill:hover { border-color: var(--blue); color: var(--text); }
+  .medi-pill.active { background: rgba(56,189,248,0.16); border-color: rgba(56,189,248,0.55); color: var(--accent); }
+
+  .medi-controls { display: flex; gap: 12px; align-items: center; justify-content: center; flex-wrap: wrap; }
+  .medi-btn {
+    background: linear-gradient(135deg, var(--blue), var(--accent)); border: none; color: #04121f;
+    padding: 0.85rem 2.4rem; border-radius: 12px; font-size: 1rem; font-weight: 900;
+    cursor: pointer; transition: transform 0.15s, filter 0.15s; font-family: Arial; letter-spacing: 0.02em;
+  }
+  .medi-btn:hover { filter: brightness(1.08); transform: translateY(-1px); }
+  .medi-btn.ghost { background: var(--bg-card); border: 1px solid var(--border); color: var(--text); padding: 0.85rem 1.4rem; }
+
+  .medi-card {
+    background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px;
+    padding: 26px 22px; margin: 22px 0; display: flex; flex-direction: column; gap: 22px; align-items: center;
+  }
+  .medi-hint { color: var(--muted); font-size: 0.85rem; text-align: center; max-width: 460px; }
+
+  /* Sound-Toggle */
+  .sound-toggle {
+    position: fixed; bottom: 20px; right: 20px; background: var(--bg-card); border: 1px solid var(--border);
+    color: var(--muted); width: 44px; height: 44px; border-radius: 50%; cursor: pointer;
+    display: flex; align-items: center; justify-content: center; font-size: 18px; transition: all 0.2s; z-index: 100;
+  }
+  .sound-toggle:hover { border-color: var(--accent); color: var(--accent); }
+
+  /* ── PABLO PLAYER ───────────────────────────── */
+  #pablo-player { position: fixed; top: 110px; right: 40px; z-index: 1000; display: flex; flex-direction: column; align-items: flex-end; gap: 8px; }
+  #pablo-panel { background: var(--bg-card); border: 1px solid var(--border); width: 300px; border-radius: 4px; overflow: hidden; box-shadow: 0 8px 40px rgba(0,0,0,0.6); display: none; flex-direction: column; }
+  #pablo-panel.open { display: flex; animation: pablo-slide-in 0.25s ease; }
+  @keyframes pablo-slide-in { from { opacity:0; transform: translateY(12px); } to { opacity:1; transform: translateY(0); } }
+  .pablo-panel-header { padding: 0.6rem 0.9rem; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border); font-size: 0.7rem; color: var(--muted); cursor: grab; user-select: none; }
+  .pablo-panel-header:active { cursor: grabbing; }
+  .pablo-now-dot { display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: #22c55e; margin-right: 6px; animation: pablo-live-pulse 2s infinite; }
+  .pablo-close-btn { background: none; border: none; color: var(--muted); cursor: pointer; font-size: 0.9rem; padding: 0; line-height: 1; }
+  .pablo-close-btn:hover { color: var(--text); }
+  .pablo-playlists { display: flex; gap: 0.35rem; padding: 0.5rem 0.75rem; flex-wrap: wrap; border-bottom: 1px solid var(--border); }
+  .pl-btn { background: rgba(56,189,248,0.06); border: 1px solid rgba(56,189,248,0.15); color: var(--muted); border-radius: 999px; padding: 0.2rem 0.6rem; font-size: 0.68rem; cursor: pointer; transition: all 0.15s; white-space: nowrap; }
+  .pl-btn:hover { background: rgba(56,189,248,0.12); color: var(--text); }
+  .pl-btn.active { background: rgba(56,189,248,0.18); border-color: rgba(56,189,248,0.5); color: var(--accent); }
+  #pablo-btn { cursor: grab; position: relative; text-align: center; user-select: none; animation: pablo-float 3s ease-in-out infinite; }
+  @keyframes pablo-float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-9px); } }
+  #pablo-btn:hover { filter: brightness(1.08); }
+  #pablo-btn:active { transform: scale(0.96) translateY(0) !important; }
+  .pablo-photo-wrap { position: relative; width: 140px; height: 140px; }
+  #pablo-photo { width: 140px; height: 140px; border-radius: 50%; object-fit: cover; object-position: center top; display: block; border: 3px solid var(--border); background: var(--bg-card); }
+  .pablo-ring { position: absolute; inset: -4px; border-radius: 50%; border: 2px solid transparent; transition: border-color 0.4s, box-shadow 0.4s; pointer-events: none; }
+  .state-playing #pablo-btn { animation: pablo-float-fast 1.2s ease-in-out infinite; }
+  .state-playing .pablo-ring { border-color: var(--accent); box-shadow: 0 0 14px rgba(56,189,248,0.55), 0 0 28px rgba(56,189,248,0.25); }
+  @keyframes pablo-float-fast { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
+  .state-sleeping #pablo-btn { animation: pablo-breathe 4s ease-in-out infinite; }
+  .state-sleeping #pablo-photo { filter: grayscale(0.6) brightness(0.75); }
+  @keyframes pablo-breathe { 0%,100% { transform: scale(1); } 50% { transform: scale(1.03); } }
+  .pablo-label { font-size: 0.58rem; letter-spacing: 0.14em; color: var(--muted); margin-top: 5px; text-transform: uppercase; }
+  #pablo-zzz { position: absolute; top: -10px; right: -2px; display: none; pointer-events: none; }
+  .state-sleeping #pablo-zzz { display: block; }
+  #pablo-zzz span { font-size: 0.75rem; font-weight: 700; color: var(--accent); animation: zzz-float 2.2s ease-in-out infinite; display: inline-block; }
+  #pablo-zzz span:nth-child(1) { animation-delay: 0s; font-size: 0.55rem; }
+  #pablo-zzz span:nth-child(2) { animation-delay: 0.6s; font-size: 0.72rem; }
+  #pablo-zzz span:nth-child(3) { animation-delay: 1.2s; font-size: 0.9rem; }
+  @keyframes zzz-float { 0% { opacity:0; transform: translate(0,0) scale(0.5); } 40% { opacity:1; } 100% { opacity:0; transform: translate(9px,-20px) scale(1); } }
+  @keyframes pablo-live-pulse { 0% { box-shadow: 0 0 0 0 rgba(56,189,248,0.5); } 70% { box-shadow: 0 0 0 9px rgba(56,189,248,0); } 100% { box-shadow: 0 0 0 0 rgba(56,189,248,0); } }
+
+  @media (max-width: 600px) {
+    h1 { font-size: 34px; }
+    #pablo-player { top: auto; bottom: 80px; right: 16px; }
+    .breath-wrap { width: 260px; height: 260px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <header>
+    <h1>Meditation</h1>
+    <div class="subtitle">Nina · Atem & Ruhe</div>
+  </header>
+
+  <div class="medi-card">
+    <div class="medi-stage">
+      <div class="medi-remaining"><span class="lbl">Verbleibend</span><span id="medi-remaining">05:00</span></div>
+      <div class="breath-wrap" id="breath-wrap">
+        <div class="breath-glow"></div>
+        <div class="breath-circle" id="breath-circle"><span id="breath-count">5</span></div>
+      </div>
+      <div id="breath-phase">Bereit</div>
+    </div>
+
+    <div>
+      <div class="pill-group-label">Atemtechnik</div>
+      <div class="pill-row" id="tech-row">
+        <button class="medi-pill active" data-tech="calm">Ruhiger Atem · 4–6</button>
+        <button class="medi-pill" data-tech="box">Box-Atmung · 4–4–4–4</button>
+        <button class="medi-pill" data-tech="relax">Tiefe Ruhe · 4–7–8</button>
+      </div>
+    </div>
+
+    <div>
+      <div class="pill-group-label">Dauer</div>
+      <div class="pill-row" id="dur-row">
+        <button class="medi-pill" data-min="3">3 Min</button>
+        <button class="medi-pill active" data-min="5">5 Min</button>
+        <button class="medi-pill" data-min="10">10 Min</button>
+      </div>
+    </div>
+
+    <div class="medi-controls">
+      <button class="medi-btn" id="medi-start" onclick="toggleSession()">▶ Start</button>
+      <button class="medi-btn ghost" id="medi-reset" onclick="resetSession()">↺ Zurücksetzen</button>
+    </div>
+    <div class="medi-hint">Folge dem Kreis: Er wird größer beim Einatmen, kleiner beim Ausatmen. Atme durch die Nase ein, sanft durch den Mund aus. Pablo legt gern Musik auf 🎵</div>
+  </div>
+</div>
+
+<button class="sound-toggle" id="sound-toggle" title="Gong an/aus">🔔</button>
+
+<!-- PABLO PLAYER -->
+<div id="pablo-player" class="state-idle">
+  <div id="pablo-panel">
+    <div class="pablo-panel-header">
+      <span><span class="pablo-now-dot"></span><span id="pablo-track-name">Pablo's Playlist</span></span>
+      <button class="pablo-close-btn" onclick="togglePabloPanel()">✕</button>
+    </div>
+    <div class="pablo-playlists">
+      <button class="pl-btn active" onclick="switchPlaylist('3VBgqGbVoabuNZL3vICTAP','Nina',this)">🎵 Nina</button>
+      <button class="pl-btn" onclick="switchPlaylist('53ebDyYHhHmElRY1Epe97N','Nina is coding',this)">💻 Coding</button>
+      <button class="pl-btn" onclick="switchPlaylist('0rF7rgJx8xR5aU87Y4qlSP','Testing 123',this)">🎛️ Test</button>
+      <button class="pl-btn" onclick="switchPlaylist('362d7BAhWSIjPTmd74o1pL','Alesis',this)">🥁 Alesis</button>
+      <button class="pl-btn" onclick="switchPlaylist('37i9dQZF1DX4WYpdgoIcn6','Chill Hits',this)">🧊 Chill</button>
+      <button class="pl-btn" onclick="switchPlaylist('0gmft5pcMN8iDI30vspobp','Aqua Feelin\'',this)">🌊 Aqua Feelin'</button>
+      <button class="pl-btn" onclick="switchPlaylist('2R10VQvUU02ga3185KXjR6','Your All-Time Top Songs',this)">🏆 Top All-Time</button>
+    </div>
+    <iframe id="pablo-iframe" src="https://open.spotify.com/embed/playlist/37i9dQZF1DX4WYpdgoIcn6?utm_source=generator&theme=0" width="300" height="352" frameBorder="0" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+  </div>
+  <div id="pablo-btn" onclick="togglePabloPanel()" title="Pablo's Playlist 🎵">
+    <div id="pablo-zzz"><span>z</span><span>z</span><span>z</span></div>
+    <div class="pablo-photo-wrap">
+      <img id="pablo-photo" src="../../PabloPlayerPicture.png" alt="Pablo" onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 1 1%22/>'"/>
+      <div class="pablo-ring"></div>
+    </div>
+    <div class="pablo-label">Pablo 🎵</div>
+  </div>
+</div>
+
+<script>
+// ── MEDITATION ───────────────────────────────────────────────
+const TECHNIQUES = {
+  calm:  { steps: [{ l: 'Einatmen', s: 4 }, { l: 'Ausatmen', s: 6 }] },
+  box:   { steps: [{ l: 'Einatmen', s: 4 }, { l: 'Halten', s: 4 }, { l: 'Ausatmen', s: 4 }, { l: 'Halten', s: 4 }] },
+  relax: { steps: [{ l: 'Einatmen', s: 4 }, { l: 'Halten', s: 7 }, { l: 'Ausatmen', s: 8 }] }
+};
+let tech = 'calm', durMin = 5;
+let running = false, stepIdx = 0, stepRemain = 0, sessionRemain = 0, tickTimer = null;
+let soundOn = true;
+
+const $ = id => document.getElementById(id);
+function fmt(sec) {
+  const m = Math.floor(sec / 60), s = sec % 60;
+  return `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+}
+
+function beginStep(i) {
+  stepIdx = i;
+  const step = TECHNIQUES[tech].steps[i];
+  stepRemain = step.s;
+  $('breath-phase').textContent = step.l;
+  $('breath-count').textContent = step.s;
+  const c = $('breath-circle');
+  c.style.transitionDuration = step.s + 's';
+  const glow = document.querySelector('.breath-glow');
+  if (glow) glow.style.transitionDuration = step.s + 's';
+  if (step.l === 'Einatmen') { c.classList.add('big'); if (glow) glow.style.transform = 'scale(1.15)'; }
+  else if (step.l === 'Ausatmen') { c.classList.remove('big'); if (glow) glow.style.transform = 'scale(0.7)'; }
+  // 'Halten' lässt den Kreis, wie er ist
+}
+
+function tick() {
+  sessionRemain--;
+  if (sessionRemain <= 0) { $('medi-remaining').textContent = '00:00'; finishSession(); return; }
+  $('medi-remaining').textContent = fmt(sessionRemain);
+  stepRemain--;
+  if (stepRemain <= 0) {
+    beginStep((stepIdx + 1) % TECHNIQUES[tech].steps.length);
+  } else {
+    $('breath-count').textContent = stepRemain;
+  }
+}
+
+function toggleSession() {
+  if (running) { pauseSession(); return; }
+  if (sessionRemain <= 0) { sessionRemain = durMin * 60; stepIdx = 0; }
+  running = true;
+  $('medi-start').textContent = '⏸ Pause';
+  safePablo('playing');
+  $('medi-remaining').textContent = fmt(sessionRemain);
+  beginStep(stepIdx);
+  clearInterval(tickTimer);
+  tickTimer = setInterval(tick, 1000);
+}
+
+function pauseSession() {
+  running = false;
+  clearInterval(tickTimer);
+  $('medi-start').textContent = '▶ Weiter';
+  $('breath-phase').textContent = 'Pause';
+  safePablo('idle');
+}
+
+function resetSession() {
+  running = false;
+  clearInterval(tickTimer);
+  sessionRemain = 0; stepIdx = 0;
+  $('medi-start').textContent = '▶ Start';
+  $('breath-phase').textContent = 'Bereit';
+  $('breath-count').textContent = TECHNIQUES[tech].steps[0].s;
+  $('medi-remaining').textContent = fmt(durMin * 60);
+  const c = $('breath-circle');
+  c.style.transitionDuration = '0.4s';
+  c.classList.remove('big');
+  const glow = document.querySelector('.breath-glow');
+  if (glow) { glow.style.transitionDuration = '0.4s'; glow.style.transform = 'scale(0.7)'; }
+  safePablo('idle');
+}
+
+function finishSession() {
+  running = false;
+  clearInterval(tickTimer);
+  sessionRemain = 0;
+  $('medi-start').textContent = '▶ Neu starten';
+  $('breath-phase').textContent = 'Fertig 🙏';
+  $('breath-count').textContent = '✓';
+  const c = $('breath-circle');
+  c.style.transitionDuration = '1s';
+  c.classList.remove('big');
+  safePablo('sleeping');
+  if (soundOn) playGong();
+}
+
+// Technik- & Dauer-Auswahl
+$('tech-row').addEventListener('click', e => {
+  const b = e.target.closest('.medi-pill'); if (!b) return;
+  tech = b.dataset.tech;
+  document.querySelectorAll('#tech-row .medi-pill').forEach(p => p.classList.remove('active'));
+  b.classList.add('active');
+  resetSession();
+});
+$('dur-row').addEventListener('click', e => {
+  const b = e.target.closest('.medi-pill'); if (!b) return;
+  durMin = parseInt(b.dataset.min);
+  document.querySelectorAll('#dur-row .medi-pill').forEach(p => p.classList.remove('active'));
+  b.classList.add('active');
+  resetSession();
+});
+
+function playGong() {
+  try {
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    const osc = ctx.createOscillator(), gain = ctx.createGain();
+    osc.connect(gain); gain.connect(ctx.destination);
+    osc.type = 'sine'; osc.frequency.value = 220;
+    gain.gain.setValueAtTime(0.0001, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.3, ctx.currentTime + 0.05);
+    gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 2.4);
+    osc.start();
+    osc.stop(ctx.currentTime + 2.5);
+    setTimeout(() => ctx.close(), 2700);
+  } catch(e) {}
+}
+
+$('sound-toggle').addEventListener('click', () => {
+  soundOn = !soundOn;
+  $('sound-toggle').textContent = soundOn ? '🔔' : '🔕';
+});
+
+function safePablo(s) { if (typeof setPabloState === 'function') setPabloState(s); }
+
+// Init
+resetSession();
+</script>
+
+<script>
+// ── PABLO PLAYER (1:1 von der Landingpage, eigener Positions-Key) ──
+const pabloPlayer = document.getElementById('pablo-player');
+const pabloPanel  = document.getElementById('pablo-panel');
+(function() {
+  const handle = document.getElementById('pablo-btn');
+  const panelHeader = document.querySelector('.pablo-panel-header');
+  let dragging = false, didDrag = false, startX, startY, startLeft, startTop;
+  function beginDrag(cx, cy) {
+    const r = pabloPlayer.getBoundingClientRect();
+    pabloPlayer.style.bottom = 'auto'; pabloPlayer.style.right = 'auto';
+    pabloPlayer.style.top = r.top + 'px'; pabloPlayer.style.left = r.left + 'px';
+    startX = cx; startY = cy; startLeft = r.left; startTop = r.top;
+    dragging = true; didDrag = false; handle.style.animationPlayState = 'paused';
+  }
+  function moveDrag(cx, cy) {
+    if (!dragging) return;
+    const dx = cx - startX, dy = cy - startY;
+    if (Math.abs(dx) > 3 || Math.abs(dy) > 3) didDrag = true;
+    const w = pabloPlayer.offsetWidth, h = pabloPlayer.offsetHeight;
+    const l = Math.max(0, Math.min(window.innerWidth - w, startLeft + dx));
+    const t = Math.max(0, Math.min(window.innerHeight - h, startTop + dy));
+    pabloPlayer.style.left = l + 'px'; pabloPlayer.style.top = t + 'px';
+  }
+  function endDrag() {
+    if (!dragging) return;
+    dragging = false; handle.style.animationPlayState = '';
+    if (didDrag) localStorage.setItem('pablo-pos-medi', JSON.stringify({ top: pabloPlayer.style.top, left: pabloPlayer.style.left }));
+  }
+  handle.addEventListener('mousedown',  e => { if (e.button === 0) { beginDrag(e.clientX, e.clientY); e.preventDefault(); } });
+  handle.addEventListener('touchstart', e => { const t = e.touches[0]; beginDrag(t.clientX, t.clientY); }, { passive: true });
+  handle.addEventListener('click', e => { if (didDrag) { e.stopPropagation(); didDrag = false; } }, true);
+  if (panelHeader) {
+    panelHeader.addEventListener('mousedown', e => { if (e.target.classList.contains('pablo-close-btn')) return; if (e.button === 0) { beginDrag(e.clientX, e.clientY); e.preventDefault(); } });
+    panelHeader.addEventListener('touchstart', e => { if (e.target.classList.contains('pablo-close-btn')) return; const t = e.touches[0]; beginDrag(t.clientX, t.clientY); }, { passive: true });
+  }
+  document.addEventListener('mousemove', e => moveDrag(e.clientX, e.clientY));
+  document.addEventListener('mouseup',   () => endDrag());
+  document.addEventListener('touchmove', e => { if (dragging) { moveDrag(e.touches[0].clientX, e.touches[0].clientY); e.preventDefault(); } }, { passive: false });
+  document.addEventListener('touchend', () => endDrag());
+  const saved = localStorage.getItem('pablo-pos-medi');
+  if (saved) try { const p = JSON.parse(saved); pabloPlayer.style.bottom = 'auto'; pabloPlayer.style.right = 'auto'; pabloPlayer.style.top = p.top; pabloPlayer.style.left = p.left; } catch(e) {}
+})();
+function switchPlaylist(id, name, btn) {
+  document.getElementById('pablo-iframe').src = 'https://open.spotify.com/embed/playlist/' + id + '?utm_source=generator&theme=0';
+  document.getElementById('pablo-track-name').textContent = name;
+  document.querySelectorAll('.pl-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+}
+function togglePabloPanel() { pabloPanel.classList.toggle('open'); }
+function setPabloState(state) { pabloPlayer.className = 'state-' + state; }
+</script>
+</body>
+</html>
