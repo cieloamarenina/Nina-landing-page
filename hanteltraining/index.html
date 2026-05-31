@@ -1,0 +1,1635 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hanteltraining — Nina</title>
+<style>
+  :root {
+    --bg: #0A1628;
+    --bg-card: #142640;
+    --bg-elevated: #1B3252;
+    --blue: #3B82F6;
+    --blue-bright: #60A5FA;
+    --accent: #38BDF8;
+    --warm: #F59E0B;
+    --text: #F8FAFC;
+    --muted: #94A3B8;
+    --border: #1E3A5F;
+    --success: #10B981;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: Arial, sans-serif;
+    background: var(--bg);
+    background-image:
+      radial-gradient(circle at 20% 0%, rgba(59, 130, 246, 0.15), transparent 50%),
+      radial-gradient(circle at 80% 100%, rgba(56, 189, 248, 0.1), transparent 50%);
+    background-attachment: fixed;
+    color: var(--text);
+    min-height: 100vh;
+    padding: 20px;
+    line-height: 1.5;
+  }
+
+  .container {
+    max-width: 900px;
+    margin: 0 auto;
+  }
+
+  header {
+    text-align: center;
+    padding: 32px 20px 16px;
+  }
+
+  h1 {
+    font-family: Arial, sans-serif;
+    font-size: 44px;
+    font-weight: 900;
+    letter-spacing: -1.5px;
+    margin-bottom: 6px;
+    background: linear-gradient(135deg, var(--text) 0%, var(--accent) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .subtitle {
+    color: var(--muted);
+    font-size: 13px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    font-weight: 700;
+  }
+
+  .progress-container {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 18px 22px;
+    margin: 24px 0;
+  }
+
+  .progress-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    color: var(--muted);
+    margin-bottom: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    font-weight: 700;
+  }
+
+  .progress-label span:last-child { color: var(--accent); }
+
+  .progress-bar {
+    height: 6px;
+    background: var(--bg-elevated);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--blue), var(--accent));
+    transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    width: 0%;
+  }
+
+  .phases {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+    margin-bottom: 28px;
+  }
+
+  .phase-tab {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    color: var(--muted);
+    padding: 14px 8px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-family: Arial, sans-serif;
+    font-size: 12px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: all 0.2s ease;
+  }
+
+  .phase-tab:hover {
+    border-color: var(--blue);
+    color: var(--text);
+    transform: translateY(-1px);
+  }
+
+  .phase-tab.active {
+    background: linear-gradient(135deg, var(--blue), var(--accent));
+    color: white;
+    border-color: transparent;
+    box-shadow: 0 4px 20px rgba(59, 130, 246, 0.4);
+  }
+
+  .phase-tab .num {
+    display: block;
+    font-size: 10px;
+    opacity: 0.7;
+    margin-bottom: 4px;
+    font-weight: 700;
+  }
+
+  .phase-header {
+    margin-bottom: 20px;
+    padding: 24px 28px;
+    background: var(--bg-card);
+    border-radius: 16px;
+    border-left: 4px solid var(--accent);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .phase-title {
+    font-size: 26px;
+    font-weight: 900;
+    letter-spacing: -0.5px;
+  }
+
+  .phase-meta {
+    color: var(--muted);
+    font-size: 13px;
+  }
+
+  .phase-meta .rounds {
+    color: var(--warm);
+    font-weight: 800;
+    background: rgba(245, 158, 11, 0.15);
+    padding: 4px 10px;
+    border-radius: 6px;
+    margin-left: 4px;
+  }
+
+  .exercises {
+    display: grid;
+    gap: 16px;
+  }
+
+  .exercise-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 22px;
+    display: grid;
+    grid-template-columns: 160px 1fr;
+    gap: 22px;
+    transition: all 0.3s ease;
+  }
+
+  @media (max-width: 600px) {
+    .exercise-card {
+      grid-template-columns: 1fr;
+    }
+    .phases {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    h1 { font-size: 32px; }
+  }
+
+  .exercise-card:hover {
+    border-color: var(--blue);
+  }
+
+  .exercise-card.completed {
+    border-color: var(--success);
+  }
+
+  .animation-box {
+    background: var(--bg-elevated);
+    border-radius: 12px;
+    width: 100%;
+    height: 160px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--border);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .animation-box::before {
+    content: '';
+    position: absolute;
+    bottom: 25px;
+    left: 10%;
+    right: 10%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--border), transparent);
+  }
+
+  .exercise-info h3 {
+    font-size: 19px;
+    font-weight: 800;
+    margin-bottom: 10px;
+    letter-spacing: -0.3px;
+  }
+
+  .exercise-meta {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 12px;
+    flex-wrap: wrap;
+  }
+
+  .meta-item {
+    background: var(--bg-elevated);
+    padding: 5px 11px;
+    border-radius: 6px;
+    font-size: 12px;
+    color: var(--accent);
+    font-weight: 700;
+    letter-spacing: 0.3px;
+  }
+
+  .meta-item.weight {
+    color: var(--warm);
+    background: rgba(245, 158, 11, 0.12);
+  }
+
+  .description {
+    color: var(--muted);
+    font-size: 13.5px;
+    margin-bottom: 14px;
+    line-height: 1.55;
+  }
+
+  .controls {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    padding-top: 12px;
+    border-top: 1px solid var(--border);
+  }
+
+  .set-tracker {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .set-label {
+    font-size: 11px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 700;
+  }
+
+  .set-dots {
+    display: flex;
+    gap: 6px;
+  }
+
+  .set-dot {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    border: 2px solid var(--border);
+    background: transparent;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-family: Arial;
+    font-weight: 800;
+    color: var(--muted);
+    font-size: 11px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .set-dot:hover {
+    border-color: var(--blue);
+    transform: scale(1.1);
+  }
+
+  .set-dot.done {
+    background: var(--success);
+    border-color: var(--success);
+    color: white;
+  }
+
+  .timer-btn {
+    background: transparent;
+    border: 1px solid var(--blue);
+    color: var(--blue);
+    padding: 7px 14px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-family: Arial;
+    font-weight: 800;
+    font-size: 12px;
+    margin-left: auto;
+    transition: all 0.2s;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .timer-btn:hover {
+    background: var(--blue);
+    color: white;
+  }
+
+  .timer-btn.running {
+    background: var(--warm);
+    border-color: var(--warm);
+    color: white;
+    animation: pulse 1s infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.7; }
+  }
+
+  /* Stickman SVG styles */
+  .stickman { width: 120px; height: 140px; }
+  .stickman .body { stroke: var(--accent); stroke-width: 3; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+  .stickman .head { fill: var(--accent); stroke: var(--accent); }
+  .stickman .bench { stroke: var(--muted); stroke-width: 4; fill: none; }
+  .stickman .weight { stroke: var(--warm); stroke-width: 4; fill: var(--warm); }
+  .stickman .ground { stroke: var(--border); stroke-width: 1; stroke-dasharray: 3,3; }
+
+  .footer-msg {
+    text-align: center;
+    color: var(--muted);
+    font-size: 12px;
+    padding: 32px 20px 20px;
+    letter-spacing: 0.5px;
+  }
+
+  .footer-msg .pablo {
+    color: var(--warm);
+    font-weight: 700;
+  }
+
+  /* Reset button */
+  .reset-btn {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    padding: 6px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-family: Arial;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    transition: all 0.2s;
+  }
+
+  .reset-btn:hover {
+    border-color: var(--warm);
+    color: var(--warm);
+  }
+
+  /* Header action buttons */
+  .header-actions {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 20px;
+    flex-wrap: wrap;
+  }
+
+  .action-btn {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 10px 16px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-family: Arial;
+    font-weight: 700;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    transition: all 0.2s;
+  }
+
+  .action-btn:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+
+  .action-btn.primary {
+    background: linear-gradient(135deg, var(--blue), var(--accent));
+    color: white;
+    border-color: transparent;
+  }
+
+  .action-btn.primary:hover {
+    opacity: 0.9;
+    color: white;
+  }
+
+  .action-btn.danger-btn {
+    border-color: rgba(245, 158, 11, 0.5);
+    color: var(--warm);
+  }
+
+  .action-btn.danger-btn:hover {
+    background: var(--warm);
+    color: white;
+    border-color: var(--warm);
+  }
+
+  /* Modal */
+  .modal-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(10, 22, 40, 0.85);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    z-index: 1000;
+    display: none;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 40px 20px;
+    overflow-y: auto;
+  }
+
+  .modal-backdrop.open {
+    display: flex;
+  }
+
+  .modal {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    max-width: 700px;
+    width: 100%;
+    padding: 28px;
+  }
+
+  .modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+  }
+
+  .modal-title {
+    font-size: 24px;
+    font-weight: 900;
+    letter-spacing: -0.5px;
+  }
+
+  .modal-close {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 18px;
+    font-family: Arial;
+  }
+
+  .modal-close:hover {
+    color: var(--text);
+    border-color: var(--muted);
+  }
+
+  /* Stats grid */
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-bottom: 24px;
+  }
+
+  @media (max-width: 500px) {
+    .stats-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  .stat-card {
+    background: var(--bg-elevated);
+    padding: 16px 10px;
+    border-radius: 12px;
+    text-align: center;
+    border: 1px solid var(--border);
+  }
+
+  .stat-value {
+    font-size: 28px;
+    font-weight: 900;
+    background: linear-gradient(135deg, var(--accent), var(--warm));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 4px;
+    line-height: 1;
+  }
+
+  .stat-label {
+    font-size: 10px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 700;
+  }
+
+  /* History list */
+  .history-title {
+    font-size: 13px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--muted);
+    margin-bottom: 12px;
+  }
+
+  .history-list {
+    display: grid;
+    gap: 10px;
+    max-height: 400px;
+    overflow-y: auto;
+  }
+
+  .history-item {
+    background: var(--bg-elevated);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 14px 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .history-date {
+    font-weight: 800;
+    font-size: 14px;
+    margin-bottom: 4px;
+  }
+
+  .history-stats {
+    color: var(--muted);
+    font-size: 12px;
+  }
+
+  .history-note {
+    color: var(--text);
+    font-size: 13px;
+    font-style: italic;
+    margin-top: 8px;
+    padding-top: 8px;
+    border-top: 1px solid var(--border);
+  }
+
+  .history-badge {
+    background: var(--success);
+    color: white;
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-size: 11px;
+    font-weight: 800;
+    white-space: nowrap;
+  }
+
+  .history-badge.partial {
+    background: var(--warm);
+  }
+
+  .history-empty {
+    text-align: center;
+    color: var(--muted);
+    font-size: 14px;
+    padding: 40px 20px;
+    line-height: 1.6;
+  }
+
+  /* Notes textarea */
+  .notes-input {
+    width: 100%;
+    background: var(--bg-elevated);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    color: var(--text);
+    font-family: Arial;
+    font-size: 14px;
+    padding: 12px 14px;
+    margin-bottom: 16px;
+    resize: vertical;
+    min-height: 70px;
+  }
+
+  .notes-input:focus {
+    outline: none;
+    border-color: var(--accent);
+  }
+
+  .save-btn {
+    background: linear-gradient(135deg, var(--blue), var(--accent));
+    color: white;
+    border: none;
+    padding: 14px 24px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-family: Arial;
+    font-weight: 800;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    width: 100%;
+  }
+
+  .save-btn:hover { opacity: 0.92; }
+
+  .confirm-text {
+    color: var(--text);
+    font-size: 14px;
+    margin-bottom: 20px;
+    line-height: 1.6;
+  }
+
+  .confirm-text strong { color: var(--accent); }
+
+  .confirm-buttons {
+    display: flex;
+    gap: 10px;
+  }
+
+  .confirm-buttons .action-btn {
+    flex: 1;
+    padding: 12px 16px;
+  }
+
+  /* Toast banner */
+  .toast {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%) translateY(-20px);
+    background: linear-gradient(135deg, var(--success), #059669);
+    padding: 14px 22px;
+    border-radius: 14px;
+    color: white;
+    font-weight: 800;
+    font-size: 14px;
+    z-index: 2000;
+    opacity: 0;
+    transition: all 0.3s ease;
+    box-shadow: 0 10px 40px rgba(16, 185, 129, 0.4);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .toast.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+
+  /* Audio toggle (für Timer-Ende) */
+  .sound-toggle {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    color: var(--muted);
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    transition: all 0.2s;
+    z-index: 100;
+  }
+
+  .sound-toggle:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <header>
+    <h1>Hanteltraining</h1>
+    <div class="subtitle">Nina · 25 Min · 3× pro Woche</div>
+    <div class="header-actions">
+      <button class="action-btn" onclick="openHistory()">📊 Verlauf</button>
+      <button class="action-btn primary" onclick="openSaveDialog()">💪 Workout speichern</button>
+      <button class="action-btn" onclick="openNewWorkoutDialog()">↻ Neuer Workout</button>
+    </div>
+  </header>
+
+  <div class="progress-container">
+    <div class="progress-label">
+      <span>Heute geschafft</span>
+      <span id="progress-text">0 / 15 Übungen</span>
+    </div>
+    <div class="progress-bar">
+      <div class="progress-fill" id="progress-fill"></div>
+    </div>
+  </div>
+
+  <div class="phases">
+    <button class="phase-tab active" data-phase="warmup">
+      <span class="num">Phase 1</span>Warmup
+    </button>
+    <button class="phase-tab" data-phase="beine">
+      <span class="num">Phase 2</span>Beine & Po
+    </button>
+    <button class="phase-tab" data-phase="arme">
+      <span class="num">Phase 3</span>Arme & Bauch
+    </button>
+    <button class="phase-tab" data-phase="cooldown">
+      <span class="num">Phase 4</span>Cool-down
+    </button>
+  </div>
+
+  <div id="phase-content"></div>
+
+  <div class="footer-msg">
+    Viel Erfolg, Nina · und liebe Grüße an <span class="pablo">Pablo</span>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="modal-backdrop" onclick="closeModal()"></div>
+
+<button class="sound-toggle" id="sound-toggle" title="Sound an/aus">🔔</button>
+
+<script>
+// ---------- ANIMATIONEN (SVG-Strichmännchen) ----------
+const animations = {
+  // Phase 1: Warmup
+  marsch: `<svg class="stickman" viewBox="0 0 120 140">
+    <line class="ground" x1="10" y1="125" x2="110" y2="125"/>
+    <circle class="head" cx="60" cy="20" r="8"/>
+    <line class="body" x1="60" y1="28" x2="60" y2="70"/>
+    <line class="body" x1="60" y1="40">
+      <animate attributeName="x2" values="40;70;40" dur="0.8s" repeatCount="indefinite"/>
+      <animate attributeName="y2" values="60;35;60" dur="0.8s" repeatCount="indefinite"/>
+    </line>
+    <line class="body" x1="60" y1="40">
+      <animate attributeName="x2" values="80;50;80" dur="0.8s" repeatCount="indefinite"/>
+      <animate attributeName="y2" values="35;60;35" dur="0.8s" repeatCount="indefinite"/>
+    </line>
+    <line class="body" x1="60" y1="70">
+      <animate attributeName="x2" values="50;60;50" dur="0.8s" repeatCount="indefinite"/>
+      <animate attributeName="y2" values="120;90;120" dur="0.8s" repeatCount="indefinite"/>
+    </line>
+    <line class="body" x1="60" y1="70">
+      <animate attributeName="x2" values="70;60;70" dur="0.8s" repeatCount="indefinite"/>
+      <animate attributeName="y2" values="90;120;90" dur="0.8s" repeatCount="indefinite"/>
+    </line>
+  </svg>`,
+
+  huefte: `<svg class="stickman" viewBox="0 0 120 140">
+    <line class="ground" x1="10" y1="125" x2="110" y2="125"/>
+    <circle class="head" cx="60" cy="22" r="8">
+      <animate attributeName="cx" values="58;62;58" dur="2s" repeatCount="indefinite"/>
+    </circle>
+    <line class="body" x1="60" y1="30" x2="60" y2="65">
+      <animate attributeName="x1" values="58;62;58" dur="2s" repeatCount="indefinite"/>
+    </line>
+    <line class="body" x1="60" y1="40" x2="42" y2="55">
+      <animate attributeName="x1" values="58;62;58" dur="2s" repeatCount="indefinite"/>
+    </line>
+    <line class="body" x1="60" y1="40" x2="78" y2="55">
+      <animate attributeName="x1" values="58;62;58" dur="2s" repeatCount="indefinite"/>
+    </line>
+    <ellipse cx="60" cy="70" rx="14" ry="6" fill="none" stroke="var(--accent)" stroke-width="2" stroke-dasharray="2,2" opacity="0.5"/>
+    <line class="body" x1="60" y1="65" x2="50" y2="123">
+      <animate attributeName="x1" values="55;65;55" dur="2s" repeatCount="indefinite"/>
+    </line>
+    <line class="body" x1="60" y1="65" x2="70" y2="123">
+      <animate attributeName="x1" values="65;55;65" dur="2s" repeatCount="indefinite"/>
+    </line>
+  </svg>`,
+
+  armkreis: `<svg class="stickman" viewBox="0 0 120 140">
+    <line class="ground" x1="10" y1="125" x2="110" y2="125"/>
+    <circle class="head" cx="60" cy="22" r="8"/>
+    <line class="body" x1="60" y1="30" x2="60" y2="80"/>
+    <line class="body" x1="60" y1="40">
+      <animate attributeName="x2" values="30;60;90;60;30" dur="2s" repeatCount="indefinite"/>
+      <animate attributeName="y2" values="40;15;40;65;40" dur="2s" repeatCount="indefinite"/>
+    </line>
+    <line class="body" x1="60" y1="40">
+      <animate attributeName="x2" values="90;60;30;60;90" dur="2s" repeatCount="indefinite"/>
+      <animate attributeName="y2" values="40;15;40;65;40" dur="2s" repeatCount="indefinite"/>
+    </line>
+    <line class="body" x1="60" y1="80" x2="50" y2="123"/>
+    <line class="body" x1="60" y1="80" x2="70" y2="123"/>
+  </svg>`,
+
+  squat: `<svg class="stickman" viewBox="0 0 120 140">
+    <line class="ground" x1="10" y1="125" x2="110" y2="125"/>
+    <circle class="head" cx="60" r="8">
+      <animate attributeName="cy" values="22;42;22" dur="2s" repeatCount="indefinite"/>
+    </circle>
+    <line class="body" x1="60" x2="60">
+      <animate attributeName="y1" values="30;50;30" dur="2s" repeatCount="indefinite"/>
+      <animate attributeName="y2" values="70;80;70" dur="2s" repeatCount="indefinite"/>
+    </line>
+    <line class="body" x1="60">
+      <animate attributeName="y1" values="40;60;40" dur="2s" repeatCount="indefinite"/>
+      <animate attributeName="x2" values="40;35;40" dur="2s" repeatCount="indefinite"/>
+      <animate attributeName="y2" values="50;55;50" dur="2s" repeatCount="indefinite"/>
+    </line>
+    <line class="body" x1="60">
+      <animate attributeName="y1" values="40;60;40" dur="2s" repeatCount="indefinite"/>
+      <animate attributeName="x2" values="80;85;80" dur="2s" repeatCount="indefinite"/>
+      <animate attributeName="y2" values="50;55;50" dur="2s" repeatCount="indefinite"/>
+    </line>
+    <line class="body" x1="60">
+      <animate attributeName="y1" values="70;80;70" dur="2s" repeatCount="indefinite"/>
+      <animate attributeName="x2" values="45;35;45" dur="2s" repeatCount="indefinite"/>
+      <animate attributeName="y2" values="123;105;123" dur="2s" repeatCount="indefinite"/>
+    </line>
+    <line class="body" x1="60">
+      <animate attributeName="y1" values="70;80;70" dur="2s" repeatCount="indefinite"/>
+      <animate attributeName="x2" values="75;85;75" dur="2s" repeatCount="indefinite"/>
+      <animate attributeName="y2" values="123;105;123" dur="2s" repeatCount="indefinite"/>
+    </line>
+  </svg>`,
+
+  // Phase 2: Beine & Po
+  goblet: `<svg class="stickman" viewBox="0 0 120 140">
+    <line class="ground" x1="10" y1="125" x2="110" y2="125"/>
+    <circle class="head" cx="60" r="8">
+      <animate attributeName="cy" values="22;42;22" dur="2.4s" repeatCount="indefinite"/>
+    </circle>
+    <line class="body" x1="60" x2="60">
+      <animate attributeName="y1" values="30;50;30" dur="2.4s" repeatCount="indefinite"/>
+      <animate attributeName="y2" values="70;80;70" dur="2.4s" repeatCount="indefinite"/>
+    </line>
+    <line class="body" x1="60" x2="45">
+      <animate attributeName="y1" values="40;60;40" dur="2.4s" repeatCount="indefinite"/>
+      <animate attributeName="y2" values="50;70;50" dur="2.4s" repeatCount="indefinite"/>
+    </line>
+    <line class="body" x1="60" x2="75">
+      <animate attributeName="y1" values="40;60;40" dur="2.4s" repeatCount="indefinite"/>
+      <animate attributeName="y2" values="50;70;50" dur="2.4s" repeatCount="indefinite"/>
+    </line>
+    <rect class="weight" x="42" width="36" height="12" rx="3">
+      <animate attributeName="y" values="44;64;44" dur="2.4s" repeatCount="indefinite"/>
+    </rect>
+    <line class="body" x1="60">
+      <animate attributeName="y1" values="70;80;70" dur="2.4s" repeatCount="indefinite"/>
+      <animate attributeName="x2" values="45;35;45" dur="2.4s" repeatCount="indefinite"/>
+      <animate attributeName="y2" values="123;105;123" dur="2.4s" repeatCount="indefinite"/>
+    </line>
+    <line class="body" x1="60">
+      <animate attributeName="y1" values="70;80;70" dur="2.4s" repeatCount="indefinite"/>
+      <animate attributeName="x2" values="75;85;75" dur="2.4s" repeatCount="indefinite"/>
+      <animate attributeName="y2" values="123;105;123" dur="2.4s" repeatCount="indefinite"/>
+    </line>
+  </svg>`,
+
+  hipthrust: `<svg class="stickman" viewBox="0 0 120 140">
+    <line class="ground" x1="10" y1="125" x2="110" y2="125"/>
+    <rect class="bench" x="15" y="75" width="35" height="6" rx="2"/>
+    <line class="bench" x1="22" y1="81" x2="22" y2="115"/>
+    <line class="bench" x1="43" y1="81" x2="43" y2="115"/>
+    <circle class="head" cx="30" cy="65" r="7"/>
+    <line class="body" x1="35" y1="72" x2="70" y2="72">
+      <animate attributeName="x2" values="70;75;70" dur="2s" repeatCount="indefinite"/>
+      <animate attributeName="y2" values="85;72;85" dur="2s" repeatCount="indefinite"/>
+    </line>
+    <rect class="weight" x="60" y="62" width="22" height="8" rx="2">
+      <animate attributeName="y" values="75;62;75" dur="2s" repeatCount="indefinite"/>
+    </rect>
+    <line class="body" x1="70" y1="72">
+      <animate attributeName="x1" values="70;75;70" dur="2s" repeatCount="indefinite"/>
+      <animate attributeName="y1" values="85;72;85" dur="2s" repeatCount="indefinite"/>
+      <animate attributeName="x2" values="85;95;85" dur="2s" repeatCount="indefinite"/>
+      <animate attributeName="y2" values="100;95;100" dur="2s" repeatCount="indefinite"/>
+    </line>
+    <line class="body" x2="85">
+      <animate attributeName="x1" values="85;95;85" dur="2s" repeatCount="indefinite"/>
+      <animate attributeName="y1" values="100;95;100" dur="2s" repeatCount="indefinite"/>
+      <animate attributeName="y2" values="123;123;123" dur="2s" repeatCount="indefinite"/>
+    </line>
+  </svg>`,
+
+  rdl: `<svg class="stickman" viewBox="0 0 120 140">
+    <line class="ground" x1="10" y1="125" x2="110" y2="125"/>
+    <circle class="head" r="8">
+      <animate attributeName="cx" values="60;75;60" dur="2.4s" repeatCount="indefinite"/>
+      <animate attributeName="cy" values="22;45;22" dur="2.4s" repeatCount="indefinite"/>
+    </circle>
+    <line class="body">
+      <animate attributeName="x1" values="60;75;60" dur="2.4s" repeatCount="indefinite"/>
+      <animate attributeName="y1" values="30;52;30" dur="2.4s" repeatCount="indefinite"/>
+      <animate attributeName="x2" values="60;58;60" dur="2.4s" repeatCount="indefinite"/>
+      <animate attributeName="y2" values="80;78;80" dur="2.4s" repeatCount="indefinite"/>
+    </line>
+    <line class="body">
+      <animate attributeName="x1" values="60;72;60" dur="2.4s" repeatCount="indefinite"/>
+      <animate attributeName="y1" values="40;55;40" dur="2.4s" repeatCount="indefinite"/>
+      <animate attributeName="x2" values="55;55;55" dur="2.4s" repeatCount="indefinite"/>
+      <animate attributeName="y2" values="80;100;80" dur="2.4s" repeatCount="indefinite"/>
+    </line>
+    <line class="body">
+      <animate attributeName="x1" values="60;72;60" dur="2.4s" repeatCount="indefinite"/>
+      <animate attributeName="y1" values="40;55;40" dur="2.4s" repeatCount="indefinite"/>
+      <animate attributeName="x2" values="65;65;65" dur="2.4s" repeatCount="indefinite"/>
+      <animate attributeName="y2" values="80;100;80" dur="2.4s" repeatCount="indefinite"/>
+    </line>
+    <rect class="weight" width="22" height="8" rx="2">
+      <animate attributeName="x" values="49;49;49" dur="2.4s" repeatCount="indefinite"/>
+      <animate attributeName="y" values="82;102;82" dur="2.4s" repeatCount="indefinite"/>
+    </rect>
+    <line class="body" x1="60" x2="55" y2="123">
+      <animate attributeName="y1" values="80;78;80" dur="2.4s" repeatCount="indefinite"/>
+    </line>
+    <line class="body" x1="60" x2="65" y2="123">
+      <animate attributeName="y1" values="80;78;80" dur="2.4s" repeatCount="indefinite"/>
+    </line>
+  </svg>`,
+
+  // Phase 2 NEU: Reiterhosen, Waden, unterer Rücken
+  curtsy: `<svg class="stickman" viewBox="0 0 120 140">
+    <line class="ground" x1="10" y1="125" x2="110" y2="125"/>
+    <circle class="head" r="8">
+      <animate attributeName="cx" values="55;52;55" dur="2.4s" repeatCount="indefinite"/>
+      <animate attributeName="cy" values="22;42;22" dur="2.4s" repeatCount="indefinite"/>
+    </circle>
+    <line class="body">
+      <animate attributeName="x1" values="55;52;55" dur="2.4s" repeatCount="indefinite"/>
+      <animate attributeName="y1" values="30;50;30" dur="2.4s" repeatCount="indefinite"/>
+      <animate attributeName="x2" values="55;52;55" dur="2.4s" repeatCount="indefinite"/>
+      <animate attributeName="y2" values="75;82;75" dur="2.4s" repeatCount="indefinite"/>
+    </line>
+    <line class="body" x2="43">
+      <animate attributeName="x1" values="55;52;55" dur="2.4s" repeatCount="indefinite"/>
+      <animate attributeName="y1" values="40;58;40" dur="2.4s" repeatCount="indefinite"/>
+      <animate attributeName="y2" values="55;72;55" dur="2.4s" repeatCount="indefinite"/>
+    </line>
+    <line class="body" x2="67">
+      <animate attributeName="x1" values="55;52;55" dur="2.4s" repeatCount="indefinite"/>
+      <animate attributeName="y1" values="40;58;40" dur="2.4s" repeatCount="indefinite"/>
+      <animate attributeName="y2" values="55;72;55" dur="2.4s" repeatCount="indefinite"/>
+    </line>
+    <rect class="weight" width="22" height="9" rx="2">
+      <animate attributeName="x" values="44;41;44" dur="2.4s" repeatCount="indefinite"/>
+      <animate attributeName="y" values="50;68;50" dur="2.4s" repeatCount="indefinite"/>
+    </rect>
+    <line class="body" x2="45" y2="123">
+      <animate attributeName="x1" values="55;52;55" dur="2.4s" repeatCount="indefinite"/>
+      <animate attributeName="y1" values="75;82;75" dur="2.4s" repeatCount="indefinite"/>
+    </line>
+    <line class="body">
+      <animate attributeName="x1" values="55;52;55" dur="2.4s" repeatCount="indefinite"/>
+      <animate attributeName="y1" values="75;82;75" dur="2.4s" repeatCount="indefinite"/>
+      <animate attributeName="x2" values="65;90;65" dur="2.4s" repeatCount="indefinite"/>
+      <animate attributeName="y2" values="123;118;123" dur="2.4s" repeatCount="indefinite"/>
+    </line>
+  </svg>`,
+
+  calfraise: `<svg class="stickman" viewBox="0 0 120 140">
+    <line class="ground" x1="10" y1="125" x2="110" y2="125"/>
+    <g>
+      <animateTransform attributeName="transform" type="translate" values="0 0; 0 -10; 0 0" dur="1.4s" repeatCount="indefinite"/>
+      <circle class="head" cx="60" cy="22" r="8"/>
+      <line class="body" x1="60" y1="30" x2="60" y2="85"/>
+      <line class="body" x1="60" y1="40" x2="42" y2="80"/>
+      <line class="body" x1="60" y1="40" x2="78" y2="80"/>
+      <rect class="weight" x="34" y="76" width="12" height="14" rx="2"/>
+      <rect class="weight" x="74" y="76" width="12" height="14" rx="2"/>
+      <line class="body" x1="60" y1="85" x2="50" y2="118"/>
+      <line class="body" x1="60" y1="85" x2="70" y2="118"/>
+    </g>
+    <line class="body" x1="44" y1="123" x2="58" y2="123"/>
+    <line class="body" x1="62" y1="123" x2="76" y2="123"/>
+  </svg>`,
+
+  superman: `<svg class="stickman" viewBox="0 0 120 140">
+    <line class="ground" x1="10" y1="125" x2="110" y2="125"/>
+    <g>
+      <animateTransform attributeName="transform" type="translate" values="0 0; 0 -12; 0 0" dur="2s" repeatCount="indefinite"/>
+      <circle class="head" cx="30" cy="105" r="7"/>
+      <line class="body" x1="37" y1="108" x2="85" y2="112"/>
+      <line class="body" x1="35" y1="103" x2="20" y2="94"/>
+      <line class="body" x1="20" y1="94" x2="10" y2="86"/>
+      <line class="body" x1="85" y1="112" x2="103" y2="116"/>
+      <line class="body" x1="103" y1="116" x2="116" y2="110"/>
+    </g>
+    <text x="60" y="50" fill="var(--warm)" font-family="Arial" font-size="11" font-weight="700" text-anchor="middle">Heben</text>
+  </svg>`,
+
+  // Phase 3: Arme & Bauch
+  kickback: `<svg class="stickman" viewBox="0 0 120 140">
+    <line class="ground" x1="10" y1="125" x2="110" y2="125"/>
+    <rect class="bench" x="10" y="78" width="40" height="6" rx="2"/>
+    <line class="bench" x1="18" y1="84" x2="18" y2="115"/>
+    <line class="bench" x1="42" y1="84" x2="42" y2="115"/>
+    <circle class="head" cx="20" cy="70" r="7"/>
+    <line class="body" x1="25" y1="74" x2="70" y2="76"/>
+    <line class="body" x1="30" y1="74" x2="30" y2="82"/>
+    <line class="body" x1="60" y1="76" x2="60" y2="68"/>
+    <line class="body" x1="60" y1="68">
+      <animate attributeName="x2" values="80;95;80" dur="1.6s" repeatCount="indefinite"/>
+      <animate attributeName="y2" values="76;62;76" dur="1.6s" repeatCount="indefinite"/>
+    </line>
+    <rect class="weight" width="14" height="6" rx="2">
+      <animate attributeName="x" values="78;93;78" dur="1.6s" repeatCount="indefinite"/>
+      <animate attributeName="y" values="73;59;73" dur="1.6s" repeatCount="indefinite"/>
+    </rect>
+    <line class="body" x1="70" y1="76" x2="65" y2="115"/>
+    <line class="body" x1="70" y1="76" x2="80" y2="115"/>
+  </svg>`,
+
+  overhead: `<svg class="stickman" viewBox="0 0 120 140">
+    <line class="ground" x1="10" y1="125" x2="110" y2="125"/>
+    <circle class="head" cx="60" cy="38" r="8"/>
+    <line class="body" x1="60" y1="46" x2="60" y2="85"/>
+    <line class="body" x1="60" y1="50" x2="45" y2="35"/>
+    <line class="body" x1="60" y1="50" x2="75" y2="35"/>
+    <line class="body" x1="45" y1="35">
+      <animate attributeName="x2" values="48;45;48" dur="2s" repeatCount="indefinite"/>
+      <animate attributeName="y2" values="15;42;15" dur="2s" repeatCount="indefinite"/>
+    </line>
+    <line class="body" x1="75" y1="35">
+      <animate attributeName="x2" values="72;75;72" dur="2s" repeatCount="indefinite"/>
+      <animate attributeName="y2" values="15;42;15" dur="2s" repeatCount="indefinite"/>
+    </line>
+    <rect class="weight" width="20" height="8" rx="2">
+      <animate attributeName="x" values="50;50;50" dur="2s" repeatCount="indefinite"/>
+      <animate attributeName="y" values="8;38;8" dur="2s" repeatCount="indefinite"/>
+    </rect>
+    <line class="body" x1="60" y1="85" x2="50" y2="123"/>
+    <line class="body" x1="60" y1="85" x2="70" y2="123"/>
+  </svg>`,
+
+  twist: `<svg class="stickman" viewBox="0 0 120 140">
+    <line class="ground" x1="10" y1="125" x2="110" y2="125"/>
+    <circle class="head" cy="55" r="7">
+      <animate attributeName="cx" values="50;70;50" dur="1.6s" repeatCount="indefinite"/>
+    </circle>
+    <line class="body" y1="62" y2="90">
+      <animate attributeName="x1" values="52;68;52" dur="1.6s" repeatCount="indefinite"/>
+      <animate attributeName="x2" values="60;60;60" dur="1.6s" repeatCount="indefinite"/>
+    </line>
+    <line class="body" y1="75">
+      <animate attributeName="x1" values="55;65;55" dur="1.6s" repeatCount="indefinite"/>
+      <animate attributeName="x2" values="35;85;35" dur="1.6s" repeatCount="indefinite"/>
+      <animate attributeName="y2" values="80;80;80" dur="1.6s" repeatCount="indefinite"/>
+    </line>
+    <rect class="weight" width="18" height="7" rx="2">
+      <animate attributeName="x" values="26;76;26" dur="1.6s" repeatCount="indefinite"/>
+      <animate attributeName="y" values="77;77;77" dur="1.6s" repeatCount="indefinite"/>
+    </rect>
+    <line class="body" x1="60" y1="90" x2="40" y2="75"/>
+    <line class="body" x1="60" y1="90" x2="80" y2="75"/>
+    <line class="ground" x1="30" y1="123" x2="90" y2="123"/>
+  </svg>`,
+
+  plank: `<svg class="stickman" viewBox="0 0 120 140">
+    <line class="ground" x1="10" y1="125" x2="110" y2="125"/>
+    <circle class="head" cx="22" cy="78" r="7">
+      <animate attributeName="cy" values="78;76;78" dur="3s" repeatCount="indefinite"/>
+    </circle>
+    <line class="body" x1="28" y1="80" x2="100" y2="85">
+      <animate attributeName="y2" values="85;83;85" dur="3s" repeatCount="indefinite"/>
+    </line>
+    <line class="body" x1="35" y1="80" x2="35" y2="115"/>
+    <line class="body" x1="35" y1="115" x2="20" y2="115"/>
+    <line class="body" x1="35" y1="115" x2="50" y2="115"/>
+    <line class="body" x1="95" y1="85" x2="105" y2="120"/>
+    <text x="60" y="50" fill="var(--warm)" font-family="Arial" font-size="11" font-weight="700" text-anchor="middle">HALTEN</text>
+  </svg>`,
+
+  sideplank: `<svg class="stickman" viewBox="0 0 120 140">
+    <line class="ground" x1="10" y1="125" x2="110" y2="125"/>
+    <circle class="head" cx="22" cy="58" r="7">
+      <animate attributeName="cy" values="58;55;58" dur="3s" repeatCount="indefinite"/>
+    </circle>
+    <line class="body" x1="28" x2="98">
+      <animate attributeName="y1" values="62;59;62" dur="3s" repeatCount="indefinite"/>
+      <animate attributeName="y2" values="115;112;115" dur="3s" repeatCount="indefinite"/>
+    </line>
+    <line class="body" x1="22" y1="115" x2="22">
+      <animate attributeName="y2" values="65;62;65" dur="3s" repeatCount="indefinite"/>
+    </line>
+    <line class="body" x1="15" y1="115" x2="35" y2="115"/>
+    <line class="body" x1="30" x2="38">
+      <animate attributeName="y1" values="62;59;62" dur="3s" repeatCount="indefinite"/>
+      <animate attributeName="y2" values="35;30;35" dur="3s" repeatCount="indefinite"/>
+    </line>
+    <line class="body" x1="90" y1="115" x2="105" y2="115"/>
+    <text x="65" y="35" fill="var(--warm)" font-family="Arial" font-size="11" font-weight="700" text-anchor="middle">HALTEN</text>
+  </svg>`,
+
+  // Phase 4: Cool-down
+  taube: `<svg class="stickman" viewBox="0 0 120 140">
+    <line class="ground" x1="10" y1="125" x2="110" y2="125"/>
+    <circle class="head" cx="55" cy="55" r="7"/>
+    <line class="body" x1="55" y1="62" x2="60" y2="90"/>
+    <line class="body" x1="56" y1="70" x2="35" y2="95"/>
+    <line class="body" x1="56" y1="70" x2="75" y2="95"/>
+    <path class="body" d="M 60 90 Q 80 100 95 95 Q 105 100 95 120 L 25 120 Q 20 100 35 95 Q 50 100 60 90"/>
+    <text x="60" y="30" fill="var(--warm)" font-family="Arial" font-size="11" font-weight="700" text-anchor="middle">HALTEN</text>
+  </svg>`,
+
+  hamstring: `<svg class="stickman" viewBox="0 0 120 140">
+    <line class="ground" x1="10" y1="125" x2="110" y2="125"/>
+    <circle class="head" cx="35" cy="60" r="7"/>
+    <line class="body" x1="40" y1="65" x2="55" y2="95"/>
+    <line class="body" x1="45" y1="70" x2="80" y2="115"/>
+    <line class="body" x1="55" y1="95" x2="100" y2="118"/>
+    <line class="body" x1="55" y1="95" x2="35" y2="118"/>
+    <circle r="3" fill="var(--warm)">
+      <animate attributeName="cx" values="80;100;80" dur="3s" repeatCount="indefinite"/>
+      <animate attributeName="cy" values="115;118;115" dur="3s" repeatCount="indefinite"/>
+    </circle>
+    <text x="60" y="30" fill="var(--warm)" font-family="Arial" font-size="11" font-weight="700" text-anchor="middle">HALTEN</text>
+  </svg>`,
+
+  trizeps: `<svg class="stickman" viewBox="0 0 120 140">
+    <line class="ground" x1="10" y1="125" x2="110" y2="125"/>
+    <circle class="head" cx="60" cy="35" r="8"/>
+    <line class="body" x1="60" y1="43" x2="60" y2="85"/>
+    <line class="body" x1="60" y1="48" x2="42" y2="35"/>
+    <line class="body" x1="42" y1="35" x2="55" y2="42"/>
+    <line class="body" x1="60" y1="48" x2="78" y2="22"/>
+    <line class="body" x1="78" y1="22" x2="68" y2="40"/>
+    <path class="body" d="M 42 35 Q 55 25 70 32" stroke-dasharray="3,3"/>
+    <line class="body" x1="60" y1="85" x2="50" y2="123"/>
+    <line class="body" x1="60" y1="85" x2="70" y2="123"/>
+    <text x="60" y="115" fill="var(--warm)" font-family="Arial" font-size="10" font-weight="700" text-anchor="middle">HALTEN</text>
+  </svg>`,
+
+  schulter: `<svg class="stickman" viewBox="0 0 120 140">
+    <line class="ground" x1="10" y1="125" x2="110" y2="125"/>
+    <circle class="head" cx="60" cy="30" r="8"/>
+    <line class="body" x1="60" y1="38" x2="60" y2="80"/>
+    <line class="body" x1="60" y1="45" x2="35" y2="55"/>
+    <line class="body" x1="60" y1="45" x2="92" y2="48"/>
+    <line class="body" x1="92" y1="48" x2="40" y2="55" stroke-dasharray="3,3"/>
+    <line class="body" x1="60" y1="80" x2="50" y2="123"/>
+    <line class="body" x1="60" y1="80" x2="70" y2="123"/>
+    <text x="60" y="105" fill="var(--warm)" font-family="Arial" font-size="10" font-weight="700" text-anchor="middle">HALTEN</text>
+  </svg>`
+};
+
+// ---------- TRAININGSDATEN ----------
+const phases = {
+  warmup: {
+    title: "Warmup",
+    meta: "ca 3 Minuten",
+    rounds: 1,
+    exercises: [
+      { name: "Marschieren auf der Stelle", reps: "30 Sek", weight: "ohne Hantel", description: "Knie hoch ziehen, Arme schwingen, Puls hochfahren", animation: "marsch", sets: 1, pause: 0 },
+      { name: "Hüftkreise", reps: "10 pro Seite", weight: "ohne Hantel", description: "Hände an die Hüften, große Kreise mit der Hüfte zeichnen — erst rechts, dann links", animation: "huefte", sets: 1, pause: 0 },
+      { name: "Armkreise", reps: "10 vor + 10 zurück", weight: "ohne Hantel", description: "Beide Arme seitlich ausgestreckt, große Kreise zeichnen", animation: "armkreis", sets: 1, pause: 0 },
+      { name: "Bodyweight Squats", reps: "10 Wdh", weight: "ohne Hantel", description: "Tief in die Hocke gehen, Knie über Zehenspitzen, Brust hoch, Po zurück", animation: "squat", sets: 1, pause: 0 }
+    ]
+  },
+  beine: {
+    title: "Beine, Po & Co",
+    meta: "ca 13 Minuten · inkl. Reiterhosen, Waden, unterer Rücken",
+    rounds: 3,
+    exercises: [
+      { name: "Goblet Squat", reps: "10-12 Wdh", weight: "8 kg Hantel", description: "Hantel vor der Brust halten (wie einen Kelch), tief in die Hocke, Knie folgen den Zehen, Brust bleibt aufrecht", animation: "goblet", sets: 3, pause: 45 },
+      { name: "Hip Thrust", reps: "12-15 Wdh", weight: "8 kg Hantel", description: "Schulter auf der Bank, Füße flach am Boden, Hantel quer auf der Hüfte, Po nach oben drücken bis Knie-Hüfte-Schulter eine Linie bilden", animation: "hipthrust", sets: 3, pause: 45 },
+      { name: "Romanian Deadlift", reps: "10 Wdh", weight: "8 kg Hantel", description: "Leichte Knie-Beugung, Hüfte nach hinten schieben, Hantel an den Schienbeinen entlang führen — Rücken bleibt gerade", animation: "rdl", sets: 3, pause: 45 },
+      { name: "Curtsy Lunges", reps: "10 pro Seite", weight: "8 kg Hantel", description: "Zielzone: Reiterhosen · Hantel vor der Brust, hinteres Bein kreuzt diagonal nach hinten wie bei einem Knicks, tief absenken, vorderes Knie bleibt über dem Fuß — links und rechts im Wechsel", animation: "curtsy", sets: 2, pause: 45 },
+      { name: "Standing Calf Raises", reps: "15 Wdh", weight: "8 kg Hantel", description: "Zielzone: Waden · Hantel in einer Hand, langsam auf die Zehenspitzen hoch, oben kurz halten, langsam ablassen — bei Bedarf an Wand abstützen für Balance", animation: "calfraise", sets: 2, pause: 30 },
+      { name: "Superman", reps: "12 Wdh", weight: "ohne Hantel", description: "Zielzone: unterer Rücken · Auf dem Bauch liegen, Arme nach vorn ausgestreckt, Beine nach hinten — gleichzeitig Arme und Beine vom Boden anheben, 2 Sek halten, kontrolliert ablassen", animation: "superman", sets: 2, pause: 30 }
+    ]
+  },
+  arme: {
+    title: "Bauch & Winkearme",
+    meta: "ca 11 Minuten · inkl. Hüftspeck",
+    rounds: 3,
+    exercises: [
+      { name: "Trizeps Kickbacks", reps: "12 pro Seite", weight: "2 kg je Hand", description: "Knie auf die Bank, vornübergebeugt, Oberarm parallel zum Boden, Unterarm nach hinten strecken — Oberarm bleibt fest", animation: "kickback", sets: 3, pause: 30 },
+      { name: "Overhead Trizeps Extension", reps: "10-12 Wdh", weight: "2 kg beidhändig", description: "Stehend, Hantel beidhändig hinter den Kopf senken, dann nach oben strecken — Ellbogen bleiben eng am Kopf", animation: "overhead", sets: 3, pause: 30 },
+      { name: "Russian Twists", reps: "20 Wdh total", weight: "2 kg", description: "Sitzend, leicht zurück gelehnt, Beine angehoben (Knie gebeugt), Hantel langsam von links nach rechts neben den Körper tippen", animation: "twist", sets: 3, pause: 30 },
+      { name: "Plank", reps: "20-30 Sek", weight: "ohne Hantel", description: "Unterarmstütz, Körper bildet eine gerade Linie von Kopf bis Ferse, Bauch fest anspannen, Po nicht nach oben schieben", animation: "plank", sets: 3, pause: 30 },
+      { name: "Side Plank", reps: "20-30 Sek pro Seite", weight: "ohne Hantel", description: "Zielzone: Hüftspeck · Seitstütz auf einem Unterarm, Körper bildet eine gerade Linie, oberer Arm zur Decke gestreckt, Hüfte nicht absacken lassen — links und rechts je 1 Satz", animation: "sideplank", sets: 2, pause: 30 }
+    ]
+  },
+  cooldown: {
+    title: "Cool-down",
+    meta: "ca 2-3 Minuten · sanft halten",
+    rounds: 1,
+    exercises: [
+      { name: "Taubensitz", reps: "30 Sek pro Seite", weight: "Stretch", description: "Vorderes Bein angewinkelt vor dem Körper, hinteres Bein nach hinten ausgestreckt, Oberkörper sanft Richtung Boden", animation: "taube", sets: 1, pause: 0 },
+      { name: "Hamstring-Stretch", reps: "30 Sek pro Seite", weight: "Stretch", description: "Sitzend, ein Bein gestreckt, anderes angewinkelt, mit der Hand zur Fußspitze des gestreckten Beins greifen", animation: "hamstring", sets: 1, pause: 0 },
+      { name: "Trizeps-Stretch", reps: "20 Sek pro Seite", weight: "Stretch", description: "Arm über den Kopf, Hand zum Nacken, mit der anderen Hand am Ellbogen sanft nach hinten drücken", animation: "trizeps", sets: 1, pause: 0 },
+      { name: "Schulter-Crossbody", reps: "20 Sek pro Seite", weight: "Stretch", description: "Arm gerade vor der Brust, mit dem anderen Arm zur Brust ziehen — Schulter unten lassen", animation: "schulter", sets: 1, pause: 0 }
+    ]
+  }
+};
+
+// ---------- BACKEND: localStorage Persistenz ----------
+const STORAGE = {
+  current: 'nina_workout_current',
+  history: 'nina_workout_history',
+  startTime: 'nina_workout_start'
+};
+
+function saveCurrent() {
+  try {
+    localStorage.setItem(STORAGE.current, JSON.stringify(completedSets));
+    // Start-Zeit beim ersten Klick setzen
+    if (!localStorage.getItem(STORAGE.startTime) && completedCount() > 0) {
+      localStorage.setItem(STORAGE.startTime, Date.now().toString());
+    }
+  } catch(e) { console.warn('Storage save failed', e); }
+}
+
+function loadCurrent() {
+  try {
+    const data = localStorage.getItem(STORAGE.current);
+    if (data) completedSets = JSON.parse(data);
+  } catch(e) { console.warn('Storage load failed', e); }
+}
+
+function getHistory() {
+  try {
+    const data = localStorage.getItem(STORAGE.history);
+    return data ? JSON.parse(data) : [];
+  } catch(e) { return []; }
+}
+
+function saveWorkoutSession(note) {
+  const history = getHistory();
+  const startTime = parseInt(localStorage.getItem(STORAGE.startTime) || Date.now());
+  let duration = Math.round((Date.now() - startTime) / 60000);
+  if (duration < 1) duration = 1;
+
+  // Pro Phase aggregieren
+  const phaseStats = {};
+  Object.keys(phases).forEach(phaseKey => {
+    let done = 0, total = 0;
+    phases[phaseKey].exercises.forEach((ex, idx) => {
+      const key = exerciseKey(phaseKey, idx);
+      const sets = completedSets[key] || [];
+      done += sets.filter(Boolean).length;
+      total += ex.sets;
+    });
+    phaseStats[phaseKey] = { done, total };
+  });
+
+  const session = {
+    date: new Date().toISOString(),
+    duration: duration,
+    completed: completedCount(),
+    total: totalSets(),
+    phases: phaseStats,
+    note: (note || '').trim()
+  };
+
+  history.unshift(session);
+  if (history.length > 50) history.length = 50;
+  localStorage.setItem(STORAGE.history, JSON.stringify(history));
+}
+
+function startNewWorkout() {
+  completedSets = {};
+  localStorage.removeItem(STORAGE.current);
+  localStorage.removeItem(STORAGE.startTime);
+  renderPhase(currentPhase);
+}
+
+function computeWeekCount() {
+  const history = getHistory();
+  if (history.length === 0) return 0;
+  const weekAgo = new Date();
+  weekAgo.setDate(weekAgo.getDate() - 7);
+  return history.filter(s => new Date(s.date) >= weekAgo).length;
+}
+
+// ---------- MODAL: History + Stats ----------
+function openHistory() {
+  const history = getHistory();
+  const weekCount = computeWeekCount();
+  const total = history.length;
+  const totalMin = history.reduce((sum, s) => sum + (s.duration || 0), 0);
+
+  let html = `
+    <div class="modal" onclick="event.stopPropagation()">
+      <div class="modal-header">
+        <div class="modal-title">📊 Dein Verlauf</div>
+        <button class="modal-close" onclick="closeModal()">×</button>
+      </div>
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-value">${weekCount}</div>
+          <div class="stat-label">Diese Woche</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">${total}</div>
+          <div class="stat-label">Total</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">${totalMin}</div>
+          <div class="stat-label">Minuten</div>
+        </div>
+      </div>
+      <div class="history-title">Letzte Sessions</div>
+      <div class="history-list">
+  `;
+
+  if (history.length === 0) {
+    html += `<div class="history-empty">Noch keine Workouts gespeichert<br>Mach dein erstes Training und klicke "Workout speichern"</div>`;
+  } else {
+    html += history.map(s => {
+      const d = new Date(s.date);
+      const dateStr = d.toLocaleDateString('de-DE', { weekday: 'short', day: '2-digit', month: '2-digit', year: '2-digit' });
+      const timeStr = d.toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' });
+      const completion = Math.round((s.completed / s.total) * 100);
+      const badgeClass = completion >= 100 ? '' : 'partial';
+      return `
+        <div class="history-item">
+          <div style="flex:1;min-width:0">
+            <div class="history-date">${dateStr} · ${timeStr}</div>
+            <div class="history-stats">${s.completed}/${s.total} Sätze · ${s.duration} Min · ${completion}%</div>
+            ${s.note ? `<div class="history-note">„${s.note}"</div>` : ''}
+          </div>
+          <div class="history-badge ${badgeClass}">${completion}%</div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  html += `</div></div>`;
+
+  const modal = document.getElementById('modal-backdrop');
+  modal.innerHTML = html;
+  modal.classList.add('open');
+}
+
+function openSaveDialog() {
+  const done = completedCount();
+  const tot = totalSets();
+  if (done === 0) {
+    showToast('⚠️ Noch keine Sätze abgehakt');
+    return;
+  }
+  const html = `
+    <div class="modal" onclick="event.stopPropagation()">
+      <div class="modal-header">
+        <div class="modal-title">💪 Workout speichern</div>
+        <button class="modal-close" onclick="closeModal()">×</button>
+      </div>
+      <div class="confirm-text">
+        Speichere dein heutiges Training im Verlauf<br>
+        <strong>${done} von ${tot} Sätzen</strong> geschafft
+      </div>
+      <textarea class="notes-input" id="workout-note" placeholder="Wie war's? (optional) — z.B. fühlte mich stark, Goblet Squat ging easy..."></textarea>
+      <button class="save-btn" onclick="confirmSave()">Speichern & neues Workout starten</button>
+    </div>
+  `;
+  const modal = document.getElementById('modal-backdrop');
+  modal.innerHTML = html;
+  modal.classList.add('open');
+}
+
+function openNewWorkoutDialog() {
+  if (completedCount() === 0) {
+    startNewWorkout();
+    showToast('Frisch gestartet — los geht\'s');
+    return;
+  }
+  const html = `
+    <div class="modal" onclick="event.stopPropagation()">
+      <div class="modal-header">
+        <div class="modal-title">Neues Workout?</div>
+        <button class="modal-close" onclick="closeModal()">×</button>
+      </div>
+      <div class="confirm-text">
+        Du hast aktuell <strong>${completedCount()} Sätze</strong> abgehakt<br><br>
+        Willst du das aktuelle Workout erst speichern, oder einfach verwerfen?
+      </div>
+      <div class="confirm-buttons">
+        <button class="action-btn primary" onclick="closeModal(); openSaveDialog()">Erst speichern</button>
+        <button class="action-btn danger-btn" onclick="discardAndRestart()">Verwerfen</button>
+      </div>
+    </div>
+  `;
+  const modal = document.getElementById('modal-backdrop');
+  modal.innerHTML = html;
+  modal.classList.add('open');
+}
+
+function confirmSave() {
+  const noteEl = document.getElementById('workout-note');
+  const note = noteEl ? noteEl.value : '';
+  saveWorkoutSession(note);
+  startNewWorkout();
+  closeModal();
+  showToast('💪 Workout gespeichert — du bist ein Champion');
+}
+
+function discardAndRestart() {
+  startNewWorkout();
+  closeModal();
+  showToast('Frisch gestartet');
+}
+
+function closeModal() {
+  const modal = document.getElementById('modal-backdrop');
+  modal.classList.remove('open');
+  setTimeout(() => { modal.innerHTML = ''; }, 200);
+}
+
+function showToast(msg) {
+  const existing = document.querySelector('.toast');
+  if (existing) existing.remove();
+  const toast = document.createElement('div');
+  toast.className = 'toast';
+  toast.textContent = msg;
+  document.body.appendChild(toast);
+  requestAnimationFrame(() => toast.classList.add('show'));
+  setTimeout(() => {
+    toast.classList.remove('show');
+    setTimeout(() => toast.remove(), 300);
+  }, 2800);
+}
+
+// ---------- STATE & RENDERING ----------
+let currentPhase = 'warmup';
+let completedSets = {};
+let soundOn = true;
+let activeTimers = {};
+
+function totalSets() {
+  let total = 0;
+  Object.values(phases).forEach(p => p.exercises.forEach(e => total += e.sets));
+  return total;
+}
+
+function completedCount() {
+  return Object.values(completedSets).reduce((sum, sets) => sum + sets.filter(Boolean).length, 0);
+}
+
+function updateProgress() {
+  const total = totalSets();
+  const done = completedCount();
+  document.getElementById('progress-text').textContent = `${done} / ${total} Sätze`;
+  document.getElementById('progress-fill').style.width = `${(done/total)*100}%`;
+}
+
+function exerciseKey(phaseKey, idx) {
+  return `${phaseKey}-${idx}`;
+}
+
+function renderPhase(phaseKey) {
+  const phase = phases[phaseKey];
+  const html = `
+    <div class="phase-header">
+      <div>
+        <div class="phase-title">${phase.title}</div>
+        <div class="phase-meta">${phase.meta}${phase.rounds > 1 ? ` · <span class="rounds">${phase.rounds} Runden</span>` : ''}</div>
+      </div>
+      <button class="reset-btn" onclick="resetPhase('${phaseKey}')">Phase zurücksetzen</button>
+    </div>
+    <div class="exercises">
+      ${phase.exercises.map((ex, idx) => renderExercise(phaseKey, ex, idx)).join('')}
+    </div>
+  `;
+  document.getElementById('phase-content').innerHTML = html;
+  updateProgress();
+}
+
+function renderExercise(phaseKey, ex, idx) {
+  const key = exerciseKey(phaseKey, idx);
+  if (!completedSets[key]) completedSets[key] = new Array(ex.sets).fill(false);
+  const allDone = completedSets[key].every(s => s);
+
+  const dots = completedSets[key].map((done, i) => `
+    <button class="set-dot ${done ? 'done' : ''}" onclick="toggleSet('${phaseKey}', ${idx}, ${i})">
+      ${done ? '✓' : i+1}
+    </button>
+  `).join('');
+
+  const timerHtml = ex.pause > 0 ? `
+    <button class="timer-btn" id="timer-${key}" onclick="startTimer('${key}', ${ex.pause})">
+      ⏱ ${ex.pause}s Pause
+    </button>
+  ` : '';
+
+  return `
+    <div class="exercise-card ${allDone ? 'completed' : ''}">
+      <div class="animation-box">${animations[ex.animation] || ''}</div>
+      <div class="exercise-info">
+        <h3>${ex.name}</h3>
+        <div class="exercise-meta">
+          <span class="meta-item">${ex.reps}</span>
+          <span class="meta-item weight">${ex.weight}</span>
+          ${ex.sets > 1 ? `<span class="meta-item">${ex.sets} Sätze</span>` : ''}
+        </div>
+        <div class="description">${ex.description}</div>
+        <div class="controls">
+          <div class="set-tracker">
+            <span class="set-label">${ex.sets > 1 ? 'Sätze' : 'Geschafft'}</span>
+            <div class="set-dots">${dots}</div>
+          </div>
+          ${timerHtml}
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function toggleSet(phaseKey, idx, setIdx) {
+  const key = exerciseKey(phaseKey, idx);
+  completedSets[key][setIdx] = !completedSets[key][setIdx];
+  saveCurrent();
+  renderPhase(phaseKey);
+}
+
+function resetPhase(phaseKey) {
+  phases[phaseKey].exercises.forEach((_, idx) => {
+    const key = exerciseKey(phaseKey, idx);
+    completedSets[key] = new Array(phases[phaseKey].exercises[idx].sets).fill(false);
+  });
+  saveCurrent();
+  renderPhase(phaseKey);
+}
+
+function startTimer(key, seconds) {
+  const btn = document.getElementById(`timer-${key}`);
+  if (activeTimers[key]) {
+    clearInterval(activeTimers[key]);
+    delete activeTimers[key];
+    btn.classList.remove('running');
+    btn.textContent = `⏱ ${seconds}s Pause`;
+    return;
+  }
+  let remaining = seconds;
+  btn.classList.add('running');
+  btn.textContent = `⏸ ${remaining}s`;
+  activeTimers[key] = setInterval(() => {
+    remaining--;
+    if (remaining <= 0) {
+      clearInterval(activeTimers[key]);
+      delete activeTimers[key];
+      btn.classList.remove('running');
+      btn.textContent = `⏱ ${seconds}s Pause`;
+      if (soundOn) playBeep();
+    } else {
+      btn.textContent = `⏸ ${remaining}s`;
+    }
+  }, 1000);
+}
+
+function playBeep() {
+  try {
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.frequency.value = 800;
+    gain.gain.value = 0.15;
+    osc.start();
+    setTimeout(() => { osc.frequency.value = 1000; }, 150);
+    setTimeout(() => { osc.stop(); ctx.close(); }, 300);
+  } catch(e) {}
+}
+
+document.querySelectorAll('.phase-tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.phase-tab').forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+    currentPhase = tab.dataset.phase;
+    renderPhase(currentPhase);
+  });
+});
+
+document.getElementById('sound-toggle').addEventListener('click', () => {
+  soundOn = !soundOn;
+  document.getElementById('sound-toggle').textContent = soundOn ? '🔔' : '🔕';
+});
+
+// Init
+loadCurrent();
+renderPhase(currentPhase);
+</script>
+
+</body>
+</html>
