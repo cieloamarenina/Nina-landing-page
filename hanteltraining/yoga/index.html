@@ -783,6 +783,9 @@
   .page-nav a { display: inline-flex; align-items: center; gap: 6px; background: var(--bg-card); border: 1px solid var(--border); color: var(--muted); padding: 0.4rem 0.9rem; border-radius: 999px; font-size: 0.8rem; font-weight: 700; text-decoration: none; transition: all 0.18s; }
   .page-nav a:hover { border-color: var(--blue); color: var(--text); transform: translateY(-1px); }
   .page-nav a.active { background: rgba(56,189,248,0.16); border-color: rgba(56,189,248,0.55); color: var(--accent); }
+
+  .page-nav a.nav-home { font-family: monospace; font-weight: 800; letter-spacing: 0.04em; color: var(--accent); border-color: rgba(56,189,248,0.4); }
+  .page-nav a.nav-home:hover { background: rgba(56,189,248,0.16); }
 </style>
 </head>
 <body>
@@ -792,6 +795,7 @@
     <h1>Yoga</h1>
     <div class="subtitle">Nina · ca 22 Min · sanfter Flow</div>
     <nav class="page-nav">
+      <a href="../../index.html" class="nav-home" title="Zurück zur Startseite">← NLC_</a>
       <a href="../index.html">💪 Training</a>
       <a href="index.html" class="active">🧘 Yoga</a>
       <a href="../meditation/index.html">🌬️ Meditation</a>
@@ -835,9 +839,6 @@
 
   <div id="phase-content"></div>
 
-  <div class="footer-msg">
-    Viel Erfolg, Nina · und liebe Grüße an <span class="pablo">Pablo</span>
-  </div>
 </div>
 
 <div class="modal-backdrop" id="modal-backdrop" onclick="closeModal()"></div>
@@ -1365,12 +1366,12 @@ function renderExercise(phaseKey, ex, idx) {
         <div class="exercise-meta">
           <span class="meta-item">${ex.reps}</span>
           <span class="meta-item weight">${ex.weight}</span>
-          ${ex.sets > 1 ? `<span class="meta-item">${ex.sets} Sätze</span>` : ''}
+          ${ex.sets > 1 ? `<span class="meta-item">${ex.sets} Seiten</span>` : ''}
         </div>
         <div class="description">${ex.description}</div>
         <div class="controls">
           <div class="set-tracker">
-            <span class="set-label">${ex.sets > 1 ? 'Sätze' : 'Geschafft'}</span>
+            <span class="set-label">${ex.sets > 1 ? 'Seiten' : 'Geschafft'}</span>
             <div class="set-dots">${dots}</div>
           </div>
           ${timerHtml}
