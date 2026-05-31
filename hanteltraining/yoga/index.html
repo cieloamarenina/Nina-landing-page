@@ -1,0 +1,1527 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Yoga — Nina</title>
+<style>
+  :root {
+    --bg: #0A1628;
+    --bg-card: #142640;
+    --bg-elevated: #1B3252;
+    --blue: #3B82F6;
+    --blue-bright: #60A5FA;
+    --accent: #38BDF8;
+    --warm: #F59E0B;
+    --text: #F8FAFC;
+    --muted: #94A3B8;
+    --border: #1E3A5F;
+    --success: #10B981;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: Arial, sans-serif;
+    background: var(--bg);
+    background-image:
+      radial-gradient(circle at 20% 0%, rgba(59, 130, 246, 0.15), transparent 50%),
+      radial-gradient(circle at 80% 100%, rgba(56, 189, 248, 0.1), transparent 50%);
+    background-attachment: fixed;
+    color: var(--text);
+    min-height: 100vh;
+    padding: 20px;
+    line-height: 1.5;
+  }
+
+  .container {
+    max-width: 900px;
+    margin: 0 auto;
+  }
+
+  header {
+    text-align: center;
+    padding: 32px 20px 16px;
+  }
+
+  h1 {
+    font-family: Arial, sans-serif;
+    font-size: 44px;
+    font-weight: 900;
+    letter-spacing: -1.5px;
+    margin-bottom: 6px;
+    background: linear-gradient(135deg, var(--text) 0%, var(--accent) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .subtitle {
+    color: var(--muted);
+    font-size: 13px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    font-weight: 700;
+  }
+
+  .progress-container {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 18px 22px;
+    margin: 24px 0;
+  }
+
+  .progress-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    color: var(--muted);
+    margin-bottom: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    font-weight: 700;
+  }
+
+  .progress-label span:last-child { color: var(--accent); }
+
+  .progress-bar {
+    height: 6px;
+    background: var(--bg-elevated);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--blue), var(--accent));
+    transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    width: 0%;
+  }
+
+  .phases {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+    margin-bottom: 28px;
+  }
+
+  .phase-tab {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    color: var(--muted);
+    padding: 14px 8px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-family: Arial, sans-serif;
+    font-size: 12px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: all 0.2s ease;
+  }
+
+  .phase-tab:hover {
+    border-color: var(--blue);
+    color: var(--text);
+    transform: translateY(-1px);
+  }
+
+  .phase-tab.active {
+    background: linear-gradient(135deg, var(--blue), var(--accent));
+    color: white;
+    border-color: transparent;
+    box-shadow: 0 4px 20px rgba(59, 130, 246, 0.4);
+  }
+
+  .phase-tab .num {
+    display: block;
+    font-size: 10px;
+    opacity: 0.7;
+    margin-bottom: 4px;
+    font-weight: 700;
+  }
+
+  .phase-header {
+    margin-bottom: 20px;
+    padding: 24px 28px;
+    background: var(--bg-card);
+    border-radius: 16px;
+    border-left: 4px solid var(--accent);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .phase-title {
+    font-size: 26px;
+    font-weight: 900;
+    letter-spacing: -0.5px;
+  }
+
+  .phase-meta {
+    color: var(--muted);
+    font-size: 13px;
+  }
+
+  .phase-meta .rounds {
+    color: var(--warm);
+    font-weight: 800;
+    background: rgba(245, 158, 11, 0.15);
+    padding: 4px 10px;
+    border-radius: 6px;
+    margin-left: 4px;
+  }
+
+  .exercises {
+    display: grid;
+    gap: 16px;
+  }
+
+  .exercise-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 22px;
+    display: grid;
+    grid-template-columns: 160px 1fr;
+    gap: 22px;
+    transition: all 0.3s ease;
+  }
+
+  @media (max-width: 600px) {
+    .exercise-card {
+      grid-template-columns: 1fr;
+    }
+    .phases {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    h1 { font-size: 32px; }
+  }
+
+  .exercise-card:hover {
+    border-color: var(--blue);
+  }
+
+  .exercise-card.completed {
+    border-color: var(--success);
+  }
+
+  .animation-box {
+    background: var(--bg-elevated);
+    border-radius: 12px;
+    width: 100%;
+    height: 160px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--border);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .animation-box::before {
+    content: '';
+    position: absolute;
+    bottom: 25px;
+    left: 10%;
+    right: 10%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--border), transparent);
+  }
+
+  .exercise-info h3 {
+    font-size: 19px;
+    font-weight: 800;
+    margin-bottom: 10px;
+    letter-spacing: -0.3px;
+  }
+
+  .exercise-meta {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 12px;
+    flex-wrap: wrap;
+  }
+
+  .meta-item {
+    background: var(--bg-elevated);
+    padding: 5px 11px;
+    border-radius: 6px;
+    font-size: 12px;
+    color: var(--accent);
+    font-weight: 700;
+    letter-spacing: 0.3px;
+  }
+
+  .meta-item.weight {
+    color: var(--warm);
+    background: rgba(245, 158, 11, 0.12);
+  }
+
+  .description {
+    color: var(--muted);
+    font-size: 13.5px;
+    margin-bottom: 14px;
+    line-height: 1.55;
+  }
+
+  .controls {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    padding-top: 12px;
+    border-top: 1px solid var(--border);
+  }
+
+  .set-tracker {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .set-label {
+    font-size: 11px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 700;
+  }
+
+  .set-dots {
+    display: flex;
+    gap: 6px;
+  }
+
+  .set-dot {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    border: 2px solid var(--border);
+    background: transparent;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-family: Arial;
+    font-weight: 800;
+    color: var(--muted);
+    font-size: 11px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .set-dot:hover {
+    border-color: var(--blue);
+    transform: scale(1.1);
+  }
+
+  .set-dot.done {
+    background: var(--success);
+    border-color: var(--success);
+    color: white;
+  }
+
+  .timer-btn {
+    background: transparent;
+    border: 1px solid var(--blue);
+    color: var(--blue);
+    padding: 7px 14px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-family: Arial;
+    font-weight: 800;
+    font-size: 12px;
+    margin-left: auto;
+    transition: all 0.2s;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .timer-btn:hover {
+    background: var(--blue);
+    color: white;
+  }
+
+  .timer-btn.running {
+    background: var(--warm);
+    border-color: var(--warm);
+    color: white;
+    animation: pulse 1s infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.7; }
+  }
+
+  /* Stickman SVG styles */
+  .stickman { width: 120px; height: 140px; }
+  .stickman .body { stroke: var(--accent); stroke-width: 3; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+  .stickman .head { fill: var(--accent); stroke: var(--accent); }
+  .stickman .bench { stroke: var(--muted); stroke-width: 4; fill: none; }
+  .stickman .weight { stroke: var(--warm); stroke-width: 4; fill: var(--warm); }
+  .stickman .ground { stroke: var(--border); stroke-width: 1; stroke-dasharray: 3,3; }
+
+  .footer-msg {
+    text-align: center;
+    color: var(--muted);
+    font-size: 12px;
+    padding: 32px 20px 20px;
+    letter-spacing: 0.5px;
+  }
+
+  .footer-msg .pablo {
+    color: var(--warm);
+    font-weight: 700;
+  }
+
+  /* Reset button */
+  .reset-btn {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    padding: 6px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-family: Arial;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    transition: all 0.2s;
+  }
+
+  .reset-btn:hover {
+    border-color: var(--warm);
+    color: var(--warm);
+  }
+
+  /* Header action buttons */
+  .header-actions {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 20px;
+    flex-wrap: wrap;
+  }
+
+  .action-btn {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 10px 16px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-family: Arial;
+    font-weight: 700;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    transition: all 0.2s;
+  }
+
+  .action-btn:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+
+  .action-btn.primary {
+    background: linear-gradient(135deg, var(--blue), var(--accent));
+    color: white;
+    border-color: transparent;
+  }
+
+  .action-btn.primary:hover {
+    opacity: 0.9;
+    color: white;
+  }
+
+  .action-btn.danger-btn {
+    border-color: rgba(245, 158, 11, 0.5);
+    color: var(--warm);
+  }
+
+  .action-btn.danger-btn:hover {
+    background: var(--warm);
+    color: white;
+    border-color: var(--warm);
+  }
+
+  /* Modal */
+  .modal-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(10, 22, 40, 0.85);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    z-index: 1000;
+    display: none;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 40px 20px;
+    overflow-y: auto;
+  }
+
+  .modal-backdrop.open {
+    display: flex;
+  }
+
+  .modal {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    max-width: 700px;
+    width: 100%;
+    padding: 28px;
+  }
+
+  .modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+  }
+
+  .modal-title {
+    font-size: 24px;
+    font-weight: 900;
+    letter-spacing: -0.5px;
+  }
+
+  .modal-close {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 18px;
+    font-family: Arial;
+  }
+
+  .modal-close:hover {
+    color: var(--text);
+    border-color: var(--muted);
+  }
+
+  /* Stats grid */
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-bottom: 24px;
+  }
+
+  @media (max-width: 500px) {
+    .stats-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  .stat-card {
+    background: var(--bg-elevated);
+    padding: 16px 10px;
+    border-radius: 12px;
+    text-align: center;
+    border: 1px solid var(--border);
+  }
+
+  .stat-value {
+    font-size: 28px;
+    font-weight: 900;
+    background: linear-gradient(135deg, var(--accent), var(--warm));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 4px;
+    line-height: 1;
+  }
+
+  .stat-label {
+    font-size: 10px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 700;
+  }
+
+  /* History list */
+  .history-title {
+    font-size: 13px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--muted);
+    margin-bottom: 12px;
+  }
+
+  .history-list {
+    display: grid;
+    gap: 10px;
+    max-height: 400px;
+    overflow-y: auto;
+  }
+
+  .history-item {
+    background: var(--bg-elevated);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 14px 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .history-date {
+    font-weight: 800;
+    font-size: 14px;
+    margin-bottom: 4px;
+  }
+
+  .history-stats {
+    color: var(--muted);
+    font-size: 12px;
+  }
+
+  .history-note {
+    color: var(--text);
+    font-size: 13px;
+    font-style: italic;
+    margin-top: 8px;
+    padding-top: 8px;
+    border-top: 1px solid var(--border);
+  }
+
+  .history-badge {
+    background: var(--success);
+    color: white;
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-size: 11px;
+    font-weight: 800;
+    white-space: nowrap;
+  }
+
+  .history-badge.partial {
+    background: var(--warm);
+  }
+
+  .history-empty {
+    text-align: center;
+    color: var(--muted);
+    font-size: 14px;
+    padding: 40px 20px;
+    line-height: 1.6;
+  }
+
+  /* Notes textarea */
+  .notes-input {
+    width: 100%;
+    background: var(--bg-elevated);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    color: var(--text);
+    font-family: Arial;
+    font-size: 14px;
+    padding: 12px 14px;
+    margin-bottom: 16px;
+    resize: vertical;
+    min-height: 70px;
+  }
+
+  .notes-input:focus {
+    outline: none;
+    border-color: var(--accent);
+  }
+
+  .save-btn {
+    background: linear-gradient(135deg, var(--blue), var(--accent));
+    color: white;
+    border: none;
+    padding: 14px 24px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-family: Arial;
+    font-weight: 800;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    width: 100%;
+  }
+
+  .save-btn:hover { opacity: 0.92; }
+
+  .confirm-text {
+    color: var(--text);
+    font-size: 14px;
+    margin-bottom: 20px;
+    line-height: 1.6;
+  }
+
+  .confirm-text strong { color: var(--accent); }
+
+  .confirm-buttons {
+    display: flex;
+    gap: 10px;
+  }
+
+  .confirm-buttons .action-btn {
+    flex: 1;
+    padding: 12px 16px;
+  }
+
+  /* Toast banner */
+  .toast {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%) translateY(-20px);
+    background: linear-gradient(135deg, var(--success), #059669);
+    padding: 14px 22px;
+    border-radius: 14px;
+    color: white;
+    font-weight: 800;
+    font-size: 14px;
+    z-index: 2000;
+    opacity: 0;
+    transition: all 0.3s ease;
+    box-shadow: 0 10px 40px rgba(16, 185, 129, 0.4);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .toast.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+
+  /* Audio toggle (für Timer-Ende) */
+  .sound-toggle {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    color: var(--muted);
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    transition: all 0.2s;
+    z-index: 100;
+  }
+
+  .sound-toggle:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+
+  /* ── PABLO PLAYER ───────────────────────────── */
+  #pablo-player { position: fixed; top: 110px; right: 40px; z-index: 1000; display: flex; flex-direction: column; align-items: flex-end; gap: 8px; }
+  #pablo-panel { background: var(--bg-card); border: 1px solid var(--border); width: 300px; border-radius: 4px; overflow: hidden; box-shadow: 0 8px 40px rgba(0,0,0,0.6); display: none; flex-direction: column; }
+  #pablo-panel.open { display: flex; animation: pablo-slide-in 0.25s ease; }
+  @keyframes pablo-slide-in { from { opacity:0; transform: translateY(12px); } to { opacity:1; transform: translateY(0); } }
+  .pablo-panel-header { padding: 0.6rem 0.9rem; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border); font-size: 0.7rem; color: var(--muted); cursor: grab; user-select: none; }
+  .pablo-panel-header:active { cursor: grabbing; }
+  .pablo-now-dot { display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: #22c55e; margin-right: 6px; animation: pablo-live-pulse 2s infinite; }
+  .pablo-close-btn { background: none; border: none; color: var(--muted); cursor: pointer; font-size: 0.9rem; padding: 0; line-height: 1; }
+  .pablo-close-btn:hover { color: var(--text); }
+  .pablo-playlists { display: flex; gap: 0.35rem; padding: 0.5rem 0.75rem; flex-wrap: wrap; border-bottom: 1px solid var(--border); }
+  .pl-btn { background: rgba(56,189,248,0.06); border: 1px solid rgba(56,189,248,0.15); color: var(--muted); border-radius: 999px; padding: 0.2rem 0.6rem; font-size: 0.68rem; cursor: pointer; transition: all 0.15s; white-space: nowrap; }
+  .pl-btn:hover { background: rgba(56,189,248,0.12); color: var(--text); }
+  .pl-btn.active { background: rgba(56,189,248,0.18); border-color: rgba(56,189,248,0.5); color: var(--accent); }
+  #pablo-btn { cursor: grab; position: relative; text-align: center; user-select: none; animation: pablo-float 3s ease-in-out infinite; }
+  @keyframes pablo-float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-9px); } }
+  #pablo-btn:hover { filter: brightness(1.08); }
+  #pablo-btn:active { transform: scale(0.96) translateY(0) !important; }
+  .pablo-photo-wrap { position: relative; width: 140px; height: 140px; }
+  #pablo-photo { width: 140px; height: 140px; border-radius: 50%; object-fit: cover; object-position: center top; display: block; border: 3px solid var(--border); background: var(--bg-card); }
+  .pablo-ring { position: absolute; inset: -4px; border-radius: 50%; border: 2px solid transparent; transition: border-color 0.4s, box-shadow 0.4s; pointer-events: none; }
+  .state-playing #pablo-btn { animation: pablo-float-fast 1.2s ease-in-out infinite; }
+  .state-playing .pablo-ring { border-color: var(--accent); box-shadow: 0 0 14px rgba(56,189,248,0.55), 0 0 28px rgba(56,189,248,0.25); }
+  @keyframes pablo-float-fast { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
+  .state-sleeping #pablo-btn { animation: pablo-breathe 4s ease-in-out infinite; }
+  .state-sleeping #pablo-photo { filter: grayscale(0.6) brightness(0.75); }
+  @keyframes pablo-breathe { 0%,100% { transform: scale(1); } 50% { transform: scale(1.03); } }
+  .pablo-label { font-size: 0.58rem; letter-spacing: 0.14em; color: var(--muted); margin-top: 5px; text-transform: uppercase; }
+  #pablo-zzz { position: absolute; top: -10px; right: -2px; display: none; pointer-events: none; }
+  .state-sleeping #pablo-zzz { display: block; }
+  #pablo-zzz span { font-size: 0.75rem; font-weight: 700; color: var(--accent); animation: zzz-float 2.2s ease-in-out infinite; display: inline-block; }
+  #pablo-zzz span:nth-child(1) { animation-delay: 0s; font-size: 0.55rem; }
+  #pablo-zzz span:nth-child(2) { animation-delay: 0.6s; font-size: 0.72rem; }
+  #pablo-zzz span:nth-child(3) { animation-delay: 1.2s; font-size: 0.9rem; }
+  @keyframes zzz-float { 0% { opacity:0; transform: translate(0,0) scale(0.5); } 40% { opacity:1; } 100% { opacity:0; transform: translate(9px,-20px) scale(1); } }
+  @keyframes pablo-live-pulse { 0% { box-shadow: 0 0 0 0 rgba(56,189,248,0.5); } 70% { box-shadow: 0 0 0 9px rgba(56,189,248,0); } 100% { box-shadow: 0 0 0 0 rgba(56,189,248,0); } }
+
+  /* ── WORKOUT-STOPPUHR ───────────────────────── */
+  .workout-clock {
+    display: inline-flex; align-items: center; gap: 9px;
+    margin: 0.7rem auto 0; padding: 0.4rem 1rem;
+    background: var(--bg-card); border: 1px solid var(--border);
+    border-radius: 999px; width: max-content;
+    font-variant-numeric: tabular-nums; font-size: 1.15rem; font-weight: 700;
+    letter-spacing: 0.06em; color: var(--muted); transition: color .3s, border-color .3s;
+  }
+  .workout-clock.running { color: var(--accent); border-color: rgba(56,189,248,0.4); }
+  .workout-clock .clock-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--muted); transition: background .3s; }
+  .workout-clock.running .clock-dot { background: #22c55e; animation: clock-pulse 2s infinite; }
+  @keyframes clock-pulse { 0% { box-shadow: 0 0 0 0 rgba(34,197,94,0.5); } 70% { box-shadow: 0 0 0 7px rgba(34,197,94,0); } 100% { box-shadow: 0 0 0 0 rgba(34,197,94,0); } }
+  .clock-label { font-size: 0.6rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <header>
+    <h1>Yoga</h1>
+    <div class="subtitle">Nina · ca 22 Min · sanfter Flow</div>
+    <div class="workout-clock" id="workout-clock" title="Workout-Dauer — läuft ab dem ersten abgehakten Satz">
+      <span class="clock-dot"></span>
+      <span class="clock-label">Dauer</span>
+      <span id="workout-clock-time">00:00</span>
+    </div>
+    <div class="header-actions">
+      <button class="action-btn" onclick="openHistory()">📊 Verlauf</button>
+      <button class="action-btn primary" onclick="openSaveDialog()">💪 Workout speichern</button>
+      <button class="action-btn" onclick="openNewWorkoutDialog()">↻ Neuer Workout</button>
+    </div>
+  </header>
+
+  <div class="progress-container">
+    <div class="progress-label">
+      <span>Heute geschafft</span>
+      <span id="progress-text">0 / 15 Übungen</span>
+    </div>
+    <div class="progress-bar">
+      <div class="progress-fill" id="progress-fill"></div>
+    </div>
+  </div>
+
+  <div class="phases">
+    <button class="phase-tab active" data-phase="warmup">
+      <span class="num">Phase 1</span>Ankommen
+    </button>
+    <button class="phase-tab" data-phase="beine">
+      <span class="num">Phase 2</span>Aufwärmen
+    </button>
+    <button class="phase-tab" data-phase="arme">
+      <span class="num">Phase 3</span>Standhaltungen
+    </button>
+    <button class="phase-tab" data-phase="cooldown">
+      <span class="num">Phase 4</span>Entspannung
+    </button>
+  </div>
+
+  <div id="phase-content"></div>
+
+  <div class="footer-msg">
+    Viel Erfolg, Nina · und liebe Grüße an <span class="pablo">Pablo</span>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="modal-backdrop" onclick="closeModal()"></div>
+
+<button class="sound-toggle" id="sound-toggle" title="Sound an/aus">🔔</button>
+<!-- PABLO PLAYER -->
+<div id="pablo-player" class="state-idle">
+  <div id="pablo-panel">
+    <div class="pablo-panel-header">
+      <span><span class="pablo-now-dot"></span><span id="pablo-track-name">Pablo's Playlist</span></span>
+      <button class="pablo-close-btn" onclick="togglePabloPanel()">✕</button>
+    </div>
+    <div class="pablo-playlists">
+      <button class="pl-btn active" onclick="switchPlaylist('3VBgqGbVoabuNZL3vICTAP','Nina',this)">🎵 Nina</button>
+      <button class="pl-btn" onclick="switchPlaylist('53ebDyYHhHmElRY1Epe97N','Nina is coding',this)">💻 Coding</button>
+      <button class="pl-btn" onclick="switchPlaylist('0rF7rgJx8xR5aU87Y4qlSP','Testing 123',this)">🎛️ Test</button>
+      <button class="pl-btn" onclick="switchPlaylist('362d7BAhWSIjPTmd74o1pL','Alesis',this)">🥁 Alesis</button>
+      <button class="pl-btn" onclick="switchPlaylist('37i9dQZF1DX4WYpdgoIcn6','Chill Hits',this)">🧊 Chill</button>
+      <button class="pl-btn" onclick="switchPlaylist('0gmft5pcMN8iDI30vspobp','Aqua Feelin\'',this)">🌊 Aqua Feelin'</button>
+      <button class="pl-btn" onclick="switchPlaylist('2R10VQvUU02ga3185KXjR6','Your All-Time Top Songs',this)">🏆 Top All-Time</button>
+    </div>
+    <iframe id="pablo-iframe" src="https://open.spotify.com/embed/playlist/3VBgqGbVoabuNZL3vICTAP?utm_source=generator&theme=0" width="300" height="352" frameBorder="0" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+  </div>
+  <div id="pablo-btn" onclick="togglePabloPanel()" title="Pablo's Playlist 🎵">
+    <div id="pablo-zzz"><span>z</span><span>z</span><span>z</span></div>
+    <div class="pablo-photo-wrap">
+      <img id="pablo-photo" src="../../PabloPlayerPicture.png" alt="Pablo" onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 1 1%22/>'"/>
+      <div class="pablo-ring"></div>
+    </div>
+    <div class="pablo-label">Pablo 🎵</div>
+  </div>
+</div>
+
+<script>
+// ---------- ANIMATIONEN (SVG-Strichmännchen) ----------
+const animations = {
+  // Phase 1: Ankommen & Atem
+  sukhasana: `<svg class="stickman" viewBox="0 0 120 140">
+    <line class="ground" x1="10" y1="118" x2="110" y2="118"/>
+    <circle class="head" cx="60" cy="44" r="8"><animate attributeName="cy" values="43;46;43" dur="4s" repeatCount="indefinite"/></circle>
+    <line class="body" x1="60" y1="52" x2="60" y2="92"/>
+    <line class="body" x1="60" y1="60" x2="40" y2="80"/>
+    <line class="body" x1="60" y1="60" x2="80" y2="80"/>
+    <path class="body" d="M 36 96 Q 60 84 84 96" fill="none"/>
+    <path class="body" d="M 44 92 Q 60 104 76 92" fill="none"/>
+    <text x="60" y="134" fill="var(--warm)" font-family="Arial" font-size="9" font-weight="700" text-anchor="middle">ATMEN</text>
+  </svg>`,
+  catcow: `<svg class="stickman" viewBox="0 0 120 140">
+    <line class="ground" x1="10" y1="122" x2="110" y2="122"/>
+    <circle class="head" cx="34" cy="62" r="8"><animate attributeName="cy" values="62;56;62" dur="3s" repeatCount="indefinite"/></circle>
+    <path class="body" d="M 42 64 Q 70 50 96 60" fill="none"><animate attributeName="d" values="M 42 64 Q 70 50 96 60;M 42 60 Q 70 78 96 56;M 42 64 Q 70 50 96 60" dur="3s" repeatCount="indefinite"/></path>
+    <line class="body" x1="44" y1="66" x2="40" y2="100"/>
+    <line class="body" x1="50" y1="64" x2="52" y2="100"/>
+    <line class="body" x1="92" y1="60" x2="88" y2="100"/>
+    <line class="body" x1="88" y1="62" x2="96" y2="100"/>
+    <text x="60" y="136" fill="var(--warm)" font-family="Arial" font-size="9" font-weight="700" text-anchor="middle">FLIESSEN</text>
+  </svg>`,
+  balasana: `<svg class="stickman" viewBox="0 0 120 140">
+    <line class="ground" x1="10" y1="118" x2="110" y2="118"/>
+    <circle class="head" cx="34" cy="96" r="8"/>
+    <path class="body" d="M 42 96 Q 70 70 92 96" fill="none"><animate attributeName="d" values="M 42 96 Q 70 72 92 96;M 42 96 Q 70 68 92 96;M 42 96 Q 70 72 92 96" dur="4s" repeatCount="indefinite"/></path>
+    <line class="body" x1="42" y1="96" x2="22" y2="100"/>
+    <line class="body" x1="92" y1="96" x2="96" y2="108"/>
+    <line class="body" x1="92" y1="96" x2="84" y2="108"/>
+    <text x="60" y="134" fill="var(--warm)" font-family="Arial" font-size="9" font-weight="700" text-anchor="middle">HALTEN</text>
+  </svg>`,
+  // Phase 2: Aufwärmen
+  tadasana: `<svg class="stickman" viewBox="0 0 120 140">
+    <line class="ground" x1="10" y1="125" x2="110" y2="125"/>
+    <circle class="head" cx="60" cy="24" r="8"><animate attributeName="cy" values="23;25;23" dur="4s" repeatCount="indefinite"/></circle>
+    <line class="body" x1="60" y1="32" x2="60" y2="85"/>
+    <line class="body" x1="60" y1="42" x2="50" y2="78"/>
+    <line class="body" x1="60" y1="42" x2="70" y2="78"/>
+    <line class="body" x1="60" y1="85" x2="54" y2="124"/>
+    <line class="body" x1="60" y1="85" x2="66" y2="124"/>
+    <text x="60" y="108" fill="var(--warm)" font-family="Arial" font-size="9" font-weight="700" text-anchor="middle">HALTEN</text>
+  </svg>`,
+  uttanasana: `<svg class="stickman" viewBox="0 0 120 140">
+    <line class="ground" x1="10" y1="125" x2="110" y2="125"/>
+    <circle class="head" cx="60" cy="92" r="8"/>
+    <line class="body" x1="60" y1="55" x2="60" y2="85"><animate attributeName="y1" values="55;60;55" dur="4s" repeatCount="indefinite"/></line>
+    <line class="body" x1="60" y1="85" x2="56" y2="108"/>
+    <line class="body" x1="60" y1="85" x2="64" y2="108"/>
+    <line class="body" x1="60" y1="55" x2="56" y2="124"/>
+    <line class="body" x1="60" y1="55" x2="64" y2="124"/>
+    <text x="60" y="44" fill="var(--warm)" font-family="Arial" font-size="9" font-weight="700" text-anchor="middle">HALTEN</text>
+  </svg>`,
+  downdog: `<svg class="stickman" viewBox="0 0 120 140">
+    <line class="ground" x1="10" y1="124" x2="110" y2="124"/>
+    <circle class="head" cx="34" cy="78" r="8"/>
+    <line class="body" x1="40" y1="76" x2="60" y2="44"/>
+    <line class="body" x1="60" y1="44" x2="86" y2="120"/>
+    <line class="body" x1="40" y1="78" x2="28" y2="120"/>
+    <text x="78" y="60" fill="var(--warm)" font-family="Arial" font-size="9" font-weight="700" text-anchor="middle">HALTEN</text>
+  </svg>`,
+  cobra: `<svg class="stickman" viewBox="0 0 120 140">
+    <line class="ground" x1="10" y1="118" x2="110" y2="118"/>
+    <circle class="head" cx="40" cy="62" r="8"><animate attributeName="cy" values="64;58;64" dur="3.5s" repeatCount="indefinite"/></circle>
+    <path class="body" d="M 46 66 Q 60 80 100 100" fill="none"><animate attributeName="d" values="M 46 70 Q 64 82 100 100;M 46 62 Q 64 82 100 100;M 46 70 Q 64 82 100 100" dur="3.5s" repeatCount="indefinite"/></path>
+    <line class="body" x1="48" y1="70" x2="46" y2="100"><animate attributeName="y1" values="74;66;74" dur="3.5s" repeatCount="indefinite"/></line>
+    <text x="60" y="134" fill="var(--warm)" font-family="Arial" font-size="9" font-weight="700" text-anchor="middle">ÖFFNEN</text>
+  </svg>`,
+  // Phase 3: Standhaltungen
+  warrior1: `<svg class="stickman" viewBox="0 0 120 140">
+    <line class="ground" x1="10" y1="125" x2="110" y2="125"/>
+    <circle class="head" cx="58" cy="26" r="8"/>
+    <line class="body" x1="58" y1="34" x2="58" y2="72"/>
+    <line class="body" x1="58" y1="40" x2="50" y2="14"/>
+    <line class="body" x1="58" y1="40" x2="66" y2="14"/>
+    <line class="body" x1="58" y1="72" x2="40" y2="98"/>
+    <line class="body" x1="40" y1="98" x2="40" y2="124"/>
+    <line class="body" x1="58" y1="72" x2="86" y2="124"/>
+    <text x="60" y="116" fill="var(--warm)" font-family="Arial" font-size="9" font-weight="700" text-anchor="middle">HALTEN</text>
+  </svg>`,
+  warrior2: `<svg class="stickman" viewBox="0 0 120 140">
+    <line class="ground" x1="10" y1="125" x2="110" y2="125"/>
+    <circle class="head" cx="52" cy="34" r="8"/>
+    <line class="body" x1="52" y1="42" x2="52" y2="74"/>
+    <line class="body" x1="22" y1="50" x2="92" y2="50"><animate attributeName="y1" values="50;48;50" dur="4s" repeatCount="indefinite"/></line>
+    <line class="body" x1="52" y1="74" x2="30" y2="98"/>
+    <line class="body" x1="30" y1="98" x2="30" y2="124"/>
+    <line class="body" x1="52" y1="74" x2="86" y2="124"/>
+    <text x="60" y="116" fill="var(--warm)" font-family="Arial" font-size="9" font-weight="700" text-anchor="middle">HALTEN</text>
+  </svg>`,
+  triangle: `<svg class="stickman" viewBox="0 0 120 140">
+    <line class="ground" x1="10" y1="125" x2="110" y2="125"/>
+    <circle class="head" cx="40" cy="58" r="8"/>
+    <line class="body" x1="44" y1="62" x2="40" y2="30"/>
+    <line class="body" x1="42" y1="48" x2="40" y2="92"/>
+    <line class="body" x1="40" y1="92" x2="26" y2="124"/>
+    <line class="body" x1="40" y1="92" x2="88" y2="124"/>
+    <text x="68" y="60" fill="var(--warm)" font-family="Arial" font-size="9" font-weight="700" text-anchor="middle">HALTEN</text>
+  </svg>`,
+  tree: `<svg class="stickman" viewBox="0 0 120 140">
+    <line class="ground" x1="10" y1="125" x2="110" y2="125"/>
+    <circle class="head" cx="60" cy="24" r="8"><animate attributeName="cx" values="59;61;59" dur="3s" repeatCount="indefinite"/></circle>
+    <line class="body" x1="60" y1="32" x2="60" y2="80"/>
+    <line class="body" x1="60" y1="40" x2="50" y2="16"/>
+    <line class="body" x1="60" y1="40" x2="70" y2="16"/>
+    <line class="body" x1="60" y1="80" x2="60" y2="124"/>
+    <line class="body" x1="60" y1="80" x2="44" y2="64"/>
+    <line class="body" x1="44" y1="64" x2="60" y2="58"/>
+    <text x="60" y="112" fill="var(--warm)" font-family="Arial" font-size="9" font-weight="700" text-anchor="middle">BALANCE</text>
+  </svg>`,
+  // Phase 4: Boden & Entspannung
+  pigeon: `<svg class="stickman" viewBox="0 0 120 140">
+    <line class="ground" x1="10" y1="120" x2="110" y2="120"/>
+    <circle class="head" cx="40" cy="74" r="8"/>
+    <path class="body" d="M 46 76 Q 64 64 78 80" fill="none"/>
+    <line class="body" x1="40" y1="94" x2="92" y2="94"/>
+    <line class="body" x1="78" y1="80" x2="40" y2="94"/>
+    <text x="60" y="112" fill="var(--warm)" font-family="Arial" font-size="9" font-weight="700" text-anchor="middle">HALTEN</text>
+  </svg>`,
+  seatedfold: `<svg class="stickman" viewBox="0 0 120 140">
+    <line class="ground" x1="10" y1="118" x2="110" y2="118"/>
+    <circle class="head" cx="56" cy="80" r="8"/>
+    <line class="body" x1="50" y1="78" x2="40" y2="96"/>
+    <line class="body" x1="40" y1="96" x2="100" y2="96"/>
+    <line class="body" x1="56" y1="80" x2="92" y2="94"><animate attributeName="x2" values="88;96;88" dur="4s" repeatCount="indefinite"/></line>
+    <text x="60" y="134" fill="var(--warm)" font-family="Arial" font-size="9" font-weight="700" text-anchor="middle">SINKEN</text>
+  </svg>`,
+  twist: `<svg class="stickman" viewBox="0 0 120 140">
+    <line class="ground" x1="10" y1="110" x2="110" y2="110"/>
+    <circle class="head" cx="26" cy="98" r="8"/>
+    <line class="body" x1="34" y1="98" x2="74" y2="98"/>
+    <line class="body" x1="74" y1="98" x2="92" y2="80"/>
+    <line class="body" x1="74" y1="98" x2="92" y2="98"/>
+    <line class="body" x1="50" y1="98" x2="60" y2="76"/>
+    <line class="body" x1="50" y1="98" x2="40" y2="76"/>
+    <text x="60" y="132" fill="var(--warm)" font-family="Arial" font-size="9" font-weight="700" text-anchor="middle">DREHEN</text>
+  </svg>`,
+  savasana: `<svg class="stickman" viewBox="0 0 120 140">
+    <line class="ground" x1="10" y1="104" x2="110" y2="104"/>
+    <circle class="head" cx="24" cy="92" r="8"><animate attributeName="r" values="8;8.6;8" dur="5s" repeatCount="indefinite"/></circle>
+    <line class="body" x1="32" y1="92" x2="84" y2="92"/>
+    <line class="body" x1="40" y1="92" x2="44" y2="100"/>
+    <line class="body" x1="84" y1="92" x2="98" y2="90"/>
+    <line class="body" x1="84" y1="92" x2="98" y2="96"/>
+    <text x="60" y="128" fill="var(--warm)" font-family="Arial" font-size="9" font-weight="700" text-anchor="middle">LOSLASSEN</text>
+  </svg>`
+};
+
+// ---------- TRAININGSDATEN ----------
+const phases = {
+  warmup: {
+    title: "Ankommen & Atem",
+    meta: "ca 3 Minuten · zur Ruhe kommen",
+    rounds: 1,
+    exercises: [
+      { name: "Schneidersitz", reps: "1-2 Min", weight: "Sukhasana", description: "Bequem im Schneidersitz, Wirbelsäule lang, Hände auf den Knien. Augen schließen und tief in den Bauch atmen — 4 Sek ein, 6 Sek aus.", animation: "sukhasana", sets: 1, pause: 60 },
+      { name: "Katze-Kuh", reps: "8 Atemzüge", weight: "Marjaryasana", description: "Im Vierfüßlerstand. Einatmen: Rücken sanft ins Hohlkreuz, Blick hoch (Kuh). Ausatmen: Rücken rund, Kinn zur Brust (Katze). Im Atemrhythmus fließen.", animation: "catcow", sets: 1, pause: 0 },
+      { name: "Kindhaltung", reps: "5 Atemzüge", weight: "Balasana", description: "Aus dem Fersensitz den Oberkörper nach vorn ablegen, Arme lang nach vorn, Stirn zum Boden. Loslassen und in den Rücken atmen.", animation: "balasana", sets: 1, pause: 30 }
+    ]
+  },
+  beine: {
+    title: "Aufwärmen · Sanfter Fluss",
+    meta: "ca 6 Minuten · den Körper wecken",
+    rounds: 1,
+    exercises: [
+      { name: "Berghaltung", reps: "5 Atemzüge", weight: "Tadasana", description: "Aufrecht stehen, Füße hüftbreit, der Scheitel zieht zur Decke, Schultern entspannt. Fest und ruhig wie ein Berg.", animation: "tadasana", sets: 1, pause: 20 },
+      { name: "Stehende Vorbeuge", reps: "5 Atemzüge", weight: "Uttanasana", description: "Aus dem Stand mit geradem Rücken nach vorn beugen, Knie leicht gebeugt, Oberkörper hängen lassen. Nacken locker.", animation: "uttanasana", sets: 1, pause: 30 },
+      { name: "Herabschauender Hund", reps: "5-8 Atemzüge", weight: "Adho Mukha", description: "Aus dem Vierfüßlerstand die Hüfte nach oben/hinten schieben — der Körper bildet ein umgedrehtes V. Fersen Richtung Boden, Rücken lang.", animation: "downdog", sets: 1, pause: 40 },
+      { name: "Kobra", reps: "5 Atemzüge", weight: "Bhujangasana", description: "Auf dem Bauch, Hände unter den Schultern, Oberkörper sanft anheben, Ellbogen leicht gebeugt, Schultern weg von den Ohren. Brust öffnen.", animation: "cobra", sets: 1, pause: 30 }
+    ]
+  },
+  arme: {
+    title: "Standhaltungen · Kraft",
+    meta: "ca 7 Minuten · Stabilität & Balance",
+    rounds: 1,
+    exercises: [
+      { name: "Krieger I", reps: "5 Atemzüge pro Seite", weight: "Virabhadrasana I", description: "Großer Ausfallschritt, vorderes Knie über dem Knöchel, hinterer Fuß leicht eingedreht, Arme nach oben gestreckt, Blick nach vorn. Beide Seiten.", animation: "warrior1", sets: 2, pause: 30 },
+      { name: "Krieger II", reps: "5 Atemzüge pro Seite", weight: "Virabhadrasana II", description: "Aus dem Ausfallschritt die Arme waagerecht öffnen, Blick über die vordere Hand, Hüfte öffnet zur Seite. Stark und geerdet. Beide Seiten.", animation: "warrior2", sets: 2, pause: 30 },
+      { name: "Dreieck", reps: "5 Atemzüge pro Seite", weight: "Trikonasana", description: "Beine weit, vorderes Bein gestreckt, zur Seite kippen, untere Hand zum Schienbein, obere Hand zur Decke strecken. Brust offen. Beide Seiten.", animation: "triangle", sets: 2, pause: 30 },
+      { name: "Baum", reps: "5 Atemzüge pro Seite", weight: "Vrksasana", description: "Auf einem Bein stehen, anderen Fuß an Wade oder Innenschenkel (nicht aufs Knie), Hände vor der Brust oder über dem Kopf. Blick fixieren für Balance. Beide Seiten.", animation: "tree", sets: 2, pause: 20 }
+    ]
+  },
+  cooldown: {
+    title: "Boden & Entspannung",
+    meta: "ca 6 Minuten · sanft ausklingen",
+    rounds: 1,
+    exercises: [
+      { name: "Taube", reps: "30 Sek pro Seite", weight: "Eka Pada", description: "Vorderes Bein angewinkelt vor dem Körper, hinteres Bein lang nach hinten, Oberkörper sanft Richtung Boden. Die Hüfte öffnet. Beide Seiten.", animation: "pigeon", sets: 2, pause: 30 },
+      { name: "Sitzende Vorbeuge", reps: "8 Atemzüge", weight: "Paschimottanasana", description: "Sitzend, beide Beine lang nach vorn, mit geradem Rücken nach vorn beugen, Hände zu den Füßen oder Schienbeinen. Nicht ziehen — sinken lassen.", animation: "seatedfold", sets: 1, pause: 40 },
+      { name: "Liegender Drehsitz", reps: "30 Sek pro Seite", weight: "Supta Twist", description: "Auf dem Rücken, Knie angezogen, beide Knie zu einer Seite ablegen, Arme zur Seite gestreckt, Blick zur Gegenseite. Wirbelsäule entdrehen. Beide Seiten.", animation: "twist", sets: 2, pause: 30 },
+      { name: "Totenstellung", reps: "2-5 Min", weight: "Savasana", description: "Flach auf dem Rücken, Arme locker neben dem Körper, Handflächen nach oben, Augen geschlossen. Alles loslassen — einfach atmen und nachspüren.", animation: "savasana", sets: 1, pause: 0 }
+    ]
+  }
+};
+
+// ---------- BACKEND: localStorage Persistenz ----------
+const STORAGE = {
+  current: 'nina_yoga_current',
+  history: 'nina_yoga_history',
+  startTime: 'nina_yoga_start'
+};
+
+function saveCurrent() {
+  try {
+    localStorage.setItem(STORAGE.current, JSON.stringify(completedSets));
+    // Start-Zeit beim ersten Klick setzen
+    if (!localStorage.getItem(STORAGE.startTime) && completedCount() > 0) {
+      localStorage.setItem(STORAGE.startTime, Date.now().toString());
+    }
+  } catch(e) { console.warn('Storage save failed', e); }
+}
+
+function loadCurrent() {
+  try {
+    const data = localStorage.getItem(STORAGE.current);
+    if (data) completedSets = JSON.parse(data);
+  } catch(e) { console.warn('Storage load failed', e); }
+}
+
+function getHistory() {
+  try {
+    const data = localStorage.getItem(STORAGE.history);
+    return data ? JSON.parse(data) : [];
+  } catch(e) { return []; }
+}
+
+function saveWorkoutSession(note) {
+  const history = getHistory();
+  const startTime = parseInt(localStorage.getItem(STORAGE.startTime) || Date.now());
+  let duration = Math.round((Date.now() - startTime) / 60000);
+  if (duration < 1) duration = 1;
+
+  // Pro Phase aggregieren
+  const phaseStats = {};
+  Object.keys(phases).forEach(phaseKey => {
+    let done = 0, total = 0;
+    phases[phaseKey].exercises.forEach((ex, idx) => {
+      const key = exerciseKey(phaseKey, idx);
+      const sets = completedSets[key] || [];
+      done += sets.filter(Boolean).length;
+      total += ex.sets;
+    });
+    phaseStats[phaseKey] = { done, total };
+  });
+
+  const session = {
+    date: new Date().toISOString(),
+    duration: duration,
+    completed: completedCount(),
+    total: totalSets(),
+    phases: phaseStats,
+    note: (note || '').trim()
+  };
+
+  history.unshift(session);
+  if (history.length > 50) history.length = 50;
+  localStorage.setItem(STORAGE.history, JSON.stringify(history));
+}
+
+function startNewWorkout() {
+  completedSets = {};
+  localStorage.removeItem(STORAGE.current);
+  localStorage.removeItem(STORAGE.startTime);
+  renderPhase(currentPhase);
+}
+
+function computeWeekCount() {
+  const history = getHistory();
+  if (history.length === 0) return 0;
+  const weekAgo = new Date();
+  weekAgo.setDate(weekAgo.getDate() - 7);
+  return history.filter(s => new Date(s.date) >= weekAgo).length;
+}
+
+// ---------- MODAL: History + Stats ----------
+function openHistory() {
+  const history = getHistory();
+  const weekCount = computeWeekCount();
+  const total = history.length;
+  const totalMin = history.reduce((sum, s) => sum + (s.duration || 0), 0);
+
+  let html = `
+    <div class="modal" onclick="event.stopPropagation()">
+      <div class="modal-header">
+        <div class="modal-title">📊 Dein Verlauf</div>
+        <button class="modal-close" onclick="closeModal()">×</button>
+      </div>
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-value">${weekCount}</div>
+          <div class="stat-label">Diese Woche</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">${total}</div>
+          <div class="stat-label">Total</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">${totalMin}</div>
+          <div class="stat-label">Minuten</div>
+        </div>
+      </div>
+      <div class="history-title">Letzte Sessions</div>
+      <div class="history-list">
+  `;
+
+  if (history.length === 0) {
+    html += `<div class="history-empty">Noch keine Workouts gespeichert<br>Mach dein erstes Training und klicke "Workout speichern"</div>`;
+  } else {
+    html += history.map(s => {
+      const d = new Date(s.date);
+      const dateStr = d.toLocaleDateString('de-DE', { weekday: 'short', day: '2-digit', month: '2-digit', year: '2-digit' });
+      const timeStr = d.toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' });
+      const completion = Math.round((s.completed / s.total) * 100);
+      const badgeClass = completion >= 100 ? '' : 'partial';
+      return `
+        <div class="history-item">
+          <div style="flex:1;min-width:0">
+            <div class="history-date">${dateStr} · ${timeStr}</div>
+            <div class="history-stats">${s.completed}/${s.total} Sätze · ${s.duration} Min · ${completion}%</div>
+            ${s.note ? `<div class="history-note">„${s.note}"</div>` : ''}
+          </div>
+          <div class="history-badge ${badgeClass}">${completion}%</div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  html += `</div></div>`;
+
+  const modal = document.getElementById('modal-backdrop');
+  modal.innerHTML = html;
+  modal.classList.add('open');
+}
+
+function openSaveDialog() {
+  const done = completedCount();
+  const tot = totalSets();
+  if (done === 0) {
+    showToast('⚠️ Noch keine Sätze abgehakt');
+    return;
+  }
+  const html = `
+    <div class="modal" onclick="event.stopPropagation()">
+      <div class="modal-header">
+        <div class="modal-title">💪 Workout speichern</div>
+        <button class="modal-close" onclick="closeModal()">×</button>
+      </div>
+      <div class="confirm-text">
+        Speichere dein heutiges Training im Verlauf<br>
+        <strong>${done} von ${tot} Sätzen</strong> geschafft
+      </div>
+      <textarea class="notes-input" id="workout-note" placeholder="Wie war's? (optional) — z.B. fühlte mich stark, Goblet Squat ging easy..."></textarea>
+      <button class="save-btn" onclick="confirmSave()">Speichern & neues Workout starten</button>
+    </div>
+  `;
+  const modal = document.getElementById('modal-backdrop');
+  modal.innerHTML = html;
+  modal.classList.add('open');
+}
+
+function openNewWorkoutDialog() {
+  if (completedCount() === 0) {
+    startNewWorkout();
+    showToast('Frisch gestartet — los geht\'s');
+    return;
+  }
+  const html = `
+    <div class="modal" onclick="event.stopPropagation()">
+      <div class="modal-header">
+        <div class="modal-title">Neues Workout?</div>
+        <button class="modal-close" onclick="closeModal()">×</button>
+      </div>
+      <div class="confirm-text">
+        Du hast aktuell <strong>${completedCount()} Sätze</strong> abgehakt<br><br>
+        Willst du das aktuelle Workout erst speichern, oder einfach verwerfen?
+      </div>
+      <div class="confirm-buttons">
+        <button class="action-btn primary" onclick="closeModal(); openSaveDialog()">Erst speichern</button>
+        <button class="action-btn danger-btn" onclick="discardAndRestart()">Verwerfen</button>
+      </div>
+    </div>
+  `;
+  const modal = document.getElementById('modal-backdrop');
+  modal.innerHTML = html;
+  modal.classList.add('open');
+}
+
+function confirmSave() {
+  const noteEl = document.getElementById('workout-note');
+  const note = noteEl ? noteEl.value : '';
+  saveWorkoutSession(note);
+  startNewWorkout();
+  closeModal();
+  showToast('💪 Workout gespeichert — du bist ein Champion');
+}
+
+function discardAndRestart() {
+  startNewWorkout();
+  closeModal();
+  showToast('Frisch gestartet');
+}
+
+function closeModal() {
+  const modal = document.getElementById('modal-backdrop');
+  modal.classList.remove('open');
+  setTimeout(() => { modal.innerHTML = ''; }, 200);
+}
+
+function showToast(msg) {
+  const existing = document.querySelector('.toast');
+  if (existing) existing.remove();
+  const toast = document.createElement('div');
+  toast.className = 'toast';
+  toast.textContent = msg;
+  document.body.appendChild(toast);
+  requestAnimationFrame(() => toast.classList.add('show'));
+  setTimeout(() => {
+    toast.classList.remove('show');
+    setTimeout(() => toast.remove(), 300);
+  }, 2800);
+}
+
+// ---------- STATE & RENDERING ----------
+let currentPhase = 'warmup';
+let completedSets = {};
+let soundOn = true;
+let activeTimers = {};
+
+function totalSets() {
+  let total = 0;
+  Object.values(phases).forEach(p => p.exercises.forEach(e => total += e.sets));
+  return total;
+}
+
+function completedCount() {
+  return Object.values(completedSets).reduce((sum, sets) => sum + sets.filter(Boolean).length, 0);
+}
+
+function updateProgress() {
+  const total = totalSets();
+  const done = completedCount();
+  document.getElementById('progress-text').textContent = `${done} / ${total} Sätze`;
+  document.getElementById('progress-fill').style.width = `${(done/total)*100}%`;
+  if (typeof updateWorkoutClock === 'function') updateWorkoutClock();
+}
+
+function exerciseKey(phaseKey, idx) {
+  return `${phaseKey}-${idx}`;
+}
+
+function renderPhase(phaseKey) {
+  const phase = phases[phaseKey];
+  const html = `
+    <div class="phase-header">
+      <div>
+        <div class="phase-title">${phase.title}</div>
+        <div class="phase-meta">${phase.meta}${phase.rounds > 1 ? ` · <span class="rounds">${phase.rounds} Runden</span>` : ''}</div>
+      </div>
+      <button class="reset-btn" onclick="resetPhase('${phaseKey}')">Phase zurücksetzen</button>
+    </div>
+    <div class="exercises">
+      ${phase.exercises.map((ex, idx) => renderExercise(phaseKey, ex, idx)).join('')}
+    </div>
+  `;
+  document.getElementById('phase-content').innerHTML = html;
+  updateProgress();
+}
+
+function renderExercise(phaseKey, ex, idx) {
+  const key = exerciseKey(phaseKey, idx);
+  if (!completedSets[key]) completedSets[key] = new Array(ex.sets).fill(false);
+  const allDone = completedSets[key].every(s => s);
+
+  const dots = completedSets[key].map((done, i) => `
+    <button class="set-dot ${done ? 'done' : ''}" onclick="toggleSet('${phaseKey}', ${idx}, ${i})">
+      ${done ? '✓' : i+1}
+    </button>
+  `).join('');
+
+  const timerHtml = ex.pause > 0 ? `
+    <button class="timer-btn" id="timer-${key}" onclick="startTimer('${key}', ${ex.pause})">
+      ⏱ ${ex.pause}s halten
+    </button>
+  ` : '';
+
+  return `
+    <div class="exercise-card ${allDone ? 'completed' : ''}">
+      <div class="animation-box">${animations[ex.animation] || ''}</div>
+      <div class="exercise-info">
+        <h3>${ex.name}</h3>
+        <div class="exercise-meta">
+          <span class="meta-item">${ex.reps}</span>
+          <span class="meta-item weight">${ex.weight}</span>
+          ${ex.sets > 1 ? `<span class="meta-item">${ex.sets} Sätze</span>` : ''}
+        </div>
+        <div class="description">${ex.description}</div>
+        <div class="controls">
+          <div class="set-tracker">
+            <span class="set-label">${ex.sets > 1 ? 'Sätze' : 'Geschafft'}</span>
+            <div class="set-dots">${dots}</div>
+          </div>
+          ${timerHtml}
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function toggleSet(phaseKey, idx, setIdx) {
+  const key = exerciseKey(phaseKey, idx);
+  completedSets[key][setIdx] = !completedSets[key][setIdx];
+  saveCurrent();
+  renderPhase(phaseKey);
+}
+
+function resetPhase(phaseKey) {
+  phases[phaseKey].exercises.forEach((_, idx) => {
+    const key = exerciseKey(phaseKey, idx);
+    completedSets[key] = new Array(phases[phaseKey].exercises[idx].sets).fill(false);
+  });
+  saveCurrent();
+  renderPhase(phaseKey);
+}
+
+function startTimer(key, seconds) {
+  const btn = document.getElementById(`timer-${key}`);
+  if (activeTimers[key]) {
+    clearInterval(activeTimers[key]);
+    delete activeTimers[key];
+    btn.classList.remove('running');
+    btn.textContent = `⏱ ${seconds}s halten`;
+    return;
+  }
+  let remaining = seconds;
+  btn.classList.add('running');
+  btn.textContent = `⏸ ${remaining}s`;
+  activeTimers[key] = setInterval(() => {
+    remaining--;
+    if (remaining <= 0) {
+      clearInterval(activeTimers[key]);
+      delete activeTimers[key];
+      btn.classList.remove('running');
+      btn.textContent = `⏱ ${seconds}s halten`;
+      if (soundOn) playBeep();
+    } else {
+      btn.textContent = `⏸ ${remaining}s`;
+    }
+  }, 1000);
+}
+
+function playBeep() {
+  try {
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.frequency.value = 800;
+    gain.gain.value = 0.15;
+    osc.start();
+    setTimeout(() => { osc.frequency.value = 1000; }, 150);
+    setTimeout(() => { osc.stop(); ctx.close(); }, 300);
+  } catch(e) {}
+}
+
+document.querySelectorAll('.phase-tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.phase-tab').forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+    currentPhase = tab.dataset.phase;
+    renderPhase(currentPhase);
+  });
+});
+
+document.getElementById('sound-toggle').addEventListener('click', () => {
+  soundOn = !soundOn;
+  document.getElementById('sound-toggle').textContent = soundOn ? '🔔' : '🔕';
+});
+
+// ── WORKOUT-STOPPUHR (an STORAGE.startTime gekoppelt) ──
+function fmtClock(ms) {
+  const s = Math.max(0, Math.floor(ms / 1000));
+  const m = Math.floor(s / 60), sec = s % 60;
+  return `${String(m).padStart(2,'0')}:${String(sec).padStart(2,'0')}`;
+}
+function updateWorkoutClock() {
+  const box = document.getElementById('workout-clock');
+  const out = document.getElementById('workout-clock-time');
+  if (!box || !out) return;
+  const start = parseInt(localStorage.getItem(STORAGE.startTime) || '0');
+  if (start > 0) { box.classList.add('running'); out.textContent = fmtClock(Date.now() - start); }
+  else { box.classList.remove('running'); out.textContent = '00:00'; }
+}
+setInterval(updateWorkoutClock, 1000);
+
+// Init
+loadCurrent();
+renderPhase(currentPhase);
+updateWorkoutClock();
+</script>
+
+
+
+<script>
+// ── PABLO PLAYER (1:1 von der Landingpage, eigener Positions-Key) ──
+const pabloPlayer = document.getElementById('pablo-player');
+const pabloPanel  = document.getElementById('pablo-panel');
+(function() {
+  const handle = document.getElementById('pablo-btn');
+  const panelHeader = document.querySelector('.pablo-panel-header');
+  let dragging = false, didDrag = false, startX, startY, startLeft, startTop;
+  function beginDrag(cx, cy) {
+    const r = pabloPlayer.getBoundingClientRect();
+    pabloPlayer.style.bottom = 'auto'; pabloPlayer.style.right = 'auto';
+    pabloPlayer.style.top = r.top + 'px'; pabloPlayer.style.left = r.left + 'px';
+    startX = cx; startY = cy; startLeft = r.left; startTop = r.top;
+    dragging = true; didDrag = false; handle.style.animationPlayState = 'paused';
+  }
+  function moveDrag(cx, cy) {
+    if (!dragging) return;
+    const dx = cx - startX, dy = cy - startY;
+    if (Math.abs(dx) > 3 || Math.abs(dy) > 3) didDrag = true;
+    const w = pabloPlayer.offsetWidth, h = pabloPlayer.offsetHeight;
+    const l = Math.max(0, Math.min(window.innerWidth - w, startLeft + dx));
+    const t = Math.max(0, Math.min(window.innerHeight - h, startTop + dy));
+    pabloPlayer.style.left = l + 'px'; pabloPlayer.style.top = t + 'px';
+  }
+  function endDrag() {
+    if (!dragging) return;
+    dragging = false; handle.style.animationPlayState = '';
+    if (didDrag) localStorage.setItem('pablo-pos-yoga', JSON.stringify({ top: pabloPlayer.style.top, left: pabloPlayer.style.left }));
+  }
+  handle.addEventListener('mousedown',  e => { if (e.button === 0) { beginDrag(e.clientX, e.clientY); e.preventDefault(); } });
+  handle.addEventListener('touchstart', e => { const t = e.touches[0]; beginDrag(t.clientX, t.clientY); }, { passive: true });
+  handle.addEventListener('click', e => { if (didDrag) { e.stopPropagation(); didDrag = false; } }, true);
+  if (panelHeader) {
+    panelHeader.addEventListener('mousedown', e => { if (e.target.classList.contains('pablo-close-btn')) return; if (e.button === 0) { beginDrag(e.clientX, e.clientY); e.preventDefault(); } });
+    panelHeader.addEventListener('touchstart', e => { if (e.target.classList.contains('pablo-close-btn')) return; const t = e.touches[0]; beginDrag(t.clientX, t.clientY); }, { passive: true });
+  }
+  document.addEventListener('mousemove', e => moveDrag(e.clientX, e.clientY));
+  document.addEventListener('mouseup',   () => endDrag());
+  document.addEventListener('touchmove', e => { if (dragging) { moveDrag(e.touches[0].clientX, e.touches[0].clientY); e.preventDefault(); } }, { passive: false });
+  document.addEventListener('touchend', () => endDrag());
+  const saved = localStorage.getItem('pablo-pos-yoga');
+  if (saved) try { const p = JSON.parse(saved); pabloPlayer.style.bottom = 'auto'; pabloPlayer.style.right = 'auto'; pabloPlayer.style.top = p.top; pabloPlayer.style.left = p.left; } catch(e) {}
+})();
+function switchPlaylist(id, name, btn) {
+  document.getElementById('pablo-iframe').src = 'https://open.spotify.com/embed/playlist/' + id + '?utm_source=generator&theme=0';
+  document.getElementById('pablo-track-name').textContent = name;
+  document.querySelectorAll('.pl-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+}
+function togglePabloPanel() { pabloPanel.classList.toggle('open'); }
+function setPabloState(state) { pabloPlayer.className = 'state-' + state; }
+let _demo = 0;
+document.getElementById('pablo-btn').addEventListener('dblclick', (e) => {
+  e.stopPropagation();
+  const states = ['idle', 'playing', 'sleeping'];
+  _demo = (_demo + 1) % states.length;
+  setPabloState(states[_demo]);
+});
+</script>
+</body>
+</html>
