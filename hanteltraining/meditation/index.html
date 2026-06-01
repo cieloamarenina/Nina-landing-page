@@ -151,15 +151,28 @@
 
   .nlc-home { position: fixed; top: 15px; left: 18px; z-index: 1100; font-family: monospace; font-weight: 800; font-size: 1rem; letter-spacing: 0.04em; color: var(--accent); text-decoration: none; }
   .nlc-home:hover { filter: brightness(1.18); }
+
+  /* ── SPRACH-UMSCHALTER ──────────────────────── */
+  .lang-switch { position: fixed; top: 14px; right: 16px; z-index: 1100; display: flex; gap: 3px; background: rgba(20,38,64,0.72); backdrop-filter: blur(6px); border: 1px solid var(--border); border-radius: 999px; padding: 4px; }
+  .ls-btn { background: none; border: none; color: var(--muted); font-family: monospace; font-size: 0.62rem; font-weight: 700; letter-spacing: 0.06em; padding: 0.25rem 0.5rem; border-radius: 999px; cursor: pointer; transition: all 0.15s; }
+  .ls-btn:hover { color: var(--text); }
+  .ls-btn.active { background: var(--accent); color: #04121f; }
 </style>
 </head>
 <body>
+<div class="lang-switch" id="lang-switch">
+  <button class="ls-btn" data-lang="de">DE</button>
+  <button class="ls-btn" data-lang="en">EN</button>
+  <button class="ls-btn" data-lang="es">ES</button>
+  <button class="ls-btn" data-lang="fr">FR</button>
+  <button class="ls-btn" data-lang="it">IT</button>
+</div>
 <a href="../../index.html" class="nlc-home" title="Zurück zur Startseite">NLC_</a>
 
 <div class="container">
   <header>
-    <h1>Meditation</h1>
-    <div class="subtitle">Nina · Atem & Ruhe</div>
+    <h1 data-i18n="h1">Meditation</h1>
+    <div class="subtitle" data-i18n="subtitle">Nina · Atem & Ruhe</div>
     <nav class="page-nav">
       <a href="../index.html">💪 Training</a>
       <a href="../yoga/index.html">🧘 Yoga</a>
@@ -169,7 +182,7 @@
 
   <div class="medi-card">
     <div class="medi-stage">
-      <div class="medi-remaining"><span class="lbl">Verbleibend</span><span id="medi-remaining">05:00</span></div>
+      <div class="medi-remaining"><span class="lbl" data-i18n="remainingLabel">Verbleibend</span><span id="medi-remaining">05:00</span></div>
       <div class="breath-wrap" id="breath-wrap">
         <div class="breath-glow"></div>
         <div class="breath-circle" id="breath-circle"><span id="breath-count">5</span></div>
@@ -178,28 +191,28 @@
     </div>
 
     <div>
-      <div class="pill-group-label">Atemtechnik</div>
+      <div class="pill-group-label" data-i18n="techLabel">Atemtechnik</div>
       <div class="pill-row" id="tech-row">
-        <button class="medi-pill active" data-tech="calm">Ruhiger Atem · 4–6</button>
-        <button class="medi-pill" data-tech="box">Box-Atmung · 4–4–4–4</button>
-        <button class="medi-pill" data-tech="relax">Tiefe Ruhe · 4–7–8</button>
+        <button class="medi-pill active" data-tech="calm" data-i18n="techCalm">Ruhiger Atem · 4–6</button>
+        <button class="medi-pill" data-tech="box" data-i18n="techBox">Box-Atmung · 4–4–4–4</button>
+        <button class="medi-pill" data-tech="relax" data-i18n="techRelax">Tiefe Ruhe · 4–7–8</button>
       </div>
     </div>
 
     <div>
-      <div class="pill-group-label">Dauer</div>
+      <div class="pill-group-label" data-i18n="durLabel">Dauer</div>
       <div class="pill-row" id="dur-row">
-        <button class="medi-pill" data-min="3">3 Min</button>
-        <button class="medi-pill active" data-min="5">5 Min</button>
-        <button class="medi-pill" data-min="10">10 Min</button>
+        <button class="medi-pill" data-min="3" data-i18n="dur3">3 Min</button>
+        <button class="medi-pill active" data-min="5" data-i18n="dur5">5 Min</button>
+        <button class="medi-pill" data-min="10" data-i18n="dur10">10 Min</button>
       </div>
     </div>
 
     <div class="medi-controls">
       <button class="medi-btn" id="medi-start" onclick="toggleSession()">▶ Start</button>
-      <button class="medi-btn ghost" id="medi-reset" onclick="resetSession()">↺ Zurücksetzen</button>
+      <button class="medi-btn ghost" id="medi-reset" onclick="resetSession()" data-i18n="btnReset">↺ Zurücksetzen</button>
     </div>
-    <div class="medi-hint">Folge dem Kreis: Er wird größer beim Einatmen, kleiner beim Ausatmen. Atme durch die Nase ein, sanft durch den Mund aus. Pablo legt gern Musik auf 🎵</div>
+    <div class="medi-hint" data-i18n="hint">Folge dem Kreis: Er wird größer beim Einatmen, kleiner beim Ausatmen. Atme durch die Nase ein, sanft durch den Mund aus. Pablo legt gern Musik auf 🎵</div>
   </div>
 </div>
 
@@ -236,9 +249,9 @@
 <script>
 // ── MEDITATION ───────────────────────────────────────────────
 const TECHNIQUES = {
-  calm:  { steps: [{ l: 'Einatmen', s: 4 }, { l: 'Ausatmen', s: 6 }] },
-  box:   { steps: [{ l: 'Einatmen', s: 4 }, { l: 'Halten', s: 4 }, { l: 'Ausatmen', s: 4 }, { l: 'Halten', s: 4 }] },
-  relax: { steps: [{ l: 'Einatmen', s: 4 }, { l: 'Halten', s: 7 }, { l: 'Ausatmen', s: 8 }] }
+  calm:  { steps: [{ p: 'in', s: 4 }, { p: 'out', s: 6 }] },
+  box:   { steps: [{ p: 'in', s: 4 }, { p: 'hold', s: 4 }, { p: 'out', s: 4 }, { p: 'hold', s: 4 }] },
+  relax: { steps: [{ p: 'in', s: 4 }, { p: 'hold', s: 7 }, { p: 'out', s: 8 }] }
 };
 let tech = 'calm', durMin = 5;
 let running = false, stepIdx = 0, stepRemain = 0, sessionRemain = 0, tickTimer = null;
@@ -254,14 +267,14 @@ function beginStep(i) {
   stepIdx = i;
   const step = TECHNIQUES[tech].steps[i];
   stepRemain = step.s;
-  $('breath-phase').textContent = step.l;
+  $('breath-phase').textContent = PHASE[lang][step.p];
   $('breath-count').textContent = step.s;
   const c = $('breath-circle');
   c.style.transitionDuration = step.s + 's';
   const glow = document.querySelector('.breath-glow');
   if (glow) glow.style.transitionDuration = step.s + 's';
-  if (step.l === 'Einatmen') { c.classList.add('big'); if (glow) glow.style.transform = 'scale(1.15)'; }
-  else if (step.l === 'Ausatmen') { c.classList.remove('big'); if (glow) glow.style.transform = 'scale(0.7)'; }
+  if (step.p === 'in') { c.classList.add('big'); if (glow) glow.style.transform = 'scale(1.15)'; }
+  else if (step.p === 'out') { c.classList.remove('big'); if (glow) glow.style.transform = 'scale(0.7)'; }
   // 'Halten' lässt den Kreis, wie er ist
 }
 
@@ -281,7 +294,7 @@ function toggleSession() {
   if (running) { pauseSession(); return; }
   if (sessionRemain <= 0) { sessionRemain = durMin * 60; stepIdx = 0; }
   running = true;
-  $('medi-start').textContent = '⏸ Pause';
+  $('medi-start').textContent = ui('btnPause');
   safePablo('playing');
   $('medi-remaining').textContent = fmt(sessionRemain);
   beginStep(stepIdx);
@@ -292,8 +305,8 @@ function toggleSession() {
 function pauseSession() {
   running = false;
   clearInterval(tickTimer);
-  $('medi-start').textContent = '▶ Weiter';
-  $('breath-phase').textContent = 'Pause';
+  $('medi-start').textContent = ui('btnResume');
+  $('breath-phase').textContent = ui('paused');
   safePablo('idle');
 }
 
@@ -301,8 +314,8 @@ function resetSession() {
   running = false;
   clearInterval(tickTimer);
   sessionRemain = 0; stepIdx = 0;
-  $('medi-start').textContent = '▶ Start';
-  $('breath-phase').textContent = 'Bereit';
+  $('medi-start').textContent = ui('btnStart');
+  $('breath-phase').textContent = ui('ready');
   $('breath-count').textContent = TECHNIQUES[tech].steps[0].s;
   $('medi-remaining').textContent = fmt(durMin * 60);
   const c = $('breath-circle');
@@ -317,8 +330,8 @@ function finishSession() {
   running = false;
   clearInterval(tickTimer);
   sessionRemain = 0;
-  $('medi-start').textContent = '▶ Neu starten';
-  $('breath-phase').textContent = 'Fertig 🙏';
+  $('medi-start').textContent = ui('btnRestart');
+  $('breath-phase').textContent = ui('done');
   $('breath-count').textContent = '✓';
   const c = $('breath-circle');
   c.style.transitionDuration = '1s';
@@ -365,7 +378,40 @@ $('sound-toggle').addEventListener('click', () => {
 
 function safePablo(s) { if (typeof setPabloState === 'function') setPabloState(s); }
 
+// ── i18n (Sprachen DE/EN/ES/FR/IT) ───────────────────────────
+let lang = localStorage.getItem('nina_workout_lang') || 'de';
+const UI = {
+  de: { h1:"Meditation", subtitle:"Nina · Atem & Ruhe", remainingLabel:"Verbleibend", techLabel:"Atemtechnik", techCalm:"Ruhiger Atem · 4–6", techBox:"Box-Atmung · 4–4–4–4", techRelax:"Tiefe Ruhe · 4–7–8", durLabel:"Dauer", dur3:"3 Min", dur5:"5 Min", dur10:"10 Min", btnReset:"↺ Zurücksetzen", btnStart:"▶ Start", btnPause:"⏸ Pause", btnResume:"▶ Weiter", btnRestart:"▶ Neu starten", ready:"Bereit", paused:"Pause", done:"Fertig 🙏", hint:"Folge dem Kreis: Er wird größer beim Einatmen, kleiner beim Ausatmen. Atme durch die Nase ein, sanft durch den Mund aus. Pablo legt gern Musik auf 🎵" },
+  en: { h1:"Meditation", subtitle:"Nina · Breath & Calm", remainingLabel:"Remaining", techLabel:"Breathing technique", techCalm:"Calm Breath · 4–6", techBox:"Box Breathing · 4–4–4–4", techRelax:"Deep Calm · 4–7–8", durLabel:"Duration", dur3:"3 min", dur5:"5 min", dur10:"10 min", btnReset:"↺ Reset", btnStart:"▶ Start", btnPause:"⏸ Pause", btnResume:"▶ Resume", btnRestart:"▶ Restart", ready:"Ready", paused:"Paused", done:"Done 🙏", hint:"Follow the circle: it grows as you inhale, shrinks as you exhale. Breathe in through your nose, out gently through your mouth. Pablo's happy to put on some music 🎵" },
+  es: { h1:"Meditación", subtitle:"Nina · Respiración y Calma", remainingLabel:"Restante", techLabel:"Técnica de respiración", techCalm:"Respiración tranquila · 4–6", techBox:"Respiración cuadrada · 4–4–4–4", techRelax:"Calma profunda · 4–7–8", durLabel:"Duración", dur3:"3 min", dur5:"5 min", dur10:"10 min", btnReset:"↺ Reiniciar", btnStart:"▶ Empezar", btnPause:"⏸ Pausa", btnResume:"▶ Continuar", btnRestart:"▶ Reiniciar", ready:"Listo", paused:"En pausa", done:"Listo 🙏", hint:"Sigue el círculo: crece al inhalar, se encoge al exhalar. Inhala por la nariz, exhala suave por la boca. A Pablo le gusta poner música 🎵" },
+  fr: { h1:"Méditation", subtitle:"Nina · Souffle & Calme", remainingLabel:"Restant", techLabel:"Technique de respiration", techCalm:"Respiration calme · 4–6", techBox:"Respiration carrée · 4–4–4–4", techRelax:"Calme profond · 4–7–8", durLabel:"Durée", dur3:"3 min", dur5:"5 min", dur10:"10 min", btnReset:"↺ Réinitialiser", btnStart:"▶ Démarrer", btnPause:"⏸ Pause", btnResume:"▶ Reprendre", btnRestart:"▶ Recommencer", ready:"Prêt", paused:"Pause", done:"Terminé 🙏", hint:"Suis le cercle : il grandit à l'inspiration, rétrécit à l'expiration. Inspire par le nez, expire doucement par la bouche. Pablo aime mettre de la musique 🎵" },
+  it: { h1:"Meditazione", subtitle:"Nina · Respiro & Calma", remainingLabel:"Rimanente", techLabel:"Tecnica di respirazione", techCalm:"Respiro calmo · 4–6", techBox:"Respirazione quadrata · 4–4–4–4", techRelax:"Calma profonda · 4–7–8", durLabel:"Durata", dur3:"3 min", dur5:"5 min", dur10:"10 min", btnReset:"↺ Azzera", btnStart:"▶ Avvia", btnPause:"⏸ Pausa", btnResume:"▶ Riprendi", btnRestart:"▶ Ricomincia", ready:"Pronto", paused:"In pausa", done:"Fatto 🙏", hint:"Segui il cerchio: si ingrandisce inspirando, si rimpicciolisce espirando. Inspira dal naso, espira dolcemente dalla bocca. A Pablo piace mettere musica 🎵" }
+};
+const PHASE = {
+  de: { in:"Einatmen", hold:"Halten", out:"Ausatmen" },
+  en: { in:"Inhale", hold:"Hold", out:"Exhale" },
+  es: { in:"Inhala", hold:"Mantén", out:"Exhala" },
+  fr: { in:"Inspire", hold:"Retiens", out:"Expire" },
+  it: { in:"Inspira", hold:"Trattieni", out:"Espira" }
+};
+function ui(k){ return (UI[lang] && UI[lang][k] != null) ? UI[lang][k] : UI.de[k]; }
+function applyUI(){
+  const u = UI[lang] || UI.de;
+  document.querySelectorAll('[data-i18n]').forEach(el => { const k = el.getAttribute('data-i18n'); if (u[k] != null) el.textContent = u[k]; });
+  document.documentElement.lang = lang;
+  document.querySelectorAll('.ls-btn').forEach(b => b.classList.toggle('active', b.dataset.lang === lang));
+}
+function refreshDynamic(){
+  const ph = $('breath-phase'), btn = $('medi-start');
+  if (running) { btn.textContent = ui('btnPause'); }
+  else if (sessionRemain > 0) { btn.textContent = ui('btnResume'); ph.textContent = ui('paused'); }
+  else { btn.textContent = ui('btnStart'); ph.textContent = ui('ready'); }
+}
+function switchLang(l){ lang = l; localStorage.setItem('nina_workout_lang', l); applyUI(); refreshDynamic(); }
+
 // Init
+document.querySelectorAll('.ls-btn').forEach(b => b.addEventListener('click', () => switchLang(b.dataset.lang)));
+applyUI();
 resetSession();
 </script>
 
