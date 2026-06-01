@@ -786,14 +786,27 @@
 
   .page-nav a.nav-home { font-family: monospace; font-weight: 800; letter-spacing: 0.04em; color: var(--accent); border-color: rgba(56,189,248,0.4); }
   .page-nav a.nav-home:hover { background: rgba(56,189,248,0.16); }
+
+  /* ── SPRACH-UMSCHALTER ──────────────────────── */
+  .lang-switch { position: fixed; top: 14px; right: 16px; z-index: 1100; display: flex; gap: 3px; background: rgba(20,38,64,0.72); backdrop-filter: blur(6px); border: 1px solid var(--border); border-radius: 999px; padding: 4px; }
+  .ls-btn { background: none; border: none; color: var(--muted); font-family: monospace; font-size: 0.62rem; font-weight: 700; letter-spacing: 0.06em; padding: 0.25rem 0.5rem; border-radius: 999px; cursor: pointer; transition: all 0.15s; }
+  .ls-btn:hover { color: var(--text); }
+  .ls-btn.active { background: var(--accent); color: #04121f; }
 </style>
 </head>
 <body>
+<div class="lang-switch" id="lang-switch">
+  <button class="ls-btn" data-lang="de">DE</button>
+  <button class="ls-btn" data-lang="en">EN</button>
+  <button class="ls-btn" data-lang="es">ES</button>
+  <button class="ls-btn" data-lang="fr">FR</button>
+  <button class="ls-btn" data-lang="it">IT</button>
+</div>
 
 <div class="container">
   <header>
-    <h1>Hanteltraining</h1>
-    <div class="subtitle">Nina · 25 Min · 3× pro Woche</div>
+    <h1 data-i18n="h1">Hanteltraining</h1>
+    <div class="subtitle" data-i18n="subtitle">Nina · 25 Min · 3× pro Woche</div>
     <nav class="page-nav">
       <a href="../index.html" class="nav-home" title="Zurück zur Startseite">← NLC_</a>
       <a href="index.html" class="active">💪 Training</a>
@@ -802,19 +815,19 @@
     </nav>
     <div class="workout-clock" id="workout-clock" title="Workout-Dauer — läuft ab dem ersten abgehakten Satz">
       <span class="clock-dot"></span>
-      <span class="clock-label">Dauer</span>
+      <span class="clock-label" data-i18n="clockLabel">Dauer</span>
       <span id="workout-clock-time">00:00</span>
     </div>
     <div class="header-actions">
-      <button class="action-btn" onclick="openHistory()">📊 Verlauf</button>
-      <button class="action-btn primary" onclick="openSaveDialog()">💪 Workout speichern</button>
-      <button class="action-btn" onclick="openNewWorkoutDialog()">↻ Neuer Workout</button>
+      <button class="action-btn" onclick="openHistory()" data-i18n="btnHistory">📊 Verlauf</button>
+      <button class="action-btn primary" onclick="openSaveDialog()" data-i18n="btnSave">💪 Workout speichern</button>
+      <button class="action-btn" onclick="openNewWorkoutDialog()" data-i18n="btnNew">↻ Neuer Workout</button>
     </div>
   </header>
 
   <div class="progress-container">
     <div class="progress-label">
-      <span>Heute geschafft</span>
+      <span data-i18n="progressLabel">Heute geschafft</span>
       <span id="progress-text">0 / 15 Übungen</span>
     </div>
     <div class="progress-bar">
@@ -824,16 +837,16 @@
 
   <div class="phases">
     <button class="phase-tab active" data-phase="warmup">
-      <span class="num">Phase 1</span>Warmup
+      <span class="num">Phase 1</span><span data-i18n="tabWarmup">Warmup</span>
     </button>
     <button class="phase-tab" data-phase="beine">
-      <span class="num">Phase 2</span>Beine & Po
+      <span class="num">Phase 2</span><span data-i18n="tabBeine">Beine & Po</span>
     </button>
     <button class="phase-tab" data-phase="arme">
-      <span class="num">Phase 3</span>Arme & Bauch
+      <span class="num">Phase 3</span><span data-i18n="tabArme">Arme & Bauch</span>
     </button>
     <button class="phase-tab" data-phase="cooldown">
-      <span class="num">Phase 4</span>Cool-down
+      <span class="num">Phase 4</span><span data-i18n="tabCool">Cool-down</span>
     </button>
   </div>
 
@@ -1582,10 +1595,123 @@ function completedCount() {
   return Object.values(completedSets).reduce((sum, sets) => sum + sets.filter(Boolean).length, 0);
 }
 
+
+// ── i18n (Sprachen DE/EN/ES/FR/IT) ───────────────────────────
+let lang = localStorage.getItem('nina_workout_lang') || 'de';
+const UI = {
+  de: { h1:"Hanteltraining", subtitle:"Nina · 25 Min · 3× pro Woche", btnHistory:"📊 Verlauf", btnSave:"💪 Workout speichern", btnNew:"↻ Neuer Workout", progressLabel:"Heute geschafft", clockLabel:"Dauer", sets:"Sätze", rounds:"Runden", resetPhase:"Phase zurücksetzen", lblSets:"Sätze", lblDone:"Geschafft", rest:"Pause", tabWarmup:"Warmup", tabBeine:"Beine & Po", tabArme:"Arme & Bauch", tabCool:"Cool-down" },
+  en: { h1:"Dumbbell Workout", subtitle:"Nina · 25 min · 3× per week", btnHistory:"📊 History", btnSave:"💪 Save workout", btnNew:"↻ New workout", progressLabel:"Done today", clockLabel:"Duration", sets:"sets", rounds:"rounds", resetPhase:"Reset phase", lblSets:"Sets", lblDone:"Done", rest:"rest", tabWarmup:"Warm-up", tabBeine:"Legs & Glutes", tabArme:"Arms & Core", tabCool:"Cool-down" },
+  es: { h1:"Entrenamiento con Mancuernas", subtitle:"Nina · 25 min · 3× por semana", btnHistory:"📊 Historial", btnSave:"💪 Guardar entreno", btnNew:"↻ Nuevo entreno", progressLabel:"Hecho hoy", clockLabel:"Duración", sets:"series", rounds:"rondas", resetPhase:"Reiniciar fase", lblSets:"Series", lblDone:"Hecho", rest:"descanso", tabWarmup:"Calentamiento", tabBeine:"Piernas y Glúteos", tabArme:"Brazos y Abdomen", tabCool:"Enfriamiento" },
+  fr: { h1:"Entraînement Haltères", subtitle:"Nina · 25 min · 3×/semaine", btnHistory:"📊 Historique", btnSave:"💪 Enregistrer", btnNew:"↻ Nouveau", progressLabel:"Fait aujourd'hui", clockLabel:"Durée", sets:"séries", rounds:"tours", resetPhase:"Réinitialiser", lblSets:"Séries", lblDone:"Fait", rest:"pause", tabWarmup:"Échauffement", tabBeine:"Jambes & Fessiers", tabArme:"Bras & Abdos", tabCool:"Récupération" },
+  it: { h1:"Allenamento con Manubri", subtitle:"Nina · 25 min · 3× a settimana", btnHistory:"📊 Cronologia", btnSave:"💪 Salva", btnNew:"↻ Nuovo", progressLabel:"Fatto oggi", clockLabel:"Durata", sets:"serie", rounds:"round", resetPhase:"Reimposta fase", lblSets:"Serie", lblDone:"Fatto", rest:"pausa", tabWarmup:"Riscaldamento", tabBeine:"Gambe & Glutei", tabArme:"Braccia & Addome", tabCool:"Defaticamento" }
+};
+const PHI = {
+  en: { warmup:{title:"Warm-up", meta:"approx. 3 minutes"}, beine:{title:"Legs, Glutes & Co", meta:"approx. 13 minutes · incl. saddlebags, calves, lower back"}, arme:{title:"Core & Bingo Wings", meta:"approx. 11 minutes · incl. muffin top"}, cooldown:{title:"Cool-down", meta:"approx. 2-3 minutes · hold gently"} },
+  es: { warmup:{title:"Calentamiento", meta:"aprox. 3 minutos"}, beine:{title:"Piernas, Glúteos y más", meta:"aprox. 13 minutos · incl. cartucheras, gemelos, zona lumbar"}, arme:{title:"Abdomen y Brazos", meta:"aprox. 11 minutos · incl. michelines"}, cooldown:{title:"Enfriamiento", meta:"aprox. 2-3 minutos · mantén suave"} },
+  fr: { warmup:{title:"Échauffement", meta:"env. 3 minutes"}, beine:{title:"Jambes, Fessiers & Co", meta:"env. 13 minutes · incl. culottes de cheval, mollets, bas du dos"}, arme:{title:"Abdos & Bras qui pendent", meta:"env. 11 minutes · incl. poignées d'amour"}, cooldown:{title:"Récupération", meta:"env. 2-3 minutes · maintiens en douceur"} },
+  it: { warmup:{title:"Riscaldamento", meta:"circa 3 minuti"}, beine:{title:"Gambe, Glutei & Co", meta:"circa 13 minuti · incl. cuscinetti, polpacci, zona lombare"}, arme:{title:"Addome & Braccia flaccide", meta:"circa 11 minuti · incl. maniglie dell'amore"}, cooldown:{title:"Defaticamento", meta:"circa 2-3 minuti · mantieni dolcemente"} }
+};
+const EXI = {
+  en: {
+    "Marschieren auf der Stelle": {name:"Marching in place", reps:"30 sec", weight:"no weight", description:"Lift your knees, swing your arms, get your heart rate up"},
+    "Hüftkreise": {name:"Hip circles", reps:"10 per side", weight:"no weight", description:"Hands on your hips, draw big circles with the hips — first right, then left"},
+    "Armkreise": {name:"Arm circles", reps:"10 fwd + 10 back", weight:"no weight", description:"Both arms stretched out to the sides, draw big circles"},
+    "Bodyweight Squats": {name:"Bodyweight squats", reps:"10 reps", weight:"no weight", description:"Squat down deep, knees over your toes, chest up, hips back"},
+    "Goblet Squat": {name:"Goblet squat", reps:"10-12 reps", weight:"8 kg dumbbell", description:"Hold the dumbbell at your chest (like a goblet), squat deep, knees track your toes, chest stays upright"},
+    "Hip Thrust": {name:"Hip thrust", reps:"12-15 reps", weight:"8 kg dumbbell", description:"Shoulders on the bench, feet flat, dumbbell across your hips, push your hips up until knee-hip-shoulder form a line"},
+    "Romanian Deadlift": {name:"Romanian deadlift", reps:"10 reps", weight:"8 kg dumbbell", description:"Slight knee bend, push your hips back, guide the dumbbell along your shins — keep your back straight"},
+    "Curtsy Lunges": {name:"Curtsy lunges", reps:"10 per side", weight:"8 kg dumbbell", description:"Target zone: saddlebags · Dumbbell at your chest, the back leg crosses diagonally behind like a curtsy, lower deep, front knee stays over the foot — alternate left and right"},
+    "Standing Calf Raises": {name:"Standing calf raises", reps:"15 reps", weight:"8 kg dumbbell", description:"Target zone: calves · Dumbbell in one hand, rise slowly onto your toes, hold briefly at the top, lower slowly — use a wall for balance if needed"},
+    "Superman": {name:"Superman", reps:"12 reps", weight:"no weight", description:"Target zone: lower back · Lie on your stomach, arms forward, legs back — lift arms and legs off the floor together, hold 2 sec, lower with control"},
+    "Trizeps Kickbacks": {name:"Triceps kickbacks", reps:"12 per side", weight:"2 kg each hand", description:"Knee on the bench, lean forward, upper arm parallel to the floor, extend the forearm back — keep the upper arm still"},
+    "Overhead Trizeps Extension": {name:"Overhead triceps extension", reps:"10-12 reps", weight:"2 kg both hands", description:"Standing, lower the dumbbell behind your head with both hands, then press up — keep elbows close to your head"},
+    "Russian Twists": {name:"Russian twists", reps:"20 reps total", weight:"2 kg", description:"Seated, leaning back slightly, legs raised (knees bent), tap the dumbbell beside you slowly from left to right"},
+    "Plank": {name:"Plank", reps:"20-30 sec", weight:"no weight", description:"Forearm plank, body in a straight line from head to heels, brace your core, don't push your hips up"},
+    "Side Plank": {name:"Side plank", reps:"20-30 sec per side", weight:"no weight", description:"Target zone: muffin top · Side support on one forearm, body in a straight line, top arm to the ceiling, don't let your hips drop — 1 set each side"},
+    "Taubensitz": {name:"Pigeon pose", reps:"30 sec per side", weight:"Stretch", description:"Front leg bent in front of you, back leg extended behind, upper body sinks gently toward the floor"},
+    "Hamstring-Stretch": {name:"Hamstring stretch", reps:"30 sec per side", weight:"Stretch", description:"Seated, one leg straight, the other bent, reach for the toes of the straight leg"},
+    "Trizeps-Stretch": {name:"Triceps stretch", reps:"20 sec per side", weight:"Stretch", description:"Arm overhead, hand to your neck, gently push the elbow back with your other hand"},
+    "Schulter-Crossbody": {name:"Cross-body shoulder stretch", reps:"20 sec per side", weight:"Stretch", description:"Arm straight across your chest, pull it toward you with the other arm — keep the shoulder down"}
+  },
+  es: {
+    "Marschieren auf der Stelle": {name:"Marcha en el sitio", reps:"30 seg", weight:"sin peso", description:"Levanta las rodillas, balancea los brazos, sube el pulso"},
+    "Hüftkreise": {name:"Círculos de cadera", reps:"10 por lado", weight:"sin peso", description:"Manos en las caderas, dibuja grandes círculos — primero a la derecha, luego a la izquierda"},
+    "Armkreise": {name:"Círculos de brazos", reps:"10 adelante + 10 atrás", weight:"sin peso", description:"Brazos extendidos a los lados, dibuja grandes círculos"},
+    "Bodyweight Squats": {name:"Sentadillas", reps:"10 reps", weight:"sin peso", description:"Baja profundo, rodillas sobre los dedos, pecho arriba, glúteos atrás"},
+    "Goblet Squat": {name:"Sentadilla goblet", reps:"10-12 reps", weight:"mancuerna 8 kg", description:"Sujeta la mancuerna en el pecho (como un cáliz), baja profundo, rodillas hacia los dedos, pecho erguido"},
+    "Hip Thrust": {name:"Hip thrust", reps:"12-15 reps", weight:"mancuerna 8 kg", description:"Hombros en el banco, pies planos, mancuerna sobre la cadera, empuja hasta alinear rodilla-cadera-hombro"},
+    "Romanian Deadlift": {name:"Peso muerto rumano", reps:"10 reps", weight:"mancuerna 8 kg", description:"Rodillas algo flexionadas, lleva la cadera atrás, baja la mancuerna por las espinillas — espalda recta"},
+    "Curtsy Lunges": {name:"Zancadas curtsy", reps:"10 por lado", weight:"mancuerna 8 kg", description:"Zona objetivo: cartucheras · Mancuerna en el pecho, la pierna de atrás cruza en diagonal como una reverencia, baja profundo, rodilla delantera sobre el pie — alterna izquierda y derecha"},
+    "Standing Calf Raises": {name:"Elevaciones de gemelos", reps:"15 reps", weight:"mancuerna 8 kg", description:"Zona objetivo: gemelos · Mancuerna en una mano, sube despacio de puntillas, mantén arriba, baja despacio — apóyate en la pared si hace falta"},
+    "Superman": {name:"Superman", reps:"12 reps", weight:"sin peso", description:"Zona objetivo: zona lumbar · Boca abajo, brazos al frente, piernas atrás — eleva brazos y piernas a la vez, mantén 2 seg, baja con control"},
+    "Trizeps Kickbacks": {name:"Patada de tríceps", reps:"12 por lado", weight:"2 kg por mano", description:"Rodilla en el banco, inclínate al frente, brazo paralelo al suelo, extiende el antebrazo atrás — el brazo no se mueve"},
+    "Overhead Trizeps Extension": {name:"Extensión de tríceps", reps:"10-12 reps", weight:"2 kg a dos manos", description:"De pie, baja la mancuerna tras la cabeza con ambas manos, luego estira arriba — codos cerca de la cabeza"},
+    "Russian Twists": {name:"Giros rusos", reps:"20 reps total", weight:"2 kg", description:"Sentada, algo inclinada atrás, piernas elevadas (rodillas dobladas), toca a cada lado de izquierda a derecha"},
+    "Plank": {name:"Plancha", reps:"20-30 seg", weight:"sin peso", description:"Apoyo en antebrazos, cuerpo en línea recta de cabeza a talones, abdomen firme, no subas la cadera"},
+    "Side Plank": {name:"Plancha lateral", reps:"20-30 seg por lado", weight:"sin peso", description:"Zona objetivo: michelines · Apoyo lateral en un antebrazo, cuerpo recto, brazo de arriba al techo, no dejes caer la cadera — 1 serie por lado"},
+    "Taubensitz": {name:"Postura de paloma", reps:"30 seg por lado", weight:"Estiramiento", description:"Pierna delantera flexionada delante, pierna trasera extendida atrás, torso suavemente hacia el suelo"},
+    "Hamstring-Stretch": {name:"Estiramiento de isquios", reps:"30 seg por lado", weight:"Estiramiento", description:"Sentada, una pierna estirada, la otra flexionada, alcanza la punta del pie de la pierna estirada"},
+    "Trizeps-Stretch": {name:"Estiramiento de tríceps", reps:"20 seg por lado", weight:"Estiramiento", description:"Brazo sobre la cabeza, mano a la nuca, empuja el codo atrás con la otra mano"},
+    "Schulter-Crossbody": {name:"Estiramiento de hombro", reps:"20 seg por lado", weight:"Estiramiento", description:"Brazo recto cruzando el pecho, tíralo hacia ti con el otro brazo — hombro abajo"}
+  },
+  fr: {
+    "Marschieren auf der Stelle": {name:"Marche sur place", reps:"30 sec", weight:"sans haltère", description:"Lève les genoux, balance les bras, fais monter le pouls"},
+    "Hüftkreise": {name:"Cercles de hanches", reps:"10 par côté", weight:"sans haltère", description:"Mains sur les hanches, dessine de grands cercles — d'abord à droite, puis à gauche"},
+    "Armkreise": {name:"Cercles de bras", reps:"10 avant + 10 arrière", weight:"sans haltère", description:"Les deux bras tendus sur les côtés, dessine de grands cercles"},
+    "Bodyweight Squats": {name:"Squats au poids du corps", reps:"10 rép", weight:"sans haltère", description:"Descends en squat, genoux au-dessus des orteils, poitrine haute, fessiers en arrière"},
+    "Goblet Squat": {name:"Goblet squat", reps:"10-12 rép", weight:"haltère 8 kg", description:"Tiens l'haltère contre la poitrine (comme un calice), descends bas, genoux vers les orteils, poitrine droite"},
+    "Hip Thrust": {name:"Hip thrust", reps:"12-15 rép", weight:"haltère 8 kg", description:"Épaules sur le banc, pieds à plat, haltère sur les hanches, pousse jusqu'à aligner genou-hanche-épaule"},
+    "Romanian Deadlift": {name:"Soulevé de terre roumain", reps:"10 rép", weight:"haltère 8 kg", description:"Légère flexion des genoux, hanches en arrière, glisse l'haltère le long des tibias — dos droit"},
+    "Curtsy Lunges": {name:"Fentes croisées", reps:"10 par côté", weight:"haltère 8 kg", description:"Zone ciblée : culottes de cheval · Haltère contre la poitrine, la jambe arrière croise en diagonale comme une révérence, descends bas, genou avant au-dessus du pied — alterne gauche et droite"},
+    "Standing Calf Raises": {name:"Élévations mollets debout", reps:"15 rép", weight:"haltère 8 kg", description:"Zone ciblée : mollets · Haltère dans une main, monte lentement sur la pointe des pieds, tiens en haut, redescends lentement — appuie-toi au mur si besoin"},
+    "Superman": {name:"Superman", reps:"12 rép", weight:"sans haltère", description:"Zone ciblée : bas du dos · Sur le ventre, bras devant, jambes derrière — soulève bras et jambes ensemble, tiens 2 sec, redescends avec contrôle"},
+    "Trizeps Kickbacks": {name:"Extensions triceps", reps:"12 par côté", weight:"2 kg par main", description:"Genou sur le banc, penchée en avant, bras parallèle au sol, tends l'avant-bras vers l'arrière — le bras reste fixe"},
+    "Overhead Trizeps Extension": {name:"Extension triceps nuque", reps:"10-12 rép", weight:"2 kg à deux mains", description:"Debout, descends l'haltère derrière la tête à deux mains, puis tends vers le haut — coudes près de la tête"},
+    "Russian Twists": {name:"Russian twists", reps:"20 rép au total", weight:"2 kg", description:"Assise, légèrement inclinée en arrière, jambes levées (genoux pliés), touche à côté de toi de gauche à droite"},
+    "Plank": {name:"Planche", reps:"20-30 sec", weight:"sans haltère", description:"Appui sur les avant-bras, corps en ligne droite de la tête aux talons, gaine le ventre, ne monte pas les hanches"},
+    "Side Plank": {name:"Planche latérale", reps:"20-30 sec par côté", weight:"sans haltère", description:"Zone ciblée : poignées d'amour · Appui latéral sur un avant-bras, corps droit, bras du haut vers le plafond, ne laisse pas tomber les hanches — 1 série par côté"},
+    "Taubensitz": {name:"Posture du pigeon", reps:"30 sec par côté", weight:"Étirement", description:"Jambe avant pliée devant, jambe arrière tendue derrière, buste doucement vers le sol"},
+    "Hamstring-Stretch": {name:"Étirement ischio-jambiers", reps:"30 sec par côté", weight:"Étirement", description:"Assise, une jambe tendue, l'autre pliée, attrape la pointe du pied de la jambe tendue"},
+    "Trizeps-Stretch": {name:"Étirement triceps", reps:"20 sec par côté", weight:"Étirement", description:"Bras au-dessus de la tête, main vers la nuque, pousse doucement le coude vers l'arrière avec l'autre main"},
+    "Schulter-Crossbody": {name:"Étirement épaule croisé", reps:"20 sec par côté", weight:"Étirement", description:"Bras tendu devant la poitrine, tire-le vers toi avec l'autre bras — garde l'épaule basse"}
+  },
+  it: {
+    "Marschieren auf der Stelle": {name:"Marcia sul posto", reps:"30 sec", weight:"senza peso", description:"Solleva le ginocchia, oscilla le braccia, alza il battito"},
+    "Hüftkreise": {name:"Cerchi con i fianchi", reps:"10 per lato", weight:"senza peso", description:"Mani sui fianchi, disegna grandi cerchi — prima a destra, poi a sinistra"},
+    "Armkreise": {name:"Cerchi con le braccia", reps:"10 avanti + 10 indietro", weight:"senza peso", description:"Braccia tese ai lati, disegna grandi cerchi"},
+    "Bodyweight Squats": {name:"Squat a corpo libero", reps:"10 rip", weight:"senza peso", description:"Scendi in profondità, ginocchia sopra le punte, petto alto, glutei indietro"},
+    "Goblet Squat": {name:"Goblet squat", reps:"10-12 rip", weight:"manubrio 8 kg", description:"Tieni il manubrio al petto (come un calice), scendi in profondità, ginocchia verso le punte, petto eretto"},
+    "Hip Thrust": {name:"Hip thrust", reps:"12-15 rip", weight:"manubrio 8 kg", description:"Spalle sulla panca, piedi a terra, manubrio sui fianchi, spingi finché ginocchio-anca-spalla sono in linea"},
+    "Romanian Deadlift": {name:"Stacco rumeno", reps:"10 rip", weight:"manubrio 8 kg", description:"Ginocchia leggermente piegate, spingi i fianchi indietro, fai scorrere il manubrio lungo gli stinchi — schiena dritta"},
+    "Curtsy Lunges": {name:"Affondi incrociati", reps:"10 per lato", weight:"manubrio 8 kg", description:"Zona mirata: cuscinetti · Manubrio al petto, la gamba dietro incrocia in diagonale come un inchino, scendi in profondità, ginocchio davanti sopra il piede — alterna sinistra e destra"},
+    "Standing Calf Raises": {name:"Sollevamenti polpacci", reps:"15 rip", weight:"manubrio 8 kg", description:"Zona mirata: polpacci · Manubrio in una mano, sali lentamente sulle punte, tieni in alto, scendi lentamente — appoggiati al muro se serve"},
+    "Superman": {name:"Superman", reps:"12 rip", weight:"senza peso", description:"Zona mirata: zona lombare · A pancia in giù, braccia avanti, gambe indietro — solleva braccia e gambe insieme, tieni 2 sec, scendi con controllo"},
+    "Trizeps Kickbacks": {name:"Kickback tricipiti", reps:"12 per lato", weight:"2 kg per mano", description:"Ginocchio sulla panca, busto in avanti, braccio parallelo al suolo, estendi l'avambraccio indietro — il braccio resta fermo"},
+    "Overhead Trizeps Extension": {name:"Estensione tricipiti sopra la testa", reps:"10-12 rip", weight:"2 kg a due mani", description:"In piedi, abbassa il manubrio dietro la testa con due mani, poi spingi in alto — gomiti vicini alla testa"},
+    "Russian Twists": {name:"Russian twist", reps:"20 rip totali", weight:"2 kg", description:"Seduta, leggermente indietro, gambe sollevate (ginocchia piegate), tocca a fianco da sinistra a destra"},
+    "Plank": {name:"Plank", reps:"20-30 sec", weight:"senza peso", description:"Appoggio sugli avambracci, corpo in linea retta da testa a talloni, addome contratto, non alzare i fianchi"},
+    "Side Plank": {name:"Plank laterale", reps:"20-30 sec per lato", weight:"senza peso", description:"Zona mirata: maniglie dell'amore · Appoggio laterale su un avambraccio, corpo dritto, braccio in alto verso il soffitto, non far cadere i fianchi — 1 serie per lato"},
+    "Taubensitz": {name:"Posizione del piccione", reps:"30 sec per lato", weight:"Stretch", description:"Gamba davanti piegata, gamba dietro distesa, busto dolcemente verso il pavimento"},
+    "Hamstring-Stretch": {name:"Stretch femorali", reps:"30 sec per lato", weight:"Stretch", description:"Seduta, una gamba tesa, l'altra piegata, raggiungi la punta del piede della gamba tesa"},
+    "Trizeps-Stretch": {name:"Stretch tricipiti", reps:"20 sec per lato", weight:"Stretch", description:"Braccio sopra la testa, mano alla nuca, spingi delicatamente il gomito indietro con l'altra mano"},
+    "Schulter-Crossbody": {name:"Stretch spalla incrociato", reps:"20 sec per lato", weight:"Stretch", description:"Braccio teso davanti al petto, tiralo verso di te con l'altro braccio — spalla in basso"}
+  }
+};
+function ui(k){ return (UI[lang] && UI[lang][k] != null) ? UI[lang][k] : UI.de[k]; }
+function exT(ex){ if(lang==='de') return ex; const t = EXI[lang] && EXI[lang][ex.name]; return t ? Object.assign({}, ex, t) : ex; }
+function phT(key, phase){ if(lang==='de') return phase; const t = PHI[lang] && PHI[lang][key]; return t ? Object.assign({}, phase, t) : phase; }
+function applyUI(){
+  const u = UI[lang] || UI.de;
+  document.querySelectorAll('[data-i18n]').forEach(el => { const k = el.getAttribute('data-i18n'); if (u[k] != null) el.textContent = u[k]; });
+  document.documentElement.lang = lang;
+  document.querySelectorAll('.ls-btn').forEach(b => b.classList.toggle('active', b.dataset.lang === lang));
+}
+function switchLang(l){ lang = l; localStorage.setItem('nina_workout_lang', l); applyUI(); renderPhase(currentPhase); }
+
 function updateProgress() {
   const total = totalSets();
   const done = completedCount();
-  document.getElementById('progress-text').textContent = `${done} / ${total} Sätze`;
+  document.getElementById('progress-text').textContent = `${done} / ${total} ${ui('sets')}`;
   document.getElementById('progress-fill').style.width = `${(done/total)*100}%`;
   if (typeof updateWorkoutClock === 'function') updateWorkoutClock();
 }
@@ -1599,10 +1725,10 @@ function renderPhase(phaseKey) {
   const html = `
     <div class="phase-header">
       <div>
-        <div class="phase-title">${phase.title}</div>
-        <div class="phase-meta">${phase.meta}${phase.rounds > 1 ? ` · <span class="rounds">${phase.rounds} Runden</span>` : ''}</div>
+        <div class="phase-title">${phT(phaseKey, phase).title}</div>
+        <div class="phase-meta">${phT(phaseKey, phase).meta}${phase.rounds > 1 ? ` · <span class="rounds">${phase.rounds} ${ui('rounds')}</span>` : ''}</div>
       </div>
-      <button class="reset-btn" onclick="resetPhase('${phaseKey}')">Phase zurücksetzen</button>
+      <button class="reset-btn" onclick="resetPhase('${phaseKey}')">${ui('resetPhase')}</button>
     </div>
     <div class="exercises">
       ${phase.exercises.map((ex, idx) => renderExercise(phaseKey, ex, idx)).join('')}
@@ -1616,6 +1742,7 @@ function renderExercise(phaseKey, ex, idx) {
   const key = exerciseKey(phaseKey, idx);
   if (!completedSets[key]) completedSets[key] = new Array(ex.sets).fill(false);
   const allDone = completedSets[key].every(s => s);
+  const t = exT(ex);
 
   const dots = completedSets[key].map((done, i) => `
     <button class="set-dot ${done ? 'done' : ''}" onclick="toggleSet('${phaseKey}', ${idx}, ${i})">
@@ -1625,7 +1752,7 @@ function renderExercise(phaseKey, ex, idx) {
 
   const timerHtml = ex.pause > 0 ? `
     <button class="timer-btn" id="timer-${key}" onclick="startTimer('${key}', ${ex.pause})">
-      ⏱ ${ex.pause}s Pause
+      ⏱ ${ex.pause}s ${ui('rest')}
     </button>
   ` : '';
 
@@ -1633,16 +1760,16 @@ function renderExercise(phaseKey, ex, idx) {
     <div class="exercise-card ${allDone ? 'completed' : ''}">
       <div class="animation-box">${animations[ex.animation] || ''}</div>
       <div class="exercise-info">
-        <h3>${ex.name}</h3>
+        <h3>${t.name}</h3>
         <div class="exercise-meta">
-          <span class="meta-item">${ex.reps}</span>
-          <span class="meta-item weight">${ex.weight}</span>
-          ${ex.sets > 1 ? `<span class="meta-item">${ex.sets} Sätze</span>` : ''}
+          <span class="meta-item">${t.reps}</span>
+          <span class="meta-item weight">${t.weight}</span>
+          ${ex.sets > 1 ? `<span class="meta-item">${ex.sets} ${ui('sets')}</span>` : ''}
         </div>
-        <div class="description">${ex.description}</div>
+        <div class="description">${t.description}</div>
         <div class="controls">
           <div class="set-tracker">
-            <span class="set-label">${ex.sets > 1 ? 'Sätze' : 'Geschafft'}</span>
+            <span class="set-label">${ex.sets > 1 ? ui('lblSets') : ui('lblDone')}</span>
             <div class="set-dots">${dots}</div>
           </div>
           ${timerHtml}
@@ -1741,6 +1868,8 @@ setInterval(updateWorkoutClock, 1000);
 
 // Init
 loadCurrent();
+document.querySelectorAll('.ls-btn').forEach(b => b.addEventListener('click', () => switchLang(b.dataset.lang)));
+applyUI();
 renderPhase(currentPhase);
 updateWorkoutClock();
 </script>
