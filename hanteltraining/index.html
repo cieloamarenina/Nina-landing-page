@@ -784,8 +784,8 @@
   .page-nav a:hover { border-color: var(--blue); color: var(--text); transform: translateY(-1px); }
   .page-nav a.active { background: rgba(56,189,248,0.16); border-color: rgba(56,189,248,0.55); color: var(--accent); }
 
-  .page-nav a.nav-home { font-family: monospace; font-weight: 800; letter-spacing: 0.04em; color: var(--accent); border-color: rgba(56,189,248,0.4); }
-  .page-nav a.nav-home:hover { background: rgba(56,189,248,0.16); }
+  .nlc-home { position: fixed; top: 15px; left: 18px; z-index: 1100; font-family: monospace; font-weight: 800; font-size: 1rem; letter-spacing: 0.04em; color: var(--accent); text-decoration: none; }
+  .nlc-home:hover { filter: brightness(1.18); }
 
   /* ── SPRACH-UMSCHALTER ──────────────────────── */
   .lang-switch { position: fixed; top: 14px; right: 16px; z-index: 1100; display: flex; gap: 3px; background: rgba(20,38,64,0.72); backdrop-filter: blur(6px); border: 1px solid var(--border); border-radius: 999px; padding: 4px; }
@@ -795,6 +795,7 @@
 </style>
 </head>
 <body>
+<a href="../index.html" class="nlc-home" title="Zurück zur Startseite">NLC_</a>
 <div class="lang-switch" id="lang-switch">
   <button class="ls-btn" data-lang="de">DE</button>
   <button class="ls-btn" data-lang="en">EN</button>
@@ -808,7 +809,6 @@
     <h1 data-i18n="h1">Hanteltraining</h1>
     <div class="subtitle" data-i18n="subtitle">Nina · 25 Min · 3× pro Woche</div>
     <nav class="page-nav">
-      <a href="../index.html" class="nav-home" title="Zurück zur Startseite">← NLC_</a>
       <a href="index.html" class="active">💪 Training</a>
       <a href="yoga/index.html">🧘 Yoga</a>
       <a href="meditation/index.html">🌬️ Meditation</a>

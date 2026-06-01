@@ -784,37 +784,50 @@
   .page-nav a:hover { border-color: var(--blue); color: var(--text); transform: translateY(-1px); }
   .page-nav a.active { background: rgba(56,189,248,0.16); border-color: rgba(56,189,248,0.55); color: var(--accent); }
 
-  .page-nav a.nav-home { font-family: monospace; font-weight: 800; letter-spacing: 0.04em; color: var(--accent); border-color: rgba(56,189,248,0.4); }
-  .page-nav a.nav-home:hover { background: rgba(56,189,248,0.16); }
+  .nlc-home { position: fixed; top: 15px; left: 18px; z-index: 1100; font-family: monospace; font-weight: 800; font-size: 1rem; letter-spacing: 0.04em; color: var(--accent); text-decoration: none; }
+  .nlc-home:hover { filter: brightness(1.18); }
+
+  /* ── SPRACH-UMSCHALTER ──────────────────────── */
+  .lang-switch { position: fixed; top: 14px; right: 16px; z-index: 1100; display: flex; gap: 3px; background: rgba(20,38,64,0.72); backdrop-filter: blur(6px); border: 1px solid var(--border); border-radius: 999px; padding: 4px; }
+  .ls-btn { background: none; border: none; color: var(--muted); font-family: monospace; font-size: 0.62rem; font-weight: 700; letter-spacing: 0.06em; padding: 0.25rem 0.5rem; border-radius: 999px; cursor: pointer; transition: all 0.15s; }
+  .ls-btn:hover { color: var(--text); }
+  .ls-btn.active { background: var(--accent); color: #04121f; }
 </style>
 </head>
 <body>
+<a href="../../index.html" class="nlc-home" title="Zurück zur Startseite">NLC_</a>
+<div class="lang-switch" id="lang-switch">
+  <button class="ls-btn" data-lang="de">DE</button>
+  <button class="ls-btn" data-lang="en">EN</button>
+  <button class="ls-btn" data-lang="es">ES</button>
+  <button class="ls-btn" data-lang="fr">FR</button>
+  <button class="ls-btn" data-lang="it">IT</button>
+</div>
 
 <div class="container">
   <header>
-    <h1>Yoga</h1>
-    <div class="subtitle">Nina · ca 22 Min · sanfter Flow</div>
+    <h1 data-i18n="h1">Yoga</h1>
+    <div class="subtitle" data-i18n="subtitle">Nina · ca 22 Min · sanfter Flow</div>
     <nav class="page-nav">
-      <a href="../../index.html" class="nav-home" title="Zurück zur Startseite">← NLC_</a>
       <a href="../index.html">💪 Training</a>
       <a href="index.html" class="active">🧘 Yoga</a>
       <a href="../meditation/index.html">🌬️ Meditation</a>
     </nav>
     <div class="workout-clock" id="workout-clock" title="Workout-Dauer — läuft ab dem ersten abgehakten Satz">
       <span class="clock-dot"></span>
-      <span class="clock-label">Dauer</span>
+      <span class="clock-label" data-i18n="clockLabel">Dauer</span>
       <span id="workout-clock-time">00:00</span>
     </div>
     <div class="header-actions">
-      <button class="action-btn" onclick="openHistory()">📊 Verlauf</button>
-      <button class="action-btn primary" onclick="openSaveDialog()">💪 Workout speichern</button>
-      <button class="action-btn" onclick="openNewWorkoutDialog()">↻ Neuer Workout</button>
+      <button class="action-btn" onclick="openHistory()" data-i18n="btnHistory">📊 Verlauf</button>
+      <button class="action-btn primary" onclick="openSaveDialog()" data-i18n="btnSave">💪 Workout speichern</button>
+      <button class="action-btn" onclick="openNewWorkoutDialog()" data-i18n="btnNew">↻ Neuer Workout</button>
     </div>
   </header>
 
   <div class="progress-container">
     <div class="progress-label">
-      <span>Heute geschafft</span>
+      <span data-i18n="progressLabel">Heute geschafft</span>
       <span id="progress-text">0 / 15 Übungen</span>
     </div>
     <div class="progress-bar">
@@ -824,16 +837,16 @@
 
   <div class="phases">
     <button class="phase-tab active" data-phase="warmup">
-      <span class="num">Phase 1</span>Ankommen
+      <span class="num">Phase 1</span><span data-i18n="tabWarmup">Ankommen</span>
     </button>
     <button class="phase-tab" data-phase="beine">
-      <span class="num">Phase 2</span>Aufwärmen
+      <span class="num">Phase 2</span><span data-i18n="tabBeine">Aufwärmen</span>
     </button>
     <button class="phase-tab" data-phase="arme">
-      <span class="num">Phase 3</span>Standhaltungen
+      <span class="num">Phase 3</span><span data-i18n="tabArme">Standhaltungen</span>
     </button>
     <button class="phase-tab" data-phase="cooldown">
-      <span class="num">Phase 4</span>Entspannung
+      <span class="num">Phase 4</span><span data-i18n="tabCool">Entspannung</span>
     </button>
   </div>
 
@@ -1311,10 +1324,107 @@ function completedCount() {
   return Object.values(completedSets).reduce((sum, sets) => sum + sets.filter(Boolean).length, 0);
 }
 
+
+// ── i18n (Sprachen DE/EN/ES/FR/IT) ───────────────────────────
+let lang = localStorage.getItem('nina_workout_lang') || 'de';
+const UI = {
+  de: { h1:"Yoga", subtitle:"Nina · ca 22 Min · sanfter Flow", btnHistory:"📊 Verlauf", btnSave:"💪 Workout speichern", btnNew:"↻ Neuer Workout", progressLabel:"Heute geschafft", clockLabel:"Dauer", sets:"Seiten", rounds:"Runden", resetPhase:"Phase zurücksetzen", lblSets:"Seiten", lblDone:"Geschafft", rest:"halten", tabWarmup:"Ankommen", tabBeine:"Aufwärmen", tabArme:"Standhaltungen", tabCool:"Entspannung" },
+  en: { h1:"Yoga", subtitle:"Nina · approx. 22 min · gentle flow", btnHistory:"📊 History", btnSave:"💪 Save session", btnNew:"↻ New session", progressLabel:"Done today", clockLabel:"Duration", sets:"sides", rounds:"rounds", resetPhase:"Reset phase", lblSets:"Sides", lblDone:"Done", rest:"hold", tabWarmup:"Arrive", tabBeine:"Warm-up", tabArme:"Standing", tabCool:"Relax" },
+  es: { h1:"Yoga", subtitle:"Nina · aprox. 22 min · flujo suave", btnHistory:"📊 Historial", btnSave:"💪 Guardar sesión", btnNew:"↻ Nueva sesión", progressLabel:"Hecho hoy", clockLabel:"Duración", sets:"lados", rounds:"rondas", resetPhase:"Reiniciar fase", lblSets:"Lados", lblDone:"Hecho", rest:"mantén", tabWarmup:"Llegar", tabBeine:"Calentar", tabArme:"De pie", tabCool:"Relajación" },
+  fr: { h1:"Yoga", subtitle:"Nina · env. 22 min · flow doux", btnHistory:"📊 Historique", btnSave:"💪 Enregistrer", btnNew:"↻ Nouvelle séance", progressLabel:"Fait aujourd'hui", clockLabel:"Durée", sets:"côtés", rounds:"tours", resetPhase:"Réinitialiser", lblSets:"Côtés", lblDone:"Fait", rest:"tiens", tabWarmup:"Arriver", tabBeine:"Échauffement", tabArme:"Debout", tabCool:"Détente" },
+  it: { h1:"Yoga", subtitle:"Nina · circa 22 min · flusso dolce", btnHistory:"📊 Cronologia", btnSave:"💪 Salva sessione", btnNew:"↻ Nuova sessione", progressLabel:"Fatto oggi", clockLabel:"Durata", sets:"lati", rounds:"round", resetPhase:"Reimposta fase", lblSets:"Lati", lblDone:"Fatto", rest:"tieni", tabWarmup:"Arrivare", tabBeine:"Riscaldamento", tabArme:"In piedi", tabCool:"Rilassamento" }
+};
+const PHI = {
+  en: { warmup:{title:"Arrive & Breathe", meta:"approx. 3 minutes · come to rest"}, beine:{title:"Warm-up · Gentle Flow", meta:"approx. 6 minutes · wake up the body"}, arme:{title:"Standing Poses · Strength", meta:"approx. 7 minutes · stability & balance"}, cooldown:{title:"Floor & Relaxation", meta:"approx. 6 minutes · wind down gently"} },
+  es: { warmup:{title:"Llegar y Respirar", meta:"aprox. 3 minutos · calmarse"}, beine:{title:"Calentamiento · Flujo Suave", meta:"aprox. 6 minutos · despierta el cuerpo"}, arme:{title:"Posturas de Pie · Fuerza", meta:"aprox. 7 minutos · estabilidad y equilibrio"}, cooldown:{title:"Suelo y Relajación", meta:"aprox. 6 minutos · relájate poco a poco"} },
+  fr: { warmup:{title:"Arriver & Respirer", meta:"env. 3 minutes · revenir au calme"}, beine:{title:"Échauffement · Flow Doux", meta:"env. 6 minutes · réveiller le corps"}, arme:{title:"Postures Debout · Force", meta:"env. 7 minutes · stabilité & équilibre"}, cooldown:{title:"Sol & Détente", meta:"env. 6 minutes · termine en douceur"} },
+  it: { warmup:{title:"Arrivare & Respirare", meta:"circa 3 minuti · calmarsi"}, beine:{title:"Riscaldamento · Flusso Dolce", meta:"circa 6 minuti · risveglia il corpo"}, arme:{title:"Posizioni in Piedi · Forza", meta:"circa 7 minuti · stabilità & equilibrio"}, cooldown:{title:"A Terra & Rilassamento", meta:"circa 6 minuti · concludi dolcemente"} }
+};
+const EXI = {
+  en: {
+    "Schneidersitz": {name:"Easy Pose", reps:"1-2 min", weight:"Sukhasana", description:"Sit comfortably cross-legged, spine long, hands on your knees. Close your eyes and breathe deep into your belly — 4 sec in, 6 sec out."},
+    "Katze-Kuh": {name:"Cat-Cow", reps:"8 breaths", weight:"Marjaryasana", description:"On all fours. Inhale: gently arch your back, gaze up (cow). Exhale: round your back, chin to chest (cat). Flow with your breath."},
+    "Kindhaltung": {name:"Child's Pose", reps:"5 breaths", weight:"Balasana", description:"From kneeling, lay your upper body forward, arms long in front, forehead to the floor. Let go and breathe into your back."},
+    "Berghaltung": {name:"Mountain Pose", reps:"5 breaths", weight:"Tadasana", description:"Stand tall, feet hip-width, crown reaching to the ceiling, shoulders relaxed. Steady and calm like a mountain."},
+    "Stehende Vorbeuge": {name:"Standing Forward Fold", reps:"5 breaths", weight:"Uttanasana", description:"From standing, fold forward with a straight back, knees slightly bent, let your upper body hang. Neck loose."},
+    "Herabschauender Hund": {name:"Downward Dog", reps:"5-8 breaths", weight:"Adho Mukha", description:"From all fours, push your hips up and back — the body forms an upside-down V. Heels toward the floor, back long."},
+    "Kobra": {name:"Cobra", reps:"5 breaths", weight:"Bhujangasana", description:"On your stomach, hands under your shoulders, gently lift your upper body, elbows slightly bent, shoulders away from your ears. Open your chest."},
+    "Krieger I": {name:"Warrior I", reps:"5 breaths per side", weight:"Virabhadrasana I", description:"Big lunge, front knee over the ankle, back foot slightly turned in, arms stretched up, gaze forward. Both sides."},
+    "Krieger II": {name:"Warrior II", reps:"5 breaths per side", weight:"Virabhadrasana II", description:"From the lunge, open your arms horizontally, gaze over the front hand, hips open to the side. Strong and grounded. Both sides."},
+    "Dreieck": {name:"Triangle", reps:"5 breaths per side", weight:"Trikonasana", description:"Legs wide, front leg straight, tip to the side, lower hand to your shin, upper hand to the ceiling. Chest open. Both sides."},
+    "Baum": {name:"Tree", reps:"5 breaths per side", weight:"Vrksasana", description:"Stand on one leg, other foot on calf or inner thigh (not the knee), hands at your chest or overhead. Fix your gaze for balance. Both sides."},
+    "Taube": {name:"Pigeon", reps:"30 sec per side", weight:"Eka Pada", description:"Front leg bent in front, back leg long behind, upper body sinks gently toward the floor. The hip opens. Both sides."},
+    "Sitzende Vorbeuge": {name:"Seated Forward Fold", reps:"8 breaths", weight:"Paschimottanasana", description:"Seated, both legs long in front, fold forward with a straight back, hands to your feet or shins. Don't pull — let yourself sink."},
+    "Liegender Drehsitz": {name:"Reclined Twist", reps:"30 sec per side", weight:"Supta Twist", description:"On your back, knees tucked, drop both knees to one side, arms stretched out, gaze to the opposite side. Unwind the spine. Both sides."},
+    "Totenstellung": {name:"Corpse Pose", reps:"2-5 min", weight:"Savasana", description:"Flat on your back, arms relaxed beside you, palms up, eyes closed. Let everything go — just breathe and feel."}
+  },
+  es: {
+    "Schneidersitz": {name:"Postura fácil", reps:"1-2 min", weight:"Sukhasana", description:"Siéntate cómoda con las piernas cruzadas, columna larga, manos en las rodillas. Cierra los ojos y respira hondo — 4 seg dentro, 6 seg fuera."},
+    "Katze-Kuh": {name:"Gato-Vaca", reps:"8 respiraciones", weight:"Marjaryasana", description:"A cuatro patas. Inhala: arquea la espalda, mirada arriba (vaca). Exhala: redondea la espalda, barbilla al pecho (gato). Fluye con la respiración."},
+    "Kindhaltung": {name:"Postura del niño", reps:"5 respiraciones", weight:"Balasana", description:"Desde sentada sobre los talones, lleva el torso adelante, brazos largos, frente al suelo. Suelta y respira hacia la espalda."},
+    "Berghaltung": {name:"Postura de la montaña", reps:"5 respiraciones", weight:"Tadasana", description:"De pie erguida, pies al ancho de cadera, coronilla hacia el techo, hombros relajados. Firme y tranquila como una montaña."},
+    "Stehende Vorbeuge": {name:"Flexión de pie", reps:"5 respiraciones", weight:"Uttanasana", description:"Desde de pie, flexiona adelante con la espalda recta, rodillas algo dobladas, deja colgar el torso. Cuello suelto."},
+    "Herabschauender Hund": {name:"Perro boca abajo", reps:"5-8 respiraciones", weight:"Adho Mukha", description:"Desde cuatro patas, empuja la cadera arriba y atrás — el cuerpo forma una V invertida. Talones al suelo, espalda larga."},
+    "Kobra": {name:"Cobra", reps:"5 respiraciones", weight:"Bhujangasana", description:"Boca abajo, manos bajo los hombros, eleva suave el torso, codos algo doblados, hombros lejos de las orejas. Abre el pecho."},
+    "Krieger I": {name:"Guerrero I", reps:"5 respiraciones por lado", weight:"Virabhadrasana I", description:"Gran zancada, rodilla delantera sobre el tobillo, pie trasero algo girado, brazos arriba, mirada al frente. Ambos lados."},
+    "Krieger II": {name:"Guerrero II", reps:"5 respiraciones por lado", weight:"Virabhadrasana II", description:"Desde la zancada, abre los brazos en horizontal, mirada sobre la mano delantera, cadera abierta al lado. Fuerte y enraizada. Ambos lados."},
+    "Dreieck": {name:"Triángulo", reps:"5 respiraciones por lado", weight:"Trikonasana", description:"Piernas anchas, pierna delantera estirada, inclínate al lado, mano de abajo a la espinilla, mano de arriba al techo. Pecho abierto. Ambos lados."},
+    "Baum": {name:"Árbol", reps:"5 respiraciones por lado", weight:"Vrksasana", description:"De pie sobre una pierna, el otro pie en la pantorrilla o muslo interno (no en la rodilla), manos al pecho o arriba. Fija la mirada. Ambos lados."},
+    "Taube": {name:"Paloma", reps:"30 seg por lado", weight:"Eka Pada", description:"Pierna delantera flexionada delante, pierna trasera larga atrás, torso suave hacia el suelo. La cadera se abre. Ambos lados."},
+    "Sitzende Vorbeuge": {name:"Flexión sentada", reps:"8 respiraciones", weight:"Paschimottanasana", description:"Sentada, ambas piernas estiradas, flexiona adelante con espalda recta, manos a los pies o espinillas. No tires — déjate hundir."},
+    "Liegender Drehsitz": {name:"Torsión tumbada", reps:"30 seg por lado", weight:"Supta Twist", description:"Boca arriba, rodillas recogidas, baja ambas rodillas a un lado, brazos extendidos, mirada al lado contrario. Destensa la columna. Ambos lados."},
+    "Totenstellung": {name:"Postura del cadáver", reps:"2-5 min", weight:"Savasana", description:"Tumbada boca arriba, brazos relajados al lado, palmas arriba, ojos cerrados. Suelta todo — solo respira y siente."}
+  },
+  fr: {
+    "Schneidersitz": {name:"Posture facile", reps:"1-2 min", weight:"Sukhasana", description:"Assise en tailleur, colonne longue, mains sur les genoux. Ferme les yeux et respire profondément dans le ventre — 4 sec inspire, 6 sec expire."},
+    "Katze-Kuh": {name:"Chat-Vache", reps:"8 respirations", weight:"Marjaryasana", description:"À quatre pattes. Inspire : creuse doucement le dos, regard vers le haut (vache). Expire : arrondis le dos, menton vers la poitrine (chat). Suis ta respiration."},
+    "Kindhaltung": {name:"Posture de l'enfant", reps:"5 respirations", weight:"Balasana", description:"Depuis assise sur les talons, pose le buste en avant, bras tendus devant, front au sol. Lâche prise et respire dans le dos."},
+    "Berghaltung": {name:"Posture de la montagne", reps:"5 respirations", weight:"Tadasana", description:"Debout bien droite, pieds largeur de hanches, sommet du crâne vers le plafond, épaules détendues. Stable et calme comme une montagne."},
+    "Stehende Vorbeuge": {name:"Flexion avant debout", reps:"5 respirations", weight:"Uttanasana", description:"Depuis debout, penche-toi en avant dos droit, genoux légèrement pliés, laisse pendre le buste. Nuque relâchée."},
+    "Herabschauender Hund": {name:"Chien tête en bas", reps:"5-8 respirations", weight:"Adho Mukha", description:"À quatre pattes, pousse les hanches vers le haut et l'arrière — le corps forme un V inversé. Talons vers le sol, dos long."},
+    "Kobra": {name:"Cobra", reps:"5 respirations", weight:"Bhujangasana", description:"Sur le ventre, mains sous les épaules, soulève doucement le buste, coudes légèrement pliés, épaules loin des oreilles. Ouvre la poitrine."},
+    "Krieger I": {name:"Guerrier I", reps:"5 respirations par côté", weight:"Virabhadrasana I", description:"Grande fente, genou avant au-dessus de la cheville, pied arrière légèrement tourné, bras tendus vers le haut, regard devant. Les deux côtés."},
+    "Krieger II": {name:"Guerrier II", reps:"5 respirations par côté", weight:"Virabhadrasana II", description:"Depuis la fente, ouvre les bras à l'horizontale, regard au-dessus de la main avant, hanches ouvertes sur le côté. Forte et ancrée. Les deux côtés."},
+    "Dreieck": {name:"Triangle", reps:"5 respirations par côté", weight:"Trikonasana", description:"Jambes écartées, jambe avant tendue, bascule sur le côté, main basse vers le tibia, main haute vers le plafond. Poitrine ouverte. Les deux côtés."},
+    "Baum": {name:"Arbre", reps:"5 respirations par côté", weight:"Vrksasana", description:"Sur une jambe, l'autre pied sur le mollet ou l'intérieur de la cuisse (pas sur le genou), mains à la poitrine ou au-dessus. Fixe ton regard. Les deux côtés."},
+    "Taube": {name:"Pigeon", reps:"30 sec par côté", weight:"Eka Pada", description:"Jambe avant pliée devant, jambe arrière longue derrière, buste doucement vers le sol. La hanche s'ouvre. Les deux côtés."},
+    "Sitzende Vorbeuge": {name:"Flexion assise", reps:"8 respirations", weight:"Paschimottanasana", description:"Assise, jambes tendues devant, penche-toi en avant dos droit, mains vers les pieds ou tibias. Ne tire pas — laisse-toi descendre."},
+    "Liegender Drehsitz": {name:"Torsion allongée", reps:"30 sec par côté", weight:"Supta Twist", description:"Sur le dos, genoux repliés, pose les deux genoux d'un côté, bras tendus, regard du côté opposé. Détords la colonne. Les deux côtés."},
+    "Totenstellung": {name:"Posture du cadavre", reps:"2-5 min", weight:"Savasana", description:"À plat sur le dos, bras détendus le long du corps, paumes vers le haut, yeux fermés. Lâche tout — respire et ressens."}
+  },
+  it: {
+    "Schneidersitz": {name:"Posizione facile", reps:"1-2 min", weight:"Sukhasana", description:"Siediti comoda a gambe incrociate, colonna lunga, mani sulle ginocchia. Chiudi gli occhi e respira in profondità — 4 sec dentro, 6 sec fuori."},
+    "Katze-Kuh": {name:"Gatto-Mucca", reps:"8 respiri", weight:"Marjaryasana", description:"A quattro zampe. Inspira: inarca dolcemente la schiena, sguardo in alto (mucca). Espira: arrotonda la schiena, mento al petto (gatto). Fluisci col respiro."},
+    "Kindhaltung": {name:"Posizione del bambino", reps:"5 respiri", weight:"Balasana", description:"Dalla seduta sui talloni, porta il busto in avanti, braccia lunghe, fronte a terra. Lascia andare e respira nella schiena."},
+    "Berghaltung": {name:"Posizione della montagna", reps:"5 respiri", weight:"Tadasana", description:"In piedi eretta, piedi alla larghezza dei fianchi, sommità verso il soffitto, spalle rilassate. Salda e calma come una montagna."},
+    "Stehende Vorbeuge": {name:"Piegamento in avanti", reps:"5 respiri", weight:"Uttanasana", description:"In piedi, piegati in avanti con la schiena dritta, ginocchia leggermente piegate, lascia pendere il busto. Collo morbido."},
+    "Herabschauender Hund": {name:"Cane a testa in giù", reps:"5-8 respiri", weight:"Adho Mukha", description:"Da quattro zampe, spingi i fianchi su e indietro — il corpo forma una V rovesciata. Talloni verso terra, schiena lunga."},
+    "Kobra": {name:"Cobra", reps:"5 respiri", weight:"Bhujangasana", description:"A pancia in giù, mani sotto le spalle, solleva dolcemente il busto, gomiti leggermente piegati, spalle lontane dalle orecchie. Apri il petto."},
+    "Krieger I": {name:"Guerriero I", reps:"5 respiri per lato", weight:"Virabhadrasana I", description:"Grande affondo, ginocchio davanti sopra la caviglia, piede dietro leggermente ruotato, braccia in alto, sguardo avanti. Entrambi i lati."},
+    "Krieger II": {name:"Guerriero II", reps:"5 respiri per lato", weight:"Virabhadrasana II", description:"Dall'affondo, apri le braccia in orizzontale, sguardo oltre la mano davanti, fianchi aperti di lato. Forte e radicata. Entrambi i lati."},
+    "Dreieck": {name:"Triangolo", reps:"5 respiri per lato", weight:"Trikonasana", description:"Gambe larghe, gamba davanti tesa, inclinati di lato, mano in basso allo stinco, mano in alto verso il soffitto. Petto aperto. Entrambi i lati."},
+    "Baum": {name:"Albero", reps:"5 respiri per lato", weight:"Vrksasana", description:"In piedi su una gamba, l'altro piede sul polpaccio o interno coscia (non sul ginocchio), mani al petto o sopra la testa. Fissa lo sguardo. Entrambi i lati."},
+    "Taube": {name:"Piccione", reps:"30 sec per lato", weight:"Eka Pada", description:"Gamba davanti piegata, gamba dietro lunga, busto dolcemente verso il pavimento. L'anca si apre. Entrambi i lati."},
+    "Sitzende Vorbeuge": {name:"Piegamento da seduti", reps:"8 respiri", weight:"Paschimottanasana", description:"Seduta, gambe tese in avanti, piegati in avanti con schiena dritta, mani ai piedi o agli stinchi. Non tirare — lasciati andare."},
+    "Liegender Drehsitz": {name:"Torsione supina", reps:"30 sec per lato", weight:"Supta Twist", description:"Sulla schiena, ginocchia raccolte, porta entrambe le ginocchia da un lato, braccia tese, sguardo dal lato opposto. Svolgi la colonna. Entrambi i lati."},
+    "Totenstellung": {name:"Posizione del cadavere", reps:"2-5 min", weight:"Savasana", description:"Distesa sulla schiena, braccia rilassate ai lati, palmi in su, occhi chiusi. Lascia andare tutto — respira e percepisci."}
+  }
+};
+function ui(k){ return (UI[lang] && UI[lang][k] != null) ? UI[lang][k] : UI.de[k]; }
+function exT(ex){ if(lang==='de') return ex; const t = EXI[lang] && EXI[lang][ex.name]; return t ? Object.assign({}, ex, t) : ex; }
+function phT(key, phase){ if(lang==='de') return phase; const t = PHI[lang] && PHI[lang][key]; return t ? Object.assign({}, phase, t) : phase; }
+function applyUI(){
+  const u = UI[lang] || UI.de;
+  document.querySelectorAll('[data-i18n]').forEach(el => { const k = el.getAttribute('data-i18n'); if (u[k] != null) el.textContent = u[k]; });
+  document.documentElement.lang = lang;
+  document.querySelectorAll('.ls-btn').forEach(b => b.classList.toggle('active', b.dataset.lang === lang));
+}
+function switchLang(l){ lang = l; localStorage.setItem('nina_workout_lang', l); applyUI(); renderPhase(currentPhase); }
+
 function updateProgress() {
   const total = totalSets();
   const done = completedCount();
-  document.getElementById('progress-text').textContent = `${done} / ${total} Sätze`;
+  document.getElementById('progress-text').textContent = `${done} / ${total} ${ui('sets')}`;
   document.getElementById('progress-fill').style.width = `${(done/total)*100}%`;
   if (typeof updateWorkoutClock === 'function') updateWorkoutClock();
 }
@@ -1328,10 +1438,10 @@ function renderPhase(phaseKey) {
   const html = `
     <div class="phase-header">
       <div>
-        <div class="phase-title">${phase.title}</div>
-        <div class="phase-meta">${phase.meta}${phase.rounds > 1 ? ` · <span class="rounds">${phase.rounds} Runden</span>` : ''}</div>
+        <div class="phase-title">${phT(phaseKey, phase).title}</div>
+        <div class="phase-meta">${phT(phaseKey, phase).meta}${phase.rounds > 1 ? ` · <span class="rounds">${phase.rounds} ${ui('rounds')}</span>` : ''}</div>
       </div>
-      <button class="reset-btn" onclick="resetPhase('${phaseKey}')">Phase zurücksetzen</button>
+      <button class="reset-btn" onclick="resetPhase('${phaseKey}')">${ui('resetPhase')}</button>
     </div>
     <div class="exercises">
       ${phase.exercises.map((ex, idx) => renderExercise(phaseKey, ex, idx)).join('')}
@@ -1345,6 +1455,7 @@ function renderExercise(phaseKey, ex, idx) {
   const key = exerciseKey(phaseKey, idx);
   if (!completedSets[key]) completedSets[key] = new Array(ex.sets).fill(false);
   const allDone = completedSets[key].every(s => s);
+  const t = exT(ex);
 
   const dots = completedSets[key].map((done, i) => `
     <button class="set-dot ${done ? 'done' : ''}" onclick="toggleSet('${phaseKey}', ${idx}, ${i})">
@@ -1354,7 +1465,7 @@ function renderExercise(phaseKey, ex, idx) {
 
   const timerHtml = ex.pause > 0 ? `
     <button class="timer-btn" id="timer-${key}" onclick="startTimer('${key}', ${ex.pause})">
-      ⏱ ${ex.pause}s halten
+      ⏱ ${ex.pause}s ${ui('rest')}
     </button>
   ` : '';
 
@@ -1362,16 +1473,16 @@ function renderExercise(phaseKey, ex, idx) {
     <div class="exercise-card ${allDone ? 'completed' : ''}">
       <div class="animation-box">${animations[ex.animation] || ''}</div>
       <div class="exercise-info">
-        <h3>${ex.name}</h3>
+        <h3>${t.name}</h3>
         <div class="exercise-meta">
-          <span class="meta-item">${ex.reps}</span>
-          <span class="meta-item weight">${ex.weight}</span>
-          ${ex.sets > 1 ? `<span class="meta-item">${ex.sets} Seiten</span>` : ''}
+          <span class="meta-item">${t.reps}</span>
+          <span class="meta-item weight">${t.weight}</span>
+          ${ex.sets > 1 ? `<span class="meta-item">${ex.sets} ${ui('sets')}</span>` : ''}
         </div>
-        <div class="description">${ex.description}</div>
+        <div class="description">${t.description}</div>
         <div class="controls">
           <div class="set-tracker">
-            <span class="set-label">${ex.sets > 1 ? 'Seiten' : 'Geschafft'}</span>
+            <span class="set-label">${ex.sets > 1 ? ui('lblSets') : ui('lblDone')}</span>
             <div class="set-dots">${dots}</div>
           </div>
           ${timerHtml}
@@ -1470,6 +1581,8 @@ setInterval(updateWorkoutClock, 1000);
 
 // Init
 loadCurrent();
+document.querySelectorAll('.ls-btn').forEach(b => b.addEventListener('click', () => switchLang(b.dataset.lang)));
+applyUI();
 renderPhase(currentPhase);
 updateWorkoutClock();
 </script>

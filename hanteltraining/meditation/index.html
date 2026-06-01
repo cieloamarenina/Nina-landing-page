@@ -149,18 +149,18 @@
   .page-nav a:hover { border-color: var(--blue); color: var(--text); transform: translateY(-1px); }
   .page-nav a.active { background: rgba(56,189,248,0.16); border-color: rgba(56,189,248,0.55); color: var(--accent); }
 
-  .page-nav a.nav-home { font-family: monospace; font-weight: 800; letter-spacing: 0.04em; color: var(--accent); border-color: rgba(56,189,248,0.4); }
-  .page-nav a.nav-home:hover { background: rgba(56,189,248,0.16); }
+  .nlc-home { position: fixed; top: 15px; left: 18px; z-index: 1100; font-family: monospace; font-weight: 800; font-size: 1rem; letter-spacing: 0.04em; color: var(--accent); text-decoration: none; }
+  .nlc-home:hover { filter: brightness(1.18); }
 </style>
 </head>
 <body>
+<a href="../../index.html" class="nlc-home" title="Zurück zur Startseite">NLC_</a>
 
 <div class="container">
   <header>
     <h1>Meditation</h1>
     <div class="subtitle">Nina · Atem & Ruhe</div>
     <nav class="page-nav">
-      <a href="../../index.html" class="nav-home" title="Zurück zur Startseite">← NLC_</a>
       <a href="../index.html">💪 Training</a>
       <a href="../yoga/index.html">🧘 Yoga</a>
       <a href="index.html" class="active">🌬️ Meditation</a>
