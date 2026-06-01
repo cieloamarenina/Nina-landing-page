@@ -82,6 +82,18 @@
 
   .nav-links a:hover { color: var(--accent); }
 
+  .nav-toggle {
+    display: none;
+    background: none;
+    border: 1px solid var(--border);
+    color: var(--accent);
+    font-size: 1.25rem;
+    line-height: 1;
+    padding: 0.25rem 0.6rem;
+    border-radius: 6px;
+    cursor: pointer;
+  }
+
   /* LANG SWITCHER */
   .lang-switcher {
     display: flex;
@@ -959,7 +971,26 @@
   @media (max-width: 768px) {
     #about .about-grid { grid-template-columns: 1fr; }
     .hero-stats { flex-wrap: wrap; gap: 1.5rem; }
-    nav .nav-links { display: none; }
+    .nav-toggle { display: block; }
+    nav .nav-links {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      flex-direction: column;
+      gap: 0;
+      background: #080c14;
+      border-bottom: 1px solid var(--border);
+      box-shadow: 0 12px 24px rgba(0,0,0,0.4);
+      padding: 0.4rem 0;
+      display: none;
+    }
+    nav .nav-links.open { display: flex; }
+    nav .nav-links a {
+      display: block;
+      padding: 0.85rem 2rem;
+      font-size: 0.85rem;
+    }
     footer { flex-direction: column; gap: 1rem; text-align: center; }
   }
 
@@ -1076,6 +1107,7 @@
     <button class="lang-btn" data-lang="it">IT</button>
     <button class="lang-btn" data-lang="es">ES</button>
   </div>
+  <button class="nav-toggle" aria-label="Menü" aria-expanded="false" onclick="toggleNav()">☰</button>
 </nav>
 
 <!-- HERO -->
@@ -1808,6 +1840,26 @@ const pabloPanel  = document.getElementById('pablo-panel');
   const saved = localStorage.getItem('pablo-pos');
   if (saved) try { const p = JSON.parse(saved); pabloPlayer.style.bottom = 'auto'; pabloPlayer.style.right = 'auto'; pabloPlayer.style.top = p.top; pabloPlayer.style.left = p.left; } catch(e) {}
 })();
+
+function toggleNav() {
+  const links = document.querySelector('.nav-links');
+  const btn = document.querySelector('.nav-toggle');
+  const open = links.classList.toggle('open');
+  btn.setAttribute('aria-expanded', open);
+  btn.textContent = open ? '✕' : '☰';
+}
+// Menü schließen, wenn ein Link angetippt wird
+document.querySelectorAll('.nav-links a').forEach(a =>
+  a.addEventListener('click', () => {
+    const links = document.querySelector('.nav-links');
+    const btn = document.querySelector('.nav-toggle');
+    if (links.classList.contains('open')) {
+      links.classList.remove('open');
+      btn.setAttribute('aria-expanded', 'false');
+      btn.textContent = '☰';
+    }
+  })
+);
 
 function switchPlaylist(id, name, btn) {
   document.getElementById('pablo-iframe').src =
