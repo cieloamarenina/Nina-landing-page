@@ -99,6 +99,40 @@
     width: 0%;
   }
 
+  .workout-selector {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin: 18px 0 22px;
+    flex-wrap: wrap;
+  }
+  .ws-btn {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    color: var(--muted);
+    padding: 12px 22px;
+    border-radius: 999px;
+    font-size: 13px;
+    cursor: pointer;
+    font-weight: 800;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    font-family: Arial, sans-serif;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 44px;
+    transition: all 0.2s;
+  }
+  .ws-btn:hover { background: var(--bg-elevated); color: var(--text); border-color: var(--accent); }
+  .ws-btn.active {
+    background: linear-gradient(135deg, var(--blue), var(--accent));
+    color: #fff;
+    border-color: var(--accent);
+    box-shadow: 0 4px 16px rgba(56,189,248,0.35);
+  }
+  .ws-btn .ws-icon { font-size: 16px; }
+
   .phases {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
@@ -737,9 +771,20 @@
   .pablo-close-btn { background: none; border: none; color: var(--muted); cursor: pointer; font-size: 0.9rem; padding: 0; line-height: 1; }
   .pablo-close-btn:hover { color: var(--text); }
   .pablo-playlists { display: flex; gap: 0.35rem; padding: 0.5rem 0.75rem; flex-wrap: wrap; border-bottom: 1px solid var(--border); }
-  .pl-btn { background: rgba(56,189,248,0.06); border: 1px solid rgba(56,189,248,0.15); color: var(--muted); border-radius: 999px; padding: 0.2rem 0.6rem; font-size: 0.68rem; cursor: pointer; transition: all 0.15s; white-space: nowrap; }
+  .pl-btn { background: rgba(56,189,248,0.06); border: 1px solid rgba(56,189,248,0.15); color: var(--muted); border-radius: 999px; padding: 0.4rem 0.75rem; font-size: 0.72rem; cursor: pointer; transition: all 0.15s; white-space: nowrap; min-height: 32px; }
   .pl-btn:hover { background: rgba(56,189,248,0.12); color: var(--text); }
   .pl-btn.active { background: rgba(56,189,248,0.18); border-color: rgba(56,189,248,0.5); color: var(--accent); }
+
+  /* Pablo Player — Mobile-Fixes */
+  @media (max-width: 600px) {
+    #pablo-player { top: auto; bottom: 14px; right: 14px; left: auto; align-items: flex-end; gap: 0; }
+    #pablo-panel { position: fixed; left: 8px; right: 8px; bottom: 100px; width: auto; max-width: none; }
+    .pl-btn { padding: 0.55rem 0.9rem; font-size: 0.78rem; min-height: 40px; }
+    .pablo-playlists { gap: 0.5rem; padding: 0.7rem 0.75rem; }
+    .pablo-photo-wrap, #pablo-photo { width: 80px; height: 80px; }
+    .pablo-label { font-size: 0.5rem; margin-top: 2px; }
+    #pablo-iframe { width: 100% !important; height: 280px; }
+  }
   #pablo-btn { cursor: grab; position: relative; text-align: center; user-select: none; animation: pablo-float 3s ease-in-out infinite; }
   @keyframes pablo-float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-9px); } }
   #pablo-btn:hover { filter: brightness(1.08); }
@@ -835,20 +880,16 @@
     </div>
   </div>
 
-  <div class="phases">
-    <button class="phase-tab active" data-phase="warmup">
-      <span class="num">Phase 1</span><span data-i18n="tabWarmup">Warmup</span>
+  <div class="workout-selector">
+    <button class="ws-btn" data-workout="vollkoerper" onclick="switchWorkout('vollkoerper')">
+      <span class="ws-icon">🏋️</span><span data-i18n="workoutVollkoerper">Vollkörper</span>
     </button>
-    <button class="phase-tab" data-phase="beine">
-      <span class="num">Phase 2</span><span data-i18n="tabBeine">Beine & Po</span>
-    </button>
-    <button class="phase-tab" data-phase="arme">
-      <span class="num">Phase 3</span><span data-i18n="tabArme">Arme & Bauch</span>
-    </button>
-    <button class="phase-tab" data-phase="cooldown">
-      <span class="num">Phase 4</span><span data-i18n="tabCool">Cool-down</span>
+    <button class="ws-btn" data-workout="compound" onclick="switchWorkout('compound')">
+      <span class="ws-icon">💪</span><span data-i18n="workoutCompound">Compound</span>
     </button>
   </div>
+
+  <div class="phases" id="phase-tabs"></div>
 
   <div id="phase-content"></div>
 
@@ -865,15 +906,14 @@
       <button class="pablo-close-btn" onclick="togglePabloPanel()">✕</button>
     </div>
     <div class="pablo-playlists">
-      <button class="pl-btn active" onclick="switchPlaylist('3VBgqGbVoabuNZL3vICTAP','Nina',this)">🎵 Nina</button>
-      <button class="pl-btn" onclick="switchPlaylist('53ebDyYHhHmElRY1Epe97N','Nina is coding',this)">💻 Coding</button>
+      <button class="pl-btn active" onclick="switchPlaylist('53ebDyYHhHmElRY1Epe97N','Nina is coding',this)">💻 Coding</button>
       <button class="pl-btn" onclick="switchPlaylist('0rF7rgJx8xR5aU87Y4qlSP','Testing 123',this)">🎛️ Test</button>
       <button class="pl-btn" onclick="switchPlaylist('362d7BAhWSIjPTmd74o1pL','Alesis',this)">🥁 Alesis</button>
       <button class="pl-btn" onclick="switchPlaylist('37i9dQZF1DX4WYpdgoIcn6','Chill Hits',this)">🧊 Chill</button>
       <button class="pl-btn" onclick="switchPlaylist('0gmft5pcMN8iDI30vspobp','Aqua Feelin\'',this)">🌊 Aqua Feelin'</button>
       <button class="pl-btn" onclick="switchPlaylist('2R10VQvUU02ga3185KXjR6','Your All-Time Top Songs',this)">🏆 Top All-Time</button>
     </div>
-    <iframe id="pablo-iframe" src="https://open.spotify.com/embed/playlist/3VBgqGbVoabuNZL3vICTAP?utm_source=generator&theme=0" width="300" height="352" frameBorder="0" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+    <iframe id="pablo-iframe" src="https://open.spotify.com/embed/playlist/53ebDyYHhHmElRY1Epe97N?utm_source=generator&theme=0" width="300" height="352" frameBorder="0" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
   </div>
   <div id="pablo-btn" onclick="togglePabloPanel()" title="Pablo's Playlist 🎵">
     <div id="pablo-zzz"><span>z</span><span>z</span><span>z</span></div>
@@ -1298,59 +1338,199 @@ const animations = {
     <line class="body" x1="60" y1="80" x2="50" y2="123"/>
     <line class="body" x1="60" y1="80" x2="70" y2="123"/>
     <text x="60" y="105" fill="var(--warm)" font-family="Arial" font-size="10" font-weight="700" text-anchor="middle">HALTEN</text>
+  </svg>`,
+
+  // Workout Compound — Glute Bridge mit KB auf Hüfte
+  glutebridge: `<svg class="stickman" viewBox="0 0 120 140">
+    <line class="ground" x1="10" y1="125" x2="110" y2="125"/>
+    <circle class="head" cx="22" cy="108" r="7"/>
+    <line class="body" x1="29" y1="108">
+      <animate attributeName="x2" values="60;65;60" dur="2.2s" repeatCount="indefinite"/>
+      <animate attributeName="y2" values="108;82;108" dur="2.2s" repeatCount="indefinite"/>
+    </line>
+    <line class="body">
+      <animate attributeName="x1" values="60;65;60" dur="2.2s" repeatCount="indefinite"/>
+      <animate attributeName="y1" values="108;82;108" dur="2.2s" repeatCount="indefinite"/>
+      <animate attributeName="x2" values="85;85;85" dur="2.2s" repeatCount="indefinite"/>
+      <animate attributeName="y2" values="105;95;105" dur="2.2s" repeatCount="indefinite"/>
+    </line>
+    <line class="body">
+      <animate attributeName="x1" values="85;85;85" dur="2.2s" repeatCount="indefinite"/>
+      <animate attributeName="y1" values="105;95;105" dur="2.2s" repeatCount="indefinite"/>
+      <animate attributeName="x2" values="95;100;95" dur="2.2s" repeatCount="indefinite"/>
+      <animate attributeName="y2" values="123;123;123" dur="2.2s" repeatCount="indefinite"/>
+    </line>
+    <circle class="weight" r="6">
+      <animate attributeName="cx" values="60;65;60" dur="2.2s" repeatCount="indefinite"/>
+      <animate attributeName="cy" values="100;74;100" dur="2.2s" repeatCount="indefinite"/>
+    </circle>
+  </svg>`,
+
+  // Workout Compound — Halbkniender Schulterdruck (rechter Arm)
+  schulterdruck: `<svg class="stickman" viewBox="0 0 120 140">
+    <line class="ground" x1="10" y1="125" x2="110" y2="125"/>
+    <circle class="head" cx="55" cy="32" r="8"/>
+    <line class="body" x1="55" y1="40" x2="55" y2="85"/>
+    <line class="body" x1="55" y1="85" x2="75" y2="100"/>
+    <line class="body" x1="75" y1="100" x2="75" y2="123"/>
+    <line class="body" x1="55" y1="85" x2="42" y2="115"/>
+    <line class="body" x1="42" y1="115" x2="58" y2="125"/>
+    <line class="body" x1="55" y1="55" x2="38" y2="78"/>
+    <line class="body" x1="55" y1="55">
+      <animate attributeName="x2" values="70;72;70" dur="2s" repeatCount="indefinite"/>
+      <animate attributeName="y2" values="58;18;58" dur="2s" repeatCount="indefinite"/>
+    </line>
+    <circle class="weight" r="6">
+      <animate attributeName="cx" values="71;73;71" dur="2s" repeatCount="indefinite"/>
+      <animate attributeName="cy" values="52;10;52" dur="2s" repeatCount="indefinite"/>
+    </circle>
+  </svg>`,
+
+  // Workout Compound — Bird Dog (diagonaler Arm + Bein)
+  birddog: `<svg class="stickman" viewBox="0 0 120 140">
+    <line class="ground" x1="10" y1="125" x2="110" y2="125"/>
+    <circle class="head" cx="32" cy="68" r="7"/>
+    <line class="body" x1="39" y1="70" x2="82" y2="74"/>
+    <line class="body" x1="39" y1="72" x2="30" y2="115"/>
+    <line class="body" x1="82" y1="76" x2="82" y2="115"/>
+    <line class="body" x1="39" y1="70">
+      <animate attributeName="x2" values="22;15;22" dur="3s" repeatCount="indefinite"/>
+      <animate attributeName="y2" values="60;40;60" dur="3s" repeatCount="indefinite"/>
+    </line>
+    <line class="body" x1="82" y1="74">
+      <animate attributeName="x2" values="105;112;105" dur="3s" repeatCount="indefinite"/>
+      <animate attributeName="y2" values="80;58;80" dur="3s" repeatCount="indefinite"/>
+    </line>
+    <text x="60" y="105" fill="var(--warm)" font-family="Arial" font-size="9" font-weight="700" text-anchor="middle">DIAGONAL</text>
+  </svg>`,
+
+  // Workout Compound — Katze-Kuh (Rücken rund / hohl)
+  katzekuh: `<svg class="stickman" viewBox="0 0 120 140">
+    <line class="ground" x1="10" y1="125" x2="110" y2="125"/>
+    <circle class="head" r="7">
+      <animate attributeName="cx" values="32;32;32" dur="3s" repeatCount="indefinite"/>
+      <animate attributeName="cy" values="60;76;60" dur="3s" repeatCount="indefinite"/>
+    </circle>
+    <path class="body" fill="none">
+      <animate attributeName="d" values="M 38 65 Q 60 50 85 70;M 38 75 Q 60 92 85 75;M 38 65 Q 60 50 85 70" dur="3s" repeatCount="indefinite"/>
+    </path>
+    <line class="body" x1="38" y1="72" x2="30" y2="115"/>
+    <line class="body" x1="83" y1="74" x2="83" y2="115"/>
   </svg>`
 };
 
-// ---------- TRAININGSDATEN ----------
-const phases = {
-  warmup: {
-    title: "Warmup",
-    meta: "ca 3 Minuten",
-    rounds: 1,
-    exercises: [
-      { name: "Marschieren auf der Stelle", reps: "30 Sek", weight: "ohne Hantel", description: "Knie hoch ziehen, Arme schwingen, Puls hochfahren", animation: "marsch", sets: 1, pause: 0 },
-      { name: "Hüftkreise", reps: "10 pro Seite", weight: "ohne Hantel", description: "Hände an die Hüften, große Kreise mit der Hüfte zeichnen — erst rechts, dann links", animation: "huefte", sets: 1, pause: 0 },
-      { name: "Armkreise", reps: "10 vor + 10 zurück", weight: "ohne Hantel", description: "Beide Arme seitlich ausgestreckt, große Kreise zeichnen", animation: "armkreis", sets: 1, pause: 0 },
-      { name: "Bodyweight Squats", reps: "10 Wdh", weight: "ohne Hantel", description: "Tief in die Hocke gehen, Knie über Zehenspitzen, Brust hoch, Po zurück", animation: "squat", sets: 1, pause: 0 }
-    ]
+// ---------- TRAININGSDATEN: 2 Workouts (Vollkörper + Compound) ----------
+const workouts = {
+  vollkoerper: {
+    name: "Vollkörper",
+    subtitleKey: "subtitleVollkoerper",
+    phaseOrder: ['warmup', 'beine', 'arme', 'cooldown'],
+    phases: {
+      warmup: {
+        title: "Warmup",
+        meta: "ca 3 Minuten",
+        rounds: 1,
+        exercises: [
+          { name: "Marschieren auf der Stelle", reps: "30 Sek", weight: "ohne Hantel", description: "Knie hoch ziehen, Arme schwingen, Puls hochfahren", animation: "marsch", sets: 1, pause: 0 },
+          { name: "Hüftkreise", reps: "10 pro Seite", weight: "ohne Hantel", description: "Hände an die Hüften, große Kreise mit der Hüfte zeichnen — erst rechts, dann links", animation: "huefte", sets: 1, pause: 0 },
+          { name: "Armkreise", reps: "10 vor + 10 zurück", weight: "ohne Hantel", description: "Beide Arme seitlich ausgestreckt, große Kreise zeichnen", animation: "armkreis", sets: 1, pause: 0 },
+          { name: "Bodyweight Squats", reps: "10 Wdh", weight: "ohne Hantel", description: "Tief in die Hocke gehen, Knie über Zehenspitzen, Brust hoch, Po zurück", animation: "squat", sets: 1, pause: 0 }
+        ]
+      },
+      beine: {
+        title: "Beine, Po & Co",
+        meta: "ca 13 Minuten · inkl. Reiterhosen, Waden, unterer Rücken",
+        rounds: 3,
+        exercises: [
+          { name: "Goblet Squat", reps: "10-12 Wdh", weight: "8 kg Kettlebell", description: "Kettlebell vor der Brust halten (wie einen Kelch), tief in die Hocke, Knie folgen den Zehen, Brust bleibt aufrecht", animation: "goblet", sets: 3, pause: 45 },
+          { name: "Hip Thrust", reps: "12-15 Wdh", weight: "8 kg Kettlebell", description: "Schulter auf der Bank, Füße flach am Boden, Kettlebell quer auf der Hüfte, Po nach oben drücken bis Knie-Hüfte-Schulter eine Linie bilden", animation: "hipthrust", sets: 3, pause: 45 },
+          { name: "Romanian Deadlift", reps: "10 Wdh", weight: "8 kg Kettlebell", description: "Leichte Knie-Beugung, Hüfte nach hinten schieben, Kettlebell an den Schienbeinen entlang führen — Rücken bleibt gerade", animation: "rdl", sets: 3, pause: 45 },
+          { name: "Curtsy Lunges", reps: "10 pro Seite", weight: "8 kg Kettlebell", description: "Zielzone: Reiterhosen · Kettlebell vor der Brust, hinteres Bein kreuzt diagonal nach hinten wie bei einem Knicks, tief absenken, vorderes Knie bleibt über dem Fuß — links und rechts im Wechsel", animation: "curtsy", sets: 2, pause: 45 },
+          { name: "Standing Calf Raises", reps: "15 Wdh", weight: "8 kg Kettlebell", description: "Zielzone: Waden · Kettlebell in einer Hand, langsam auf die Zehenspitzen hoch, oben kurz halten, langsam ablassen — bei Bedarf an Wand abstützen für Balance", animation: "calfraise", sets: 2, pause: 30 },
+          { name: "Superman", reps: "12 Wdh", weight: "ohne Hantel", description: "Zielzone: unterer Rücken · Auf dem Bauch liegen, Arme nach vorn ausgestreckt, Beine nach hinten — gleichzeitig Arme und Beine vom Boden anheben, 2 Sek halten, kontrolliert ablassen", animation: "superman", sets: 2, pause: 30 }
+        ]
+      },
+      arme: {
+        title: "Bauch & Winkearme",
+        meta: "ca 11 Minuten · inkl. Hüftspeck",
+        rounds: 3,
+        exercises: [
+          { name: "Trizeps Kickbacks", reps: "12 pro Seite", weight: "2 kg je Hand", description: "Knie auf die Bank, vornübergebeugt, Oberarm parallel zum Boden, Unterarm nach hinten strecken — Oberarm bleibt fest", animation: "kickback", sets: 3, pause: 30 },
+          { name: "Overhead Trizeps Extension", reps: "10-12 Wdh", weight: "2 kg beidhändig", description: "Stehend, Hantel beidhändig hinter den Kopf senken, dann nach oben strecken — Ellbogen bleiben eng am Kopf", animation: "overhead", sets: 3, pause: 30 },
+          { name: "Russian Twists", reps: "20 Wdh total", weight: "2 kg", description: "Sitzend, leicht zurück gelehnt, Beine angehoben (Knie gebeugt), Hantel langsam von links nach rechts neben den Körper tippen", animation: "twist", sets: 3, pause: 30 },
+          { name: "Plank", reps: "20-30 Sek", weight: "ohne Hantel", description: "Unterarmstütz, Körper bildet eine gerade Linie von Kopf bis Ferse, Bauch fest anspannen, Po nicht nach oben schieben", animation: "plank", sets: 3, pause: 30 },
+          { name: "Side Plank", reps: "20-30 Sek pro Seite", weight: "ohne Hantel", description: "Zielzone: Hüftspeck · Seitstütz auf einem Unterarm, Körper bildet eine gerade Linie, oberer Arm zur Decke gestreckt, Hüfte nicht absacken lassen — links und rechts je 1 Satz", animation: "sideplank", sets: 2, pause: 30 }
+        ]
+      },
+      cooldown: {
+        title: "Cool-down",
+        meta: "ca 2-3 Minuten · sanft halten",
+        rounds: 1,
+        exercises: [
+          { name: "Taubensitz", reps: "30 Sek pro Seite", weight: "Stretch", description: "Vorderes Bein angewinkelt vor dem Körper, hinteres Bein nach hinten ausgestreckt, Oberkörper sanft Richtung Boden", animation: "taube", sets: 1, pause: 0 },
+          { name: "Hamstring-Stretch", reps: "30 Sek pro Seite", weight: "Stretch", description: "Sitzend, ein Bein gestreckt, anderes angewinkelt, mit der Hand zur Fußspitze des gestreckten Beins greifen", animation: "hamstring", sets: 1, pause: 0 },
+          { name: "Trizeps-Stretch", reps: "20 Sek pro Seite", weight: "Stretch", description: "Arm über den Kopf, Hand zum Nacken, mit der anderen Hand am Ellbogen sanft nach hinten drücken", animation: "trizeps", sets: 1, pause: 0 },
+          { name: "Schulter-Crossbody", reps: "20 Sek pro Seite", weight: "Stretch", description: "Arm gerade vor der Brust, mit dem anderen Arm zur Brust ziehen — Schulter unten lassen", animation: "schulter", sets: 1, pause: 0 }
+        ]
+      }
+    }
   },
-  beine: {
-    title: "Beine, Po & Co",
-    meta: "ca 13 Minuten · inkl. Reiterhosen, Waden, unterer Rücken",
-    rounds: 3,
-    exercises: [
-      { name: "Goblet Squat", reps: "10-12 Wdh", weight: "8 kg Hantel", description: "Hantel vor der Brust halten (wie einen Kelch), tief in die Hocke, Knie folgen den Zehen, Brust bleibt aufrecht", animation: "goblet", sets: 3, pause: 45 },
-      { name: "Hip Thrust", reps: "12-15 Wdh", weight: "8 kg Hantel", description: "Schulter auf der Bank, Füße flach am Boden, Hantel quer auf der Hüfte, Po nach oben drücken bis Knie-Hüfte-Schulter eine Linie bilden", animation: "hipthrust", sets: 3, pause: 45 },
-      { name: "Romanian Deadlift", reps: "10 Wdh", weight: "8 kg Hantel", description: "Leichte Knie-Beugung, Hüfte nach hinten schieben, Hantel an den Schienbeinen entlang führen — Rücken bleibt gerade", animation: "rdl", sets: 3, pause: 45 },
-      { name: "Curtsy Lunges", reps: "10 pro Seite", weight: "8 kg Hantel", description: "Zielzone: Reiterhosen · Hantel vor der Brust, hinteres Bein kreuzt diagonal nach hinten wie bei einem Knicks, tief absenken, vorderes Knie bleibt über dem Fuß — links und rechts im Wechsel", animation: "curtsy", sets: 2, pause: 45 },
-      { name: "Standing Calf Raises", reps: "15 Wdh", weight: "8 kg Hantel", description: "Zielzone: Waden · Hantel in einer Hand, langsam auf die Zehenspitzen hoch, oben kurz halten, langsam ablassen — bei Bedarf an Wand abstützen für Balance", animation: "calfraise", sets: 2, pause: 30 },
-      { name: "Superman", reps: "12 Wdh", weight: "ohne Hantel", description: "Zielzone: unterer Rücken · Auf dem Bauch liegen, Arme nach vorn ausgestreckt, Beine nach hinten — gleichzeitig Arme und Beine vom Boden anheben, 2 Sek halten, kontrolliert ablassen", animation: "superman", sets: 2, pause: 30 }
-    ]
-  },
-  arme: {
-    title: "Bauch & Winkearme",
-    meta: "ca 11 Minuten · inkl. Hüftspeck",
-    rounds: 3,
-    exercises: [
-      { name: "Trizeps Kickbacks", reps: "12 pro Seite", weight: "2 kg je Hand", description: "Knie auf die Bank, vornübergebeugt, Oberarm parallel zum Boden, Unterarm nach hinten strecken — Oberarm bleibt fest", animation: "kickback", sets: 3, pause: 30 },
-      { name: "Overhead Trizeps Extension", reps: "10-12 Wdh", weight: "2 kg beidhändig", description: "Stehend, Hantel beidhändig hinter den Kopf senken, dann nach oben strecken — Ellbogen bleiben eng am Kopf", animation: "overhead", sets: 3, pause: 30 },
-      { name: "Russian Twists", reps: "20 Wdh total", weight: "2 kg", description: "Sitzend, leicht zurück gelehnt, Beine angehoben (Knie gebeugt), Hantel langsam von links nach rechts neben den Körper tippen", animation: "twist", sets: 3, pause: 30 },
-      { name: "Plank", reps: "20-30 Sek", weight: "ohne Hantel", description: "Unterarmstütz, Körper bildet eine gerade Linie von Kopf bis Ferse, Bauch fest anspannen, Po nicht nach oben schieben", animation: "plank", sets: 3, pause: 30 },
-      { name: "Side Plank", reps: "20-30 Sek pro Seite", weight: "ohne Hantel", description: "Zielzone: Hüftspeck · Seitstütz auf einem Unterarm, Körper bildet eine gerade Linie, oberer Arm zur Decke gestreckt, Hüfte nicht absacken lassen — links und rechts je 1 Satz", animation: "sideplank", sets: 2, pause: 30 }
-    ]
-  },
-  cooldown: {
-    title: "Cool-down",
-    meta: "ca 2-3 Minuten · sanft halten",
-    rounds: 1,
-    exercises: [
-      { name: "Taubensitz", reps: "30 Sek pro Seite", weight: "Stretch", description: "Vorderes Bein angewinkelt vor dem Körper, hinteres Bein nach hinten ausgestreckt, Oberkörper sanft Richtung Boden", animation: "taube", sets: 1, pause: 0 },
-      { name: "Hamstring-Stretch", reps: "30 Sek pro Seite", weight: "Stretch", description: "Sitzend, ein Bein gestreckt, anderes angewinkelt, mit der Hand zur Fußspitze des gestreckten Beins greifen", animation: "hamstring", sets: 1, pause: 0 },
-      { name: "Trizeps-Stretch", reps: "20 Sek pro Seite", weight: "Stretch", description: "Arm über den Kopf, Hand zum Nacken, mit der anderen Hand am Ellbogen sanft nach hinten drücken", animation: "trizeps", sets: 1, pause: 0 },
-      { name: "Schulter-Crossbody", reps: "20 Sek pro Seite", weight: "Stretch", description: "Arm gerade vor der Brust, mit dem anderen Arm zur Brust ziehen — Schulter unten lassen", animation: "schulter", sets: 1, pause: 0 }
-    ]
+
+  compound: {
+    name: "Compound",
+    subtitleKey: "subtitleCompound",
+    phaseOrder: ['warmup', 'lifts', 'stability', 'cooldown'],
+    phases: {
+      warmup: {
+        title: "Warmup",
+        meta: "ca 5 Minuten · Gelenke aktivieren",
+        rounds: 1,
+        exercises: [
+          { name: "Marschieren auf der Stelle", reps: "30 Sek", weight: "ohne Kettlebell", description: "Knie hoch ziehen, Arme schwingen, Puls hochfahren", animation: "marsch", sets: 1, pause: 0 },
+          { name: "Hüftkreise", reps: "10 pro Seite", weight: "ohne Kettlebell", description: "Hände an die Hüften, große Kreise mit der Hüfte zeichnen — Hüfte wird gleich beansprucht", animation: "huefte", sets: 1, pause: 0 },
+          { name: "Armkreise", reps: "10 vor + 10 zurück", weight: "ohne Kettlebell", description: "Beide Arme seitlich ausgestreckt, große Kreise — wichtig zum Schutz der Schulter vor dem Schulterdruck", animation: "armkreis", sets: 1, pause: 0 },
+          { name: "Bodyweight Squats", reps: "10 Wdh", weight: "ohne Kettlebell", description: "Bewegungsmuster für den Goblet Squat proben — tief in die Hocke, Knie folgen Zehen", animation: "squat", sets: 1, pause: 0 }
+        ]
+      },
+      lifts: {
+        title: "Hauptlifts",
+        meta: "ca 15 Minuten · 8 kg Kettlebell · 60 Sek Pause",
+        rounds: 3,
+        exercises: [
+          { name: "Goblet Squat", reps: "10 Wdh", weight: "8 kg Kettlebell", description: "Kettlebell vor der Brust mit beiden Händen, Ellbogen zeigen nach unten, KB nah am Körper. Po nach hinten, Knie folgen Zehen", animation: "goblet", sets: 3, pause: 60 },
+          { name: "Romanian Deadlift", reps: "10 Wdh", weight: "8 kg Kettlebell", description: "⚠️ Form-Check: Beine fast gestreckt, Po nach hinten schieben, KB nah an Beinen entlang nach unten. Rücken bleibt gerade — flacher Rücken, nicht rund! Spürbar in Po + hinteren Oberschenkeln", animation: "rdl", sets: 3, pause: 60 },
+          { name: "Glute Bridge", reps: "12 Wdh", weight: "8 kg Kettlebell auf Hüfte", description: "Rücken auf Boden, Knie angewinkelt, KB auf Hüfte balancieren, Becken hoch — oben Po fest anspannen 1 Sek", animation: "glutebridge", sets: 3, pause: 60 }
+        ]
+      },
+      stability: {
+        title: "Schulter & Core",
+        meta: "ca 10 Minuten · Kontrolle vor Last",
+        rounds: 3,
+        exercises: [
+          { name: "Halbkniender Schulterdruck", reps: "6 pro Seite", weight: "8 kg Kettlebell", description: "⚠️ Schulter-Achtung · Ein Knie unten, anderes Bein vorne. KB auf einer Schulter, gerade nach oben drücken. Bei kleinstem ungutem Gefühl in der Schulter weglassen — Plank-Satz dann verdoppeln", animation: "schulterdruck", sets: 3, pause: 60 },
+          { name: "Bird Dog", reps: "8 pro Seite", weight: "ohne Kettlebell", description: "Vierfüßlerstand, diagonal Arm + Bein lang ausstrecken, kurz halten — Rumpf bleibt stabil, kein Schwanken", animation: "birddog", sets: 3, pause: 30 },
+          { name: "Plank", reps: "20-30 Sek", weight: "ohne Kettlebell", description: "Schultern über Ellbogen, Körper gerade von Kopf bis Ferse — Bauch fest, Po nicht nach oben schieben", animation: "plank", sets: 3, pause: 30 }
+        ]
+      },
+      cooldown: {
+        title: "Cool-down",
+        meta: "ca 5 Minuten · sanft dehnen",
+        rounds: 1,
+        exercises: [
+          { name: "Hamstring-Stretch", reps: "30 Sek pro Seite", weight: "Stretch", description: "Wichtig nach RDL · Sitzend, ein Bein gestreckt, anderes angewinkelt, mit der Hand zur Fußspitze des gestreckten Beins greifen", animation: "hamstring", sets: 1, pause: 0 },
+          { name: "Hüftbeuger-Stretch", reps: "30 Sek pro Seite", weight: "Stretch", description: "Halbkniender Ausfallschritt, hinteres Knie am Boden, Becken nach vorne schieben — spürbar vorne in der Hüfte", animation: "taube", sets: 1, pause: 0 },
+          { name: "Katze-Kuh", reps: "10 Wdh", weight: "Mobilität", description: "Vierfüßlerstand · Rücken rund machen (Katze) und dann hohlmachen (Kuh) — Wirbelsäule nach Deadlifts mobilisieren", animation: "katzekuh", sets: 1, pause: 0 },
+          { name: "Schulter-Crossbody", reps: "20 Sek pro Seite", weight: "Stretch", description: "Arm gerade vor der Brust, mit dem anderen Arm zur Brust ziehen — Schulter unten lassen", animation: "schulter", sets: 1, pause: 0 }
+        ]
+      }
+    }
   }
 };
+
+// Aktives Workout (aus localStorage)
+let currentWorkout = localStorage.getItem('nina_workout_active') || 'vollkoerper';
+if (!workouts[currentWorkout]) currentWorkout = 'vollkoerper';
+let phases = workouts[currentWorkout].phases;
 
 // ---------- BACKEND: localStorage Persistenz ----------
 const STORAGE = {
@@ -1404,6 +1584,7 @@ function saveWorkoutSession(note) {
 
   const session = {
     date: new Date().toISOString(),
+    workout: currentWorkout,
     duration: duration,
     completed: completedCount(),
     total: totalSets(),
@@ -1580,7 +1761,7 @@ function showToast(msg) {
 }
 
 // ---------- STATE & RENDERING ----------
-let currentPhase = 'warmup';
+let currentPhase = workouts[currentWorkout].phaseOrder[0];
 let completedSets = {};
 let soundOn = true;
 let activeTimers = {};
@@ -1599,17 +1780,29 @@ function completedCount() {
 // ── i18n (Sprachen DE/EN/ES/FR/IT) ───────────────────────────
 let lang = localStorage.getItem('nina_workout_lang') || 'en';
 const UI = {
-  de: { h1:"Hanteltraining", subtitle:"Nina · 25 Min · 3× pro Woche", btnHistory:"📊 Verlauf", btnSave:"💪 Workout speichern", btnNew:"↻ Neuer Workout", progressLabel:"Heute geschafft", clockLabel:"Dauer", sets:"Sätze", rounds:"Runden", resetPhase:"Phase zurücksetzen", lblSets:"Sätze", lblDone:"Geschafft", rest:"Pause", tabWarmup:"Warmup", tabBeine:"Beine & Po", tabArme:"Arme & Bauch", tabCool:"Cool-down" },
-  en: { h1:"Dumbbell Workout", subtitle:"Nina · 25 min · 3× per week", btnHistory:"📊 History", btnSave:"💪 Save workout", btnNew:"↻ New workout", progressLabel:"Done today", clockLabel:"Duration", sets:"sets", rounds:"rounds", resetPhase:"Reset phase", lblSets:"Sets", lblDone:"Done", rest:"rest", tabWarmup:"Warm-up", tabBeine:"Legs & Glutes", tabArme:"Arms & Core", tabCool:"Cool-down" },
-  es: { h1:"Entrenamiento con Mancuernas", subtitle:"Nina · 25 min · 3× por semana", btnHistory:"📊 Historial", btnSave:"💪 Guardar entreno", btnNew:"↻ Nuevo entreno", progressLabel:"Hecho hoy", clockLabel:"Duración", sets:"series", rounds:"rondas", resetPhase:"Reiniciar fase", lblSets:"Series", lblDone:"Hecho", rest:"descanso", tabWarmup:"Calentamiento", tabBeine:"Piernas y Glúteos", tabArme:"Brazos y Abdomen", tabCool:"Enfriamiento" },
-  fr: { h1:"Entraînement Haltères", subtitle:"Nina · 25 min · 3×/semaine", btnHistory:"📊 Historique", btnSave:"💪 Enregistrer", btnNew:"↻ Nouveau", progressLabel:"Fait aujourd'hui", clockLabel:"Durée", sets:"séries", rounds:"tours", resetPhase:"Réinitialiser", lblSets:"Séries", lblDone:"Fait", rest:"pause", tabWarmup:"Échauffement", tabBeine:"Jambes & Fessiers", tabArme:"Bras & Abdos", tabCool:"Récupération" },
-  it: { h1:"Allenamento con Manubri", subtitle:"Nina · 25 min · 3× a settimana", btnHistory:"📊 Cronologia", btnSave:"💪 Salva", btnNew:"↻ Nuovo", progressLabel:"Fatto oggi", clockLabel:"Durata", sets:"serie", rounds:"round", resetPhase:"Reimposta fase", lblSets:"Serie", lblDone:"Fatto", rest:"pausa", tabWarmup:"Riscaldamento", tabBeine:"Gambe & Glutei", tabArme:"Braccia & Addome", tabCool:"Defaticamento" }
+  de: { h1:"Hanteltraining", subtitle:"Nina · 25 Min · 3× pro Woche", subtitleVollkoerper:"Nina · 25 Min · 3× pro Woche", subtitleCompound:"Nina · 30 Min · 2× pro Woche", workoutVollkoerper:"Vollkörper", workoutCompound:"Compound", phase:"Phase", btnHistory:"📊 Verlauf", btnSave:"💪 Workout speichern", btnNew:"↻ Neuer Workout", progressLabel:"Heute geschafft", clockLabel:"Dauer", sets:"Sätze", rounds:"Runden", resetPhase:"Phase zurücksetzen", lblSets:"Sätze", lblDone:"Geschafft", rest:"Pause", tabWarmup:"Warmup", tabBeine:"Beine & Po", tabArme:"Arme & Bauch", tabCool:"Cool-down" },
+  en: { h1:"Strength Training", subtitle:"Nina · 25 min · 3× per week", subtitleVollkoerper:"Nina · 25 min · 3× per week", subtitleCompound:"Nina · 30 min · 2× per week", workoutVollkoerper:"Full Body", workoutCompound:"Compound", phase:"Phase", btnHistory:"📊 History", btnSave:"💪 Save workout", btnNew:"↻ New workout", progressLabel:"Done today", clockLabel:"Duration", sets:"sets", rounds:"rounds", resetPhase:"Reset phase", lblSets:"Sets", lblDone:"Done", rest:"rest", tabWarmup:"Warm-up", tabBeine:"Legs & Glutes", tabArme:"Arms & Core", tabCool:"Cool-down" },
+  es: { h1:"Entrenamiento de Fuerza", subtitle:"Nina · 25 min · 3× por semana", subtitleVollkoerper:"Nina · 25 min · 3× por semana", subtitleCompound:"Nina · 30 min · 2× por semana", workoutVollkoerper:"Cuerpo Completo", workoutCompound:"Compound", phase:"Fase", btnHistory:"📊 Historial", btnSave:"💪 Guardar entreno", btnNew:"↻ Nuevo entreno", progressLabel:"Hecho hoy", clockLabel:"Duración", sets:"series", rounds:"rondas", resetPhase:"Reiniciar fase", lblSets:"Series", lblDone:"Hecho", rest:"descanso", tabWarmup:"Calentamiento", tabBeine:"Piernas y Glúteos", tabArme:"Brazos y Abdomen", tabCool:"Enfriamiento" },
+  fr: { h1:"Entraînement de Force", subtitle:"Nina · 25 min · 3×/semaine", subtitleVollkoerper:"Nina · 25 min · 3×/semaine", subtitleCompound:"Nina · 30 min · 2×/semaine", workoutVollkoerper:"Corps Entier", workoutCompound:"Compound", phase:"Phase", btnHistory:"📊 Historique", btnSave:"💪 Enregistrer", btnNew:"↻ Nouveau", progressLabel:"Fait aujourd'hui", clockLabel:"Durée", sets:"séries", rounds:"tours", resetPhase:"Réinitialiser", lblSets:"Séries", lblDone:"Fait", rest:"pause", tabWarmup:"Échauffement", tabBeine:"Jambes & Fessiers", tabArme:"Bras & Abdos", tabCool:"Récupération" },
+  it: { h1:"Allenamento di Forza", subtitle:"Nina · 25 min · 3× a settimana", subtitleVollkoerper:"Nina · 25 min · 3× a settimana", subtitleCompound:"Nina · 30 min · 2× a settimana", workoutVollkoerper:"Corpo Intero", workoutCompound:"Compound", phase:"Fase", btnHistory:"📊 Cronologia", btnSave:"💪 Salva", btnNew:"↻ Nuovo", progressLabel:"Fatto oggi", clockLabel:"Durata", sets:"serie", rounds:"round", resetPhase:"Reimposta fase", lblSets:"Serie", lblDone:"Fatto", rest:"pausa", tabWarmup:"Riscaldamento", tabBeine:"Gambe & Glutei", tabArme:"Braccia & Addome", tabCool:"Defaticamento" }
 };
 const PHI = {
-  en: { warmup:{title:"Warm-up", meta:"approx. 3 minutes"}, beine:{title:"Legs, Glutes & Co", meta:"approx. 13 minutes · incl. saddlebags, calves, lower back"}, arme:{title:"Core & Bingo Wings", meta:"approx. 11 minutes · incl. muffin top"}, cooldown:{title:"Cool-down", meta:"approx. 2-3 minutes · hold gently"} },
-  es: { warmup:{title:"Calentamiento", meta:"aprox. 3 minutos"}, beine:{title:"Piernas, Glúteos y más", meta:"aprox. 13 minutos · incl. cartucheras, gemelos, zona lumbar"}, arme:{title:"Abdomen y Brazos", meta:"aprox. 11 minutos · incl. michelines"}, cooldown:{title:"Enfriamiento", meta:"aprox. 2-3 minutos · mantén suave"} },
-  fr: { warmup:{title:"Échauffement", meta:"env. 3 minutes"}, beine:{title:"Jambes, Fessiers & Co", meta:"env. 13 minutes · incl. culottes de cheval, mollets, bas du dos"}, arme:{title:"Abdos & Bras qui pendent", meta:"env. 11 minutes · incl. poignées d'amour"}, cooldown:{title:"Récupération", meta:"env. 2-3 minutes · maintiens en douceur"} },
-  it: { warmup:{title:"Riscaldamento", meta:"circa 3 minuti"}, beine:{title:"Gambe, Glutei & Co", meta:"circa 13 minuti · incl. cuscinetti, polpacci, zona lombare"}, arme:{title:"Addome & Braccia flaccide", meta:"circa 11 minuti · incl. maniglie dell'amore"}, cooldown:{title:"Defaticamento", meta:"circa 2-3 minuti · mantieni dolcemente"} }
+  en: {
+    vollkoerper: { warmup:{title:"Warm-up", meta:"approx. 3 minutes"}, beine:{title:"Legs, Glutes & Co", meta:"approx. 13 minutes · incl. saddlebags, calves, lower back"}, arme:{title:"Core & Bingo Wings", meta:"approx. 11 minutes · incl. muffin top"}, cooldown:{title:"Cool-down", meta:"approx. 2-3 minutes · hold gently"} },
+    compound: { warmup:{title:"Warm-up", meta:"approx. 5 minutes · activate joints"}, lifts:{title:"Main Lifts", meta:"approx. 15 minutes · 8 kg kettlebell · 60 sec rest"}, stability:{title:"Shoulders & Core", meta:"approx. 10 minutes · control before load"}, cooldown:{title:"Cool-down", meta:"approx. 5 minutes · gentle stretching"} }
+  },
+  es: {
+    vollkoerper: { warmup:{title:"Calentamiento", meta:"aprox. 3 minutos"}, beine:{title:"Piernas, Glúteos y más", meta:"aprox. 13 minutos · incl. cartucheras, gemelos, zona lumbar"}, arme:{title:"Abdomen y Brazos", meta:"aprox. 11 minutos · incl. michelines"}, cooldown:{title:"Enfriamiento", meta:"aprox. 2-3 minutos · mantén suave"} },
+    compound: { warmup:{title:"Calentamiento", meta:"aprox. 5 minutos · activar articulaciones"}, lifts:{title:"Levantamientos principales", meta:"aprox. 15 minutos · kettlebell 8 kg · 60 seg descanso"}, stability:{title:"Hombros y Core", meta:"aprox. 10 minutos · control antes que carga"}, cooldown:{title:"Enfriamiento", meta:"aprox. 5 minutos · estiramiento suave"} }
+  },
+  fr: {
+    vollkoerper: { warmup:{title:"Échauffement", meta:"env. 3 minutes"}, beine:{title:"Jambes, Fessiers & Co", meta:"env. 13 minutes · incl. culottes de cheval, mollets, bas du dos"}, arme:{title:"Abdos & Bras qui pendent", meta:"env. 11 minutes · incl. poignées d'amour"}, cooldown:{title:"Récupération", meta:"env. 2-3 minutes · maintiens en douceur"} },
+    compound: { warmup:{title:"Échauffement", meta:"env. 5 minutes · activer les articulations"}, lifts:{title:"Mouvements principaux", meta:"env. 15 minutes · kettlebell 8 kg · 60 sec repos"}, stability:{title:"Épaules & Tronc", meta:"env. 10 minutes · contrôle avant charge"}, cooldown:{title:"Récupération", meta:"env. 5 minutes · étirements doux"} }
+  },
+  it: {
+    vollkoerper: { warmup:{title:"Riscaldamento", meta:"circa 3 minuti"}, beine:{title:"Gambe, Glutei & Co", meta:"circa 13 minuti · incl. cuscinetti, polpacci, zona lombare"}, arme:{title:"Addome & Braccia flaccide", meta:"circa 11 minuti · incl. maniglie dell'amore"}, cooldown:{title:"Defaticamento", meta:"circa 2-3 minuti · mantieni dolcemente"} },
+    compound: { warmup:{title:"Riscaldamento", meta:"circa 5 minuti · attivare le articolazioni"}, lifts:{title:"Lift principali", meta:"circa 15 minuti · kettlebell 8 kg · 60 sec pausa"}, stability:{title:"Spalle & Core", meta:"circa 10 minuti · controllo prima del carico"}, cooldown:{title:"Defaticamento", meta:"circa 5 minuti · stretching dolce"} }
+  }
 };
 const EXI = {
   en: {
@@ -1617,11 +1810,11 @@ const EXI = {
     "Hüftkreise": {name:"Hip circles", reps:"10 per side", weight:"no weight", description:"Hands on your hips, draw big circles with the hips — first right, then left"},
     "Armkreise": {name:"Arm circles", reps:"10 fwd + 10 back", weight:"no weight", description:"Both arms stretched out to the sides, draw big circles"},
     "Bodyweight Squats": {name:"Bodyweight squats", reps:"10 reps", weight:"no weight", description:"Squat down deep, knees over your toes, chest up, hips back"},
-    "Goblet Squat": {name:"Goblet squat", reps:"10-12 reps", weight:"8 kg dumbbell", description:"Hold the dumbbell at your chest (like a goblet), squat deep, knees track your toes, chest stays upright"},
-    "Hip Thrust": {name:"Hip thrust", reps:"12-15 reps", weight:"8 kg dumbbell", description:"Shoulders on the bench, feet flat, dumbbell across your hips, push your hips up until knee-hip-shoulder form a line"},
-    "Romanian Deadlift": {name:"Romanian deadlift", reps:"10 reps", weight:"8 kg dumbbell", description:"Slight knee bend, push your hips back, guide the dumbbell along your shins — keep your back straight"},
-    "Curtsy Lunges": {name:"Curtsy lunges", reps:"10 per side", weight:"8 kg dumbbell", description:"Target zone: saddlebags · Dumbbell at your chest, the back leg crosses diagonally behind like a curtsy, lower deep, front knee stays over the foot — alternate left and right"},
-    "Standing Calf Raises": {name:"Standing calf raises", reps:"15 reps", weight:"8 kg dumbbell", description:"Target zone: calves · Dumbbell in one hand, rise slowly onto your toes, hold briefly at the top, lower slowly — use a wall for balance if needed"},
+    "Goblet Squat": {name:"Goblet squat", reps:"10-12 reps", weight:"8 kg kettlebell", description:"Hold the dumbbell at your chest (like a goblet), squat deep, knees track your toes, chest stays upright"},
+    "Hip Thrust": {name:"Hip thrust", reps:"12-15 reps", weight:"8 kg kettlebell", description:"Shoulders on the bench, feet flat, dumbbell across your hips, push your hips up until knee-hip-shoulder form a line"},
+    "Romanian Deadlift": {name:"Romanian deadlift", reps:"10 reps", weight:"8 kg kettlebell", description:"Slight knee bend, push your hips back, guide the dumbbell along your shins — keep your back straight"},
+    "Curtsy Lunges": {name:"Curtsy lunges", reps:"10 per side", weight:"8 kg kettlebell", description:"Target zone: saddlebags · Dumbbell at your chest, the back leg crosses diagonally behind like a curtsy, lower deep, front knee stays over the foot — alternate left and right"},
+    "Standing Calf Raises": {name:"Standing calf raises", reps:"15 reps", weight:"8 kg kettlebell", description:"Target zone: calves · Dumbbell in one hand, rise slowly onto your toes, hold briefly at the top, lower slowly — use a wall for balance if needed"},
     "Superman": {name:"Superman", reps:"12 reps", weight:"no weight", description:"Target zone: lower back · Lie on your stomach, arms forward, legs back — lift arms and legs off the floor together, hold 2 sec, lower with control"},
     "Trizeps Kickbacks": {name:"Triceps kickbacks", reps:"12 per side", weight:"2 kg each hand", description:"Knee on the bench, lean forward, upper arm parallel to the floor, extend the forearm back — keep the upper arm still"},
     "Overhead Trizeps Extension": {name:"Overhead triceps extension", reps:"10-12 reps", weight:"2 kg both hands", description:"Standing, lower the dumbbell behind your head with both hands, then press up — keep elbows close to your head"},
@@ -1631,18 +1824,23 @@ const EXI = {
     "Taubensitz": {name:"Pigeon pose", reps:"30 sec per side", weight:"Stretch", description:"Front leg bent in front of you, back leg extended behind, upper body sinks gently toward the floor"},
     "Hamstring-Stretch": {name:"Hamstring stretch", reps:"30 sec per side", weight:"Stretch", description:"Seated, one leg straight, the other bent, reach for the toes of the straight leg"},
     "Trizeps-Stretch": {name:"Triceps stretch", reps:"20 sec per side", weight:"Stretch", description:"Arm overhead, hand to your neck, gently push the elbow back with your other hand"},
-    "Schulter-Crossbody": {name:"Cross-body shoulder stretch", reps:"20 sec per side", weight:"Stretch", description:"Arm straight across your chest, pull it toward you with the other arm — keep the shoulder down"}
+    "Schulter-Crossbody": {name:"Cross-body shoulder stretch", reps:"20 sec per side", weight:"Stretch", description:"Arm straight across your chest, pull it toward you with the other arm — keep the shoulder down"},
+    "Glute Bridge": {name:"Glute bridge", reps:"12 reps", weight:"8 kg kettlebell on hips", description:"Back on the floor, knees bent, balance the kettlebell on your hips, lift the pelvis — squeeze glutes hard at the top for 1 sec"},
+    "Halbkniender Schulterdruck": {name:"Half-kneeling shoulder press", reps:"6 per side", weight:"8 kg kettlebell", description:"⚠️ Shoulder caution · One knee down, other foot forward. KB on one shoulder, press straight up. Skip if any discomfort in the shoulder — double the plank set instead"},
+    "Bird Dog": {name:"Bird dog", reps:"8 per side", weight:"no weight", description:"On all fours, extend opposite arm + leg long, hold briefly — keep your torso stable, no swaying"},
+    "Hüftbeuger-Stretch": {name:"Hip flexor stretch", reps:"30 sec per side", weight:"Stretch", description:"Half-kneeling lunge, back knee on the floor, push hips forward — felt in the front of the hip"},
+    "Katze-Kuh": {name:"Cat-cow", reps:"10 reps", weight:"Mobility", description:"On all fours · Round your back (cat) then arch it (cow) — mobilize the spine after deadlifts"}
   },
   es: {
     "Marschieren auf der Stelle": {name:"Marcha en el sitio", reps:"30 seg", weight:"sin peso", description:"Levanta las rodillas, balancea los brazos, sube el pulso"},
     "Hüftkreise": {name:"Círculos de cadera", reps:"10 por lado", weight:"sin peso", description:"Manos en las caderas, dibuja grandes círculos — primero a la derecha, luego a la izquierda"},
     "Armkreise": {name:"Círculos de brazos", reps:"10 adelante + 10 atrás", weight:"sin peso", description:"Brazos extendidos a los lados, dibuja grandes círculos"},
     "Bodyweight Squats": {name:"Sentadillas", reps:"10 reps", weight:"sin peso", description:"Baja profundo, rodillas sobre los dedos, pecho arriba, glúteos atrás"},
-    "Goblet Squat": {name:"Sentadilla goblet", reps:"10-12 reps", weight:"mancuerna 8 kg", description:"Sujeta la mancuerna en el pecho (como un cáliz), baja profundo, rodillas hacia los dedos, pecho erguido"},
-    "Hip Thrust": {name:"Hip thrust", reps:"12-15 reps", weight:"mancuerna 8 kg", description:"Hombros en el banco, pies planos, mancuerna sobre la cadera, empuja hasta alinear rodilla-cadera-hombro"},
-    "Romanian Deadlift": {name:"Peso muerto rumano", reps:"10 reps", weight:"mancuerna 8 kg", description:"Rodillas algo flexionadas, lleva la cadera atrás, baja la mancuerna por las espinillas — espalda recta"},
-    "Curtsy Lunges": {name:"Zancadas curtsy", reps:"10 por lado", weight:"mancuerna 8 kg", description:"Zona objetivo: cartucheras · Mancuerna en el pecho, la pierna de atrás cruza en diagonal como una reverencia, baja profundo, rodilla delantera sobre el pie — alterna izquierda y derecha"},
-    "Standing Calf Raises": {name:"Elevaciones de gemelos", reps:"15 reps", weight:"mancuerna 8 kg", description:"Zona objetivo: gemelos · Mancuerna en una mano, sube despacio de puntillas, mantén arriba, baja despacio — apóyate en la pared si hace falta"},
+    "Goblet Squat": {name:"Sentadilla goblet", reps:"10-12 reps", weight:"kettlebell 8 kg", description:"Sujeta la mancuerna en el pecho (como un cáliz), baja profundo, rodillas hacia los dedos, pecho erguido"},
+    "Hip Thrust": {name:"Hip thrust", reps:"12-15 reps", weight:"kettlebell 8 kg", description:"Hombros en el banco, pies planos, mancuerna sobre la cadera, empuja hasta alinear rodilla-cadera-hombro"},
+    "Romanian Deadlift": {name:"Peso muerto rumano", reps:"10 reps", weight:"kettlebell 8 kg", description:"Rodillas algo flexionadas, lleva la cadera atrás, baja la mancuerna por las espinillas — espalda recta"},
+    "Curtsy Lunges": {name:"Zancadas curtsy", reps:"10 por lado", weight:"kettlebell 8 kg", description:"Zona objetivo: cartucheras · Mancuerna en el pecho, la pierna de atrás cruza en diagonal como una reverencia, baja profundo, rodilla delantera sobre el pie — alterna izquierda y derecha"},
+    "Standing Calf Raises": {name:"Elevaciones de gemelos", reps:"15 reps", weight:"kettlebell 8 kg", description:"Zona objetivo: gemelos · Mancuerna en una mano, sube despacio de puntillas, mantén arriba, baja despacio — apóyate en la pared si hace falta"},
     "Superman": {name:"Superman", reps:"12 reps", weight:"sin peso", description:"Zona objetivo: zona lumbar · Boca abajo, brazos al frente, piernas atrás — eleva brazos y piernas a la vez, mantén 2 seg, baja con control"},
     "Trizeps Kickbacks": {name:"Patada de tríceps", reps:"12 por lado", weight:"2 kg por mano", description:"Rodilla en el banco, inclínate al frente, brazo paralelo al suelo, extiende el antebrazo atrás — el brazo no se mueve"},
     "Overhead Trizeps Extension": {name:"Extensión de tríceps", reps:"10-12 reps", weight:"2 kg a dos manos", description:"De pie, baja la mancuerna tras la cabeza con ambas manos, luego estira arriba — codos cerca de la cabeza"},
@@ -1652,18 +1850,23 @@ const EXI = {
     "Taubensitz": {name:"Postura de paloma", reps:"30 seg por lado", weight:"Estiramiento", description:"Pierna delantera flexionada delante, pierna trasera extendida atrás, torso suavemente hacia el suelo"},
     "Hamstring-Stretch": {name:"Estiramiento de isquios", reps:"30 seg por lado", weight:"Estiramiento", description:"Sentada, una pierna estirada, la otra flexionada, alcanza la punta del pie de la pierna estirada"},
     "Trizeps-Stretch": {name:"Estiramiento de tríceps", reps:"20 seg por lado", weight:"Estiramiento", description:"Brazo sobre la cabeza, mano a la nuca, empuja el codo atrás con la otra mano"},
-    "Schulter-Crossbody": {name:"Estiramiento de hombro", reps:"20 seg por lado", weight:"Estiramiento", description:"Brazo recto cruzando el pecho, tíralo hacia ti con el otro brazo — hombro abajo"}
+    "Schulter-Crossbody": {name:"Estiramiento de hombro", reps:"20 seg por lado", weight:"Estiramiento", description:"Brazo recto cruzando el pecho, tíralo hacia ti con el otro brazo — hombro abajo"},
+    "Glute Bridge": {name:"Puente de glúteos", reps:"12 reps", weight:"kettlebell 8 kg en la cadera", description:"Espalda en el suelo, rodillas dobladas, equilibra la kettlebell en la cadera, eleva la pelvis — aprieta glúteos arriba 1 seg"},
+    "Halbkniender Schulterdruck": {name:"Press de hombros media rodilla", reps:"6 por lado", weight:"kettlebell 8 kg", description:"⚠️ Atención hombro · Una rodilla abajo, el otro pie delante. KB en un hombro, presiona recto arriba. Si molesta el hombro, salta y duplica la plancha"},
+    "Bird Dog": {name:"Bird dog", reps:"8 por lado", weight:"sin peso", description:"A cuatro patas, extiende brazo y pierna opuestos largos, mantén un momento — tronco estable, sin balanceo"},
+    "Hüftbeuger-Stretch": {name:"Estiramiento flexores de cadera", reps:"30 seg por lado", weight:"Estiramiento", description:"Zancada con rodilla atrás en el suelo, empuja la cadera hacia delante — se siente delante de la cadera"},
+    "Katze-Kuh": {name:"Gato-vaca", reps:"10 reps", weight:"Movilidad", description:"A cuatro patas · Redondea la espalda (gato) y luego arquéala (vaca) — moviliza la columna tras los pesos muertos"}
   },
   fr: {
     "Marschieren auf der Stelle": {name:"Marche sur place", reps:"30 sec", weight:"sans haltère", description:"Lève les genoux, balance les bras, fais monter le pouls"},
     "Hüftkreise": {name:"Cercles de hanches", reps:"10 par côté", weight:"sans haltère", description:"Mains sur les hanches, dessine de grands cercles — d'abord à droite, puis à gauche"},
     "Armkreise": {name:"Cercles de bras", reps:"10 avant + 10 arrière", weight:"sans haltère", description:"Les deux bras tendus sur les côtés, dessine de grands cercles"},
     "Bodyweight Squats": {name:"Squats au poids du corps", reps:"10 rép", weight:"sans haltère", description:"Descends en squat, genoux au-dessus des orteils, poitrine haute, fessiers en arrière"},
-    "Goblet Squat": {name:"Goblet squat", reps:"10-12 rép", weight:"haltère 8 kg", description:"Tiens l'haltère contre la poitrine (comme un calice), descends bas, genoux vers les orteils, poitrine droite"},
-    "Hip Thrust": {name:"Hip thrust", reps:"12-15 rép", weight:"haltère 8 kg", description:"Épaules sur le banc, pieds à plat, haltère sur les hanches, pousse jusqu'à aligner genou-hanche-épaule"},
-    "Romanian Deadlift": {name:"Soulevé de terre roumain", reps:"10 rép", weight:"haltère 8 kg", description:"Légère flexion des genoux, hanches en arrière, glisse l'haltère le long des tibias — dos droit"},
-    "Curtsy Lunges": {name:"Fentes croisées", reps:"10 par côté", weight:"haltère 8 kg", description:"Zone ciblée : culottes de cheval · Haltère contre la poitrine, la jambe arrière croise en diagonale comme une révérence, descends bas, genou avant au-dessus du pied — alterne gauche et droite"},
-    "Standing Calf Raises": {name:"Élévations mollets debout", reps:"15 rép", weight:"haltère 8 kg", description:"Zone ciblée : mollets · Haltère dans une main, monte lentement sur la pointe des pieds, tiens en haut, redescends lentement — appuie-toi au mur si besoin"},
+    "Goblet Squat": {name:"Goblet squat", reps:"10-12 rép", weight:"kettlebell 8 kg", description:"Tiens l'haltère contre la poitrine (comme un calice), descends bas, genoux vers les orteils, poitrine droite"},
+    "Hip Thrust": {name:"Hip thrust", reps:"12-15 rép", weight:"kettlebell 8 kg", description:"Épaules sur le banc, pieds à plat, haltère sur les hanches, pousse jusqu'à aligner genou-hanche-épaule"},
+    "Romanian Deadlift": {name:"Soulevé de terre roumain", reps:"10 rép", weight:"kettlebell 8 kg", description:"Légère flexion des genoux, hanches en arrière, glisse l'haltère le long des tibias — dos droit"},
+    "Curtsy Lunges": {name:"Fentes croisées", reps:"10 par côté", weight:"kettlebell 8 kg", description:"Zone ciblée : culottes de cheval · Haltère contre la poitrine, la jambe arrière croise en diagonale comme une révérence, descends bas, genou avant au-dessus du pied — alterne gauche et droite"},
+    "Standing Calf Raises": {name:"Élévations mollets debout", reps:"15 rép", weight:"kettlebell 8 kg", description:"Zone ciblée : mollets · Haltère dans une main, monte lentement sur la pointe des pieds, tiens en haut, redescends lentement — appuie-toi au mur si besoin"},
     "Superman": {name:"Superman", reps:"12 rép", weight:"sans haltère", description:"Zone ciblée : bas du dos · Sur le ventre, bras devant, jambes derrière — soulève bras et jambes ensemble, tiens 2 sec, redescends avec contrôle"},
     "Trizeps Kickbacks": {name:"Extensions triceps", reps:"12 par côté", weight:"2 kg par main", description:"Genou sur le banc, penchée en avant, bras parallèle au sol, tends l'avant-bras vers l'arrière — le bras reste fixe"},
     "Overhead Trizeps Extension": {name:"Extension triceps nuque", reps:"10-12 rép", weight:"2 kg à deux mains", description:"Debout, descends l'haltère derrière la tête à deux mains, puis tends vers le haut — coudes près de la tête"},
@@ -1673,18 +1876,23 @@ const EXI = {
     "Taubensitz": {name:"Posture du pigeon", reps:"30 sec par côté", weight:"Étirement", description:"Jambe avant pliée devant, jambe arrière tendue derrière, buste doucement vers le sol"},
     "Hamstring-Stretch": {name:"Étirement ischio-jambiers", reps:"30 sec par côté", weight:"Étirement", description:"Assise, une jambe tendue, l'autre pliée, attrape la pointe du pied de la jambe tendue"},
     "Trizeps-Stretch": {name:"Étirement triceps", reps:"20 sec par côté", weight:"Étirement", description:"Bras au-dessus de la tête, main vers la nuque, pousse doucement le coude vers l'arrière avec l'autre main"},
-    "Schulter-Crossbody": {name:"Étirement épaule croisé", reps:"20 sec par côté", weight:"Étirement", description:"Bras tendu devant la poitrine, tire-le vers toi avec l'autre bras — garde l'épaule basse"}
+    "Schulter-Crossbody": {name:"Étirement épaule croisé", reps:"20 sec par côté", weight:"Étirement", description:"Bras tendu devant la poitrine, tire-le vers toi avec l'autre bras — garde l'épaule basse"},
+    "Glute Bridge": {name:"Pont fessier", reps:"12 rép", weight:"kettlebell 8 kg sur les hanches", description:"Dos au sol, genoux pliés, kettlebell en équilibre sur les hanches, monte le bassin — contracte les fessiers en haut 1 sec"},
+    "Halbkniender Schulterdruck": {name:"Développé épaules à genou", reps:"6 par côté", weight:"kettlebell 8 kg", description:"⚠️ Attention épaule · Un genou au sol, l'autre pied devant. KB sur une épaule, pousse vers le haut. À la moindre gêne d'épaule : saute et double la planche"},
+    "Bird Dog": {name:"Bird dog", reps:"8 par côté", weight:"sans poids", description:"À quatre pattes, étire bras et jambe opposés, tiens un moment — tronc stable, pas d'oscillation"},
+    "Hüftbeuger-Stretch": {name:"Étirement fléchisseurs de hanche", reps:"30 sec par côté", weight:"Étirement", description:"Fente avec genou arrière au sol, pousse le bassin vers l'avant — ressenti devant la hanche"},
+    "Katze-Kuh": {name:"Chat-vache", reps:"10 rép", weight:"Mobilité", description:"À quatre pattes · Arrondis le dos (chat) puis creuse (vache) — mobilise la colonne après les soulevés de terre"}
   },
   it: {
     "Marschieren auf der Stelle": {name:"Marcia sul posto", reps:"30 sec", weight:"senza peso", description:"Solleva le ginocchia, oscilla le braccia, alza il battito"},
     "Hüftkreise": {name:"Cerchi con i fianchi", reps:"10 per lato", weight:"senza peso", description:"Mani sui fianchi, disegna grandi cerchi — prima a destra, poi a sinistra"},
     "Armkreise": {name:"Cerchi con le braccia", reps:"10 avanti + 10 indietro", weight:"senza peso", description:"Braccia tese ai lati, disegna grandi cerchi"},
     "Bodyweight Squats": {name:"Squat a corpo libero", reps:"10 rip", weight:"senza peso", description:"Scendi in profondità, ginocchia sopra le punte, petto alto, glutei indietro"},
-    "Goblet Squat": {name:"Goblet squat", reps:"10-12 rip", weight:"manubrio 8 kg", description:"Tieni il manubrio al petto (come un calice), scendi in profondità, ginocchia verso le punte, petto eretto"},
-    "Hip Thrust": {name:"Hip thrust", reps:"12-15 rip", weight:"manubrio 8 kg", description:"Spalle sulla panca, piedi a terra, manubrio sui fianchi, spingi finché ginocchio-anca-spalla sono in linea"},
-    "Romanian Deadlift": {name:"Stacco rumeno", reps:"10 rip", weight:"manubrio 8 kg", description:"Ginocchia leggermente piegate, spingi i fianchi indietro, fai scorrere il manubrio lungo gli stinchi — schiena dritta"},
-    "Curtsy Lunges": {name:"Affondi incrociati", reps:"10 per lato", weight:"manubrio 8 kg", description:"Zona mirata: cuscinetti · Manubrio al petto, la gamba dietro incrocia in diagonale come un inchino, scendi in profondità, ginocchio davanti sopra il piede — alterna sinistra e destra"},
-    "Standing Calf Raises": {name:"Sollevamenti polpacci", reps:"15 rip", weight:"manubrio 8 kg", description:"Zona mirata: polpacci · Manubrio in una mano, sali lentamente sulle punte, tieni in alto, scendi lentamente — appoggiati al muro se serve"},
+    "Goblet Squat": {name:"Goblet squat", reps:"10-12 rip", weight:"kettlebell 8 kg", description:"Tieni il manubrio al petto (come un calice), scendi in profondità, ginocchia verso le punte, petto eretto"},
+    "Hip Thrust": {name:"Hip thrust", reps:"12-15 rip", weight:"kettlebell 8 kg", description:"Spalle sulla panca, piedi a terra, manubrio sui fianchi, spingi finché ginocchio-anca-spalla sono in linea"},
+    "Romanian Deadlift": {name:"Stacco rumeno", reps:"10 rip", weight:"kettlebell 8 kg", description:"Ginocchia leggermente piegate, spingi i fianchi indietro, fai scorrere il manubrio lungo gli stinchi — schiena dritta"},
+    "Curtsy Lunges": {name:"Affondi incrociati", reps:"10 per lato", weight:"kettlebell 8 kg", description:"Zona mirata: cuscinetti · Manubrio al petto, la gamba dietro incrocia in diagonale come un inchino, scendi in profondità, ginocchio davanti sopra il piede — alterna sinistra e destra"},
+    "Standing Calf Raises": {name:"Sollevamenti polpacci", reps:"15 rip", weight:"kettlebell 8 kg", description:"Zona mirata: polpacci · Manubrio in una mano, sali lentamente sulle punte, tieni in alto, scendi lentamente — appoggiati al muro se serve"},
     "Superman": {name:"Superman", reps:"12 rip", weight:"senza peso", description:"Zona mirata: zona lombare · A pancia in giù, braccia avanti, gambe indietro — solleva braccia e gambe insieme, tieni 2 sec, scendi con controllo"},
     "Trizeps Kickbacks": {name:"Kickback tricipiti", reps:"12 per lato", weight:"2 kg per mano", description:"Ginocchio sulla panca, busto in avanti, braccio parallelo al suolo, estendi l'avambraccio indietro — il braccio resta fermo"},
     "Overhead Trizeps Extension": {name:"Estensione tricipiti sopra la testa", reps:"10-12 rip", weight:"2 kg a due mani", description:"In piedi, abbassa il manubrio dietro la testa con due mani, poi spingi in alto — gomiti vicini alla testa"},
@@ -1694,19 +1902,30 @@ const EXI = {
     "Taubensitz": {name:"Posizione del piccione", reps:"30 sec per lato", weight:"Stretch", description:"Gamba davanti piegata, gamba dietro distesa, busto dolcemente verso il pavimento"},
     "Hamstring-Stretch": {name:"Stretch femorali", reps:"30 sec per lato", weight:"Stretch", description:"Seduta, una gamba tesa, l'altra piegata, raggiungi la punta del piede della gamba tesa"},
     "Trizeps-Stretch": {name:"Stretch tricipiti", reps:"20 sec per lato", weight:"Stretch", description:"Braccio sopra la testa, mano alla nuca, spingi delicatamente il gomito indietro con l'altra mano"},
-    "Schulter-Crossbody": {name:"Stretch spalla incrociato", reps:"20 sec per lato", weight:"Stretch", description:"Braccio teso davanti al petto, tiralo verso di te con l'altro braccio — spalla in basso"}
+    "Schulter-Crossbody": {name:"Stretch spalla incrociato", reps:"20 sec per lato", weight:"Stretch", description:"Braccio teso davanti al petto, tiralo verso di te con l'altro braccio — spalla in basso"},
+    "Glute Bridge": {name:"Ponte glutei", reps:"12 rip", weight:"kettlebell 8 kg sui fianchi", description:"Schiena a terra, ginocchia piegate, kettlebell in equilibrio sui fianchi, alza il bacino — stringi i glutei in alto 1 sec"},
+    "Halbkniender Schulterdruck": {name:"Spinta spalle in ginocchio", reps:"6 per lato", weight:"kettlebell 8 kg", description:"⚠️ Attenzione spalla · Un ginocchio a terra, l'altro piede avanti. KB su una spalla, spingi in alto. Se la spalla protesta, salta e raddoppia il plank"},
+    "Bird Dog": {name:"Bird dog", reps:"8 per lato", weight:"senza peso", description:"A quattro zampe, allunga braccio e gamba opposti, tieni un momento — busto stabile, niente oscillazioni"},
+    "Hüftbeuger-Stretch": {name:"Stretch flessori dell'anca", reps:"30 sec per lato", weight:"Stretch", description:"Affondo con ginocchio dietro a terra, spingi il bacino in avanti — si sente davanti all'anca"},
+    "Katze-Kuh": {name:"Gatto-mucca", reps:"10 rip", weight:"Mobilità", description:"A quattro zampe · Arrotonda la schiena (gatto) poi inarcala (mucca) — mobilizza la colonna dopo gli stacchi"}
   }
 };
 function ui(k){ return (UI[lang] && UI[lang][k] != null) ? UI[lang][k] : UI.de[k]; }
 function exT(ex){ if(lang==='de') return ex; const t = EXI[lang] && EXI[lang][ex.name]; return t ? Object.assign({}, ex, t) : ex; }
-function phT(key, phase){ if(lang==='de') return phase; const t = PHI[lang] && PHI[lang][key]; return t ? Object.assign({}, phase, t) : phase; }
+function phT(key, phase){ if(lang==='de') return phase; const t = PHI[lang] && PHI[lang][currentWorkout] && PHI[lang][currentWorkout][key]; return t ? Object.assign({}, phase, t) : phase; }
 function applyUI(){
   const u = UI[lang] || UI.de;
   document.querySelectorAll('[data-i18n]').forEach(el => { const k = el.getAttribute('data-i18n'); if (u[k] != null) el.textContent = u[k]; });
+  // Subtitle ist workout-abhängig
+  const subtitleEl = document.querySelector('.subtitle');
+  if (subtitleEl) {
+    const subKey = workouts[currentWorkout].subtitleKey;
+    if (u[subKey]) subtitleEl.textContent = u[subKey];
+  }
   document.documentElement.lang = lang;
   document.querySelectorAll('.ls-btn').forEach(b => b.classList.toggle('active', b.dataset.lang === lang));
 }
-function switchLang(l){ lang = l; localStorage.setItem('nina_workout_lang', l); applyUI(); renderPhase(currentPhase); }
+function switchLang(l){ lang = l; localStorage.setItem('nina_workout_lang', l); applyUI(); buildPhaseTabs(); renderPhase(currentPhase); }
 
 function updateProgress() {
   const total = totalSets();
@@ -1836,14 +2055,38 @@ function playBeep() {
   } catch(e) {}
 }
 
-document.querySelectorAll('.phase-tab').forEach(tab => {
-  tab.addEventListener('click', () => {
-    document.querySelectorAll('.phase-tab').forEach(t => t.classList.remove('active'));
-    tab.classList.add('active');
-    currentPhase = tab.dataset.phase;
-    renderPhase(currentPhase);
+function buildPhaseTabs() {
+  const tabsContainer = document.getElementById('phase-tabs');
+  const order = workouts[currentWorkout].phaseOrder;
+  tabsContainer.innerHTML = order.map((key, i) => {
+    const phaseTitle = phT(key, phases[key]).title;
+    return `<button class="phase-tab ${key === currentPhase ? 'active' : ''}" data-phase="${key}">
+      <span class="num">${ui('phase') || 'Phase'} ${i+1}</span><span>${phaseTitle}</span>
+    </button>`;
+  }).join('');
+  tabsContainer.querySelectorAll('.phase-tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      tabsContainer.querySelectorAll('.phase-tab').forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+      currentPhase = tab.dataset.phase;
+      renderPhase(currentPhase);
+    });
   });
-});
+}
+
+function switchWorkout(key) {
+  if (!workouts[key] || key === currentWorkout) return;
+  currentWorkout = key;
+  localStorage.setItem('nina_workout_active', key);
+  phases = workouts[key].phases;
+  currentPhase = workouts[key].phaseOrder[0];
+  completedSets = {};
+  saveCurrent();
+  document.querySelectorAll('.ws-btn').forEach(b => b.classList.toggle('active', b.dataset.workout === key));
+  applyUI();
+  buildPhaseTabs();
+  renderPhase(currentPhase);
+}
 
 document.getElementById('sound-toggle').addEventListener('click', () => {
   soundOn = !soundOn;
@@ -1869,7 +2112,9 @@ setInterval(updateWorkoutClock, 1000);
 // Init
 loadCurrent();
 document.querySelectorAll('.ls-btn').forEach(b => b.addEventListener('click', () => switchLang(b.dataset.lang)));
+document.querySelectorAll('.ws-btn').forEach(b => b.classList.toggle('active', b.dataset.workout === currentWorkout));
 applyUI();
+buildPhaseTabs();
 renderPhase(currentPhase);
 updateWorkoutClock();
 </script>
@@ -1905,19 +2150,36 @@ const pabloPanel  = document.getElementById('pablo-panel');
     dragging = false; handle.style.animationPlayState = '';
     if (didDrag) localStorage.setItem('pablo-pos-gym', JSON.stringify({ top: pabloPlayer.style.top, left: pabloPlayer.style.left }));
   }
-  handle.addEventListener('mousedown',  e => { if (e.button === 0) { beginDrag(e.clientX, e.clientY); e.preventDefault(); } });
-  handle.addEventListener('touchstart', e => { const t = e.touches[0]; beginDrag(t.clientX, t.clientY); }, { passive: true });
+  function isMobile() { return window.innerWidth <= 600; }
+  handle.addEventListener('mousedown',  e => { if (isMobile()) return; if (e.button === 0) { beginDrag(e.clientX, e.clientY); e.preventDefault(); } });
+  handle.addEventListener('touchstart', e => { if (isMobile()) return; const t = e.touches[0]; beginDrag(t.clientX, t.clientY); }, { passive: true });
   handle.addEventListener('click', e => { if (didDrag) { e.stopPropagation(); didDrag = false; } }, true);
   if (panelHeader) {
-    panelHeader.addEventListener('mousedown', e => { if (e.target.classList.contains('pablo-close-btn')) return; if (e.button === 0) { beginDrag(e.clientX, e.clientY); e.preventDefault(); } });
-    panelHeader.addEventListener('touchstart', e => { if (e.target.classList.contains('pablo-close-btn')) return; const t = e.touches[0]; beginDrag(t.clientX, t.clientY); }, { passive: true });
+    panelHeader.addEventListener('mousedown', e => { if (isMobile()) return; if (e.target.classList.contains('pablo-close-btn')) return; if (e.button === 0) { beginDrag(e.clientX, e.clientY); e.preventDefault(); } });
+    panelHeader.addEventListener('touchstart', e => { if (isMobile()) return; if (e.target.classList.contains('pablo-close-btn')) return; const t = e.touches[0]; beginDrag(t.clientX, t.clientY); }, { passive: true });
   }
   document.addEventListener('mousemove', e => moveDrag(e.clientX, e.clientY));
   document.addEventListener('mouseup',   () => endDrag());
   document.addEventListener('touchmove', e => { if (dragging) { moveDrag(e.touches[0].clientX, e.touches[0].clientY); e.preventDefault(); } }, { passive: false });
   document.addEventListener('touchend', () => endDrag());
   const saved = localStorage.getItem('pablo-pos-gym');
-  if (saved) try { const p = JSON.parse(saved); pabloPlayer.style.bottom = 'auto'; pabloPlayer.style.right = 'auto'; pabloPlayer.style.top = p.top; pabloPlayer.style.left = p.left; } catch(e) {}
+  if (saved) try {
+    const p = JSON.parse(saved);
+    const leftPx = parseInt(p.left || '0');
+    const topPx = parseInt(p.top || '0');
+    const vw = window.innerWidth, vh = window.innerHeight;
+    const w = pabloPlayer.offsetWidth || 150, h = pabloPlayer.offsetHeight || 150;
+    // Nur restore wenn Position noch im aktuellen Viewport sichtbar — sonst Reset auf Default
+    if (leftPx >= 0 && topPx >= 0 && leftPx + w <= vw && topPx + h <= vh) {
+      pabloPlayer.style.bottom = 'auto';
+      pabloPlayer.style.right = 'auto';
+      pabloPlayer.style.top = p.top;
+      pabloPlayer.style.left = p.left;
+    } else {
+      // Position passt nicht (Viewport-Wechsel Desktop→Mobile) → Default-Position vom CSS nutzen
+      localStorage.removeItem('pablo-pos-gym');
+    }
+  } catch(e) {}
 })();
 function switchPlaylist(id, name, btn) {
   document.getElementById('pablo-iframe').src = 'https://open.spotify.com/embed/playlist/' + id + '?utm_source=generator&theme=0';
@@ -1925,7 +2187,16 @@ function switchPlaylist(id, name, btn) {
   document.querySelectorAll('.pl-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
 }
-function togglePabloPanel() { pabloPanel.classList.toggle('open'); }
+function togglePabloPanel() {
+  pabloPanel.classList.toggle('open');
+  // Auf Mobile: jegliche von Drag/JS gesetzte Inline-Position löschen → Mobile-CSS greift sauber
+  if (window.innerWidth <= 600) {
+    pabloPlayer.style.top = '';
+    pabloPlayer.style.left = '';
+    pabloPlayer.style.right = '';
+    pabloPlayer.style.bottom = '';
+  }
+}
 function setPabloState(state) { pabloPlayer.className = 'state-' + state; }
 let _demo = 0;
 document.getElementById('pablo-btn').addEventListener('dblclick', (e) => {
