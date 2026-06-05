@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Hanteltraining — Nina</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%230d1320'/><text x='2' y='22' font-family='monospace' font-weight='bold' font-size='13' fill='%2300d4ff'>NLC</text></svg>">
 <style>
   :root {
     --bg: #0A1628;
@@ -331,17 +332,17 @@
   }
 
   .set-dot {
-    width: 30px;
-    height: 30px;
+    width: 38px;
+    height: 38px;
     border-radius: 50%;
-    border: 2px solid var(--border);
+    border: 2px dashed var(--border);
     background: transparent;
     cursor: pointer;
     transition: all 0.2s ease;
     font-family: Arial;
     font-weight: 800;
     color: var(--muted);
-    font-size: 11px;
+    font-size: 14px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -349,12 +350,15 @@
 
   .set-dot:hover {
     border-color: var(--blue);
+    border-style: solid;
+    background: rgba(56,189,248,0.08);
     transform: scale(1.1);
   }
 
   .set-dot.done {
     background: var(--success);
     border-color: var(--success);
+    border-style: solid;
     color: white;
   }
 
@@ -385,6 +389,14 @@
     color: white;
     animation: pulse 1s infinite;
   }
+
+  .hold-btn {
+    border-color: var(--success);
+    color: var(--success);
+    margin-left: auto;
+  }
+  .hold-btn:hover { background: var(--success); color: white; }
+  .hold-btn + .timer-btn { margin-left: 8px; }
 
   @keyframes pulse {
     0%, 100% { opacity: 1; }
@@ -822,6 +834,26 @@
   .workout-clock.running .clock-dot { background: #22c55e; animation: clock-pulse 2s infinite; }
   @keyframes clock-pulse { 0% { box-shadow: 0 0 0 0 rgba(34,197,94,0.5); } 70% { box-shadow: 0 0 0 7px rgba(34,197,94,0); } 100% { box-shadow: 0 0 0 0 rgba(34,197,94,0); } }
   .clock-label { font-size: 0.6rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); }
+  /* Start-Button + Timer-Leiste */
+  .workout-timer-bar { display: flex; align-items: center; justify-content: center; gap: 12px; flex-wrap: wrap; margin-top: 0.7rem; }
+  .workout-timer-bar .workout-clock { margin: 0; }
+  .workout-start-btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 0.55rem 1.4rem; border-radius: 999px; border: none; cursor: pointer;
+    background: linear-gradient(135deg, #22c55e, #16a34a); color: #fff;
+    font-size: 1rem; font-weight: 800; letter-spacing: 0.03em;
+    box-shadow: 0 4px 18px rgba(34,197,94,0.4); transition: transform .15s, box-shadow .2s, filter .2s;
+    animation: start-pulse 2.2s ease-in-out infinite;
+  }
+  .workout-start-btn:hover { filter: brightness(1.07); transform: translateY(-1px); }
+  .workout-start-btn:active { transform: scale(0.97); }
+  @keyframes start-pulse { 0%,100% { box-shadow: 0 4px 18px rgba(34,197,94,0.35); } 50% { box-shadow: 0 4px 26px rgba(34,197,94,0.6); } }
+  /* Stopp-Zustand (Uhr läuft) — rot, ohne Puls */
+  .workout-start-btn.stop {
+    background: linear-gradient(135deg, #ef4444, #dc2626);
+    box-shadow: 0 4px 18px rgba(239,68,68,0.4);
+    animation: none;
+  }
 
   /* ── SEITEN-NAVIGATION ──────────────────────── */
   .page-nav { display: flex; gap: 8px; justify-content: center; margin: 14px auto 0; flex-wrap: wrap; }
@@ -858,10 +890,13 @@
       <a href="yoga/index.html">🧘 Yoga</a>
       <a href="meditation/index.html">🌬️ Meditation</a>
     </nav>
-    <div class="workout-clock" id="workout-clock" title="Workout-Dauer — läuft ab dem ersten abgehakten Satz">
-      <span class="clock-dot"></span>
-      <span class="clock-label" data-i18n="clockLabel">Dauer</span>
-      <span id="workout-clock-time">00:00</span>
+    <div class="workout-timer-bar">
+      <button id="workout-start-btn" class="workout-start-btn" onclick="toggleWorkout()">▶ Workout starten</button>
+      <div class="workout-clock" id="workout-clock" title="Workout-Dauer — läuft ab Start oder ab dem ersten abgehakten Satz">
+        <span class="clock-dot"></span>
+        <span class="clock-label" data-i18n="clockLabel">Dauer</span>
+        <span id="workout-clock-time">00:00</span>
+      </div>
     </div>
     <div class="header-actions">
       <button class="action-btn" onclick="openHistory()" data-i18n="btnHistory">📊 Verlauf</button>
@@ -1764,7 +1799,8 @@ function showToast(msg) {
 let currentPhase = workouts[currentWorkout].phaseOrder[0];
 let completedSets = {};
 let soundOn = true;
-let activeTimers = {};
+let countdowns = {};   // laufende Timer:  id -> { remaining, total }
+let timerSecs = {};    // Standard-Sekunden pro Button-id (für Anzeige im Ruhezustand)
 
 function totalSets() {
   let total = 0;
@@ -1780,11 +1816,11 @@ function completedCount() {
 // ── i18n (Sprachen DE/EN/ES/FR/IT) ───────────────────────────
 let lang = localStorage.getItem('nina_workout_lang') || 'en';
 const UI = {
-  de: { h1:"Hanteltraining", subtitle:"Nina · 25 Min · 3× pro Woche", subtitleVollkoerper:"Nina · 25 Min · 3× pro Woche", subtitleCompound:"Nina · 30 Min · 2× pro Woche", workoutVollkoerper:"Vollkörper", workoutCompound:"Compound", phase:"Phase", btnHistory:"📊 Verlauf", btnSave:"💪 Workout speichern", btnNew:"↻ Neuer Workout", progressLabel:"Heute geschafft", clockLabel:"Dauer", sets:"Sätze", rounds:"Runden", resetPhase:"Phase zurücksetzen", lblSets:"Sätze", lblDone:"Geschafft", rest:"Pause", tabWarmup:"Warmup", tabBeine:"Beine & Po", tabArme:"Arme & Bauch", tabCool:"Cool-down" },
-  en: { h1:"Strength Training", subtitle:"Nina · 25 min · 3× per week", subtitleVollkoerper:"Nina · 25 min · 3× per week", subtitleCompound:"Nina · 30 min · 2× per week", workoutVollkoerper:"Full Body", workoutCompound:"Compound", phase:"Phase", btnHistory:"📊 History", btnSave:"💪 Save workout", btnNew:"↻ New workout", progressLabel:"Done today", clockLabel:"Duration", sets:"sets", rounds:"rounds", resetPhase:"Reset phase", lblSets:"Sets", lblDone:"Done", rest:"rest", tabWarmup:"Warm-up", tabBeine:"Legs & Glutes", tabArme:"Arms & Core", tabCool:"Cool-down" },
-  es: { h1:"Entrenamiento de Fuerza", subtitle:"Nina · 25 min · 3× por semana", subtitleVollkoerper:"Nina · 25 min · 3× por semana", subtitleCompound:"Nina · 30 min · 2× por semana", workoutVollkoerper:"Cuerpo Completo", workoutCompound:"Compound", phase:"Fase", btnHistory:"📊 Historial", btnSave:"💪 Guardar entreno", btnNew:"↻ Nuevo entreno", progressLabel:"Hecho hoy", clockLabel:"Duración", sets:"series", rounds:"rondas", resetPhase:"Reiniciar fase", lblSets:"Series", lblDone:"Hecho", rest:"descanso", tabWarmup:"Calentamiento", tabBeine:"Piernas y Glúteos", tabArme:"Brazos y Abdomen", tabCool:"Enfriamiento" },
-  fr: { h1:"Entraînement de Force", subtitle:"Nina · 25 min · 3×/semaine", subtitleVollkoerper:"Nina · 25 min · 3×/semaine", subtitleCompound:"Nina · 30 min · 2×/semaine", workoutVollkoerper:"Corps Entier", workoutCompound:"Compound", phase:"Phase", btnHistory:"📊 Historique", btnSave:"💪 Enregistrer", btnNew:"↻ Nouveau", progressLabel:"Fait aujourd'hui", clockLabel:"Durée", sets:"séries", rounds:"tours", resetPhase:"Réinitialiser", lblSets:"Séries", lblDone:"Fait", rest:"pause", tabWarmup:"Échauffement", tabBeine:"Jambes & Fessiers", tabArme:"Bras & Abdos", tabCool:"Récupération" },
-  it: { h1:"Allenamento di Forza", subtitle:"Nina · 25 min · 3× a settimana", subtitleVollkoerper:"Nina · 25 min · 3× a settimana", subtitleCompound:"Nina · 30 min · 2× a settimana", workoutVollkoerper:"Corpo Intero", workoutCompound:"Compound", phase:"Fase", btnHistory:"📊 Cronologia", btnSave:"💪 Salva", btnNew:"↻ Nuovo", progressLabel:"Fatto oggi", clockLabel:"Durata", sets:"serie", rounds:"round", resetPhase:"Reimposta fase", lblSets:"Serie", lblDone:"Fatto", rest:"pausa", tabWarmup:"Riscaldamento", tabBeine:"Gambe & Glutei", tabArme:"Braccia & Addome", tabCool:"Defaticamento" }
+  de: { h1:"Hanteltraining", subtitle:"Nina · 25 Min · 3× pro Woche", subtitleVollkoerper:"Nina · 25 Min · 3× pro Woche", subtitleCompound:"Nina · 30 Min · 2× pro Woche", workoutVollkoerper:"Vollkörper", workoutCompound:"Compound", phase:"Phase", btnHistory:"📊 Verlauf", btnSave:"💪 Workout speichern", btnNew:"↻ Neuer Workout", progressLabel:"Heute geschafft", clockLabel:"Dauer", btnStart:"▶ Workout starten", btnStop:"■ Stopp", tapToCheck:"Tippen zum Abhaken", openSpotify:"▶ In Spotify öffnen (volle Songs)", sets:"Sätze", rounds:"Runden", resetPhase:"Phase zurücksetzen", lblSets:"Sätze", lblDone:"Geschafft", rest:"Pause", tabWarmup:"Warmup", tabBeine:"Beine & Po", tabArme:"Arme & Bauch", tabCool:"Cool-down" },
+  en: { h1:"Strength Training", subtitle:"Nina · 25 min · 3× per week", subtitleVollkoerper:"Nina · 25 min · 3× per week", subtitleCompound:"Nina · 30 min · 2× per week", workoutVollkoerper:"Full Body", workoutCompound:"Compound", phase:"Phase", btnHistory:"📊 History", btnSave:"💪 Save workout", btnNew:"↻ New workout", progressLabel:"Done today", clockLabel:"Duration", btnStart:"▶ Start workout", btnStop:"■ Stop", tapToCheck:"Tap to check off", openSpotify:"▶ Open in Spotify (full songs)", sets:"sets", rounds:"rounds", resetPhase:"Reset phase", lblSets:"Sets", lblDone:"Done", rest:"rest", tabWarmup:"Warm-up", tabBeine:"Legs & Glutes", tabArme:"Arms & Core", tabCool:"Cool-down" },
+  es: { h1:"Entrenamiento de Fuerza", subtitle:"Nina · 25 min · 3× por semana", subtitleVollkoerper:"Nina · 25 min · 3× por semana", subtitleCompound:"Nina · 30 min · 2× por semana", workoutVollkoerper:"Cuerpo Completo", workoutCompound:"Compound", phase:"Fase", btnHistory:"📊 Historial", btnSave:"💪 Guardar entreno", btnNew:"↻ Nuevo entreno", progressLabel:"Hecho hoy", clockLabel:"Duración", btnStart:"▶ Empezar entreno", btnStop:"■ Parar", tapToCheck:"Toca para marcar", openSpotify:"▶ Abrir en Spotify (canciones completas)", sets:"series", rounds:"rondas", resetPhase:"Reiniciar fase", lblSets:"Series", lblDone:"Hecho", rest:"descanso", tabWarmup:"Calentamiento", tabBeine:"Piernas y Glúteos", tabArme:"Brazos y Abdomen", tabCool:"Enfriamiento" },
+  fr: { h1:"Entraînement de Force", subtitle:"Nina · 25 min · 3×/semaine", subtitleVollkoerper:"Nina · 25 min · 3×/semaine", subtitleCompound:"Nina · 30 min · 2×/semaine", workoutVollkoerper:"Corps Entier", workoutCompound:"Compound", phase:"Phase", btnHistory:"📊 Historique", btnSave:"💪 Enregistrer", btnNew:"↻ Nouveau", progressLabel:"Fait aujourd'hui", clockLabel:"Durée", btnStart:"▶ Démarrer l'entraînement", btnStop:"■ Arrêter", tapToCheck:"Toucher pour cocher", openSpotify:"▶ Ouvrir dans Spotify (titres complets)", sets:"séries", rounds:"tours", resetPhase:"Réinitialiser", lblSets:"Séries", lblDone:"Fait", rest:"pause", tabWarmup:"Échauffement", tabBeine:"Jambes & Fessiers", tabArme:"Bras & Abdos", tabCool:"Récupération" },
+  it: { h1:"Allenamento di Forza", subtitle:"Nina · 25 min · 3× a settimana", subtitleVollkoerper:"Nina · 25 min · 3× a settimana", subtitleCompound:"Nina · 30 min · 2× a settimana", workoutVollkoerper:"Corpo Intero", workoutCompound:"Compound", phase:"Fase", btnHistory:"📊 Cronologia", btnSave:"💪 Salva", btnNew:"↻ Nuovo", progressLabel:"Fatto oggi", clockLabel:"Durata", btnStart:"▶ Inizia allenamento", btnStop:"■ Ferma", tapToCheck:"Tocca per segnare", openSpotify:"▶ Apri in Spotify (brani completi)", sets:"serie", rounds:"round", resetPhase:"Reimposta fase", lblSets:"Serie", lblDone:"Fatto", rest:"pausa", tabWarmup:"Riscaldamento", tabBeine:"Gambe & Glutei", tabArme:"Braccia & Addome", tabCool:"Defaticamento" }
 };
 const PHI = {
   en: {
@@ -1964,16 +2000,23 @@ function renderExercise(phaseKey, ex, idx) {
   const t = exT(ex);
 
   const dots = completedSets[key].map((done, i) => `
-    <button class="set-dot ${done ? 'done' : ''}" onclick="toggleSet('${phaseKey}', ${idx}, ${i})">
+    <button class="set-dot ${done ? 'done' : ''}" onclick="toggleSet('${phaseKey}', ${idx}, ${i})" title="${ui('tapToCheck')}">
       ${done ? '✓' : i+1}
     </button>
   `).join('');
 
-  const timerHtml = ex.pause > 0 ? `
-    <button class="timer-btn" id="timer-${key}" onclick="startTimer('${key}', ${ex.pause})">
-      ⏱ ${ex.pause}s ${ui('rest')}
-    </button>
-  ` : '';
+  const holdSec = holdSeconds(ex);
+  let timerHtml = '';
+  if (holdSec > 0) {
+    const holdId = `hold-${key}`;
+    timerSecs[holdId] = holdSec;
+    timerHtml += `<button class="timer-btn hold-btn ${countdowns[holdId] ? 'running' : ''}" id="${holdId}" onclick="toggleCountdown('${holdId}', ${holdSec})">${timerLabel(holdId)}</button>`;
+  }
+  if (ex.pause > 0) {
+    const pauseId = `pause-${key}`;
+    timerSecs[pauseId] = ex.pause;
+    timerHtml += `<button class="timer-btn ${countdowns[pauseId] ? 'running' : ''}" id="${pauseId}" onclick="toggleCountdown('${pauseId}', ${ex.pause})">${timerLabel(pauseId)}</button>`;
+  }
 
   return `
     <div class="exercise-card ${allDone ? 'completed' : ''}">
@@ -2000,9 +2043,17 @@ function renderExercise(phaseKey, ex, idx) {
 
 function toggleSet(phaseKey, idx, setIdx) {
   const key = exerciseKey(phaseKey, idx);
-  completedSets[key][setIdx] = !completedSets[key][setIdx];
+  const nowDone = !completedSets[key][setIdx];
+  completedSets[key][setIdx] = nowDone;
   saveCurrent();
   renderPhase(phaseKey);
+  // Pause automatisch starten, wenn ein Satz frisch abgehakt wurde
+  const ex = phases[phaseKey].exercises[idx];
+  if (nowDone && ex.pause > 0) {
+    const pauseId = `pause-${key}`;
+    countdowns[pauseId] = { remaining: ex.pause, total: ex.pause };
+    refreshTimerBtn(pauseId);
+  }
 }
 
 function resetPhase(phaseKey) {
@@ -2014,31 +2065,39 @@ function resetPhase(phaseKey) {
   renderPhase(phaseKey);
 }
 
-function startTimer(key, seconds) {
-  const btn = document.getElementById(`timer-${key}`);
-  if (activeTimers[key]) {
-    clearInterval(activeTimers[key]);
-    delete activeTimers[key];
-    btn.classList.remove('running');
-    btn.textContent = `⏱ ${seconds}s Pause`;
-    return;
-  }
-  let remaining = seconds;
-  btn.classList.add('running');
-  btn.textContent = `⏸ ${remaining}s`;
-  activeTimers[key] = setInterval(() => {
-    remaining--;
-    if (remaining <= 0) {
-      clearInterval(activeTimers[key]);
-      delete activeTimers[key];
-      btn.classList.remove('running');
-      btn.textContent = `⏱ ${seconds}s Pause`;
-      if (soundOn) playBeep();
-    } else {
-      btn.textContent = `⏸ ${remaining}s`;
-    }
-  }, 1000);
+// ── COUNTDOWN-TIMER (Halte-Zeit + Pause), re-render-sicher ──
+// Sekunden aus dem Übungstext lesen (z.B. "30 Sek", "20-30 Sek pro Seite" → 30)
+function holdSeconds(ex) {
+  if (!/sek/i.test(ex.reps)) return 0;
+  const nums = (ex.reps.match(/\d+/g) || []).map(Number);
+  return nums.length ? Math.max(...nums) : 0;
 }
+function timerLabel(id) {
+  const c = countdowns[id];
+  if (c) return `⏸ ${c.remaining}s`;
+  const secs = timerSecs[id] || 0;
+  return id.startsWith('hold-') ? `▶ ${secs}s` : `⏱ ${secs}s ${ui('rest')}`;
+}
+function refreshTimerBtn(id) {
+  const btn = document.getElementById(id);
+  if (!btn) return;
+  btn.textContent = timerLabel(id);
+  btn.classList.toggle('running', !!countdowns[id]);
+}
+function toggleCountdown(id, seconds) {
+  if (countdowns[id]) delete countdowns[id];           // läuft → stoppen/zurücksetzen
+  else countdowns[id] = { remaining: seconds, total: seconds };  // starten
+  refreshTimerBtn(id);
+}
+function tickCountdowns() {
+  Object.keys(countdowns).forEach(id => {
+    const c = countdowns[id];
+    c.remaining--;
+    if (c.remaining <= 0) { delete countdowns[id]; if (soundOn) playBeep(); }
+    refreshTimerBtn(id);
+  });
+}
+setInterval(tickCountdowns, 1000);
 
 function playBeep() {
   try {
@@ -2069,6 +2128,7 @@ function buildPhaseTabs() {
       tabsContainer.querySelectorAll('.phase-tab').forEach(t => t.classList.remove('active'));
       tab.classList.add('active');
       currentPhase = tab.dataset.phase;
+      countdowns = {};   // Timer der vorherigen Phase stoppen
       renderPhase(currentPhase);
     });
   });
@@ -2081,6 +2141,7 @@ function switchWorkout(key) {
   phases = workouts[key].phases;
   currentPhase = workouts[key].phaseOrder[0];
   completedSets = {};
+  countdowns = {};   // Timer beim Workout-Wechsel stoppen
   saveCurrent();
   document.querySelectorAll('.ws-btn').forEach(b => b.classList.toggle('active', b.dataset.workout === key));
   applyUI();
@@ -2096,16 +2157,37 @@ document.getElementById('sound-toggle').addEventListener('click', () => {
 // ── WORKOUT-STOPPUHR (an STORAGE.startTime gekoppelt) ──
 function fmtClock(ms) {
   const s = Math.max(0, Math.floor(ms / 1000));
-  const m = Math.floor(s / 60), sec = s % 60;
-  return `${String(m).padStart(2,'0')}:${String(sec).padStart(2,'0')}`;
+  const h = Math.floor(s / 3600), m = Math.floor((s % 3600) / 60), sec = s % 60;
+  const pad = n => String(n).padStart(2,'0');
+  return h > 0 ? `${h}:${pad(m)}:${pad(sec)}` : `${pad(m)}:${pad(sec)}`;
+}
+function toggleWorkout() {
+  if (localStorage.getItem(STORAGE.startTime)) stopWorkout();
+  else startWorkout();
+}
+function startWorkout() {
+  if (!localStorage.getItem(STORAGE.startTime)) {
+    localStorage.setItem(STORAGE.startTime, Date.now().toString());
+  }
+  updateWorkoutClock();
+}
+function stopWorkout() {
+  localStorage.removeItem(STORAGE.startTime);
+  updateWorkoutClock();
 }
 function updateWorkoutClock() {
   const box = document.getElementById('workout-clock');
   const out = document.getElementById('workout-clock-time');
+  const startBtn = document.getElementById('workout-start-btn');
   if (!box || !out) return;
   const start = parseInt(localStorage.getItem(STORAGE.startTime) || '0');
-  if (start > 0) { box.classList.add('running'); out.textContent = fmtClock(Date.now() - start); }
-  else { box.classList.remove('running'); out.textContent = '00:00'; }
+  if (start > 0) {
+    box.classList.add('running'); out.textContent = fmtClock(Date.now() - start);
+    if (startBtn) { startBtn.textContent = ui('btnStop'); startBtn.classList.add('stop'); }
+  } else {
+    box.classList.remove('running'); out.textContent = '00:00';
+    if (startBtn) { startBtn.textContent = ui('btnStart'); startBtn.classList.remove('stop'); }
+  }
 }
 setInterval(updateWorkoutClock, 1000);
 
