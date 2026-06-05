@@ -1,0 +1,278 @@
+{
+  "name": "🎯 TALENTSCONNECT · Bewerbung · Page-Visit Tracker",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "page-visit-talentsconnect",
+        "responseMode": "responseNode",
+        "options": {
+          "allowedOrigins": "https://ninalearnsvibecoding.com",
+          "rawBody": false
+        }
+      },
+      "name": "Webhook · Page Visit",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        240,
+        320
+      ],
+      "id": "525ee915-87b4-41a8-9905-f30fc1fcbc64",
+      "webhookId": "page-visit-talentsconnect"
+    },
+    {
+      "parameters": {
+        "respondWith": "noData",
+        "responseCode": 204,
+        "options": {
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "Access-Control-Allow-Origin",
+                "value": "https://ninalearnsvibecoding.com"
+              }
+            ]
+          }
+        }
+      },
+      "name": "Respond 204",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        460,
+        320
+      ],
+      "id": "f05b7ab4-e4b1-4540-8c03-fdda5400b9ee"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "page",
+              "name": "page",
+              "value": "={{ $json.body.page || 'unknown' }}",
+              "type": "string"
+            },
+            {
+              "id": "timestamp",
+              "name": "timestamp",
+              "value": "={{ $json.body.timestamp || $now.toISO() }}",
+              "type": "string"
+            },
+            {
+              "id": "source",
+              "name": "source",
+              "value": "={{ $json.body.source || 'direct' }}",
+              "type": "string"
+            },
+            {
+              "id": "referrer",
+              "name": "referrer",
+              "value": "={{ $json.body.referrer || 'direct' }}",
+              "type": "string"
+            },
+            {
+              "id": "user_agent",
+              "name": "user_agent",
+              "value": "={{ $json.body.user_agent || '' }}",
+              "type": "string"
+            },
+            {
+              "id": "screen",
+              "name": "screen",
+              "value": "={{ $json.body.screen || '' }}",
+              "type": "string"
+            },
+            {
+              "id": "language",
+              "name": "language",
+              "value": "={{ $json.body.language || '' }}",
+              "type": "string"
+            },
+            {
+              "id": "visitor_token",
+              "name": "visitor_token",
+              "value": "={{ $json.body.visitor_token || 'anon' }}",
+              "type": "string"
+            },
+            {
+              "id": "visit_count",
+              "name": "visit_count",
+              "value": "={{ $json.body.visit_count || 1 }}",
+              "type": "number"
+            },
+            {
+              "id": "ip_hint",
+              "name": "ip_hint",
+              "value": "={{ $json.headers['x-forwarded-for'] || $json.headers['cf-connecting-ip'] || 'unknown' }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Normalize Payload",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        240,
+        540
+      ],
+      "id": "b9068a7f-b2f0-4747-860b-f903f54648ce"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "is-first",
+              "leftValue": "={{ $json.visit_count }}",
+              "rightValue": 1,
+              "operator": {
+                "type": "number",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "name": "Is First Visit?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        460,
+        540
+      ],
+      "id": "578b7c26-8d2c-4aa7-a3a6-512113794a74"
+    },
+    {
+      "parameters": {
+        "chatId": "486622230",
+        "text": "=🔥 *talentsconnect-Bewerbung gerade geöffnet!*\n\n👀 *Visit:* #{{ $json.visit_count }} (erster Besuch)\n🕒 {{ $now.setZone('Europe/Berlin').toFormat('dd.MM.yyyy · HH:mm') }}\n🎯 Source: `{{ $json.source }}`\n🔗 Referrer: `{{ $json.referrer }}`\n💻 {{ $json.screen }} · {{ $json.language }}\n🆔 `{{ $json.visitor_token }}`\n\n→ ninalearnsvibecoding.com/bewerbung/talentsconnect/",
+        "additionalFields": {
+          "parse_mode": "Markdown",
+          "disable_web_page_preview": true
+        }
+      },
+      "name": "Telegram · First Visit",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        680,
+        440
+      ],
+      "credentials": {
+        "telegramApi": {
+          "id": "Rr79EHv1a9lukVb2",
+          "name": "Telegram account"
+        }
+      },
+      "id": "f7129793-9e52-41b9-9a82-b4636dd2fe9a",
+      "webhookId": "aaf834d2-5033-4f30-b64e-1adc99db6951"
+    },
+    {
+      "parameters": {
+        "chatId": "486622230",
+        "text": "=👁  talentsconnect-Bewerbung · Visit #{{ $json.visit_count }}\n🕒 {{ $now.setZone('Europe/Berlin').toFormat('dd.MM. · HH:mm') }} · 🆔 `{{ $json.visitor_token }}`",
+        "additionalFields": {
+          "parse_mode": "Markdown",
+          "disable_web_page_preview": true,
+          "disable_notification": true
+        }
+      },
+      "name": "Telegram · Repeat Visit",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        680,
+        640
+      ],
+      "credentials": {
+        "telegramApi": {
+          "id": "Rr79EHv1a9lukVb2",
+          "name": "Telegram account"
+        }
+      },
+      "id": "d1cae7a6-e434-45e5-94ae-0465bc841e80",
+      "webhookId": "bc52da14-8f7c-441a-920e-08641b208837"
+    },
+    {
+      "parameters": {
+        "content": "## 📊 Page-Visit-Tracker · talentsconnect\n\n**Flow:**\n1. Bewerbungs-Seite ruft `POST /webhook/page-visit-talentsconnect`\n2. Wir antworten sofort mit `204` (kein blocking)\n3. Parallel: Payload normalisieren → Telegram-Push an Nina\n4. Erster Visit = laute Notification mit Vollkontext\n5. Folge-Visits = stille Push (no notification)\n\n**Aufruf von Frontend:**\n```\nnavigator.sendBeacon(URL, JSON.stringify(payload))\n```\n\n**Optional:** Anhängen an NocoDB-Tabelle `page_visits` für Analytics.\n\n_Sicherheit:_ CORS auf `ninalearnsvibecoding.com` beschränkt. Kein Token nötig — Endpoint ist read-only und rate-limited via n8n.",
+        "height": 280,
+        "width": 540,
+        "color": 5
+      },
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        120,
+        100
+      ],
+      "id": "f9ebc126-e5e7-4501-89a9-f346348f7b98"
+    }
+  ],
+  "connections": {
+    "Webhook · Page Visit": {
+      "main": [
+        [
+          {
+            "node": "Respond 204",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Normalize Payload",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Normalize Payload": {
+      "main": [
+        [
+          {
+            "node": "Is First Visit?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Is First Visit?": {
+      "main": [
+        [
+          {
+            "node": "Telegram · First Visit",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Telegram · Repeat Visit",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "saveExecutionProgress": true,
+    "saveDataSuccessExecution": "all",
+    "saveDataErrorExecution": "all"
+  }
+}
