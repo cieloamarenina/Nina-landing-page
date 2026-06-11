@@ -68,6 +68,30 @@
     letter-spacing: 0.15em;
     text-transform: uppercase;
   }
+  .lang-switch { display: flex; gap: 2px; }
+  .lang-btn {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    letter-spacing: 0.08em;
+    padding: 0.3rem 0.5rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-transform: uppercase;
+  }
+  .lang-btn:hover { color: var(--accent); border-color: rgba(0,212,255,0.3); }
+  .lang-btn.active {
+    background: var(--accent);
+    color: var(--bg);
+    border-color: var(--accent);
+    font-weight: 600;
+  }
+  @media (max-width: 700px) {
+    .nav-meta { display: none; }
+    nav { flex-wrap: wrap; gap: 0.5rem; }
+  }
 
   .container { max-width: 1800px; margin: 0 auto; padding: 7rem 3rem 4rem; }
 
@@ -263,6 +287,7 @@
   }
   .node-en { color: var(--muted); }
   .node-de { color: var(--text); }
+  .node-en.primary { color: var(--text); }
   .node-en::before {
     content: 'EN';
     display: inline-block;
@@ -358,8 +383,7 @@
     line-height: 1.65;
     color: var(--text);
   }
-  .node-use::before {
-    content: '⮕ Wann einsetzen';
+  .nu-label {
     display: block;
     font-size: 0.6rem;
     letter-spacing: 0.2em;
@@ -447,6 +471,13 @@
 <nav>
   <a href="/" class="nav-logo">[ NLC ] n8n nodes</a>
   <div class="nav-right">
+    <div class="lang-switch" id="langSwitch">
+      <button class="lang-btn" data-lang="en">EN</button>
+      <button class="lang-btn" data-lang="de">DE</button>
+      <button class="lang-btn" data-lang="fr">FR</button>
+      <button class="lang-btn" data-lang="it">IT</button>
+      <button class="lang-btn" data-lang="es">ES</button>
+    </div>
     <a href="/" class="nav-back">← back to nlc</a>
     <div class="nav-meta">1.513 / Nodes &amp; Aliases</div>
   </div>
@@ -456,13 +487,9 @@
   <div class="header-badge">Master List · by Solomon Christ · 16-Feb-2026</div>
   <h1>
     <span class="line-1">n8n nodes</span>
-    <span class="line-2">filterbar · deutsch</span>
+    <span class="line-2" id="h1Mode">filterbar · deutsch</span>
   </h1>
-  <p class="subtitle">
-    <span>1.513 n8n-Nodes &amp; Aliases</span> aus Solomons komplettem Master List, übersetzt &amp; durchsuchbar.
-    Filter nach Integration, Trigger, Core oder KI/LangChain — jetzt mit <span>Node-Optik wie im n8n-Canvas</span>,
-    <span>„Wann einsetzen"-Tipps</span> zu den wichtigsten Nodes und Links in die offizielle Doku.
-    Die Suche findet auch Einsatzzwecke: probier mal <span>„Verzweigung"</span> oder <span>„Termin"</span>.
+  <p class="subtitle" id="subtitle">
   </p>
 
   <div class="update-note">
@@ -474,18 +501,18 @@
   <div class="update-note">
     <span class="update-label">NODES UPDATE</span>
     <span class="update-date">11-Jun-2026</span>
-    <span class="update-text">+23 neue offizielle n8n-Nodes ergänzt (direkt aus n8n-nodes-base &amp; LangChain-Paketen) — u.a. Anthropic Chat Model, MCP Client Tool, AI Agent Tool.</span>
+    <span class="update-text" id="updateText2">+23 neue offizielle n8n-Nodes ergänzt (direkt aus n8n-nodes-base &amp; LangChain-Paketen) — u.a. Anthropic Chat Model, MCP Client Tool, AI Agent Tool.</span>
   </div>
 
   <div class="controls">
     <input type="text" id="search" placeholder="// search nodes · z.B. 'PDF', 'OpenAI', 'Verzweigung', 'Termin'..." autofocus>
     <div class="filters">
-      <span class="filter-label">Type:</span>
-      <button class="filter-btn active" data-type="all">All</button>
-      <button class="filter-btn" data-type="Regular">Integration</button>
+      <span class="filter-label" data-i18n="typeLabel">Type:</span>
+      <button class="filter-btn active" data-type="all" data-i18n="filterAll">All</button>
+      <button class="filter-btn" data-type="Regular" data-i18n="filterIntegration">Integration</button>
       <button class="filter-btn" data-type="Trigger">Trigger</button>
       <button class="filter-btn" data-type="Core">Core</button>
-      <button class="filter-btn" data-type="KI/LangChain">KI/LangChain</button>
+      <button class="filter-btn" data-type="KI/LangChain" data-i18n="filterAI">KI/LangChain</button>
     </div>
     <div class="count" id="count"></div>
   </div>
@@ -493,15 +520,15 @@
   <div class="legend">
     <div class="legend-item">
       <div class="node-visual"><span class="nv-fb">Ab</span></div>
-      <div class="legend-text"><strong>Standard-Node</strong>Daten rein (Port links), verarbeiten, Daten raus (Port rechts).</div>
+      <div class="legend-text"><strong data-i18n="legStdT">Standard-Node</strong><span data-i18n="legStd">Daten rein (Port links), verarbeiten, Daten raus (Port rechts).</span></div>
     </div>
     <div class="legend-item">
       <div class="node-visual nv-trigger"><span class="nv-fb" style="--fbc:#ff6d5a">Tr</span><span class="nv-bolt"><svg viewBox="0 0 24 24"><path d="M13 2 3 14h7l-1 8 11-13h-7l0-7z"/></svg></span></div>
-      <div class="legend-text"><strong>Trigger</strong>Startet den Workflow — links abgerundet, kein Eingang, nur Ausgang.</div>
+      <div class="legend-text"><strong>Trigger</strong><span data-i18n="legTrig">Startet den Workflow — links abgerundet, kein Eingang, nur Ausgang.</span></div>
     </div>
     <div class="legend-item">
       <div class="node-visual nv-ki"><span class="nv-fb" style="--fbc:#7c3aed">KI</span><span class="nv-diamond"></span></div>
-      <div class="legend-text"><strong>KI / LangChain</strong>Docken oft als Sub-Node unten an den AI Agent an (Raute).</div>
+      <div class="legend-text"><strong data-i18n="legAIT">KI / LangChain</strong><span data-i18n="legAI">Docken oft als Sub-Node unten an den AI Agent an (Raute).</span></div>
     </div>
   </div>
 
@@ -513,7 +540,7 @@
     Daten: <a href="https://www.solomonchrist.com" target="_blank" rel="noopener">Master List Of n8n Nodes</a> von <strong>Solomon Christ</strong> · 16-Feb-2026
   </div>
   <div>
-    Übersetzung & UI mit <span style="color:#ff6d5a">♥</span> by Nina · ninalearnsvibecoding.com
+    <span data-i18n="footerCredit">Übersetzung & UI mit</span> <span style="color:#ff6d5a">♥</span> by Nina · ninalearnsvibecoding.com
   </div>
 </footer>
 
@@ -742,6 +769,228 @@ const NODE_USE = {
 "oracle database vector store": "Vector Store in Oracle — RAG ohne Zusatzdienst, wenn Oracle eh die Firmen-DB ist.",
 "reranker cohere": "RAG-Qualitäts-Booster: sortiert Vector-Store-Treffer nochmal nach echter Relevanz, bevor sie ins LLM gehen — einsetzen, wenn RAG-Antworten am Thema vorbeigehen."
 };
+const NODE_USE_EN = {
+"if": "Branches your workflow into true/false: e.g. 'email contains invoice?' → yes: file it, no: ignore. THE standard node for if-then decisions.",
+"switch": "Like If, but with multiple outputs: e.g. route leads by source (LinkedIn / website / trade fair) into different paths. Use it when 2 outputs aren't enough.",
+"merge": "Brings two paths back together: combines data from both branches (e.g. contact + company data) via append, combine, or match on a field.",
+"filter": "Only lets items through that meet a condition — e.g. only emails with attachments, only deals over €1,000. Like If, but without a second output: the rest is discarded.",
+"edit fields (set)": "Create fields, rename them, or set values — the Swiss army knife for data. Use it whenever you need to bend data into shape for the next node.",
+"code": "Custom JavaScript/Python for anything standard nodes can't do: complex transformations, calculations, loops. Check for a ready-made node first — code is harder to maintain.",
+"http request": "Talks to ANY API, even without a dedicated n8n node: configure URL, method, headers, body, done. Your universal tool when there's no ready-made node for a service.",
+"webhook": "Starts the workflow from outside: other systems call your n8n URL (e.g. form submitted, payment received). Always secure it — header auth at minimum!",
+"respond to webhook": "Sends a custom response back to the webhook caller (JSON, HTML, redirect) — e.g. a confirmation page after a form submission. Belongs at the end of webhook workflows with custom replies.",
+"schedule trigger": "Starts the workflow on a schedule: every morning at 7, every hour, every Monday. Use it for reports, regular syncs, daily checks.",
+"manual trigger": "Start with a click in the editor — for testing and workflows you deliberately run by hand. Most new workflows start with this.",
+"wait": "Pauses the workflow: fixed time (10 min), until a date, or until a webhook arrives. Use it for follow-up emails after 2 days or to wait for external responses.",
+"loop over items (split in batches)": "Processes items in chunks — e.g. 500 contacts in batches of 50 against a rate-limited API. Use it when a service can't handle all items at once.",
+"split out": "Turns one item containing a list into many individual items: e.g. an API response with 20 results in an array → 20 items you can process one by one.",
+"aggregate": "The opposite of Split Out: combines many items into one — e.g. all of today's orders into one list for a SINGLE summary email.",
+"remove duplicates": "Throws out duplicate items — e.g. the same email address from multiple sources. Can also remember values across runs (only let new items through).",
+"sort": "Sorts items by a field (date, amount, name) ascending or descending — e.g. newest order first, before you forward only the top 5.",
+"limit": "Keeps only the first X items — e.g. top 3 news for the newsletter. Often right after Sort.",
+"summarize": "Like a pivot table in Excel: groups and aggregates items (sum, count, average) — e.g. revenue per customer from an order list.",
+"compare datasets": "Compares two data sources and shows: only in A, only in B, in both, different. Use it for reconciliation, e.g. CRM contacts vs. newsletter list.",
+"execute sub-workflow": "Calls another n8n workflow as a building block — e.g. a central 'send notification' workflow used by several workflows. Keeps big automations maintainable.",
+"execute command": "Runs shell commands on the n8n server (ls, curl, your own scripts). Self-hosted only — use with care, it runs directly on your server.",
+"no operation, do nothing": "Does nothing — a deliberate endpoint for workflow branches, making clear: this path ends on purpose and wasn't forgotten.",
+"error trigger": "Starts a workflow when ANOTHER workflow fails — perfect for central error notifications via Telegram/email. Register it as the error workflow in your main workflow.",
+"stop and error": "Deliberately aborts the workflow with an error — e.g. when required data is missing. This also triggers your error workflow.",
+"convert to file": "Turns JSON data into a file: CSV, Excel, PDF text, iCal… — e.g. order list as a CSV attachment for accounting.",
+"extract from file": "Reads files into JSON data: CSV, Excel, PDF, JSON… — e.g. turn an uploaded Excel sheet into items you can process.",
+"date & time": "Format dates, add/subtract, round — e.g. 'today + 14 days' as a payment deadline or convert ISO dates into local format.",
+"html": "Generate HTML or extract data from HTML (CSS selectors) — e.g. pull titles and prices from a web page you fetched via HTTP Request.",
+"xml": "Converts XML to JSON and back — needed for older APIs, raw RSS data, or SOAP services.",
+"markdown": "Converts Markdown to HTML and vice versa — e.g. turn an AI answer into HTML for a nicely formatted email.",
+"crypto": "Generate hashes (SHA, MD5) and HMAC signatures — e.g. to verify webhook signatures or compare values securely.",
+"compression": "Zip/gzip pack and unpack — e.g. send several report files as one ZIP via email.",
+"edit image": "Edit images: crop, resize, overlay text/watermarks — e.g. automatically resize social media images.",
+"send email": "Sends emails via YOUR SMTP server — no Gmail/Outlook connection needed. Use it for notifications and system emails from your own hosting.",
+"email trigger (imap)": "Starts on new email in a mailbox (IMAP) — e.g. automatically process incoming applications or support emails. Works with any mail host.",
+"rss read": "Reads RSS feeds on demand — e.g. collect news in a daily schedule workflow, filter them, and prepare them for LinkedIn.",
+"rss feed trigger": "Starts automatically on new feed entries — the trigger variant of RSS Read, when you want to react immediately instead of collecting daily.",
+"ftp": "Upload and download files to/from FTP/SFTP servers — e.g. automatically push a CSV export to your web hosting.",
+"ssh": "Run commands on a remote server via SSH — e.g. kick off a deploy script on your VPS or check server status.",
+"n8n": "Controls n8n itself via API: list workflows, activate them, check executions — e.g. for your own monitoring dashboard across all your workflows.",
+"n8n form": "Shows multi-page forms mid-workflow — e.g. step 2 of an application form, depending on step 1.",
+"n8n form trigger": "Starts via n8n's own form (n8n hosts the page) — fastest path to 'fill form → workflow runs', no website needed.",
+"chat trigger": "Starts on a chat message and provides an embeddable chat widget — the foundation for AI chatbots on your website (together with AI Agent).",
+"sticky note": "A note on the canvas — document WHAT a workflow section does and WHY. Your future self will thank you.",
+"local file trigger": "Starts when files change in a server folder — e.g. automatically process new files in an upload directory (self-hosted only).",
+"postgres trigger": "Starts on changes in your Postgres DB (LISTEN/NOTIFY) — e.g. react instantly when NocoDB writes a new record.",
+"workflow": "Alias/umbrella term — usually means Execute Sub-workflow (calling a workflow from a workflow).",
+"ai agent": "THE central AI node: gets a goal, picks tools on its own (search, DB, your workflows), and works in multiple steps. Use it for chatbots and tasks that need more than one LLM call. Needs a Chat Model as a sub-node.",
+"openai chat model": "GPT models as the brain for AI Agent & chains. Sub-node — docks onto AI nodes from below, not into the main chain. Good default: gpt-4.1-mini for everyday tasks.",
+"google gemini chat model": "Gemini models as the brain — strong with huge contexts and multimodal tasks (images + text), with a generous free tier.",
+"azure openai chat model": "GPT via Microsoft Azure instead of OpenAI directly — use it when company compliance requires EU hosting/Azure contracts.",
+"ollama chat model": "Locally running open-source models (Llama, Mistral…) as the brain — data never leaves your server. Needs an Ollama server.",
+"ollama model": "Like Ollama Chat Model, but for plain text completion instead of chat — you usually want the chat variant.",
+"simple memory": "Gives the AI Agent short-term memory in RAM: it remembers the last messages of the conversation. Careful: gone on restart — use Postgres Chat Memory for production chatbots.",
+"postgres chat memory": "Store chat history permanently in Postgres — your chatbot remembers users even after a restart. The robust memory choice if you run Postgres anyway.",
+"redis chat memory": "Chat history in Redis — very fast, ideal when many parallel chats are running and you already operate Redis.",
+"chat memory manager": "Read/write/delete chat history manually — for special cases, e.g. pulling the history into a report or resetting it selectively.",
+"postgres pgvector store": "Vector database INSIDE your Postgres (pgvector extension) — store documents as embeddings and search semantically. Perfect for RAG without an extra service.",
+"qdrant vector store": "Dedicated open-source vector DB (self-hostable) — like PGVector, but as its own specialized service. Use it for large document collections.",
+"pinecone vector store": "Vector DB as a cloud service — nothing to operate yourself, but externally hosted. Quick start for RAG prototypes.",
+"supabase vector store": "Vector search via Supabase (pgvector under the hood) — handy when your project runs on Supabase anyway.",
+"simple vector store": "Vector store in RAM — only for testing/learning RAG. Content is gone after restart; use PGVector/Qdrant in production.",
+"embeddings openai": "Turns text into vectors (embeddings) — required sub-node for every vector store. Important: use the SAME embedding model for storing and searching!",
+"embeddings google gemini": "Embeddings by Google — alternative to OpenAI embeddings, same principle: text → vector for semantic search.",
+"embeddings ollama": "Embeddings locally via Ollama — for RAG entirely without the cloud, data stays on your server.",
+"recursive character text splitter": "Splits long documents into overlapping chunks before they go into the vector store — the standard splitter for RAG, start with chunk size ~500-1000.",
+"basic llm chain": "ONE prompt, ONE answer — no tools, no memory. Use it for simple tasks: rewrite, translate, summarize text. Lighter & cheaper than AI Agent.",
+"question and answer chain": "Answers questions based on YOUR documents (from the vector store) — the ready-made RAG building block: question in, grounded answer with your knowledge out.",
+"summarization chain": "Summarizes even VERY long texts that don't fit into one prompt — splits automatically and combines the partial results.",
+"information extractor": "Pulls structured fields out of free text: name, date, amount from an email → clean JSON matching your schema. Use it instead of prompt tinkering when you need reliable fields.",
+"text classifier": "Sorts texts into YOUR categories: support email → invoice/complaint/inquiry. Each category becomes its own workflow output.",
+"sentiment analysis": "Rates sentiment (positive/neutral/negative) — e.g. automatically prioritize incoming feedback: angry customers first.",
+"structured output parser": "Forces the LLM answer into your JSON schema — required sub-node when downstream nodes need reliable fields instead of prose.",
+"http request tool": "Gives the AI Agent internet/API access as a tool: the agent DECIDES itself when to call the API. Describe clearly in the tool what it's for.",
+"code tool": "Your own JS function as an agent tool — e.g. a special calculation the agent calls when needed.",
+"calculator": "Math tool for the AI Agent — LLMs love to miscalculate; with Calculator the agent does math reliably.",
+"call n8n workflow tool": "Turns a WHOLE n8n workflow into an agent tool — the agent can e.g. 'create appointment' by calling your appointment workflow. This is how you build agents with real capabilities.",
+"custom n8n workflow tool": "Alias for Call n8n Workflow Tool — workflow as an agent tool.",
+"think tool": "Lets the agent 'think out loud' in between (take notes) without acting — improves multi-step reasoning on tricky tasks.",
+"mcp client": "Connects n8n to MCP servers (Model Context Protocol) — the agent uses their tools, e.g. file system or external services, without custom API plumbing.",
+"mcp server trigger": "Makes n8n itself an MCP server: Claude & other AI clients can call your n8n workflows as tools — n8n becomes your AI's toolbox.",
+"workflow retriever": "Fetches context documents via your own n8n workflow instead of a vector store — for RAG with custom logic (e.g. database search + filters).",
+"openai": "The 'regular' OpenAI node (not LangChain): chat, images (DALL·E), audio transcription (Whisper), assistants — for direct API calls without agent architecture.",
+"anthropic": "Direct Claude API node: send messages, analyze images, process PDFs. For Claude as an agent brain, use the 'Anthropic Chat Model' sub-node on the AI Agent instead.",
+"google gemini": "Direct Gemini node: text, image analysis, audio, video — Google's multimodal model without agent overhead.",
+"mistral ai": "European LLM (GDPR-friendly, EU hosting) — call chat and OCR directly; a good choice when data privacy arguments matter.",
+"perplexity": "AI search with citations: answers questions with current web info — use it for research workflows where LLM knowledge is too old.",
+"ollama": "Direct node for local Ollama models — generate text entirely without the cloud (the non-LangChain way).",
+"elevenlabs": "Top-quality text-to-speech: voice texts, clone voices — e.g. automatically create an audio version of blog articles.",
+"deepl": "DeepL-quality translations — e.g. automatically translate blog posts into EN/FR/IT/ES for your multilingual website.",
+"google translate": "Fast bulk translations via Google — more languages than DeepL, but often a bit less polish.",
+"hugging face": "Access to thousands of open-source models (Inference API) — for special models the big providers don't offer.",
+"postgres": "Talk to your SQL database directly: SELECT, INSERT, UPDATE, or custom SQL — the backbone for all workflows that store data permanently (also behind NocoDB).",
+"mysql": "Like the Postgres node, but for MySQL/MariaDB — standard with many web hosts and WordPress setups.",
+"mongodb": "Document database (JSON structures instead of tables) — use it when your data is nested and has no fixed schema.",
+"redis": "Super-fast key-value store: cache intermediate results, counters, flags — e.g. 'has this URL already been processed today?'",
+"supabase": "Postgres + auth + storage as a cloud package — CRUD on your Supabase tables without SQL.",
+"nocodb": "Your no-code DB frontend via API: read/create/update rows — perfect when humans maintain data in the NocoDB UI and workflows process it automatically.",
+"baserow": "Open-source Airtable alternative (self-hostable) — manage rows like with NocoDB, just with Baserow as the frontend.",
+"airtable": "Cloud tables with app character: read/write/search rows — popular as a quick 'database light' for teams.",
+"airtable trigger": "Starts when new/changed records appear in Airtable — instead of polling regularly.",
+"google sheets": "THE beginner data store: append, read, update rows — ideal for lists, logs, and everything you think of as tables anyway.",
+"google sheets trigger": "Starts on new/changed rows in the sheet — e.g. new row = new order → workflow takes off.",
+"microsoft excel 365": "Edit Excel files in OneDrive/SharePoint — the Google Sheets equivalent for Microsoft environments.",
+"aws s3": "Store/fetch files in Amazon S3 (or compatible stores like MinIO) — standard for backups and large file volumes.",
+"google drive": "Upload, search, share, move files in Drive — e.g. automatically sort generated PDFs into customer folders.",
+"google drive trigger": "Starts on new/changed files in a Drive folder — e.g. 'new file in inbox' → process it.",
+"microsoft onedrive": "Manage files in OneDrive — the Drive equivalent in the Microsoft world.",
+"dropbox": "Manage files in Dropbox — use it when your team simply uses Dropbox.",
+"gmail": "Send, read, label, reply to emails via your Gmail account — the standard node for personal/Workspace mailboxes.",
+"gmail trigger": "Starts on new emails in Gmail (filterable by label/sender) — the foundation of every email automation workflow.",
+"microsoft outlook": "Email + calendar via Outlook/Microsoft 365 — the Gmail equivalent for the Microsoft world.",
+"telegram": "Send messages, photos, files via a Telegram bot — perfect for notifications on your phone: workflow done, error occurred, new lead.",
+"telegram trigger": "Starts on Telegram messages to your bot — this is how you build interactive bots: send a command → workflow replies.",
+"slack": "Post messages to Slack channels/DMs, with buttons and formatting — standard for team notifications.",
+"slack trigger": "Starts on Slack events (new message, reaction, mention) — e.g. an emoji reaction to a message kicks off a workflow.",
+"discord": "Send messages to Discord servers (also via a simple webhook) — for community notifications and bot replies.",
+"whatsapp business cloud": "Send WhatsApp messages via the official Business API (templates + sessions) — for customer communication; requires Meta business setup.",
+"whatsapp trigger": "Starts on incoming WhatsApp messages — the counterpart to the send node for real dialogues.",
+"microsoft teams": "Post messages to Teams channels, create tasks — notifications for Microsoft-oriented companies.",
+"mattermost": "Like Slack, but self-hosted open source — team messages on your own infrastructure.",
+"matrix": "Decentralized, encrypted messenger (Element & co.) — notifications into the Matrix universe.",
+"twilio": "Send SMS and make calls programmatically — e.g. SMS alert for critical errors when email/chat isn't enough.",
+"zoom": "Create/manage meetings automatically — e.g. generate and send a Zoom link right after a booking.",
+"hubspot": "Your CRM via API: create and maintain contacts, deals, companies — e.g. automatically turn a web form lead into a contact + deal.",
+"hubspot trigger": "Starts on HubSpot events (new contact, deal stage changed) — e.g. deal moves to 'Won' → start onboarding workflow.",
+"pipedrive": "Sales CRM with pipeline focus: deals, people, activities — alternative to HubSpot when the focus is purely on sales.",
+"salesforce": "The enterprise CRM: leads, opportunities, accounts — use it when the customer simply runs Salesforce.",
+"odoo": "Open-source ERP (CRM, invoices, inventory…) — one node for many modules, self-hostable.",
+"zendesk": "Create, update, answer support tickets — e.g. automatically turn an incoming email into a ticket with priority.",
+"freshdesk": "Like Zendesk: ticket system for support — create and maintain tickets from any source.",
+"intercom": "Customer messaging inside the product (chat bubble): manage contacts and conversations.",
+"mailchimp": "Newsletter marketing: maintain subscribers in lists, control campaigns — e.g. automatically add a new lead to a list.",
+"brevo": "Email marketing + transactional mails (formerly Sendinblue), EU provider — maintain contacts and send emails, GDPR-friendly.",
+"mailjet": "Transactional and marketing emails, EU provider — alternative to Brevo/SendGrid.",
+"sendgrid": "Transactional emails at scale (confirmations, system emails) — when your SMTP isn't enough or needs to scale.",
+"mailerlite": "Lean newsletter tool — manage subscribers and campaigns, simpler than Mailchimp.",
+"convertkit": "Newsletter tool for creators (now 'Kit') — maintain subscribers, tags, and sequences.",
+"lemlist": "Cold outreach sequences: personalized email campaigns with follow-ups — automatically push leads into campaigns.",
+"clearbit": "Enriches leads: an email address becomes company, size, industry — e.g. enrich a form lead before the CRM entry.",
+"hunter": "Finds and verifies business email addresses — e.g. look up a contact email for a domain.",
+"dropcontact": "GDPR-compliant lead enrichment + email verification from Europe — alternative to Clearbit/Hunter.",
+"linkedin": "Publish posts on LinkedIn (personal/company profile) — the publishing end of your content pipeline.",
+"x (twitter)": "Post, search, like tweets via API — for automated posts; API access is paid.",
+"youtube": "Manage videos, maintain playlists, pull statistics — e.g. automatically announce new videos.",
+"reddit": "Read/create posts and comments — e.g. search subreddits for mentions of your topic.",
+"medium": "Automatically publish articles on Medium — e.g. blog cross-posting.",
+"hacker news": "Pull tech news from HN (top stories, search) — popular for daily tech digest workflows.",
+"stripe": "Manage payments, customers, subscriptions via API — e.g. after a successful payment, file the invoice + send a welcome email.",
+"stripe trigger": "Starts on Stripe events (payment received, subscription canceled) — n8n handles the webhook setup for you.",
+"paypal": "Manage PayPal payments and payouts — for processing where PayPal is a must.",
+"shopify": "Automate shop data: orders, products, customers — e.g. new order → shipping label + accounting.",
+"woocommerce": "Like Shopify, but for WordPress shops — orders and products via API.",
+"xero": "Cloud accounting: invoices and contacts — capture receipts automatically.",
+"invoice ninja": "Open-source invoicing tool (self-hostable): invoices, quotes, clients — e.g. automatically create an invoice after project completion.",
+"github": "Manage repos, issues, PRs, releases — e.g. automatically post a changelog on a new release.",
+"github trigger": "Starts on GitHub events (push, PR, issue) — the basis for custom CI/notification flows.",
+"gitlab": "Like the GitHub node, for GitLab — issues, merge requests, pipelines.",
+"jira software": "Tickets the enterprise way: create issues, transition them, comment — e.g. customer report → Jira ticket.",
+"linear": "Modern, fast issue tracking for product teams — create and update issues.",
+"asana": "Project management: tasks, projects, sections — e.g. automatically create a task in the right project from a form submission.",
+"trello": "Kanban boards: create and move cards — lightweight task tracking via workflow.",
+"clickup": "All-in-one project management: tasks, lists, fields — automations around your ClickUp setup.",
+"monday.com": "Work OS with colorful boards: manage items and updates — common in marketing teams.",
+"todoist": "Personal to-dos: create/check off tasks — e.g. automatically turn flagged emails into tasks.",
+"notion": "Read/write pages and databases — e.g. automatically file meeting notes or maintain a content calendar. Share the database with the integration first!",
+"notion trigger": "Starts on new/changed entries in a Notion database — e.g. status 'Ready' → publishing workflow.",
+"wordpress": "Create/update posts and pages via API — e.g. add AI-generated articles as drafts.",
+"webflow": "Manage CMS items in Webflow — e.g. automatically push blog posts into your Webflow site.",
+"ghost": "Create/manage posts in your Ghost blog — the publishing node for Ghost users.",
+"cal.com trigger": "Starts on bookings in your (self-hosted) Cal.com: appointment booked/canceled → e.g. kick off prep, update CRM, schedule a reminder.",
+"calendly": "Fetch and manage Calendly bookings — the cloud counterpart to Cal.com.",
+"calendly trigger": "Starts on new Calendly bookings/cancellations — e.g. appointment booked → Zoom link + CRM entry.",
+"google calendar": "Create, search, update events — e.g. automatically turn confirmed bookings into calendar entries.",
+"google calendar trigger": "Starts on new/changed/starting events — e.g. send a briefing email 10 minutes before a meeting.",
+"typeform trigger": "Starts on submitted Typeform answers — beautiful forms whose answers land directly in your workflow.",
+"jotform trigger": "Starts on Jotform submissions — alternative to Typeform with a powerful form builder.",
+"google docs": "Create and fill documents — e.g. automatically generate quotes from a template + data.",
+"google slides": "Fill presentations from data — e.g. automatically update the monthly report deck with numbers.",
+"wikipedia": "Fetch article knowledge (also as an agent tool) — a quick fact source without an API key.",
+"brave search": "Web search via API (privacy-friendly) — give your agent current search results.",
+"searxng": "Self-hosted meta search engine — web search for agents entirely without an external API provider.",
+"jina ai": "Turn web pages into LLM-friendly Markdown (Reader) + search — ideal for feeding page content cleanly into RAG/agents.",
+"openweathermap": "Weather data, current + forecast — the classic for first schedule workflows and weather-dependent logic.",
+"nasa": "NASA data: astronomy picture of the day, Mars photos & co. — a fun API for learning and content.",
+"home assistant": "Control smart home devices and read states — n8n as the automation brain next to your Home Assistant.",
+"philips hue": "Switch/dim/color lamps — e.g. a lamp turns red when a workflow fails.",
+"bitwarden": "Password manager via API: manage entries and organizations — e.g. automate offboarding.",
+"cloudflare": "Manage DNS records and zones — e.g. create subdomains automatically.",
+"netlify": "Control deploys and sites — e.g. automatically redeploy after a content update.",
+"grafana": "Manage dashboards and alerts — automate your monitoring setup.",
+"pagerduty": "Incident management: trigger and escalate alerts — when errors should wake an on-call team.",
+"jenkins": "Trigger and monitor CI jobs — kick off build pipelines from workflows.",
+"circleci": "Control CI pipelines — like the Jenkins node, for CircleCI.",
+"servicenow": "Enterprise ITSM: manage incidents and requests — a must-have integration in corporate IT.",
+"zendesk trigger": "Starts on new/updated Zendesk tickets — e.g. new ticket → generate an AI reply suggestion.",
+"ai agent tool": "Builds multi-agent systems: a specialist agent (e.g. research) is attached as a tool to a main agent. Use it when ONE agent with many tools gets messy.",
+"alibaba cloud chat model": "Qwen models as the agent brain — alternative to OpenAI/Claude, strong multilingually and cheap.",
+"alibaba cloud model studio": "Direct node for Qwen models — when you use Alibaba Cloud as your AI provider, without agent overhead.",
+"anthropic chat model": "Claude as the agent brain: sub-node, docks onto AI Agent & chains from below. Strong with long texts, clean writing, and complex instructions.",
+"auto-fixing output parser": "Don't use anymore: used to auto-repair broken LLM outputs. The Structured Output Parser handles this better today.",
+"azure ai search vector store": "Vector store on Azure — use it when company compliance requires Microsoft hosting.",
+"character text splitter": "Simplest text splitter (fixed separator) — the Recursive Character Text Splitter is usually the better choice; use this only for clearly structured text with a fixed delimiter.",
+"chat": "Combine with Chat Trigger: sends progress updates or follow-up questions into the chat session while the workflow keeps running — e.g. 'searching…' or a question back to the user.",
+"check credential status": "For dynamic credentials: checks before API steps whether the triggering user's personal credential exists — and otherwise routes into a notice path.",
+"contextual compression retriever": "Filters only the relevant passages out of retrieved documents before they go to the LLM — saves tokens and sharpens RAG answers.",
+"default data loader": "Loads documents (PDF, text, JSON…) and prepares them for the vector store — the entry gate of every RAG pipeline when filling it.",
+"embeddings aws bedrock": "Text → vectors via AWS Bedrock — when your infrastructure runs on AWS anyway.",
+"embeddings oracle database": "Create embeddings directly in Oracle — for RAG setups whose data already lives in Oracle.",
+"mcp client tool": "Attaches MCP server tools directly to the AI Agent: the agent uses e.g. file system, database, or SaaS tools via the Model Context Protocol — no custom API plumbing.",
+"microsoft agent 365 trigger": "Starts workflows from Microsoft Agent 365 — when your n8n agent should be part of the Microsoft Copilot ecosystem.",
+"minimax": "Direct node for MiniMax (text, audio, video) — without agent overhead.",
+"minimax chat model": "MiniMax as the agent brain — Chinese provider, strong at audio/voice features.",
+"mongodb chat memory": "Persistent chat memory in MongoDB — the memory choice when your stack runs on MongoDB (otherwise: Postgres Chat Memory).",
+"moonshot kimi": "Direct node for Kimi models — without agent overhead.",
+"moonshot kimi chat model": "Kimi as the agent brain — known for very large context windows.",
+"nvidia nemotron chat model": "Nemotron as the agent brain — via NVIDIA cloud or self-hosted NIM containers; interesting for local enterprise setups on NVIDIA hardware.",
+"oracle database vector store": "Vector store in Oracle — RAG without an extra service when Oracle is the company DB anyway.",
+"reranker cohere": "RAG quality booster: re-sorts vector store hits by true relevance before they go to the LLM — use it when RAG answers miss the point."
+};
 const searchInput = document.getElementById('search');
 const resultsDiv = document.getElementById('results');
 const countDiv = document.getElementById('count');
@@ -792,6 +1041,96 @@ resultsDiv.addEventListener('error', ev => {
   }
 }, true);
 
+// ── i18n (UI in 5 Sprachen; Inhalte: DE komplett, EN komplett, FR/IT/ES → EN-Fallback) ──
+const I18N = {
+de: {
+  h1Mode: 'filterbar · deutsch',
+  subtitle: '<span>1.513 n8n-Nodes &amp; Aliases</span> aus Solomons komplettem Master List, übersetzt &amp; durchsuchbar. Filter nach Integration, Trigger, Core oder KI/LangChain — mit <span>Node-Optik wie im n8n-Canvas</span>, <span>„Wann einsetzen"-Tipps</span> zu den wichtigsten Nodes und Links in die offizielle Doku. Die Suche findet auch Einsatzzwecke: probier mal <span>„Verzweigung"</span> oder <span>„Termin"</span>.',
+  updateText2: '+23 neue offizielle n8n-Nodes ergänzt (direkt aus n8n-nodes-base & LangChain-Paketen) — u.a. Anthropic Chat Model, MCP Client Tool, AI Agent Tool.',
+  searchPlaceholder: "// search nodes · z.B. 'PDF', 'OpenAI', 'Verzweigung', 'Termin'...",
+  typeLabel: 'Type:', filterAll: 'Alle', filterIntegration: 'Integration', filterAI: 'KI/LangChain',
+  legStdT: 'Standard-Node', legStd: 'Daten rein (Port links), verarbeiten, Daten raus (Port rechts).',
+  legTrig: 'Startet den Workflow — links abgerundet, kein Eingang, nur Ausgang.',
+  legAIT: 'KI / LangChain', legAI: 'Docken oft als Sub-Node unten an den AI Agent an (Raute).',
+  useLabel: '⮕ Wann einsetzen', docsLink: 'n8n-Doku: so nutzt du ihn →', searchLink: 'auf n8n.io suchen →',
+  noResults: '// Keine Nodes gefunden für', footerCredit: 'Übersetzung & UI mit'
+},
+en: {
+  h1Mode: 'searchable · english',
+  subtitle: '<span>1,513 n8n nodes &amp; aliases</span> from Solomon\'s complete Master List, searchable &amp; filterable by Integration, Trigger, Core or AI/LangChain — with <span>node visuals like the n8n canvas</span>, <span>"when to use" tips</span> for the most important nodes, and links to the official docs. The search also finds use cases: try <span>"branch"</span> or <span>"appointment"</span>.',
+  updateText2: '+23 new official n8n nodes added (straight from the n8n-nodes-base & LangChain packages) — incl. Anthropic Chat Model, MCP Client Tool, AI Agent Tool.',
+  searchPlaceholder: "// search nodes · e.g. 'PDF', 'OpenAI', 'branch', 'appointment'...",
+  typeLabel: 'Type:', filterAll: 'All', filterIntegration: 'Integration', filterAI: 'AI/LangChain',
+  legStdT: 'Standard node', legStd: 'Data in (left port), process, data out (right port).',
+  legTrig: 'Starts the workflow — rounded left side, no input, output only.',
+  legAIT: 'AI / LangChain', legAI: 'Often dock onto the AI Agent from below as sub-nodes (diamond).',
+  useLabel: '⮕ When to use', docsLink: 'n8n docs: how to use it →', searchLink: 'search on n8n.io →',
+  noResults: '// No nodes found for', footerCredit: 'Translation & UI with'
+},
+fr: {
+  h1Mode: 'filtrable · français',
+  subtitle: '<span>1 513 nœuds n8n &amp; alias</span> de la Master List complète de Solomon, consultables &amp; filtrables par Intégration, Trigger, Core ou IA/LangChain — avec <span>l\'apparence des nœuds comme dans le canvas n8n</span>, des <span>conseils « quand l\'utiliser »</span> pour les nœuds les plus importants et des liens vers la doc officielle. <span>Interface en français</span> — descriptions et conseils en anglais pour l\'instant. La recherche trouve aussi les cas d\'usage : essayez <span>« branch »</span> ou <span>« appointment »</span>.',
+  updateText2: '+23 nouveaux nœuds n8n officiels ajoutés (directement des packages n8n-nodes-base & LangChain) — dont Anthropic Chat Model, MCP Client Tool, AI Agent Tool.',
+  searchPlaceholder: "// chercher · p.ex. 'PDF', 'OpenAI', 'branch', 'appointment'...",
+  typeLabel: 'Type :', filterAll: 'Tous', filterIntegration: 'Intégration', filterAI: 'IA/LangChain',
+  legStdT: 'Nœud standard', legStd: 'Données en entrée (port gauche), traitement, sortie (port droit).',
+  legTrig: 'Démarre le workflow — arrondi à gauche, pas d\'entrée, sortie uniquement.',
+  legAIT: 'IA / LangChain', legAI: 'S\'attachent souvent sous l\'AI Agent comme sous-nœuds (losange).',
+  useLabel: '⮕ Quand l\'utiliser', docsLink: 'Doc n8n : mode d\'emploi →', searchLink: 'chercher sur n8n.io →',
+  noResults: '// Aucun nœud trouvé pour', footerCredit: 'Traduction & UI avec'
+},
+it: {
+  h1Mode: 'filtrabile · italiano',
+  subtitle: '<span>1.513 nodi n8n &amp; alias</span> dalla Master List completa di Solomon, ricercabili &amp; filtrabili per Integrazione, Trigger, Core o IA/LangChain — con <span>l\'aspetto dei nodi come nel canvas n8n</span>, <span>consigli "quando usarlo"</span> per i nodi più importanti e link alla documentazione ufficiale. <span>Interfaccia in italiano</span> — descrizioni e consigli in inglese per ora. La ricerca trova anche i casi d\'uso: prova <span>"branch"</span> o <span>"appointment"</span>.',
+  updateText2: '+23 nuovi nodi n8n ufficiali aggiunti (direttamente dai pacchetti n8n-nodes-base & LangChain) — tra cui Anthropic Chat Model, MCP Client Tool, AI Agent Tool.',
+  searchPlaceholder: "// cerca · es. 'PDF', 'OpenAI', 'branch', 'appointment'...",
+  typeLabel: 'Tipo:', filterAll: 'Tutti', filterIntegration: 'Integrazione', filterAI: 'IA/LangChain',
+  legStdT: 'Nodo standard', legStd: 'Dati in entrata (porta sinistra), elaborazione, uscita (porta destra).',
+  legTrig: 'Avvia il workflow — arrotondato a sinistra, nessun ingresso, solo uscita.',
+  legAIT: 'IA / LangChain', legAI: 'Spesso si agganciano sotto l\'AI Agent come sotto-nodi (rombo).',
+  useLabel: '⮕ Quando usarlo', docsLink: 'Doc n8n: come si usa →', searchLink: 'cerca su n8n.io →',
+  noResults: '// Nessun nodo trovato per', footerCredit: 'Traduzione & UI con'
+},
+es: {
+  h1Mode: 'filtrable · español',
+  subtitle: '<span>1.513 nodos n8n &amp; alias</span> de la Master List completa de Solomon, buscables &amp; filtrables por Integración, Trigger, Core o IA/LangChain — con <span>el aspecto de los nodos como en el canvas de n8n</span>, <span>consejos de "cuándo usarlo"</span> para los nodos más importantes y enlaces a la documentación oficial. <span>Interfaz en español</span> — descripciones y consejos en inglés por ahora. La búsqueda también encuentra casos de uso: prueba <span>"branch"</span> o <span>"appointment"</span>.',
+  updateText2: '+23 nuevos nodos oficiales de n8n añadidos (directamente de los paquetes n8n-nodes-base & LangChain) — incl. Anthropic Chat Model, MCP Client Tool, AI Agent Tool.',
+  searchPlaceholder: "// buscar · p.ej. 'PDF', 'OpenAI', 'branch', 'appointment'...",
+  typeLabel: 'Tipo:', filterAll: 'Todos', filterIntegration: 'Integración', filterAI: 'IA/LangChain',
+  legStdT: 'Nodo estándar', legStd: 'Datos de entrada (puerto izquierdo), procesar, salida (puerto derecho).',
+  legTrig: 'Inicia el workflow — redondeado a la izquierda, sin entrada, solo salida.',
+  legAIT: 'IA / LangChain', legAI: 'Suelen acoplarse debajo del AI Agent como subnodos (rombo).',
+  useLabel: '⮕ Cuándo usarlo', docsLink: 'Docs n8n: cómo usarlo →', searchLink: 'buscar en n8n.io →',
+  noResults: '// No se encontraron nodos para', footerCredit: 'Traducción & UI con'
+}
+};
+let LANG = localStorage.getItem('nlvc_lang') || 'en';
+if (!I18N[LANG]) LANG = 'en';
+
+function t(key) { return (I18N[LANG] && I18N[LANG][key]) || I18N.en[key] || ''; }
+function useText(key) {
+  if (LANG === 'de') return NODE_USE[key];
+  return NODE_USE_EN[key] || NODE_USE[key];
+}
+function applyLang(lang) {
+  LANG = I18N[lang] ? lang : 'en';
+  localStorage.setItem('nlvc_lang', LANG);
+  document.documentElement.lang = LANG;
+  document.getElementById('subtitle').innerHTML = t('subtitle');
+  document.getElementById('h1Mode').textContent = t('h1Mode');
+  document.getElementById('updateText2').textContent = t('updateText2');
+  searchInput.placeholder = t('searchPlaceholder');
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const v = t(el.dataset.i18n);
+    if (v) el.textContent = v;
+  });
+  document.querySelectorAll('.lang-btn').forEach(b => b.classList.toggle('active', b.dataset.lang === LANG));
+  render();
+}
+document.querySelectorAll('.lang-btn').forEach(btn => {
+  btn.addEventListener('click', () => applyLang(btn.dataset.lang));
+});
+
 function escapeHtml(s) {
   return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 }
@@ -807,7 +1146,8 @@ function render() {
   const filtered = data.filter(e => {
     if (activeType !== 'all' && e.type !== activeType) return false;
     if (!q) return true;
-    const use = NODE_USE[e.name.toLowerCase()] || '';
+    const k = e.name.toLowerCase();
+    const use = (NODE_USE[k] || '') + ' ' + (NODE_USE_EN[k] || '');
     return (e.name + ' ' + e.en + ' ' + e.de + ' ' + use).toLowerCase().includes(q);
   });
 
@@ -815,7 +1155,7 @@ function render() {
   countDiv.innerHTML = '> <strong>' + fmt(filtered.length) + '</strong> / ' + fmt(data.length) + ' nodes';
 
   if (filtered.length === 0) {
-    resultsDiv.innerHTML = '<div class="no-results">// No nodes found for <strong>"' + escapeHtml(searchInput.value) + '"</strong></div>';
+    resultsDiv.innerHTML = '<div class="no-results">' + escapeHtml(t('noResults')) + ' <strong>"' + escapeHtml(searchInput.value) + '"</strong></div>';
     return;
   }
 
@@ -833,7 +1173,7 @@ function render() {
       const typeClass = e.type.replace(/[\/]/g,'');
       const key = e.name.toLowerCase();
       const m = NODE_META[key];
-      const use = NODE_USE[key];
+      const use = useText(key);
       html += '<div class="node">';
       html += '<div class="node-row">';
       html += nodeVisual(e, m);
@@ -842,15 +1182,20 @@ function render() {
       html += '<span class="node-name">' + highlight(e.name, q) + '</span>';
       html += '<span class="node-type ' + typeClass + '">' + e.type + '</span>';
       html += '</div>';
-      if (e.en) html += '<div class="node-en">' + highlight(e.en, q) + '</div>';
-      if (e.de) html += '<div class="node-de">' + highlight(e.de, q) + '</div>';
-      if (use) html += '<div class="node-use">' + highlight(use, q) + '</div>';
+      if (LANG === 'de') {
+        if (e.en) html += '<div class="node-en">' + highlight(e.en, q) + '</div>';
+        if (e.de) html += '<div class="node-de">' + highlight(e.de, q) + '</div>';
+      } else {
+        if (e.en) html += '<div class="node-en primary">' + highlight(e.en, q) + '</div>';
+        else if (e.de) html += '<div class="node-de">' + highlight(e.de, q) + '</div>';
+      }
+      if (use) html += '<div class="node-use"><span class="nu-label">' + escapeHtml(t('useLabel')) + '</span>' + highlight(use, q) + '</div>';
       html += '<div class="node-foot">';
       if (m && m.k) m.k.forEach(c => { html += '<span class="node-cat">' + escapeHtml(c) + '</span>'; });
       if (m && m.d) {
-        html += '<a class="node-docs" href="' + DOCS_BASE + m.d + '/" target="_blank" rel="noopener">n8n-Doku: so nutzt du ihn →</a>';
+        html += '<a class="node-docs" href="' + DOCS_BASE + m.d + '/" target="_blank" rel="noopener">' + escapeHtml(t('docsLink')) + '</a>';
       } else {
-        html += '<a class="node-docs" href="https://n8n.io/integrations/?q=' + encodeURIComponent(e.name) + '" target="_blank" rel="noopener">auf n8n.io suchen →</a>';
+        html += '<a class="node-docs" href="https://n8n.io/integrations/?q=' + encodeURIComponent(e.name) + '" target="_blank" rel="noopener">' + escapeHtml(t('searchLink')) + '</a>';
       }
       html += '</div>';
       html += '</div></div></div>';
@@ -865,6 +1210,7 @@ searchInput.addEventListener('input', () => {
   clearTimeout(searchTimer);
   searchTimer = setTimeout(render, 120);
 });
+applyLang(LANG);
 document.querySelectorAll('.filter-btn').forEach(btn => {
   btn.addEventListener('click', () => {
     document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
