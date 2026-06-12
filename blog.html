@@ -270,6 +270,7 @@
     <li><a href="index.html#journey" id="nav-journey">Journey</a></li>
     <li><a href="index.html#tools" id="nav-stack">Stack</a></li>
     <li><a href="blog.html" class="active" id="nav-blog">Blog</a></li>
+    <li><a href="guestbook.html" id="nav-guestbook">Guestbook</a></li>
   </ul>
   <div class="lang-switcher">
     <button class="lang-btn" data-lang="en">EN</button>
@@ -296,11 +297,11 @@
 const LANG_LOCALE = {en:'en-GB', de:'de-DE', fr:'fr-FR', es:'es-ES', it:'it-IT'};
 
 const UI = {
-  en: { tag:'// latest posts', sub:'Learnings, tools and honest reports from everyday AI-assisted building.', footer:'© 2026 Nina Panknin — Learning in Public', about:'About', journey:'Journey', stack:'Stack', blog:'Blog' },
-  de: { tag:'// neueste artikel', sub:'Learnings, Tools und ehrliche Berichte aus dem Alltag des KI-gestützten Bauens.', footer:'© 2026 Nina Panknin — Lernen in der Öffentlichkeit', about:'Über mich', journey:'Journey', stack:'Stack', blog:'Blog' },
-  fr: { tag:'// derniers articles', sub:"Apprentissages, outils et rapports honnêtes du quotidien de la construction assistée par IA.", footer:'© 2026 Nina Panknin — Apprendre en public', about:'À propos', journey:'Parcours', stack:'Stack', blog:'Blog' },
-  es: { tag:'// últimas entradas', sub:'Aprendizajes, herramientas e informes honestos del día a día de la construcción asistida por IA.', footer:'© 2026 Nina Panknin — Aprendiendo en público', about:'Sobre mí', journey:'Journey', stack:'Stack', blog:'Blog' },
-  it: { tag:'// ultimi articoli', sub:"Apprendimenti, strumenti e resoconti onesti dal quotidiano della costruzione assistita dall'IA.", footer:'© 2026 Nina Panknin — Imparare in pubblico', about:'Chi sono', journey:'Percorso', stack:'Stack', blog:'Blog' },
+  en: { tag:'// latest posts', sub:'Learnings, tools and honest reports from everyday AI-assisted building.', footer:'© 2026 Nina Panknin — Learning in Public', about:'About', journey:'Journey', stack:'Stack', blog:'Blog', guestbook:'Guestbook' },
+  de: { tag:'// neueste artikel', sub:'Learnings, Tools und ehrliche Berichte aus dem Alltag des KI-gestützten Bauens.', footer:'© 2026 Nina Panknin — Lernen in der Öffentlichkeit', about:'Über mich', journey:'Journey', stack:'Stack', blog:'Blog', guestbook:'Gästebuch' },
+  fr: { tag:'// derniers articles', sub:"Apprentissages, outils et rapports honnêtes du quotidien de la construction assistée par IA.", footer:'© 2026 Nina Panknin — Apprendre en public', about:'À propos', journey:'Parcours', stack:'Stack', blog:'Blog', guestbook:"Livre d'or" },
+  es: { tag:'// últimas entradas', sub:'Aprendizajes, herramientas e informes honestos del día a día de la construcción asistida por IA.', footer:'© 2026 Nina Panknin — Aprendiendo en público', about:'Sobre mí', journey:'Journey', stack:'Stack', blog:'Blog', guestbook:'Libro de visitas' },
+  it: { tag:'// ultimi articoli', sub:"Apprendimenti, strumenti e resoconti onesti dal quotidiano della costruzione assistita dall'IA.", footer:'© 2026 Nina Panknin — Imparare in pubblico', about:'Chi sono', journey:'Percorso', stack:'Stack', blog:'Blog', guestbook:'Libro degli ospiti' },
 };
 
 let _articles = [];
@@ -316,6 +317,7 @@ function applyUI(lang) {
   document.getElementById('nav-journey').textContent = u.journey;
   document.getElementById('nav-stack').textContent = u.stack;
   document.getElementById('nav-blog').textContent = u.blog;
+  document.getElementById('nav-guestbook').textContent = u.guestbook;
   document.querySelectorAll('.lang-btn').forEach(b => b.classList.toggle('active', b.dataset.lang === lang));
   document.documentElement.lang = lang;
   localStorage.setItem('nlvc_lang', lang);

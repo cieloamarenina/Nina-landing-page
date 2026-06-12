@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%230d1320'/><text x='2' y='22' font-family='monospace' font-weight='bold' font-size='13' fill='%2300d4ff'>NLC</text></svg>">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Guestbook — Nina Learns Vibe Coding</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=JetBrains+Mono:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #080c14;
+    --surface: #0d1320;
+    --card: #111827;
+    --border: #1e2d45;
+    --accent: #00d4ff;
+    --accent2: #7c3aed;
+    --text: #e8f0fe;
+    --muted: #6b7fa3;
+    --font-display: 'Syne', sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-mono);
+    font-size: 15px;
+    line-height: 1.7;
+    overflow-x: hidden;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(0,212,255,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,212,255,0.03) 1px, transparent 1px);
+    background-size: 60px 60px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: repeating-linear-gradient(
+      to bottom,
+      transparent 0px, transparent 3px,
+      rgba(0,0,0,0.05) 3px, rgba(0,0,0,0.05) 4px
+    );
+    pointer-events: none;
+    z-index: 9999;
+    opacity: 0.4;
+  }
+
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    padding: 1.2rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(8,12,20,0.85);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .nav-logo {
+    font-family: var(--font-display);
+    font-size: 1rem;
+    font-weight: 800;
+    color: var(--accent);
+    letter-spacing: 0.05em;
+    text-decoration: none;
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 2rem;
+    list-style: none;
+  }
+
+  .nav-links a {
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 0.75rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    transition: color 0.2s;
+  }
+
+  .nav-links a:hover, .nav-links a.active { color: var(--accent); }
+
+  .lang-switcher {
+    display: flex;
+    gap: 0.3rem;
+    align-items: center;
+  }
+
+  .lang-btn {
+    background: none;
+    border: 1px solid transparent;
+    color: var(--muted);
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    letter-spacing: 0.1em;
+    padding: 0.2rem 0.45rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-transform: uppercase;
+  }
+
+  .lang-btn:hover { color: var(--accent); border-color: rgba(0,212,255,0.3); }
+  .lang-btn.active { color: var(--accent); border-color: rgba(0,212,255,0.5); }
+
+  main {
+    position: relative;
+    z-index: 1;
+    padding: 8rem 2rem 6rem;
+    max-width: 760px;
+    margin: 0 auto;
+  }
+
+  .section-tag {
+    font-size: 0.65rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .section-tag::after {
+    content: '';
+    flex: 1;
+    max-width: 60px;
+    height: 1px;
+    background: var(--accent);
+    opacity: 0.4;
+  }
+
+  .page-title {
+    font-family: var(--font-display);
+    font-size: clamp(2.5rem, 6vw, 5rem);
+    font-weight: 800;
+    line-height: 1.0;
+    letter-spacing: -0.03em;
+    margin-bottom: 1rem;
+  }
+
+  .page-sub {
+    font-size: 0.9rem;
+    color: var(--muted);
+    margin-bottom: 3rem;
+    max-width: 520px;
+  }
+
+  /* ----- Formular ----- */
+  .gb-form {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-top: 2px solid var(--accent);
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .gb-form label {
+    display: block;
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 0.4rem;
+  }
+
+  .gb-form input[type="text"],
+  .gb-form textarea {
+    width: 100%;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    padding: 0.7rem 0.9rem;
+    margin-bottom: 1.1rem;
+    outline: none;
+    transition: border-color 0.2s;
+    resize: vertical;
+  }
+
+  .gb-form input[type="text"]:focus,
+  .gb-form textarea:focus { border-color: rgba(0,212,255,0.5); }
+
+  .gb-form textarea { min-height: 110px; }
+
+  /* Honeypot: fuer Menschen unsichtbar, Bots fuellen es aus */
+  .gb-hp {
+    position: absolute !important;
+    left: -9999px !important;
+    width: 1px; height: 1px;
+    overflow: hidden;
+    opacity: 0;
+  }
+
+  .gb-form-foot {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .gb-count {
+    font-size: 0.65rem;
+    color: var(--muted);
+    letter-spacing: 0.1em;
+  }
+
+  .gb-btn {
+    background: transparent;
+    border: 1px solid var(--accent);
+    color: var(--accent);
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    padding: 0.7rem 1.6rem;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .gb-btn:hover:not(:disabled) { background: rgba(0,212,255,0.1); box-shadow: 0 0 20px rgba(0,212,255,0.15); }
+  .gb-btn:disabled { opacity: 0.4; cursor: wait; }
+
+  .gb-privacy {
+    font-size: 0.62rem;
+    color: var(--muted);
+    line-height: 1.6;
+    margin-bottom: 3rem;
+  }
+
+  .gb-msg {
+    display: none;
+    padding: 0.8rem 1rem;
+    font-size: 0.75rem;
+    margin-bottom: 3rem;
+    border: 1px solid;
+  }
+
+  .gb-msg.ok { display: block; border-color: rgba(0,212,255,0.4); color: var(--accent); background: rgba(0,212,255,0.05); }
+  .gb-msg.err { display: block; border-color: rgba(255,107,107,0.4); color: #ff6b6b; background: rgba(255,107,107,0.05); }
+
+  /* ----- Eintraege ----- */
+  .gb-list { display: flex; flex-direction: column; gap: 1rem; }
+
+  .gb-entry {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-left: 2px solid var(--accent2);
+    padding: 1.1rem 1.3rem;
+  }
+
+  .gb-entry-head {
+    display: flex;
+    align-items: baseline;
+    gap: 0.7rem;
+    flex-wrap: wrap;
+    margin-bottom: 0.5rem;
+  }
+
+  .gb-entry-name {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 0.95rem;
+    color: var(--text);
+  }
+
+  .gb-entry-flag { font-size: 0.8rem; }
+
+  .gb-entry-date {
+    font-size: 0.62rem;
+    color: var(--muted);
+    letter-spacing: 0.1em;
+    margin-left: auto;
+  }
+
+  .gb-entry-msg {
+    font-size: 0.8rem;
+    color: var(--text);
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+
+  .gb-entry-foot { margin-top: 0.6rem; }
+
+  .gb-translate {
+    background: none;
+    border: none;
+    color: var(--accent);
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    letter-spacing: 0.1em;
+    cursor: pointer;
+    padding: 0;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  .gb-translate:hover { color: var(--text); }
+
+  .gb-translated-note {
+    font-size: 0.62rem;
+    color: var(--muted);
+    font-style: italic;
+    margin-right: 0.6rem;
+  }
+
+  .gb-empty, .gb-loading, .gb-load-error {
+    font-size: 0.78rem;
+    color: var(--muted);
+    padding: 2rem 0;
+    text-align: center;
+  }
+
+  footer {
+    position: relative;
+    z-index: 1;
+    border-top: 1px solid var(--border);
+    padding: 3rem 2rem;
+    max-width: 1100px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .footer-logo {
+    font-family: var(--font-display);
+    font-size: 1.2rem;
+    font-weight: 800;
+    color: var(--accent);
+  }
+
+  .footer-copy {
+    font-size: 0.7rem;
+    color: var(--muted);
+    letter-spacing: 0.1em;
+  }
+
+  @media (max-width: 600px) {
+    nav .nav-links { display: none; }
+    footer { flex-direction: column; gap: 1rem; text-align: center; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-logo">NLC_</a>
+  <ul class="nav-links">
+    <li><a href="index.html#about" id="nav-about">About</a></li>
+    <li><a href="index.html#journey" id="nav-journey">Journey</a></li>
+    <li><a href="index.html#tools" id="nav-stack">Stack</a></li>
+    <li><a href="blog.html" id="nav-blog">Blog</a></li>
+    <li><a href="guestbook.html" class="active" id="nav-guestbook">Guestbook</a></li>
+  </ul>
+  <div class="lang-switcher">
+    <button class="lang-btn" data-lang="en">EN</button>
+    <button class="lang-btn" data-lang="de">DE</button>
+    <button class="lang-btn" data-lang="fr">FR</button>
+    <button class="lang-btn" data-lang="it">IT</button>
+    <button class="lang-btn" data-lang="es">ES</button>
+  </div>
+</nav>
+
+<main>
+  <div class="section-tag" id="gb-tag">// guestbook</div>
+  <h1 class="page-title" id="gb-title">Guestbook</h1>
+  <p class="page-sub" id="gb-sub">Leave a note — in any language. Entries are translated automatically.</p>
+
+  <form class="gb-form" id="gb-form" novalidate>
+    <label for="gb-name" id="gb-label-name">Name</label>
+    <input type="text" id="gb-name" name="name" maxlength="50" autocomplete="off" required>
+
+    <label for="gb-message" id="gb-label-message">Message</label>
+    <textarea id="gb-message" name="message" maxlength="500" required></textarea>
+
+    <!-- Honeypot: unsichtbar fuer Menschen, nur Bots fuellen es aus -->
+    <div class="gb-hp" aria-hidden="true">
+      <label for="gb-website">Website</label>
+      <input type="text" id="gb-website" name="website" tabindex="-1" autocomplete="off">
+    </div>
+
+    <div class="gb-form-foot">
+      <span class="gb-count"><span id="gb-count-num">0</span>/500</span>
+      <button type="submit" class="gb-btn" id="gb-submit">Send_</button>
+    </div>
+  </form>
+
+  <p class="gb-privacy" id="gb-privacy"></p>
+
+  <div class="gb-msg" id="gb-msg" role="status"></div>
+
+  <div class="gb-list" id="gb-list">
+    <div class="gb-loading" id="gb-loading">loading…</div>
+  </div>
+</main>
+
+<footer>
+  <div class="footer-logo">NLC_</div>
+  <div class="footer-copy" id="footer-copy">© 2026 Nina Panknin — Learning in Public</div>
+</footer>
+
+<script>
+const SUBMIT_URL = 'https://n8n.ninalearnsvibecoding.com/webhook/guestbook-submit';
+const LIST_URL   = 'https://n8n.ninalearnsvibecoding.com/webhook/guestbook-list';
+
+const LANG_LOCALE = {en:'en-GB', de:'de-DE', fr:'fr-FR', es:'es-ES', it:'it-IT'};
+const FLAGS = {de:'🇩🇪', en:'🇬🇧', fr:'🇫🇷', it:'🇮🇹', es:'🇪🇸'};
+
+const UI = {
+  en: {
+    tag:'// guestbook', title:'Guestbook',
+    sub:'Leave a note — in any language. Every entry gets translated automatically by my n8n + AI pipeline.',
+    name:'Name', message:'Message', send:'Send_', sending:'Sending…',
+    privacy:'Your name and message are shown publicly here after a quick review. No email addresses, no IPs stored. Want an entry removed? Just contact me.',
+    success:'Thank you! Your entry will appear here after a quick review.',
+    err_invalid:'Please enter a name (min. 2 characters) and a message (min. 5 characters).',
+    err_rate:'Too many entries right now — please try again later.',
+    err_network:'Could not send right now. Please try again in a moment.',
+    empty:'No entries yet — be the first!', load_error:'Entries could not be loaded right now.',
+    translate:'Translate', original:'Show original', translated_from:'Translated from',
+    footer:'© 2026 Nina Panknin — Learning in Public',
+    nav: { about:'About', journey:'Journey', stack:'Stack', blog:'Blog', guestbook:'Guestbook' },
+    langNames: {de:'German', en:'English', fr:'French', it:'Italian', es:'Spanish'}
+  },
+  de: {
+    tag:'// gästebuch', title:'Gästebuch',
+    sub:'Hinterlass mir eine Nachricht — in jeder Sprache. Jeder Eintrag wird von meiner n8n-+-KI-Pipeline automatisch übersetzt.',
+    name:'Name', message:'Nachricht', send:'Senden_', sending:'Sende…',
+    privacy:'Dein Name und deine Nachricht werden nach einer kurzen Prüfung öffentlich angezeigt. Keine E-Mail-Adressen, keine IPs gespeichert. Eintrag löschen lassen? Melde dich einfach.',
+    success:'Danke! Dein Eintrag erscheint hier nach einer kurzen Prüfung.',
+    err_invalid:'Bitte gib einen Namen (mind. 2 Zeichen) und eine Nachricht (mind. 5 Zeichen) ein.',
+    err_rate:'Gerade zu viele Einträge — bitte versuch es später noch einmal.',
+    err_network:'Senden gerade nicht möglich. Bitte versuch es gleich noch einmal.',
+    empty:'Noch keine Einträge — sei du der oder die Erste!', load_error:'Einträge konnten gerade nicht geladen werden.',
+    translate:'Übersetzen', original:'Original anzeigen', translated_from:'Übersetzt aus:',
+    footer:'© 2026 Nina Panknin — Lernen in der Öffentlichkeit',
+    nav: { about:'Über mich', journey:'Journey', stack:'Stack', blog:'Blog', guestbook:'Gästebuch' },
+    langNames: {de:'Deutsch', en:'Englisch', fr:'Französisch', it:'Italienisch', es:'Spanisch'}
+  },
+  fr: {
+    tag:"// livre d'or", title:"Livre d'or",
+    sub:'Laissez-moi un mot — dans la langue de votre choix. Chaque entrée est traduite automatiquement par mon pipeline n8n + IA.',
+    name:'Nom', message:'Message', send:'Envoyer_', sending:'Envoi…',
+    privacy:"Votre nom et votre message sont affichés publiquement après une courte vérification. Aucune adresse e-mail ni IP enregistrée. Pour supprimer une entrée, contactez-moi.",
+    success:'Merci ! Votre message apparaîtra ici après une courte vérification.',
+    err_invalid:'Veuillez saisir un nom (min. 2 caractères) et un message (min. 5 caractères).',
+    err_rate:'Trop de messages en ce moment — réessayez plus tard.',
+    err_network:"Envoi impossible pour l'instant. Réessayez dans un instant.",
+    empty:'Aucune entrée pour le moment — soyez la première ou le premier !', load_error:"Impossible de charger les entrées pour l'instant.",
+    translate:'Traduire', original:"Afficher l'original", translated_from:'Traduit de :',
+    footer:'© 2026 Nina Panknin — Apprendre en public',
+    nav: { about:'À propos', journey:'Parcours', stack:'Stack', blog:'Blog', guestbook:"Livre d'or" },
+    langNames: {de:'allemand', en:'anglais', fr:'français', it:'italien', es:'espagnol'}
+  },
+  it: {
+    tag:'// libro degli ospiti', title:'Libro degli ospiti',
+    sub:'Lasciami un messaggio — in qualsiasi lingua. Ogni voce viene tradotta automaticamente dalla mia pipeline n8n + IA.',
+    name:'Nome', message:'Messaggio', send:'Invia_', sending:'Invio…',
+    privacy:'Il tuo nome e il tuo messaggio vengono mostrati pubblicamente dopo una breve verifica. Nessun indirizzo e-mail, nessun IP salvato. Vuoi rimuovere una voce? Contattami.',
+    success:'Grazie! Il tuo messaggio apparirà qui dopo una breve verifica.',
+    err_invalid:'Inserisci un nome (min. 2 caratteri) e un messaggio (min. 5 caratteri).',
+    err_rate:'Troppi messaggi in questo momento — riprova più tardi.',
+    err_network:'Invio non riuscito. Riprova tra un istante.',
+    empty:'Ancora nessuna voce — sii il primo o la prima!', load_error:'Impossibile caricare le voci al momento.',
+    translate:'Traduci', original:"Mostra l'originale", translated_from:'Tradotto da:',
+    footer:'© 2026 Nina Panknin — Imparare in pubblico',
+    nav: { about:'Chi sono', journey:'Percorso', stack:'Stack', blog:'Blog', guestbook:'Libro degli ospiti' },
+    langNames: {de:'tedesco', en:'inglese', fr:'francese', it:'italiano', es:'spagnolo'}
+  },
+  es: {
+    tag:'// libro de visitas', title:'Libro de visitas',
+    sub:'Déjame un mensaje — en cualquier idioma. Cada entrada se traduce automáticamente con mi pipeline de n8n + IA.',
+    name:'Nombre', message:'Mensaje', send:'Enviar_', sending:'Enviando…',
+    privacy:'Tu nombre y tu mensaje se muestran públicamente tras una breve revisión. No se guardan correos ni IPs. ¿Quieres eliminar una entrada? Escríbeme.',
+    success:'¡Gracias! Tu mensaje aparecerá aquí tras una breve revisión.',
+    err_invalid:'Introduce un nombre (mín. 2 caracteres) y un mensaje (mín. 5 caracteres).',
+    err_rate:'Demasiadas entradas ahora mismo — inténtalo más tarde.',
+    err_network:'No se pudo enviar. Inténtalo de nuevo en un momento.',
+    empty:'Aún no hay entradas — ¡sé la primera persona!', load_error:'No se pudieron cargar las entradas.',
+    translate:'Traducir', original:'Mostrar original', translated_from:'Traducido del:',
+    footer:'© 2026 Nina Panknin — Aprendiendo en público',
+    nav: { about:'Sobre mí', journey:'Journey', stack:'Stack', blog:'Blog', guestbook:'Libro de visitas' },
+    langNames: {de:'alemán', en:'inglés', fr:'francés', it:'italiano', es:'español'}
+  },
+};
+
+let _entries = [];
+
+function getLang() { return localStorage.getItem('nlvc_lang') || 'en'; }
+function t() { return UI[getLang()] || UI.en; }
+
+function applyUI(lang) {
+  const u = UI[lang] || UI.en;
+  document.getElementById('gb-tag').textContent = u.tag;
+  document.getElementById('gb-title').textContent = u.title;
+  document.getElementById('gb-sub').textContent = u.sub;
+  document.getElementById('gb-label-name').textContent = u.name;
+  document.getElementById('gb-label-message').textContent = u.message;
+  document.getElementById('gb-submit').textContent = u.send;
+  document.getElementById('gb-privacy').textContent = u.privacy;
+  document.getElementById('footer-copy').textContent = u.footer;
+  document.getElementById('nav-about').textContent = u.nav.about;
+  document.getElementById('nav-journey').textContent = u.nav.journey;
+  document.getElementById('nav-stack').textContent = u.nav.stack;
+  document.getElementById('nav-blog').textContent = u.nav.blog;
+  document.getElementById('nav-guestbook').textContent = u.nav.guestbook;
+  document.querySelectorAll('.lang-btn').forEach(b => b.classList.toggle('active', b.dataset.lang === lang));
+  document.documentElement.lang = lang;
+  localStorage.setItem('nlvc_lang', lang);
+}
+
+/* Eintraege rendern — bewusst NUR mit createElement/textContent (kein innerHTML
+   mit Gast-Inhalten), damit niemand Script-Code ins Gaestebuch schreiben kann. */
+function renderEntries() {
+  const lang = getLang();
+  const u = t();
+  const list = document.getElementById('gb-list');
+  list.replaceChildren();
+
+  if (!_entries.length) {
+    const empty = document.createElement('div');
+    empty.className = 'gb-empty';
+    empty.textContent = u.empty;
+    list.appendChild(empty);
+    return;
+  }
+
+  for (const e of _entries) {
+    const card = document.createElement('div');
+    card.className = 'gb-entry';
+
+    const head = document.createElement('div');
+    head.className = 'gb-entry-head';
+
+    const flag = document.createElement('span');
+    flag.className = 'gb-entry-flag';
+    flag.textContent = FLAGS[e.lang] || '🌐';
+    head.appendChild(flag);
+
+    const name = document.createElement('span');
+    name.className = 'gb-entry-name';
+    name.textContent = e.name;
+    head.appendChild(name);
+
+    const date = document.createElement('span');
+    date.className = 'gb-entry-date';
+    try {
+      date.textContent = new Date(e.date + 'T00:00:00').toLocaleDateString(LANG_LOCALE[lang] || 'en-GB', {day:'numeric', month:'long', year:'numeric'});
+    } catch (_) { date.textContent = e.date; }
+    head.appendChild(date);
+    card.appendChild(head);
+
+    const msg = document.createElement('p');
+    msg.className = 'gb-entry-msg';
+    msg.textContent = e.message;
+    card.appendChild(msg);
+
+    const translated = e.translations && typeof e.translations === 'object' ? e.translations[lang] : null;
+    if (e.lang !== lang && translated) {
+      const foot = document.createElement('div');
+      foot.className = 'gb-entry-foot';
+
+      const note = document.createElement('span');
+      note.className = 'gb-translated-note';
+
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'gb-translate';
+      btn.textContent = u.translate;
+
+      let showingTranslation = false;
+      btn.addEventListener('click', () => {
+        showingTranslation = !showingTranslation;
+        if (showingTranslation) {
+          msg.textContent = translated;
+          note.textContent = u.translated_from + ' ' + (u.langNames[e.lang] || e.lang.toUpperCase());
+          btn.textContent = u.original;
+        } else {
+          msg.textContent = e.message;
+          note.textContent = '';
+          btn.textContent = u.translate;
+        }
+      });
+
+      foot.appendChild(note);
+      foot.appendChild(btn);
+      card.appendChild(foot);
+    }
+
+    list.appendChild(card);
+  }
+}
+
+function showMsg(text, kind) {
+  const box = document.getElementById('gb-msg');
+  box.textContent = text;
+  box.className = 'gb-msg ' + kind;
+}
+
+function loadEntries() {
+  fetch(LIST_URL)
+    .then(r => { if (!r.ok) throw new Error('http ' + r.status); return r.json(); })
+    .then(data => {
+      _entries = Array.isArray(data.entries) ? data.entries : [];
+      renderEntries();
+    })
+    .catch(() => {
+      const list = document.getElementById('gb-list');
+      list.replaceChildren();
+      const err = document.createElement('div');
+      err.className = 'gb-load-error';
+      err.textContent = t().load_error;
+      list.appendChild(err);
+    });
+}
+
+document.getElementById('gb-message').addEventListener('input', ev => {
+  document.getElementById('gb-count-num').textContent = String(ev.target.value.length);
+});
+
+document.getElementById('gb-form').addEventListener('submit', ev => {
+  ev.preventDefault();
+  const u = t();
+  const name = document.getElementById('gb-name').value.trim();
+  const message = document.getElementById('gb-message').value.trim();
+  const website = document.getElementById('gb-website').value; // Honeypot
+
+  if (name.length < 2 || message.length < 5) { showMsg(u.err_invalid, 'err'); return; }
+
+  const btn = document.getElementById('gb-submit');
+  btn.disabled = true;
+  btn.textContent = u.sending;
+
+  fetch(SUBMIT_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ name, message, lang: getLang(), website }),
+  })
+    .then(r => {
+      if (r.status === 429) { showMsg(u.err_rate, 'err'); return null; }
+      if (!r.ok) { showMsg(u.err_invalid, 'err'); return null; }
+      return r.json();
+    })
+    .then(data => {
+      if (data && data.success) {
+        showMsg(u.success, 'ok');
+        document.getElementById('gb-form').reset();
+        document.getElementById('gb-count-num').textContent = '0';
+      }
+    })
+    .catch(() => showMsg(u.err_network, 'err'))
+    .finally(() => {
+      btn.disabled = false;
+      btn.textContent = t().send;
+    });
+});
+
+document.querySelectorAll('.lang-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    applyUI(btn.dataset.lang);
+    renderEntries();
+  });
+});
+
+applyUI(getLang());
+loadEntries();
+</script>
+</body>
+</html>

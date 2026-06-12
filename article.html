@@ -277,6 +277,7 @@
     <li><a href="index.html#journey" id="nav-journey">Journey</a></li>
     <li><a href="index.html#tools" id="nav-stack">Stack</a></li>
     <li><a href="blog.html" id="nav-blog">Blog</a></li>
+    <li><a href="guestbook.html" id="nav-guestbook">Guestbook</a></li>
   </ul>
   <div class="lang-switcher">
     <button class="lang-btn" data-lang="en">EN</button>
@@ -298,11 +299,11 @@
 const LANG_LOCALE = {en:'en-GB', de:'de-DE', fr:'fr-FR', es:'es-ES', it:'it-IT'};
 
 const UI = {
-  en: { back:'← Back to Blog', loading:'Loading article...', notFound:'This article does not exist (anymore).', footer:'© 2026 Nina Panknin — Learning in Public', about:'About', journey:'Journey', stack:'Stack', blog:'Blog' },
-  de: { back:'← Zurück zum Blog', loading:'Lade Artikel...', notFound:'Dieser Artikel existiert nicht (mehr).', footer:'© 2026 Nina Panknin — Lernen in der Öffentlichkeit', about:'Über mich', journey:'Journey', stack:'Stack', blog:'Blog' },
-  fr: { back:'← Retour au blog', loading:'Chargement...', notFound:"Cet article n'existe plus.", footer:'© 2026 Nina Panknin — Apprendre en public', about:'À propos', journey:'Parcours', stack:'Stack', blog:'Blog' },
-  es: { back:'← Volver al blog', loading:'Cargando artículo...', notFound:'Este artículo no existe (más).', footer:'© 2026 Nina Panknin — Aprendiendo en público', about:'Sobre mí', journey:'Journey', stack:'Stack', blog:'Blog' },
-  it: { back:'← Torna al blog', loading:'Caricamento...', notFound:"Questo articolo non esiste (più).", footer:'© 2026 Nina Panknin — Imparare in pubblico', about:'Chi sono', journey:'Percorso', stack:'Stack', blog:'Blog' },
+  en: { back:'← Back to Blog', loading:'Loading article...', notFound:'This article does not exist (anymore).', footer:'© 2026 Nina Panknin — Learning in Public', about:'About', journey:'Journey', stack:'Stack', blog:'Blog', guestbook:'Guestbook' },
+  de: { back:'← Zurück zum Blog', loading:'Lade Artikel...', notFound:'Dieser Artikel existiert nicht (mehr).', footer:'© 2026 Nina Panknin — Lernen in der Öffentlichkeit', about:'Über mich', journey:'Journey', stack:'Stack', blog:'Blog', guestbook:'Gästebuch' },
+  fr: { back:'← Retour au blog', loading:'Chargement...', notFound:"Cet article n'existe plus.", footer:'© 2026 Nina Panknin — Apprendre en public', about:'À propos', journey:'Parcours', stack:'Stack', blog:'Blog', guestbook:"Livre d'or" },
+  es: { back:'← Volver al blog', loading:'Cargando artículo...', notFound:'Este artículo no existe (más).', footer:'© 2026 Nina Panknin — Aprendiendo en público', about:'Sobre mí', journey:'Journey', stack:'Stack', blog:'Blog', guestbook:'Libro de visitas' },
+  it: { back:'← Torna al blog', loading:'Caricamento...', notFound:"Questo articolo non esiste (più).", footer:'© 2026 Nina Panknin — Imparare in pubblico', about:'Chi sono', journey:'Percorso', stack:'Stack', blog:'Blog', guestbook:'Libro degli ospiti' },
 };
 
 const slug = new URLSearchParams(window.location.search).get('slug');
@@ -318,6 +319,7 @@ function applyUI(lang) {
   document.getElementById('nav-journey').textContent = u.journey;
   document.getElementById('nav-stack').textContent = u.stack;
   document.getElementById('nav-blog').textContent = u.blog;
+  document.getElementById('nav-guestbook').textContent = u.guestbook;
   document.querySelectorAll('.lang-btn').forEach(b => b.classList.toggle('active', b.dataset.lang === lang));
   document.documentElement.lang = lang;
   localStorage.setItem('nlvc_lang', lang);
