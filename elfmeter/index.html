@@ -48,6 +48,12 @@
     transition:opacity .12s}
   #hype.on{opacity:1;animation:hypepulse .42s ease}
   @keyframes hypepulse{0%{opacity:0}25%{opacity:1}100%{opacity:0}}
+  /* Sprachumschalter */
+  #langSwitch{display:flex;gap:3px;margin-left:10px}
+  .lng{font-family:'Inter',sans-serif;font-size:10px;font-weight:600;color:var(--muted);background:transparent;
+    border:1px solid rgba(56,189,248,.25);border-radius:6px;padding:3px 6px;cursor:pointer}
+  .lng.active{color:#06122e;background:var(--sky);border-color:var(--sky)}
+  @media (max-width:560px){ .lng{padding:2px 4px;font-size:9px} #langSwitch{margin-left:4px;gap:2px} }
   /* Nationen-Label oben in der Szene (Schütze vs Torwart) */
   #nations{position:absolute;top:8px;left:50%;transform:translateX(-50%);z-index:5;
     font-size:13px;letter-spacing:.4px;color:var(--text);background:rgba(8,14,34,.6);
@@ -156,10 +162,13 @@
 <body>
   <header>
     <div class="brand"><span class="dot"></span><span class="title">Elfmeter<b>·</b>Challenge</span></div>
-    <div class="board" aria-label="Spielstand">
-      <div class="seg"><span class="num" id="score">0</span><span class="lbl">Tore</span></div>
-      <div class="seg"><span class="num" id="shots">0</span><span class="lbl">Schuss</span></div>
-      <div class="seg"><span class="num" id="best">–</span><span class="lbl">Best</span></div>
+    <div class="board" aria-label="Scoreboard">
+      <div class="seg"><span class="num" id="score">0</span><span class="lbl" data-i18n="board.goals">Tore</span></div>
+      <div class="seg"><span class="num" id="shots">0</span><span class="lbl" data-i18n="board.shots">Schuss</span></div>
+      <div class="seg"><span class="num" id="best">–</span><span class="lbl" data-i18n="board.best">Best</span></div>
+    </div>
+    <div id="langSwitch">
+      <button class="lng" data-lang="en">EN</button><button class="lng" data-lang="de">DE</button><button class="lng" data-lang="fr">FR</button><button class="lng" data-lang="it">IT</button><button class="lng" data-lang="es">ES</button>
     </div>
   </header>
 
@@ -173,22 +182,22 @@
     <div id="powerwrap"><div id="powerbar"></div></div>
 
     <div id="picker">
-      <h2>Wähle deine Teams</h2>
+      <h2 data-i18n="picker.title">Wähle deine Teams</h2>
       <div class="modes">
-        <button type="button" class="modebtn active" id="modeSolo">1 Spieler</button>
-        <button type="button" class="modebtn" id="modeDuo">2 Spieler</button>
-        <button type="button" class="modebtn" id="modeTurnier">🏆 Turnier</button>
+        <button type="button" class="modebtn active" id="modeSolo" data-i18n="mode.solo">1 Spieler</button>
+        <button type="button" class="modebtn" id="modeDuo" data-i18n="mode.duo">2 Spieler</button>
+        <button type="button" class="modebtn" id="modeTurnier" data-i18n="mode.cup">🏆 Turnier</button>
       </div>
       <div class="slots">
-        <div class="slot s active" id="slotS"><span class="who">Schütze</span><span class="fl" id="flS">🏳️</span></div>
-        <div class="slot k" id="slotK"><span class="who">Torwart</span><span class="fl" id="flK">🏳️</span></div>
+        <div class="slot s active" id="slotS"><span class="who" data-i18n="role.shooter">Schütze</span><span class="fl" id="flS">🏳️</span></div>
+        <div class="slot k" id="slotK"><span class="who" data-i18n="role.keeper">Torwart</span><span class="fl" id="flK">🏳️</span></div>
       </div>
       <div class="grid" id="flagGrid"></div>
-      <button class="btn" id="startBtn" disabled>Anpfiff ⚽</button>
+      <button class="btn" id="startBtn" data-i18n="btn.kickoff" disabled>Anpfiff ⚽</button>
     </div>
 
     <div id="final" class="hidden">
-      <h2>Endstand</h2>
+      <h2 id="finalH2" data-i18n="final.end">Endstand</h2>
       <div class="teams" id="finalTeams">🇩🇪 vs 🇧🇷</div>
       <div class="score" id="finalScore">0 / 10</div>
       <div class="rate" id="finalRate"></div>
@@ -243,6 +252,22 @@
 </script>
 <script type="module">
 import * as THREE from 'three';
+
+/* ===== i18n (5 Sprachen, synchron mit der Hauptseite via localStorage 'nlvc_lang') ===== */
+const I18N={
+ en:{'board.goals':'Goals','board.shots':'Shots','board.best':'Best','picker.title':'Choose your teams','mode.solo':'1 Player','mode.duo':'2 Players','mode.cup':'🏆 Cup','role.shooter':'Shooter','role.keeper':'Keeper','btn.kickoff':'Kick off ⚽','final.end':'Final score','btn.newgame':'New game','foot.right':'🦶 Right foot','foot.left':'🦶 Left foot','style.power':'💥 Power','style.finesse':'🎯 Finesse','hint.pick':'Choose shooter & keeper','hint.kickoff':'Kick off …','hint.controls':'Drag = aim · hold = power · swipe = curve','hint.player2':"Player 2's turn",'flash.goal':'GOAL!','flash.saved':'SAVED!','flash.wide':'WIDE!','flash.over':'OVER!','combo.double':'DOUBLE!','combo.hat':'HAT-TRICK! 🔥','combo.x':'COMBO ×{n} 🔥','combo.unstoppable':'UNSTOPPABLE! 🔥','player':'Player','atBall':'on the ball','rate.god':'Perfect – penalty god','rate.world':'World class','rate.strong':'Strong shooting','rate.solid':'Solid rate','rate.more':'Room to improve','rate.warmup':'Warm-up counts too','rate.practice':'Practice, practice','duel.title':'2-Player duel','duel.win1':'Player 1 wins! 🏆','duel.win2':'Player 2 wins! 🏆','duel.draw':'Draw 🤝','round.0':'Round of 16','round.1':'Quarter-final','round.2':'Semi-final','round.3':'Final','cup.advance':'Into the {next}!','cup.out':'Out in the {round} 😢','cup.champion':'{team} wins the cup! 🎉','btn.nextround':'Next round →','btn.newcup':'New cup'},
+ de:{'board.goals':'Tore','board.shots':'Schuss','board.best':'Best','picker.title':'Wähle deine Teams','mode.solo':'1 Spieler','mode.duo':'2 Spieler','mode.cup':'🏆 Turnier','role.shooter':'Schütze','role.keeper':'Torwart','btn.kickoff':'Anpfiff ⚽','final.end':'Endstand','btn.newgame':'Neues Spiel','foot.right':'🦶 Rechtsfuß','foot.left':'🦶 Linksfuß','style.power':'💥 Wucht','style.finesse':'🎯 Gefühl','hint.pick':'Wähle Schütze & Torwart','hint.kickoff':'Anpfiff …','hint.controls':'Ziehen = zielen · halten = Power · wischen = Effet','hint.player2':'Spieler 2 ist dran','flash.goal':'TOR!','flash.saved':'GEHALTEN!','flash.wide':'DANEBEN!','flash.over':'DRÜBER!','combo.double':'DOPPELPACK!','combo.hat':'HATTRICK! 🔥','combo.x':'COMBO ×{n} 🔥','combo.unstoppable':'UNAUFHALTSAM! 🔥','player':'Spieler','atBall':'am Ball','rate.god':'Perfekt – Elfmeter-Gott','rate.world':'Weltklasse','rate.strong':'Stark geschossen','rate.solid':'Solide Quote','rate.more':'Da geht mehr','rate.warmup':'Aufwärmen zählt auch','rate.practice':'Üben, üben, üben','duel.title':'2-Spieler-Duell','duel.win1':'Spieler 1 gewinnt! 🏆','duel.win2':'Spieler 2 gewinnt! 🏆','duel.draw':'Unentschieden 🤝','round.0':'Achtelfinale','round.1':'Viertelfinale','round.2':'Halbfinale','round.3':'Finale','cup.advance':'Weiter ins {next}!','cup.out':'Ausgeschieden im {round} 😢','cup.champion':'{team} ist Turniersieger! 🎉','btn.nextround':'Nächste Runde →','btn.newcup':'Neues Turnier'},
+ fr:{'board.goals':'Buts','board.shots':'Tirs','board.best':'Best','picker.title':'Choisis tes équipes','mode.solo':'1 Joueur','mode.duo':'2 Joueurs','mode.cup':'🏆 Tournoi','role.shooter':'Tireur','role.keeper':'Gardien','btn.kickoff':"Coup d'envoi ⚽",'final.end':'Score final','btn.newgame':'Nouvelle partie','foot.right':'🦶 Pied droit','foot.left':'🦶 Pied gauche','style.power':'💥 Puissance','style.finesse':'🎯 Effet','hint.pick':'Choisis tireur & gardien','hint.kickoff':"Coup d'envoi …",'hint.controls':'Glisser = viser · maintenir = puissance · balayer = effet','hint.player2':'Au tour du joueur 2','flash.goal':'BUT!','flash.saved':'ARRÊT!','flash.wide':'À CÔTÉ!','flash.over':'TROP HAUT!','combo.double':'DOUBLÉ!','combo.hat':'TRIPLÉ! 🔥','combo.x':'COMBO ×{n} 🔥','combo.unstoppable':'IMPARABLE! 🔥','player':'Joueur','atBall':'au ballon','rate.god':'Parfait – dieu du penalty','rate.world':'Classe mondiale','rate.strong':'Bien tiré','rate.solid':'Bon ratio','rate.more':'Peut mieux faire','rate.warmup':"L'échauffement compte",'rate.practice':'Entraîne-toi','duel.title':'Duel à 2','duel.win1':'Joueur 1 gagne ! 🏆','duel.win2':'Joueur 2 gagne ! 🏆','duel.draw':'Égalité 🤝','round.0':'Huitièmes','round.1':'Quarts','round.2':'Demi-finale','round.3':'Finale','cup.advance':'Vers {next} !','cup.out':'Éliminé en {round} 😢','cup.champion':'{team} remporte le tournoi ! 🎉','btn.nextround':'Tour suivant →','btn.newcup':'Nouveau tournoi'},
+ it:{'board.goals':'Gol','board.shots':'Tiri','board.best':'Best','picker.title':'Scegli le squadre','mode.solo':'1 Giocatore','mode.duo':'2 Giocatori','mode.cup':'🏆 Torneo','role.shooter':'Tiratore','role.keeper':'Portiere','btn.kickoff':'Fischio ⚽','final.end':'Risultato','btn.newgame':'Nuova partita','foot.right':'🦶 Destro','foot.left':'🦶 Sinistro','style.power':'💥 Potenza','style.finesse':'🎯 Effetto','hint.pick':'Scegli tiratore e portiere','hint.kickoff':'Fischio …','hint.controls':'Trascina = mira · tieni = potenza · scorri = effetto','hint.player2':'Tocca al giocatore 2','flash.goal':'GOL!','flash.saved':'PARATA!','flash.wide':'FUORI!','flash.over':'ALTO!','combo.double':'DOPPIETTA!','combo.hat':'TRIPLETTA! 🔥','combo.x':'COMBO ×{n} 🔥','combo.unstoppable':'INARRESTABILE! 🔥','player':'Giocatore','atBall':'al pallone','rate.god':'Perfetto – dio dei rigori','rate.world':'Fuoriclasse','rate.strong':'Bei tiri','rate.solid':'Buona media','rate.more':'Si può migliorare','rate.warmup':'Anche scaldarsi conta','rate.practice':'Allenati ancora','duel.title':'Duello a 2','duel.win1':'Vince il giocatore 1! 🏆','duel.win2':'Vince il giocatore 2! 🏆','duel.draw':'Pareggio 🤝','round.0':'Ottavi','round.1':'Quarti','round.2':'Semifinale','round.3':'Finale','cup.advance':'Avanti a {next}!','cup.out':'Fuori a {round} 😢','cup.champion':'{team} vince il torneo! 🎉','btn.nextround':'Turno successivo →','btn.newcup':'Nuovo torneo'},
+ es:{'board.goals':'Goles','board.shots':'Tiros','board.best':'Best','picker.title':'Elige tus equipos','mode.solo':'1 Jugador','mode.duo':'2 Jugadores','mode.cup':'🏆 Torneo','role.shooter':'Tirador','role.keeper':'Portero','btn.kickoff':'¡A jugar! ⚽','final.end':'Marcador final','btn.newgame':'Nuevo juego','foot.right':'🦶 Pie derecho','foot.left':'🦶 Pie izquierdo','style.power':'💥 Potencia','style.finesse':'🎯 Efecto','hint.pick':'Elige tirador y portero','hint.kickoff':'¡A jugar! …','hint.controls':'Arrastra = apunta · mantén = potencia · desliza = efecto','hint.player2':'Turno del jugador 2','flash.goal':'¡GOL!','flash.saved':'¡PARADA!','flash.wide':'¡FUERA!','flash.over':'¡POR ENCIMA!','combo.double':'¡DOBLETE!','combo.hat':'¡HAT-TRICK! 🔥','combo.x':'COMBO ×{n} 🔥','combo.unstoppable':'¡IMPARABLE! 🔥','player':'Jugador','atBall':'al balón','rate.god':'Perfecto – dios del penalti','rate.world':'Clase mundial','rate.strong':'Buenos tiros','rate.solid':'Buen promedio','rate.more':'Puedes mejorar','rate.warmup':'Calentar también cuenta','rate.practice':'A practicar','duel.title':'Duelo a 2','duel.win1':'¡Gana el jugador 1! 🏆','duel.win2':'¡Gana el jugador 2! 🏆','duel.draw':'Empate 🤝','round.0':'Octavos','round.1':'Cuartos','round.2':'Semifinal','round.3':'Final','cup.advance':'¡A {next}!','cup.out':'Eliminado en {round} 😢','cup.champion':'¡{team} gana el torneo! 🎉','btn.nextround':'Siguiente ronda →','btn.newcup':'Nuevo torneo'}
+};
+let LANG=(()=>{ try{ const s=localStorage.getItem('nlvc_lang'); return (s&&I18N[s])?s:'en'; }catch(e){ return 'en'; } })();
+function t(k,vars){ let s=(I18N[LANG]&&I18N[LANG][k]) || I18N.en[k] || k; if(vars) for(const p in vars) s=s.replace('{'+p+'}',vars[p]); return s; }
+function roundName(i){ return t('round.'+i); }
+function applyStaticI18n(){
+  document.querySelectorAll('[data-i18n]').forEach(el=>{ el.textContent=t(el.getAttribute('data-i18n')); });
+  document.querySelectorAll('.lng').forEach(b=>b.classList.toggle('active', b.dataset.lang===LANG));
+}
 
 /* ===== WM-2026-Teams (48): Name, Flagge, Trikot j / Trim t / Nummer u ===== */
 const COUNTRIES = [
@@ -641,7 +666,7 @@ const DUO_SHOTS=5;
 let shotsTarget=MAX_SHOTS, curPlayer=1, p1Goals=0, p2Goals=0;
 let finalAction=null;                    // was der "Weiter"-Button im Final-Screen tut
 // Turnier
-const TROUNDS=['Achtelfinale','Viertelfinale','Halbfinale','Finale'];
+const TROUNDS=[0,1,2,3];   // Anzahl Runden; Namen via roundName()/i18n
 let tround=0, tPlayerIdx=null, tOppIdx=null, tPool=[];
 let tShot=0, tResult=0, tCount=0, countShown=null;
 let willSave=false, willOver=false, willMiss=false, missMsg='', result='';
@@ -702,8 +727,8 @@ function shoot(p, power, curve){
   willMiss = !onTarget;                                       // neben/über das Tor gezielt
   willOver = overshoot;
   // Beschriftung: über die Latte = DRÜBER, sonst seitlich = DANEBEN
-  if(overshoot) missMsg='DRÜBER!';
-  else if(willMiss) missMsg = (p.y>=GH-0.05 && Math.abs(p.x)<HALF) ? 'DRÜBER!' : 'DANEBEN!';
+  if(overshoot) missMsg=t('flash.over');
+  else if(willMiss) missMsg = (p.y>=GH-0.05 && Math.abs(p.x)<HALF) ? t('flash.over') : t('flash.wide');
   else missMsg='';
 
   const shotZone=zoneOf(p);
@@ -756,10 +781,10 @@ function renderPicker(){
 }
 function applyPicks(){ SHOOTER=COUNTRIES[pickS]; KEEPER_C=COUNTRIES[pickK]; applyKit(); applyShooter(); applyShooterKit(); updateMatchup(); }
 function updateMatchup(){ $match.textContent=SHOOTER.f+'  vs  '+KEEPER_C.f; document.getElementById('finalTeams').textContent=SHOOTER.f+' vs '+KEEPER_C.f;
-  const n=document.getElementById('nations'); if(n) n.innerHTML='<b>'+SHOOTER.f+' '+SHOOTER.n+'</b> &nbsp;·&nbsp; Torwart <b>'+KEEPER_C.f+' '+KEEPER_C.n+'</b>'; }
-function showPicker(){ mode='menu'; resetBall(); $picker.classList.remove('hidden'); setHint('Wähle Schütze & Torwart'); renderPicker(); }
+  const n=document.getElementById('nations'); if(n) n.innerHTML='<b>'+SHOOTER.f+' '+SHOOTER.n+'</b> &nbsp;·&nbsp; '+t('role.keeper')+' <b>'+KEEPER_C.f+' '+KEEPER_C.n+'</b>'; }
+function showPicker(){ mode='menu'; resetBall(); $picker.classList.remove('hidden'); setHint(t('hint.pick')); renderPicker(); }
 
-function ratingText(g){ const p=g/MAX_SHOTS; if(g>=MAX_SHOTS)return 'Perfekt – Elfmeter-Gott'; if(p>=0.8)return 'Weltklasse'; if(p>=0.6)return 'Stark geschossen'; if(p>=0.4)return 'Solide Quote'; if(p>=0.2)return 'Da geht mehr'; if(g>=1)return 'Aufwärmen zählt auch'; return 'Üben, üben, üben'; }
+function ratingText(g){ const p=g/MAX_SHOTS; if(g>=MAX_SHOTS)return t('rate.god'); if(p>=0.8)return t('rate.world'); if(p>=0.6)return t('rate.strong'); if(p>=0.4)return t('rate.solid'); if(p>=0.2)return t('rate.more'); if(g>=1)return t('rate.warmup'); return t('rate.practice'); }
 
 function resetBall(){ ball.position.copy(start); ball.rotation.set(0,0,0); keeper.position.set(0,0,0.35); keeper.rotation.z=0; armL.rotation.z=-0.7; armR.rotation.z=0.7; resetShooter();
   aiming=false; reticle.visible=false; const w=$pwrwrap(); if(w) w.classList.remove('show'); }
@@ -784,45 +809,45 @@ function nextTournamentRound(){
   SHOOTER=COUNTRIES[tPlayerIdx]; KEEPER_C=COUNTRIES[tOppIdx];
   applyKit(); applyShooter(); applyShooterKit(); updateMatchup();
   goals=0; shots=0; $score.textContent=0; $shots.textContent='0/'+shotsTarget; renderBest();
-  flash(TROUNDS[tround],'#ffce00');
-  const n=document.getElementById('nations'); if(n) n.innerHTML='<b>🏆 '+TROUNDS[tround]+'</b> &nbsp;·&nbsp; '+SHOOTER.f+' '+SHOOTER.n+' vs '+KEEPER_C.f+' '+KEEPER_C.n;
+  flash(roundName(tround),'#ffce00');
+  const n=document.getElementById('nations'); if(n) n.innerHTML='<b>🏆 '+roundName(tround)+'</b> &nbsp;·&nbsp; '+SHOOTER.f+' '+SHOOTER.n+' vs '+KEEPER_C.f+' '+KEEPER_C.n;
   startCountdown();
 }
 function oppScoreFor(round){ return Math.min(4, 2 + Math.floor(round/1.5) + (Math.random()<0.4?1:0)); }
 function resolveTournamentRound(){
   const opp=oppScoreFor(tround);
   const win = goals>opp;
-  document.querySelector('#final h2').textContent='🏆 '+TROUNDS[tround];
+  document.querySelector('#final h2').textContent='🏆 '+roundName(tround);
   document.getElementById('finalTeams').textContent=SHOOTER.f+' '+goals+' : '+opp+' '+KEEPER_C.f;
   if(win){
     if(tround>=TROUNDS.length-1){
       document.getElementById('finalScore').textContent='🏆';
-      document.getElementById('finalRate').textContent=SHOOTER.n+' ist Turniersieger! 🎉';
-      finalAction=showPicker; $againBtn.textContent='Neues Turnier';
+      document.getElementById('finalRate').textContent=t('cup.champion',{team:SHOOTER.n});
+      finalAction=showPicker; $againBtn.textContent=t('btn.newcup');
     } else {
       document.getElementById('finalScore').textContent=goals+' : '+opp;
-      document.getElementById('finalRate').textContent='Weiter ins '+TROUNDS[tround+1]+'!';
-      tround++; finalAction=()=>nextTournamentRound(); $againBtn.textContent='Nächste Runde →';
+      document.getElementById('finalRate').textContent=t('cup.advance',{next:roundName(tround+1)});
+      tround++; finalAction=()=>nextTournamentRound(); $againBtn.textContent=t('btn.nextround');
     }
   } else {
     document.getElementById('finalScore').textContent=goals+' : '+opp;
-    document.getElementById('finalRate').textContent='Ausgeschieden im '+TROUNDS[tround]+' 😢';
-    finalAction=showPicker; $againBtn.textContent='Neues Turnier';
+    document.getElementById('finalRate').textContent=t('cup.out',{round:roundName(tround)});
+    finalAction=showPicker; $againBtn.textContent=t('btn.newcup');
   }
   $final.classList.remove('hidden'); mode='final';
 }
 function startPlayerTurn(){
   goals=0; shots=0; goalStreak=0; $score.textContent=0; $shots.textContent='0/'+shotsTarget; renderBest();
   if(gameMode==='duo'){
-    flash('SPIELER '+curPlayer,'#38bdf8');
-    const n=document.getElementById('nations'); if(n) n.innerHTML='<b>Spieler '+curPlayer+'</b> am Ball &nbsp;·&nbsp; '+SHOOTER.f+' vs '+KEEPER_C.f;
+    flash(t('player').toUpperCase()+' '+curPlayer,'#38bdf8');
+    const n=document.getElementById('nations'); if(n) n.innerHTML='<b>'+t('player')+' '+curPlayer+'</b> '+t('atBall')+' &nbsp;·&nbsp; '+SHOOTER.f+' vs '+KEEPER_C.f;
   }
   startCountdown();
 }
 function endOfRound(){
   if(gameMode==='turnier'){ resolveTournamentRound(); return; }
   if(gameMode==='duo' && curPlayer===1){
-    p1Goals=goals; curPlayer=2; setHint('Spieler 2 ist dran'); startPlayerTurn(); return;
+    p1Goals=goals; curPlayer=2; setHint(t('hint.player2')); startPlayerTurn(); return;
   }
   if(gameMode==='duo'){
     p2Goals=goals; showDuoFinal();
@@ -830,16 +855,16 @@ function endOfRound(){
     const nr=(best==null||goals>best); if(nr)best=goals; renderBest();
     document.getElementById('finalScore').textContent=goals+' / '+shotsTarget;
     document.getElementById('finalRate').textContent=ratingText(goals)+(nr?'  ★ Rekord':'');
-    document.querySelector('#final h2').textContent='Endstand';
-    $againBtn.textContent='Neues Spiel'; finalAction=showPicker;
+    document.querySelector('#final h2').textContent=t('final.end');
+    $againBtn.textContent=t('btn.newgame'); finalAction=showPicker;
     $final.classList.remove('hidden'); mode='final';
   }
 }
 function showDuoFinal(){
-  $againBtn.textContent='Neues Spiel'; finalAction=showPicker;
-  const win = p1Goals>p2Goals ? 'Spieler 1 gewinnt! 🏆' : p2Goals>p1Goals ? 'Spieler 2 gewinnt! 🏆' : 'Unentschieden – Sudden Death? 🤝';
-  document.querySelector('#final h2').textContent='2-Spieler-Duell';
-  document.getElementById('finalTeams').textContent='Spieler 1: '+p1Goals+'  ·  Spieler 2: '+p2Goals;
+  $againBtn.textContent=t('btn.newgame'); finalAction=showPicker;
+  const win = p1Goals>p2Goals ? t('duel.win1') : p2Goals>p1Goals ? t('duel.win2') : t('duel.draw');
+  document.querySelector('#final h2').textContent=t('duel.title');
+  document.getElementById('finalTeams').textContent=t('player')+' 1: '+p1Goals+'  ·  '+t('player')+' 2: '+p2Goals;
   document.getElementById('finalScore').textContent=p1Goals+' : '+p2Goals;
   document.getElementById('finalRate').textContent=win;
   $final.classList.remove('hidden'); mode='final';
@@ -847,8 +872,8 @@ function showDuoFinal(){
 function startCountdown(){ resetBall(); result=''; mode='countdown'; tCount=performance.now(); countShown=null; setHint('Anpfiff …'); }
 function flash(txt,color){ $flash.textContent=txt; $flash.style.color=color; $flash.classList.add('show'); setTimeout(()=>$flash.classList.remove('show'),1100); }
 function comboFx(n){
-  const names={2:'DOPPELPACK!',3:'HATTRICK! 🔥',4:'COMBO ×4 🔥',5:'UNAUFHALTSAM! 🔥'};
-  flash(names[n] || ('COMBO ×'+n+' 🔥'), '#ffce00');
+  const names={2:t('combo.double'),3:t('combo.hat'),4:t('combo.x',{n:4}),5:t('combo.unstoppable')};
+  flash(names[n] || t('combo.x',{n}), '#ffce00');
   shakeT=performance.now(); shakeMag=Math.min(0.5,0.16+n*0.05); hypeT=performance.now();
   const h=document.getElementById('hype'); if(h){ h.classList.add('on'); setTimeout(()=>h.classList.remove('on'),420); }
   sfxCheer();
@@ -860,7 +885,7 @@ function loop(){
   const now=performance.now();
   if(mode==='countdown'){
     const el=now-tCount;
-    if(el>=COUNT_MS*3){ countShown=0; sfxWhistle(); setHint('Ziehen = zielen · halten = Power · wischen = Effet'); mode='ready'; }
+    if(el>=COUNT_MS*3){ countShown=0; sfxWhistle(); setHint(t('hint.controls')); mode='ready'; }
     else { const nn=3-Math.floor(el/COUNT_MS); if(nn!==countShown){ countShown=nn; sfxTick(); flash(String(nn),'#38bdf8'); } }
   } else if(mode==='shooting'){
     const p=Math.min((now-tShot)/shotDur,1), e=easeOut(p);
@@ -889,10 +914,10 @@ function loop(){
     else if(keeperDive.x>0){ armR.rotation.z=0.7+e*1.4; armL.rotation.z=-0.7+e*0.5; }
     else { armL.rotation.z=-0.7-e*0.7; armR.rotation.z=0.7+e*0.7; }
     if(p>=1){ shots++;
-      if(willSave){ result='HALT'; sfxSave(); sfxGroan(); flash('GEHALTEN!','#ff5a7a'); goalStreak=0; }
-      else if(willMiss||willOver){ result='MISS'; sfxGroan(); flash(missMsg||'DANEBEN!','#ffb020'); goalStreak=0; }
+      if(willSave){ result='HALT'; sfxSave(); sfxGroan(); flash(t('flash.saved'),'#ff5a7a'); goalStreak=0; }
+      else if(willMiss||willOver){ result='MISS'; sfxGroan(); flash(missMsg||t('flash.wide'),'#ffb020'); goalStreak=0; }
       else { result='TOR'; goals++; goalStreak++; sfxGoal(); sfxCheer();
-        if(goalStreak>=2) comboFx(goalStreak); else flash('TOR!','#38bdf8');
+        if(goalStreak>=2) comboFx(goalStreak); else flash(t('flash.goal'),'#38bdf8');
         startRipple(target.x,target.y); }
       $shots.textContent=shots+'/'+shotsTarget; $score.textContent=goals;
       mode='result'; tResult=now; }
@@ -966,13 +991,13 @@ window.addEventListener('pointercancel', endAim);
 const $styleBtn=document.getElementById('styleBtn');
 if($styleBtn) $styleBtn.addEventListener('click',()=>{
   shotStyle = shotStyle==='wucht' ? 'gefuehl' : 'wucht';
-  $styleBtn.textContent = shotStyle==='wucht' ? '💥 Wucht' : '🎯 Gefühl';
+  $styleBtn.textContent = t(shotStyle==='wucht' ? 'style.power' : 'style.finesse');
   $styleBtn.classList.toggle('gefuehl', shotStyle==='gefuehl');
 });
 const $footBtn=document.getElementById('footBtn');
 if($footBtn) $footBtn.addEventListener('click',()=>{
   setFoot(shootFoot==='R' ? 'L' : 'R');
-  $footBtn.textContent = shootFoot==='R' ? '🦶 Rechtsfuß' : '🦶 Linksfuß';
+  $footBtn.textContent = t(shootFoot==='R' ? 'foot.right' : 'foot.left');
 });
 
 /* ===== Resize ===== */
@@ -987,7 +1012,19 @@ new ResizeObserver(()=>{ if(resizeQueued)return; resizeQueued=true; requestAnima
 window.addEventListener('resize', resize);
 
 /* ===== Init ===== */
+function refreshLangLabels(){
+  const fb=document.getElementById('footBtn'); if(fb) fb.textContent=t(shootFoot==='R'?'foot.right':'foot.left');
+  const sb=document.getElementById('styleBtn'); if(sb) sb.textContent=t(shotStyle==='wucht'?'style.power':'style.finesse');
+}
+function setLang(l){ if(!I18N[l])return; LANG=l; try{localStorage.setItem('nlvc_lang',l);}catch(e){}
+  applyStaticI18n(); refreshLangLabels();
+  if(mode==='menu') setHint(t('hint.pick'));
+  if(SHOOTER && KEEPER_C) updateMatchup();
+}
+document.querySelectorAll('.lng').forEach(b=> b.addEventListener('click',()=>setLang(b.dataset.lang)));
+
 buildGrid(); applyPicks(); resetBall(); resize();
+applyStaticI18n(); refreshLangLabels();
 $shots.textContent='0/'+MAX_SHOTS; renderBest(); showPicker();
 requestAnimationFrame(loop);
 
