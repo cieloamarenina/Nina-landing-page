@@ -305,11 +305,26 @@ function meshFace(a,b,c,d,nu,nv){   // bilineares Gitter a=TL b=TR c=BR d=BL
   const g=new THREE.BufferGeometry().setFromPoints(pts);
   return new THREE.LineSegments(g, netMaterial);
 }
-goal.add(meshFace(V.BTL,V.BTR,V.BBR,V.BBL, 24, 16));   // Rückwand
+const netBack = meshFace(V.BTL,V.BTR,V.BBR,V.BBL, 28, 18); goal.add(netBack);   // Rückwand (referenziert für Wackeln)
+const netBackBase = netBack.geometry.attributes.position.array.slice();
 goal.add(meshFace(V.FTL,V.FTR,V.BTR,V.BTL, 24, 7));    // Dach (geneigt)
 goal.add(meshFace(V.FTL,V.BTL,V.BBL,V.FBL, 7, 16));    // linke Seite
 goal.add(meshFace(V.FTR,V.BTR,V.BBR,V.FBR, 7, 16));    // rechte Seite
 goal.add(meshFace(V.FBL,V.FBR,V.BBR,V.BBL, 24, 7));    // Bodennetz
+
+// Netz-Wackeln am Einschlagpunkt
+let rippleT=-1, rippleX=0, rippleY=0;
+function startRipple(x,y){ rippleT=performance.now(); rippleX=x; rippleY=y; }
+function updateRipple(now){
+  if(rippleT<0) return;
+  const dt=(now-rippleT)/1000, pos=netBack.geometry.attributes.position, arr=pos.array;
+  if(dt>0.8){ arr.set(netBackBase); pos.needsUpdate=true; rippleT=-1; return; }
+  for(let i=0;i<arr.length;i+=3){ const bx=netBackBase[i], by=netBackBase[i+1];
+    const d2=(bx-rippleX)*(bx-rippleX)+(by-rippleY)*(by-rippleY);
+    const amp=0.45*Math.exp(-d2/0.55)*Math.cos(dt*24)*Math.exp(-dt*4.2);
+    arr[i+2]=netBackBase[i+2]-amp; }
+  pos.needsUpdate=true;
+}
 
 // unsichtbare Torebene fürs Zielen
 const goalPlane=new THREE.Mesh(new THREE.PlaneGeometry(GW,GH), new THREE.MeshBasicMaterial({visible:false}));
@@ -356,7 +371,7 @@ function applyKit(){
 }
 
 /* ===== Schützen-Flagge (Eckfahne neben dem Punkt) ===== */
-const shooterFlag=new THREE.Group(); shooterFlag.position.set(1.5,0,SPOT_Z+0.3); scene.add(shooterFlag);
+const shooterFlag=new THREE.Group(); shooterFlag.position.set(1.85,0,SPOT_Z+0.2); shooterFlag.scale.setScalar(0.62); scene.add(shooterFlag);
 const pole=new THREE.Mesh(new THREE.CylinderGeometry(0.02,0.02,1.2,8),new THREE.MeshStandardMaterial({color:0xdddddd})); pole.position.y=0.6; shooterFlag.add(pole);
 const flagMesh=new THREE.Mesh(new THREE.PlaneGeometry(0.5,0.32), new THREE.MeshStandardMaterial({side:THREE.DoubleSide})); flagMesh.position.set(0.27,1.05,0); shooterFlag.add(flagMesh);
 function flagTex(country){
@@ -495,14 +510,23 @@ function loop(){
     else if(keeperDive.x>0){ armR.rotation.z=0.7+e*1.4; armL.rotation.z=-0.7+e*0.5; }
     else { armL.rotation.z=-0.7-e*0.7; armR.rotation.z=0.7+e*0.7; }
     if(p>=1){ shots++; result=willSave?'HALT':'TOR'; if(!willSave)goals++; $shots.textContent=shots+'/'+MAX_SHOTS; $score.textContent=goals;
-      if(willSave){ sfxSave(); sfxGroan(); flash('GEHALTEN!','#ff5a7a'); } else { sfxGoal(); sfxCheer(); flash('TOR!','#38bdf8'); }
+      if(willSave){ sfxSave(); sfxGroan(); flash('GEHALTEN!','#ff5a7a'); } else { sfxGoal(); sfxCheer(); flash('TOR!','#38bdf8'); startRipple(target.x,target.y); }
       mode='result'; tResult=now; }
   } else if(mode==='result'){
+    if(result==='TOR'){ const pr=Math.min((now-tResult)/700,1); ball.position.y=endPos.y+(BALL_R-endPos.y)*easeOut(pr); ball.rotation.x-=0.12; }
+    updateRipple(now);
     if(now-tResult>HOLD_MS){
       if(shots>=MAX_SHOTS){ const nr=(best==null||goals>best); if(nr)best=goals; renderBest();
         document.getElementById('finalScore').textContent=goals+' / '+MAX_SHOTS; document.getElementById('finalRate').textContent=ratingText(goals)+(nr?'  ★ Rekord':''); $final.classList.remove('hidden'); mode='final'; }
       else startCountdown();
     }
+  }
+  if(mode==='ready'||mode==='countdown'){   // Leerlauf: Torwart wippt / verlagert Gewicht
+    keeper.position.x=Math.sin(now/640)*0.06;
+    keeper.position.y=Math.abs(Math.sin(now/300))*0.035;
+    keeper.rotation.z=Math.sin(now/900)*0.02;
+    armL.rotation.z=-0.7+Math.sin(now/470)*0.07;
+    armR.rotation.z= 0.7-Math.sin(now/470)*0.07;
   }
   renderer.render(scene,camera);
   requestAnimationFrame(loop);
