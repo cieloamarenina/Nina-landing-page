@@ -147,8 +147,11 @@
     .board .num{font-size:21px}
     .board .lbl{font-size:8px;letter-spacing:1.5px}
     #flash{font-size:52px}
-    #picker,#final{padding:18px 10px 10px}
-    #picker h2,#final h2{font-size:21px;margin-bottom:16px}
+    /* Picker/Final als großflächiges Overlay -> Länder-Raster bekommt viele Reihen,
+       unabhängig von der (kürzeren) 3D-Spielfläche */
+    #picker,#final{position:fixed;left:8px;right:8px;top:58px;bottom:10px;z-index:25;border-radius:16px;padding:16px 10px 12px}
+    #picker h2,#final h2{font-size:21px;margin-bottom:12px}
+    .grid{gap:7px}
     #final .score{font-size:82px}
     #final .rate{font-size:24px}
     #final .teams{font-size:18px}
@@ -241,9 +244,10 @@
       const setOpen=o=>{ panel.classList.toggle('open',o); btn.textContent=o?'🎶':'🎵'; };
       btn.addEventListener('click',()=>{ const o=!panel.classList.contains('open'); setOpen(o); if(o&&!musicStarted) startMusic(); });
       close.addEventListener('click',()=>setOpen(false));
-      // Anpfiff -> Musik starten (Klick ist die nötige User-Geste) + Panel kurz zeigen
+      // Anpfiff -> Musik starten (Klick ist die nötige User-Geste); Panel NICHT auto-öffnen
+      // (verdeckte sonst mobil den Schützen/das Spielfeld). 🎵-Button öffnet es bei Bedarf.
       const sb=document.getElementById('startBtn');
-      if(sb) sb.addEventListener('click',()=>{ if(!musicStarted) startMusic(); setOpen(true); });
+      if(sb) sb.addEventListener('click',()=>{ if(!musicStarted) startMusic(); });
     })();
   </script>
 
