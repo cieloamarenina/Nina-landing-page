@@ -80,6 +80,10 @@
     background:linear-gradient(180deg,rgba(8,14,34,.93),rgba(6,9,26,.97));-webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px)}
   #picker.hidden,#final.hidden{display:none}
   #picker h2,#final h2{font-family:'Bebas Neue',Impact,sans-serif;font-size:26px;letter-spacing:1.5px;color:var(--sky);text-align:center;line-height:1.25;padding-bottom:2px;margin-bottom:18px}
+  .modes{display:flex;gap:8px;justify-content:center;margin-bottom:12px}
+  .modebtn{font-family:'Inter',sans-serif;font-size:12px;font-weight:600;color:var(--muted);
+    background:rgba(13,18,48,.6);border:1px solid rgba(56,189,248,.3);border-radius:999px;padding:6px 16px;cursor:pointer}
+  .modebtn.active{color:#06122e;background:var(--sky);border-color:var(--sky)}
   .slots{display:flex;gap:8px;justify-content:center;margin-bottom:8px}
   .slot{flex:1;max-width:240px;display:flex;align-items:center;justify-content:center;gap:9px;padding:8px 10px;border-radius:12px;
     border:1px solid rgba(56,189,248,.3);background:rgba(13,18,48,.6);cursor:pointer}
@@ -163,6 +167,10 @@
 
     <div id="picker">
       <h2>Wähle deine Teams</h2>
+      <div class="modes">
+        <button type="button" class="modebtn active" id="modeSolo">1 Spieler</button>
+        <button type="button" class="modebtn" id="modeDuo">2 Spieler</button>
+      </div>
       <div class="slots">
         <div class="slot s active" id="slotS"><span class="who">Schütze</span><span class="fl" id="flS">🏳️</span></div>
         <div class="slot k" id="slotK"><span class="who">Torwart</span><span class="fl" id="flK">🏳️</span></div>
@@ -619,6 +627,9 @@ function unlockAudio(){ const a=audio(); if(!a)return; try{const o=a.createOscil
 /* ===== Spiel-Logik ===== */
 let mode='menu';                       // menu | countdown | ready | shooting | result | final
 let shots=0, goals=0, best=null;
+let gameMode='solo';                    // 'solo' | 'duo'
+const DUO_SHOTS=5;
+let shotsTarget=MAX_SHOTS, curPlayer=1, p1Goals=0, p2Goals=0;
 let tShot=0, tResult=0, tCount=0, countShown=null;
 let willSave=false, willOver=false, willMiss=false, missMsg='', result='';
 const start=new THREE.Vector3(0,BALL_R,SPOT_Z);
@@ -718,6 +729,9 @@ function buildGrid(){
   $slotK.addEventListener('click',()=>{activeSlot='K';renderPicker();});
   $startBtn.addEventListener('click',()=>{ unlockAudio(); applyPicks(); $picker.classList.add('hidden'); startMatch(); });
   $againBtn.addEventListener('click',()=>{ unlockAudio(); $final.classList.add('hidden'); showPicker(); });
+  const mSolo=document.getElementById('modeSolo'), mDuo=document.getElementById('modeDuo');
+  mSolo.addEventListener('click',()=>{ gameMode='solo'; mSolo.classList.add('active'); mDuo.classList.remove('active'); });
+  mDuo.addEventListener('click',()=>{ gameMode='duo'; mDuo.classList.add('active'); mSolo.classList.remove('active'); });
 }
 function choose(i){ if(activeSlot==='S'){pickS=i;activeSlot='K';} else {pickK=i;activeSlot='S';} renderPicker(); }
 function renderPicker(){
@@ -735,7 +749,41 @@ function ratingText(g){ const p=g/MAX_SHOTS; if(g>=MAX_SHOTS)return 'Perfekt –
 
 function resetBall(){ ball.position.copy(start); ball.rotation.set(0,0,0); keeper.position.set(0,0,0.35); keeper.rotation.z=0; armL.rotation.z=-0.7; armR.rotation.z=0.7; resetShooter();
   aiming=false; reticle.visible=false; const w=$pwrwrap(); if(w) w.classList.remove('show'); }
-function startMatch(){ goals=0; shots=0; $score.textContent=0; $shots.textContent='0/'+MAX_SHOTS; renderBest(); startCountdown(); }
+function startMatch(){
+  if(gameMode==='duo'){ curPlayer=1; p1Goals=0; p2Goals=0; shotsTarget=DUO_SHOTS; }
+  else shotsTarget=MAX_SHOTS;
+  startPlayerTurn();
+}
+function startPlayerTurn(){
+  goals=0; shots=0; $score.textContent=0; $shots.textContent='0/'+shotsTarget; renderBest();
+  if(gameMode==='duo'){
+    flash('SPIELER '+curPlayer,'#38bdf8');
+    const n=document.getElementById('nations'); if(n) n.innerHTML='<b>Spieler '+curPlayer+'</b> am Ball &nbsp;·&nbsp; '+SHOOTER.f+' vs '+KEEPER_C.f;
+  }
+  startCountdown();
+}
+function endOfRound(){
+  if(gameMode==='duo' && curPlayer===1){
+    p1Goals=goals; curPlayer=2; setHint('Spieler 2 ist dran'); startPlayerTurn(); return;
+  }
+  if(gameMode==='duo'){
+    p2Goals=goals; showDuoFinal();
+  } else {
+    const nr=(best==null||goals>best); if(nr)best=goals; renderBest();
+    document.getElementById('finalScore').textContent=goals+' / '+shotsTarget;
+    document.getElementById('finalRate').textContent=ratingText(goals)+(nr?'  ★ Rekord':'');
+    document.querySelector('#final h2').textContent='Endstand';
+    $final.classList.remove('hidden'); mode='final';
+  }
+}
+function showDuoFinal(){
+  const win = p1Goals>p2Goals ? 'Spieler 1 gewinnt! 🏆' : p2Goals>p1Goals ? 'Spieler 2 gewinnt! 🏆' : 'Unentschieden – Sudden Death? 🤝';
+  document.querySelector('#final h2').textContent='2-Spieler-Duell';
+  document.getElementById('finalTeams').textContent='Spieler 1: '+p1Goals+'  ·  Spieler 2: '+p2Goals;
+  document.getElementById('finalScore').textContent=p1Goals+' : '+p2Goals;
+  document.getElementById('finalRate').textContent=win;
+  $final.classList.remove('hidden'); mode='final';
+}
 function startCountdown(){ resetBall(); result=''; mode='countdown'; tCount=performance.now(); countShown=null; setHint('Anpfiff …'); }
 function flash(txt,color){ $flash.textContent=txt; $flash.style.color=color; $flash.classList.add('show'); setTimeout(()=>$flash.classList.remove('show'),1100); }
 
@@ -777,14 +825,13 @@ function loop(){
       if(willSave){ result='HALT'; sfxSave(); sfxGroan(); flash('GEHALTEN!','#ff5a7a'); }
       else if(willMiss||willOver){ result='MISS'; sfxGroan(); flash(missMsg||'DANEBEN!','#ffb020'); }
       else { result='TOR'; goals++; sfxGoal(); sfxCheer(); flash('TOR!','#38bdf8'); startRipple(target.x,target.y); }
-      $shots.textContent=shots+'/'+MAX_SHOTS; $score.textContent=goals;
+      $shots.textContent=shots+'/'+shotsTarget; $score.textContent=goals;
       mode='result'; tResult=now; }
   } else if(mode==='result'){
     if(result==='TOR'){ const pr=Math.min((now-tResult)/700,1); ball.position.y=endPos.y+(BALL_R-endPos.y)*easeOut(pr); ball.rotation.x-=0.12; }
     updateRipple(now);
     if(now-tResult>HOLD_MS){
-      if(shots>=MAX_SHOTS){ const nr=(best==null||goals>best); if(nr)best=goals; renderBest();
-        document.getElementById('finalScore').textContent=goals+' / '+MAX_SHOTS; document.getElementById('finalRate').textContent=ratingText(goals)+(nr?'  ★ Rekord':''); $final.classList.remove('hidden'); mode='final'; }
+      if(shots>=shotsTarget) endOfRound();
       else startCountdown();
     }
   }
@@ -835,6 +882,9 @@ function endAim(ev){
 }
 glCanvas.addEventListener('pointerup', endAim);
 glCanvas.addEventListener('pointercancel', endAim);
+// Absicherung: Loslassen/Abbruch auch außerhalb des Canvas -> kein Soft-Lock
+window.addEventListener('pointerup', endAim);
+window.addEventListener('pointercancel', endAim);
 
 /* ===== Schuss-Stil-Umschalter ===== */
 const $styleBtn=document.getElementById('styleBtn');
