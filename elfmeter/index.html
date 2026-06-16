@@ -83,11 +83,12 @@
     box-shadow:0 8px 22px rgba(37,99,235,.45);transition:transform .15s,filter .15s}
   #music-btn:hover{filter:brightness(1.1)}
   #music-btn:active{transform:scale(0.94)}
+  /* Panel bleibt immer im DOM (iframe spielt weiter) – Ausblenden nur per transform/opacity */
   #music-panel{position:fixed;left:16px;bottom:80px;z-index:30;width:300px;max-width:calc(100vw - 32px);
     background:rgba(8,14,34,.97);border:1px solid rgba(56,189,248,.35);border-radius:16px;padding:12px;
-    box-shadow:0 18px 48px rgba(0,0,0,.6);display:none;flex-direction:column;gap:10px}
-  #music-panel.open{display:flex;animation:music-in .2s ease}
-  @keyframes music-in{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+    box-shadow:0 18px 48px rgba(0,0,0,.6);display:flex;flex-direction:column;gap:10px;
+    transition:opacity .2s ease,transform .2s ease;opacity:0;transform:translateY(14px) scale(.98);pointer-events:none}
+  #music-panel.open{opacity:1;transform:translateY(0) scale(1);pointer-events:auto}
   .music-head{display:flex;align-items:center;justify-content:space-between;font-size:12px;letter-spacing:1.5px;
     text-transform:uppercase;color:var(--muted)}
   .music-close{background:none;border:none;color:var(--muted);font-size:20px;line-height:1;cursor:pointer}
@@ -155,25 +156,39 @@
   </footer>
 
   <!-- ── Hintergrundmusik: Spotify-Playlist "three nations" ──
+       Startet beim Anpfiff (User-Geste umgeht Autoplay-Sperre).
        Playlist tauschen? Nur die ID in MUSIC_PLAYLIST unten ändern. -->
-  <button id="music-btn" title="Musik abspielen 🎵" aria-label="Musik">🎵</button>
+  <button id="music-btn" title="Musik 🎵" aria-label="Musik">🎵</button>
   <div id="music-panel" aria-label="Musik-Player">
     <div class="music-head"><span>🎵 three nations</span><button class="music-close" id="music-close" aria-label="Schließen">×</button></div>
     <div id="music-embed"></div>
   </div>
+  <!-- Offizielle Spotify IFrame API: erlaubt programmatisches Play innerhalb einer Geste -->
+  <script src="https://open.spotify.com/embed/iframe-api/v1" async></script>
   <script>
     const MUSIC_PLAYLIST = '74PsGUvTAvqkWVCCnpsrFV'; // Spotify "three nations"
+    let spotifyCtrl=null, wantPlay=false, musicStarted=false;
+    window.onSpotifyIframeApiReady = (IFrameAPI) => {
+      IFrameAPI.createController(
+        document.getElementById('music-embed'),
+        { uri:'spotify:playlist:'+MUSIC_PLAYLIST, width:'100%', height:352 },
+        (ctrl)=>{ spotifyCtrl=ctrl; if(wantPlay) startMusic(); }
+      );
+    };
+    function startMusic(){
+      if(!spotifyCtrl){ wantPlay=true; return; }   // API noch nicht bereit -> beim Ready nachholen
+      try{ spotifyCtrl.play(); }catch(e){ try{ spotifyCtrl.resume(); }catch(_){} }
+      musicStarted=true;
+    }
     (function(){
       const btn=document.getElementById('music-btn'), panel=document.getElementById('music-panel'),
-            close=document.getElementById('music-close'), embed=document.getElementById('music-embed');
-      let loaded=false;
-      function open(){
-        if(!loaded){ embed.innerHTML='<iframe style="border-radius:12px" src="https://open.spotify.com/embed/playlist/'+MUSIC_PLAYLIST+'?utm_source=generator&theme=0" width="100%" height="352" frameborder="0" allowfullscreen allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>'; loaded=true; }
-        panel.classList.add('open'); btn.textContent='🎶';
-      }
-      function hide(){ panel.classList.remove('open'); btn.textContent='🎵'; }
-      btn.addEventListener('click',()=>{ panel.classList.contains('open') ? hide() : open(); });
-      close.addEventListener('click',hide);
+            close=document.getElementById('music-close');
+      const setOpen=o=>{ panel.classList.toggle('open',o); btn.textContent=o?'🎶':'🎵'; };
+      btn.addEventListener('click',()=>{ const o=!panel.classList.contains('open'); setOpen(o); if(o&&!musicStarted) startMusic(); });
+      close.addEventListener('click',()=>setOpen(false));
+      // Anpfiff -> Musik starten (Klick ist die nötige User-Geste) + Panel kurz zeigen
+      const sb=document.getElementById('startBtn');
+      if(sb) sb.addEventListener('click',()=>{ if(!musicStarted) startMusic(); setOpen(true); });
     })();
   </script>
 
