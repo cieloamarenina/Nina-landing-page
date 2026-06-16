@@ -360,6 +360,9 @@ scene.add(sun);
 // Flutlicht-Schimmer
 const fl1 = new THREE.PointLight(0xbfe0ff, 0.6, 60); fl1.position.set(-10,12,-6); scene.add(fl1);
 const fl2 = new THREE.PointLight(0xbfe0ff, 0.6, 60); fl2.position.set(10,12,-6); scene.add(fl2);
+// Rim-Light von der Kameraseite -> Figuren heben sich plastisch ab
+const rim = new THREE.DirectionalLight(0xdfeaff, 0.55); rim.position.set(-5, 6, 16); scene.add(rim);
+const fill = new THREE.DirectionalLight(0xffe9d0, 0.25); fill.position.set(6, 3, 12); scene.add(fill);
 
 /* ===== Texturen (Canvas) ===== */
 function makeGrass(){
@@ -488,7 +491,7 @@ ball.castShadow=true; ball.position.set(0,BALL_R,SPOT_Z); scene.add(ball);
 /* ===== Torwart ===== */
 const keeper=new THREE.Group(); keeper.position.set(0,0,0.35); scene.add(keeper);
 let kMat={jersey:new THREE.MeshStandardMaterial({roughness:0.7}), trim:new THREE.MeshStandardMaterial({roughness:0.6}),
-         skin:new THREE.MeshStandardMaterial({color:0xf0c9a8,roughness:0.8}), short:new THREE.MeshStandardMaterial({color:0x12203a,roughness:0.9})};
+         skin:new THREE.MeshStandardMaterial({color:0xe7b48f,roughness:0.58,metalness:0}), short:new THREE.MeshStandardMaterial({color:0x14223e,roughness:0.85})};
 const numMesh=new THREE.Mesh(new THREE.PlaneGeometry(0.32,0.32), new THREE.MeshBasicMaterial({transparent:true}));
 let armL, armR;
 (function buildKeeper(){
@@ -509,7 +512,12 @@ let armL, armR;
   const eyeMat=new THREE.MeshStandardMaterial({color:0x1a1410});
   for(const s of [-1,1]){ const eye=new THREE.Mesh(new THREE.SphereGeometry(0.02,10,10),eyeMat); eye.position.set(s*0.055,1.78,0.15); keeper.add(eye);
     const ear=new THREE.Mesh(new THREE.SphereGeometry(0.034,10,10),kMat.skin); ear.scale.set(0.55,1,1); ear.position.set(s*0.16,1.76,0.01); keeper.add(ear); }
-  const nose=new THREE.Mesh(new THREE.SphereGeometry(0.026,8,8),kMat.skin); nose.position.set(0,1.75,0.165); keeper.add(nose);
+  const nose=new THREE.Mesh(new THREE.SphereGeometry(0.024,8,8),kMat.skin); nose.scale.set(0.8,1.1,1.2); nose.position.set(0,1.755,0.168); keeper.add(nose);
+  // Kinn/Kiefer -> Kopf wirkt menschlicher (keine reine Kugel)
+  const chin=new THREE.Mesh(new THREE.SphereGeometry(0.08,16,14),kMat.skin); chin.scale.set(1,0.8,0.95); chin.position.set(0,1.68,0.05); keeper.add(chin);
+  const browMat=new THREE.MeshStandardMaterial({color:0x2a1c12,roughness:1});
+  for(const s of [-1,1]){ const brow=new THREE.Mesh(new THREE.BoxGeometry(0.045,0.012,0.02),browMat); brow.position.set(s*0.055,1.805,0.152); keeper.add(brow); }
+  const mouth=new THREE.Mesh(new THREE.BoxGeometry(0.05,0.01,0.015),new THREE.MeshStandardMaterial({color:0x7a3b34,roughness:1})); mouth.position.set(0,1.70,0.155); keeper.add(mouth);
   // Beine: Oberschenkel + Knie + Stutzen + runder Schuh (gespreizt)
   for(const s of [-1,1]){
     const thigh=new THREE.Mesh(new THREE.CapsuleGeometry(0.115,0.28,8,12),kMat.skin); thigh.position.set(s*0.14,0.62,0); thigh.rotation.z=s*0.07; thigh.castShadow=true; keeper.add(thigh);
@@ -566,7 +574,7 @@ function setFoot(f){
   if(typeof resetShooter==='function') resetShooter();
 }
 let shMat={jersey:new THREE.MeshStandardMaterial({roughness:0.7}), sock:new THREE.MeshStandardMaterial({roughness:0.6}),
-  skin:new THREE.MeshStandardMaterial({color:0xf0c9a8,roughness:0.8}), short:new THREE.MeshStandardMaterial({color:0x12203a,roughness:0.9})};
+  skin:new THREE.MeshStandardMaterial({color:0xe7b48f,roughness:0.58,metalness:0}), short:new THREE.MeshStandardMaterial({color:0x14223e,roughness:0.85})};
 let shTorso, shKickLeg, shStandLeg, shArmL, shArmR;
 (function buildShooter(){
   const bootMat=new THREE.MeshStandardMaterial({color:0x14181f,roughness:0.6});
