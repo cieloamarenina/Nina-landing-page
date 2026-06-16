@@ -289,18 +289,27 @@ function post(x){ const p=new THREE.Mesh(new THREE.CylinderGeometry(0.07,0.07,GH
 post(-HALF); post(HALF);
 const bar=new THREE.Mesh(new THREE.CylinderGeometry(0.07,0.07,GW+0.14,16),frameMat); bar.rotation.z=Math.PI/2; bar.position.set(0,GH,0); bar.castShadow=true; goal.add(bar);
 
-const netTex=makeNet();
-const netMat=new THREE.MeshStandardMaterial({map:netTex, transparent:true, opacity:0.55, side:THREE.DoubleSide, depthWrite:false, roughness:1});
-const DEPTH=1.7;
-function netPanel(w,h,nx,repx,repy){ const t=netTex.clone(); t.needsUpdate=true; t.repeat.set(repx,repy);
-  return new THREE.Mesh(new THREE.PlaneGeometry(w,h), new THREE.MeshStandardMaterial({map:t,transparent:true,opacity:0.5,side:THREE.DoubleSide,depthWrite:false})); }
-// Rückwand
-const netBack=netPanel(GW,GH,0,GW/0.4,GH/0.4); netBack.position.set(0,GH/2,-DEPTH); goal.add(netBack);
-// Dach
-const netTop=netPanel(GW,DEPTH,0,GW/0.4,DEPTH/0.4); netTop.rotation.x=-Math.PI/2; netTop.position.set(0,GH,-DEPTH/2); goal.add(netTop);
-// Seiten
-const netL=netPanel(DEPTH,GH,0,DEPTH/0.4,GH/0.4); netL.rotation.y=Math.PI/2; netL.position.set(-HALF,GH/2,-DEPTH/2); goal.add(netL);
-const netR=netPanel(DEPTH,GH,0,DEPTH/0.4,GH/0.4); netR.rotation.y=Math.PI/2; netR.position.set(HALF,GH/2,-DEPTH/2); goal.add(netR);
+const DEPTH=1.9;
+// Echtes Tornetz als Maschen-Gitter (LineSegments). Eckpunkte des Netz-Käfigs:
+const V = {
+  FTL:new THREE.Vector3(-HALF, GH, 0),  FTR:new THREE.Vector3( HALF, GH, 0),     // vorne oben (Latte)
+  BTL:new THREE.Vector3(-HALF, 1.95, -DEPTH), BTR:new THREE.Vector3( HALF, 1.95, -DEPTH), // hinten oben (geneigt)
+  BBL:new THREE.Vector3(-HALF, 0, -DEPTH), BBR:new THREE.Vector3( HALF, 0, -DEPTH),  // hinten unten
+  FBL:new THREE.Vector3(-HALF, 0, 0),   FBR:new THREE.Vector3( HALF, 0, 0)          // vorne unten (Torlinie)
+};
+const netMaterial = new THREE.LineBasicMaterial({color:0xffffff, transparent:true, opacity:0.42});
+function meshFace(a,b,c,d,nu,nv){   // bilineares Gitter a=TL b=TR c=BR d=BL
+  const pts=[]; const P=(u,v)=>{ const t1=a.clone().lerp(b,u), t2=d.clone().lerp(c,u); return t1.lerp(t2,v); };
+  for(let i=0;i<=nu;i++){ const u=i/nu; for(let v=0;v<nv;v++){ pts.push(P(u,v/nv),P(u,(v+1)/nv)); } }   // vertikale Maschen
+  for(let j=0;j<=nv;j++){ const v=j/nv; for(let u=0;u<nu;u++){ pts.push(P(u/nu,v),P((u+1)/nu,v)); } }     // horizontale Maschen
+  const g=new THREE.BufferGeometry().setFromPoints(pts);
+  return new THREE.LineSegments(g, netMaterial);
+}
+goal.add(meshFace(V.BTL,V.BTR,V.BBR,V.BBL, 24, 16));   // Rückwand
+goal.add(meshFace(V.FTL,V.FTR,V.BTR,V.BTL, 24, 7));    // Dach (geneigt)
+goal.add(meshFace(V.FTL,V.BTL,V.BBL,V.FBL, 7, 16));    // linke Seite
+goal.add(meshFace(V.FTR,V.BTR,V.BBR,V.FBR, 7, 16));    // rechte Seite
+goal.add(meshFace(V.FBL,V.FBR,V.BBR,V.BBL, 24, 7));    // Bodennetz
 
 // unsichtbare Torebene fürs Zielen
 const goalPlane=new THREE.Mesh(new THREE.PlaneGeometry(GW,GH), new THREE.MeshBasicMaterial({visible:false}));
