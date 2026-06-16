@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Elfmeter-Challenge</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    /* Blau-Brand-Tokens — Hex hier zentral, einfach anpassbar */
+    --ink:        #0a1024;   /* Hintergrund Nacht */
+    --ink-2:      #0f1c44;   /* Verlauf unten */
+    --brand:      #2563eb;   /* Royal-Blau */
+    --brand-deep: #1e3a8a;   /* dunkles Blau */
+    --sky:        #38bdf8;   /* Akzent Sky-Blau */
+    --grass-far:  #176c39;
+    --grass-near: #1f8a47;
+    --line:       #f1f5f9;   /* Tor-/Feldlinien */
+    --ball:       #ffffff;
+    --text:       #e8eefc;
+    --muted:      #93a4cc;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{
+    font-family:'Inter',system-ui,sans-serif;
+    background:radial-gradient(120% 90% at 50% -10%, #15265e 0%, var(--ink) 55%, #06091a 100%);
+    color:var(--text);
+    min-height:100dvh;
+    display:flex;flex-direction:column;align-items:center;
+    padding:env(safe-area-inset-top) 16px env(safe-area-inset-bottom);
+  }
+  /* Scoreboard-Header */
+  header{
+    width:100%;max-width:720px;
+    display:flex;align-items:center;justify-content:space-between;
+    padding:18px 6px 14px;
+  }
+  .brand{display:flex;align-items:center;gap:10px}
+  .dot{width:12px;height:12px;border-radius:50%;
+    background:var(--sky);box-shadow:0 0 14px var(--sky)}
+  .title{
+    font-family:'Bebas Neue',Impact,sans-serif;
+    font-size:34px;letter-spacing:1.5px;line-height:1;
+    color:var(--text);
+  }
+  .title b{color:var(--sky);font-weight:400}
+  .board{
+    font-family:'Bebas Neue',sans-serif;
+    background:linear-gradient(180deg,var(--brand-deep),#0c1230);
+    border:1px solid rgba(56,189,248,.35);
+    border-radius:12px;padding:6px 14px;
+    display:flex;gap:14px;align-items:center;
+    box-shadow:0 0 18px rgba(37,99,235,.25), inset 0 0 12px rgba(0,0,0,.4);
+  }
+  .board .seg{display:flex;flex-direction:column;align-items:center;line-height:1}
+  .board .num{font-size:30px;letter-spacing:1px;color:var(--sky)}
+  .board .lbl{font-family:'Inter';font-size:9px;letter-spacing:2px;
+    color:var(--muted);text-transform:uppercase;margin-top:3px}
+
+  /* Spielfeld */
+  .stage{
+    width:100%;max-width:720px;
+    border-radius:18px;overflow:hidden;
+    border:1px solid rgba(56,189,248,.18);
+    box-shadow:0 24px 60px rgba(0,0,0,.55), 0 0 0 1px rgba(255,255,255,.03) inset;
+    background:var(--ink);
+  }
+  canvas{display:block;width:100%;height:auto;touch-action:none;-webkit-user-select:none;user-select:none}
+
+  footer{
+    width:100%;max-width:720px;
+    display:flex;align-items:center;justify-content:space-between;
+    padding:14px 6px 22px;gap:12px;
+  }
+  .hint{font-size:13px;color:var(--muted)}
+  .badge{
+    font-size:11px;letter-spacing:1px;text-transform:uppercase;
+    color:var(--sky);border:1px solid rgba(56,189,248,.4);
+    padding:4px 10px;border-radius:999px;white-space:nowrap;
+  }
+</style>
+</head>
+<body>
+  <header>
+    <div class="brand">
+      <span class="dot"></span>
+      <span class="title">Elfmeter<b>·</b>Challenge</span>
+    </div>
+    <div class="board" aria-label="Spielstand">
+      <div class="seg"><span class="num" id="score">0</span><span class="lbl">Tore</span></div>
+      <div class="seg"><span class="num" id="shots">0</span><span class="lbl">Schuss</span></div>
+      <div class="seg"><span class="num" id="best">–</span><span class="lbl">Best</span></div>
+    </div>
+  </header>
+
+  <div class="stage">
+    <canvas id="pitch" width="1000" height="700" role="img"
+            aria-label="Fußballtor mit Torwart und Ball auf dem Elfmeterpunkt"></canvas>
+  </div>
+
+  <footer>
+    <span class="hint">Tippen zum Anpfiff</span>
+    <span class="badge">Ziel: oben einnetzen</span>
+  </footer>
+
+<script>
+// Fehler sichtbar machen (statt leerem Bild)
+window.addEventListener('error', function(ev){
+  try { var h = document.querySelector('.hint'); if (h) h.textContent = 'Fehler: ' + (ev.message || (ev.error && ev.error.message) || 'unbekannt'); } catch(e){}
+});
+// roundRect-Polyfill für ältere iOS-/Safari-Versionen
+if (window.CanvasRenderingContext2D && !CanvasRenderingContext2D.prototype.roundRect){
+  CanvasRenderingContext2D.prototype.roundRect = function(x, y, w, h, r){
+    if (typeof r === 'number') r = {tl:r, tr:r, br:r, bl:r};
+    else if (Array.isArray(r)){ const a = r; r = {tl:a[0]||0, tr:a[1]!=null?a[1]:a[0]||0, br:a[2]!=null?a[2]:a[0]||0, bl:a[3]!=null?a[3]:a[1]!=null?a[1]:a[0]||0}; }
+    else r = r || {tl:0,tr:0,br:0,bl:0};
+    this.moveTo(x + r.tl, y);
+    this.lineTo(x + w - r.tr, y); this.arcTo(x + w, y, x + w, y + r.tr, r.tr);
+    this.lineTo(x + w, y + h - r.br); this.arcTo(x + w, y + h, x + w - r.br, y + h, r.br);
+    this.lineTo(x + r.bl, y + h); this.arcTo(x, y + h, x, y + h - r.bl, r.bl);
+    this.lineTo(x, y + r.tl); this.arcTo(x, y, x + r.tl, y, r.tl);
+    return this;
+  };
+}
+const cv = document.getElementById('pitch');
+const ctx = cv.getContext('2d');
+const W = cv.width, H = cv.height;
+
+// Tor-Geometrie im Design-Raum (1000 x 700)
+const GOAL = { left: 280, right: 720, top: 175, bottom: 360 };
+
+// 6 Zielzonen (3 Spalten x 2 Reihen) — Vorschau für Phase 2
+function zones(){
+  const z = [];
+  const colW = (GOAL.right - GOAL.left) / 3;
+  const rowH = (GOAL.bottom - GOAL.top) / 2;
+  for (let r = 0; r < 2; r++){
+    for (let c = 0; c < 3; c++){
+      z.push({
+        x: GOAL.left + c*colW + 8,
+        y: GOAL.top + r*rowH + 8,
+        w: colW - 16,
+        h: rowH - 16
+      });
+    }
+  }
+  return z;
+}
+
+function css(name){ return getComputedStyle(document.documentElement).getPropertyValue(name).trim(); }
+
+function drawPitch(){
+  // Rasen mit Verlauf + Mäh-Streifen
+  const g = ctx.createLinearGradient(0, GOAL.bottom-40, 0, H);
+  g.addColorStop(0, css('--grass-far'));
+  g.addColorStop(1, css('--grass-near'));
+  ctx.fillStyle = g;
+  ctx.fillRect(0, GOAL.bottom-40, W, H-(GOAL.bottom-40));
+  // Streifen (perspektivisch heller/dunkler)
+  ctx.save();
+  for (let i = 0; i < 7; i++){
+    ctx.fillStyle = `rgba(255,255,255,${i%2 ? 0.05 : 0})`;
+    const y = (GOAL.bottom-40) + i*((H-(GOAL.bottom-40))/7);
+    ctx.fillRect(0, y, W, (H-(GOAL.bottom-40))/7);
+  }
+  ctx.restore();
+  // Elfmeterpunkt
+  ctx.fillStyle = 'rgba(255,255,255,.85)';
+  ctx.beginPath(); ctx.arc(W/2, 560, 6, 0, Math.PI*2); ctx.fill();
+}
+
+function drawMarkings(){
+  ctx.save();
+  ctx.strokeStyle = 'rgba(255,255,255,.78)';
+  ctx.lineWidth = 3; ctx.lineJoin = 'round'; ctx.lineCap = 'round';
+  // Torlinie
+  ctx.beginPath(); ctx.moveTo(120, 360); ctx.lineTo(880, 360); ctx.stroke();
+  // Strafraum (16 m) — perspektivisch nach vorne breiter
+  ctx.beginPath();
+  ctx.moveTo(210, 360); ctx.lineTo(140, 600);
+  ctx.lineTo(860, 600); ctx.lineTo(790, 360);
+  ctx.stroke();
+  // Torraum (5 m)
+  ctx.beginPath();
+  ctx.moveTo(330, 360); ctx.lineTo(305, 432);
+  ctx.lineTo(695, 432); ctx.lineTo(670, 360);
+  ctx.stroke();
+  // Strafstoßbogen am Elfmeterpunkt
+  ctx.beginPath();
+  ctx.arc(500, 560, 85, 0.49, 2.65, false);
+  ctx.stroke();
+  ctx.restore();
+}
+
+function drawGoal(){
+  const {left,right,top,bottom} = GOAL;
+  // Netz
+  ctx.strokeStyle = 'rgba(255,255,255,.16)';
+  ctx.lineWidth = 1;
+  for (let x = left; x <= right; x += 22){
+    ctx.beginPath(); ctx.moveTo(x, top); ctx.lineTo(x, bottom); ctx.stroke();
+  }
+  for (let y = top; y <= bottom; y += 22){
+    ctx.beginPath(); ctx.moveTo(left, y); ctx.lineTo(right, y); ctx.stroke();
+  }
+  // Glow hinterm Tor
+  const glow = ctx.createRadialGradient(W/2, top+30, 10, W/2, top+30, 360);
+  glow.addColorStop(0, 'rgba(56,189,248,.20)');
+  glow.addColorStop(1, 'rgba(56,189,248,0)');
+  ctx.fillStyle = glow;
+  ctx.fillRect(left-60, top-60, (right-left)+120, (bottom-top)+120);
+  // Pfosten + Latte
+  ctx.fillStyle = css('--line');
+  ctx.shadowColor = 'rgba(56,189,248,.55)'; ctx.shadowBlur = 16;
+  const t = 12;
+  ctx.fillRect(left-t, top-t, t, (bottom-top)+t);   // linker Pfosten
+  ctx.fillRect(right, top-t, t, (bottom-top)+t);     // rechter Pfosten
+  ctx.fillRect(left-t, top-t, (right-left)+2*t, t);  // Latte
+  ctx.shadowBlur = 0;
+}
+
+function drawZones(){
+  ctx.save();
+  zones().forEach((z,i)=>{
+    if (mode === 'ready' && i === hoveredZone){
+      ctx.setLineDash([]);
+      ctx.fillStyle = 'rgba(56,189,248,.16)';
+      ctx.beginPath(); ctx.roundRect(z.x, z.y, z.w, z.h, 8); ctx.fill();
+      ctx.strokeStyle = 'rgba(56,189,248,.80)'; ctx.lineWidth = 2;
+    } else {
+      ctx.setLineDash([6,6]);
+      ctx.strokeStyle = 'rgba(56,189,248,.30)'; ctx.lineWidth = 1.5;
+    }
+    ctx.beginPath(); ctx.roundRect(z.x, z.y, z.w, z.h, 8); ctx.stroke();
+  });
+  ctx.restore();
+}
+
+function drawKeeper(offX=0, offY=0, lean=0){
+  const cx = W/2, feetY = GOAL.bottom - 6;
+  ctx.save();
+  ctx.translate(offX, offY);
+  ctx.translate(cx, feetY-60); ctx.rotate(lean); ctx.translate(-cx, -(feetY-60));
+  // Schatten
+  ctx.fillStyle = 'rgba(0,0,0,.25)';
+  ctx.beginPath(); ctx.ellipse(cx, feetY+8, 46, 10, 0, 0, Math.PI*2); ctx.fill();
+  // Beine
+  ctx.strokeStyle = '#0c1230'; ctx.lineWidth = 14; ctx.lineCap='round';
+  ctx.beginPath(); ctx.moveTo(cx-12, feetY-58); ctx.lineTo(cx-18, feetY); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(cx+12, feetY-58); ctx.lineTo(cx+18, feetY); ctx.stroke();
+  // Arme (hinter dem Trikot) + Sky-Handschuhe
+  ctx.strokeStyle = css('--brand'); ctx.lineWidth = 14; ctx.lineCap='round';
+  ctx.beginPath(); ctx.moveTo(cx-22, feetY-104); ctx.lineTo(cx-58, feetY-78); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(cx+22, feetY-104); ctx.lineTo(cx+58, feetY-78); ctx.stroke();
+  // Trikot (Brand-Blau)
+  ctx.fillStyle = css('--brand');
+  ctx.beginPath(); ctx.roundRect(cx-26, feetY-118, 52, 64, 12); ctx.fill();
+  // Nummer 1 auf der Brust
+  ctx.fillStyle = '#ffffff';
+  ctx.font = "30px 'Bebas Neue', Impact, sans-serif";
+  ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  ctx.fillText('1', cx, feetY-84);
+  // Kapitänsbinde in Schwarz-Rot-Gold am linken Oberarm
+  (function(){
+    const bx = cx-48, by = feetY-100, bw = 18, bh = 12;
+    const cols = ['#000000','#dd0000','#ffce00'];
+    cols.forEach((col,i)=>{ ctx.fillStyle = col; ctx.fillRect(bx, by + i*(bh/3), bw, bh/3); });
+    ctx.strokeStyle = 'rgba(255,255,255,.55)'; ctx.lineWidth = 1; ctx.strokeRect(bx, by, bw, bh);
+  })();
+  // Handschuhe
+  ctx.fillStyle = css('--sky');
+  ctx.beginPath(); ctx.arc(cx-60, feetY-76, 9, 0, Math.PI*2); ctx.fill();
+  ctx.beginPath(); ctx.arc(cx+60, feetY-76, 9, 0, Math.PI*2); ctx.fill();
+  // Kopf
+  const hx = cx, hy = feetY-134, hr = 16;
+  ctx.fillStyle = '#f0c9a8';
+  ctx.beginPath(); ctx.arc(hx, hy, hr, 0, Math.PI*2); ctx.fill();
+  // Heller Bartschatten
+  ctx.fillStyle = 'rgba(150,110,60,.20)';
+  ctx.beginPath(); ctx.arc(hx, hy+3, hr, Math.PI*0.18, Math.PI*0.82); ctx.fill();
+  // Augen
+  ctx.fillStyle = 'rgba(35,28,20,.85)';
+  ctx.beginPath(); ctx.arc(hx-5, hy-1, 1.7, 0, Math.PI*2); ctx.fill();
+  ctx.beginPath(); ctx.arc(hx+5, hy-1, 1.7, 0, Math.PI*2); ctx.fill();
+  // Kurze blonde Haare
+  ctx.fillStyle = '#ddb85f';
+  ctx.beginPath(); ctx.arc(hx, hy-1, hr, Math.PI*1.04, Math.PI*1.96); ctx.fill();
+  // Seitenscheitel / Pony
+  ctx.beginPath();
+  ctx.moveTo(hx-hr+1, hy-3);
+  ctx.lineTo(hx+5, hy-hr+1);
+  ctx.lineTo(hx+hr-2, hy-5);
+  ctx.lineTo(hx+3, hy-6);
+  ctx.closePath(); ctx.fill();
+  ctx.restore();
+}
+
+function drawBall(cx, cy, r){
+  ctx.save();
+  ctx.fillStyle = 'rgba(0,0,0,.22)';
+  ctx.beginPath(); ctx.ellipse(cx, cy+r-2, r*0.9, 6, 0, 0, Math.PI*2); ctx.fill();
+  ctx.fillStyle = css('--ball');
+  ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI*2); ctx.fill();
+  // angedeutetes Muster
+  ctx.fillStyle = '#0a1024';
+  ctx.beginPath();
+  ctx.moveTo(cx, cy-9);
+  for (let i=0;i<5;i++){
+    const a = -Math.PI/2 + i*(2*Math.PI/5);
+    ctx.lineTo(cx + Math.cos(a)*9, cy + Math.sin(a)*9);
+  }
+  ctx.closePath(); ctx.fill();
+  ctx.strokeStyle = 'rgba(10,16,36,.25)'; ctx.lineWidth=1.5;
+  ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI*2); ctx.stroke();
+  ctx.restore();
+}
+
+function drawScene(){
+  ctx.clearRect(0,0,W,H);
+  // Himmel/Stadion
+  const sky = ctx.createLinearGradient(0,0,0,GOAL.bottom);
+  sky.addColorStop(0, '#0b1330');
+  sky.addColorStop(1, '#101f4d');
+  ctx.fillStyle = sky; ctx.fillRect(0,0,W,GOAL.bottom);
+  // Flutlicht-Schein oben
+  const fl = ctx.createRadialGradient(W/2,-40,20,W/2,-40,420);
+  fl.addColorStop(0,'rgba(120,170,255,.25)');
+  fl.addColorStop(1,'rgba(120,170,255,0)');
+  ctx.fillStyle = fl; ctx.fillRect(0,0,W,GOAL.bottom);
+
+  drawPitch();
+  drawMarkings();
+  drawGoal();
+  drawZones();
+}
+
+/* ---------- Phase 2: Schuss-Mechanik ---------- */
+const SPOT = { x: W/2, y: 560 };
+const Z = zones();                       // 0-2 = oben L/M/R, 3-5 = unten L/M/R
+const zoneCenter = i => ({ x: Z[i].x + Z[i].w/2, y: Z[i].y + Z[i].h/2 });
+
+let mode = 'ready';                      // ready | shooting | result
+let hoveredZone = -1;
+let shotZone = -1, keeperZone = -1;
+let ball = { x: SPOT.x, y: SPOT.y, r: 22 };
+let keeperOff = { x: 0, y: 0, lean: 0 };
+let result = '';                         // 'TOR' | 'HALT'
+let willSave = false;
+let shotTarget = { x: SPOT.x, y: SPOT.y };
+let parryTarget = { x: SPOT.x, y: SPOT.y };
+let tShot = 0, tResult = 0;
+let shots = 0, goals = 0;
+let tCount = 0, countShown = null;       // Countdown vor dem Schuss
+const TICK = 650;                        // ms pro Countdown-Zahl
+const MAX_SHOTS = 5;                     // Solo-Challenge: 5 Elfmeter
+const SHOT_MS = 440, HOLD_MS = 1150, PARRY_MS = 360, ARC_LIFT = 60;
+
+const $score = document.getElementById('score');
+const $shots = document.getElementById('shots');
+const $best  = document.getElementById('best');
+const $hint  = document.querySelector('.hint');
+$hint.textContent = 'Tipp eine Ecke an';
+
+const REDUCED = (typeof window !== 'undefined' && window.matchMedia)
+  ? window.matchMedia('(prefers-reduced-motion: reduce)').matches : false;
+
+let best = loadBest();
+let newRecord = false;
+function loadBest(){ return null; }                 // Session-Highscore (kein Browser-Speicher -> öffnet überall)
+function saveBest(v){ /* bewusst nur Session; persistentes Speichern erst beim Deploy */ }
+function renderBest(){ $best.textContent = (best == null) ? '–' : best + '/' + MAX_SHOTS; }
+
+const easeOut = p => 1 - Math.pow(1-p, 3);
+const easeOutBack = p => { const c1 = 2.2, c3 = c1 + 1; return 1 + c3*Math.pow(p-1,3) + c1*Math.pow(p-1,2); };
+
+const KEEPER_READ = 0.55;            // Chance, dass der Torwart die Ecke "liest" (hält auch rechts)
+
+/* --- Sound (Web Audio, ohne Dateien) --- */
+let actx = null;
+function audio(){
+  if (!actx){ try { actx = new (window.AudioContext || window.webkitAudioContext)(); } catch(e){ actx = null; } }
+  if (actx && actx.state === 'suspended') actx.resume();
+  return actx;
+}
+function tone(freq, dur, type, vol, delay){
+  const a = audio(); if (!a) return;
+  const t = a.currentTime + (delay||0);
+  const o = a.createOscillator(), g = a.createGain();
+  o.type = type || 'sine'; o.frequency.value = freq;
+  o.connect(g); g.connect(a.destination);
+  g.gain.setValueAtTime(vol||0.2, t);
+  g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+  o.start(t); o.stop(t + dur);
+}
+function noise(dur, vol){
+  const a = audio(); if (!a) return;
+  const n = Math.floor(a.sampleRate * dur);
+  const buf = a.createBuffer(1, n, a.sampleRate);
+  const d = buf.getChannelData(0);
+  for (let i=0;i<n;i++) d[i] = (Math.random()*2-1) * (1 - i/n);
+  const s = a.createBufferSource(); s.buffer = buf;
+  const g = a.createGain(); g.gain.value = vol||0.2;
+  s.connect(g); g.connect(a.destination); s.start();
+}
+const sfxKick = ()=>{ noise(0.07,0.25); tone(150,0.12,'triangle',0.3); };
+const sfxGoal = ()=>{ tone(523,0.14,'square',0.16); tone(659,0.14,'square',0.16,0.12); tone(784,0.24,'square',0.18,0.24); noise(0.22,0.10); };
+const sfxSave = ()=>{ tone(95,0.18,'sawtooth',0.3); noise(0.12,0.2); };
+const sfxTick = ()=>{ tone(760,0.09,'square',0.16); };
+function sfxWhistle(){
+  const a = audio(); if (!a) return;
+  const t = a.currentTime;
+  const o = a.createOscillator(), g = a.createGain();
+  o.type = 'square'; o.frequency.setValueAtTime(2300, t);
+  const lfo = a.createOscillator(), lg = a.createGain();   // Triller
+  lfo.frequency.value = 30; lg.gain.value = 130;
+  lfo.connect(lg); lg.connect(o.frequency);
+  g.gain.setValueAtTime(0.0001, t);
+  g.gain.exponentialRampToValueAtTime(0.26, t + 0.02);
+  g.gain.exponentialRampToValueAtTime(0.0001, t + 0.34);
+  o.connect(g); g.connect(a.destination);
+  o.start(t); lfo.start(t); o.stop(t + 0.36); lfo.stop(t + 0.36);
+}
+
+/* --- Konfetti bei Tor --- */
+let confetti = [];
+const CONFETTI_COLS = ['#38bdf8','#2563eb','#ffffff','#ffce00'];
+function spawnConfetti(x, y){
+  for (let i=0;i<64;i++){
+    confetti.push({ x, y,
+      vx:(Math.random()-0.5)*10, vy:-(Math.random()*9+5), g:0.38,
+      life:1, col:CONFETTI_COLS[i%4], s:4+Math.random()*5,
+      rot:Math.random()*6.28, vr:(Math.random()-0.5)*0.45 });
+  }
+}
+function stepConfetti(){
+  for (const p of confetti){ p.vy+=p.g; p.x+=p.vx; p.y+=p.vy; p.rot+=p.vr; p.life-=0.012; }
+  confetti = confetti.filter(p => p.life>0 && p.y < H+30);
+}
+function drawConfetti(){
+  for (const p of confetti){
+    ctx.save(); ctx.globalAlpha = Math.max(p.life,0);
+    ctx.translate(p.x,p.y); ctx.rotate(p.rot);
+    ctx.fillStyle = p.col; ctx.fillRect(-p.s/2, -p.s/2, p.s, p.s*0.6);
+    ctx.restore();
+  }
+}
+
+// Wohin der Torwart hechtet (Spalte = Seite, Reihe = Höhe)
+function keeperTarget(i){
+  const col = i % 3, row = Math.floor(i/3);
+  return { x: (col-1)*120, y: row === 0 ? -56 : 12, lean: (col-1)*0.72 };
+}
+
+function drawActors(){
+  if (mode === 'shooting'){
+    const p  = Math.min((performance.now()-tShot)/SHOT_MS, 1);
+    const pb = easeOutBack(p);            // Hechten mit Überschwung
+    const kt = keeperTarget(keeperZone);
+    keeperOff = { x: kt.x*pb, y: kt.y*pb, lean: kt.lean*easeOut(p) };
+  }
+  drawKeeper(keeperOff.x, keeperOff.y, keeperOff.lean);
+  drawBall(ball.x, ball.y, ball.r);
+
+  if (mode === 'result'){
+    const dt = performance.now() - tResult;
+    const win = result === 'TOR';
+    if (win){                                   // Netz-Zittern um den Ball
+      const rp = Math.min(dt/260, 1);
+      ctx.save(); ctx.globalAlpha = (1-rp)*0.5;
+      ctx.strokeStyle = '#ffffff'; ctx.lineWidth = 3;
+      ctx.beginPath(); ctx.arc(shotTarget.x, shotTarget.y, 10 + rp*42, 0, Math.PI*2); ctx.stroke();
+      ctx.restore();
+    }
+    // kurzer Farbblitz
+    const fa = Math.max(0, 0.22*(1 - dt/280));
+    if (fa > 0){
+      ctx.save(); ctx.globalAlpha = fa;
+      ctx.fillStyle = win ? '#38bdf8' : '#ff5a7a';
+      ctx.fillRect(0,0,W,H); ctx.restore();
+    }
+    ctx.save();
+    ctx.textAlign='center'; ctx.textBaseline='middle';
+    ctx.font = "92px 'Bebas Neue', Impact, sans-serif";
+    ctx.fillStyle = win ? '#38bdf8' : '#ff5a7a';
+    ctx.shadowColor = ctx.fillStyle; ctx.shadowBlur = 24;
+    ctx.fillText(win ? 'TOR!' : 'GEHALTEN!', W/2, 118);
+    ctx.restore();
+  }
+  if (mode === 'countdown' && countShown >= 1){
+    ctx.save();
+    ctx.textAlign='center'; ctx.textBaseline='middle';
+    ctx.font = "120px 'Bebas Neue', Impact, sans-serif";
+    ctx.fillStyle = '#38bdf8'; ctx.shadowColor = '#38bdf8'; ctx.shadowBlur = 26;
+    ctx.fillText(String(countShown), W/2, 130);
+    ctx.restore();
+  }
+  if (mode === 'intro'){
+    ctx.save();
+    ctx.textAlign='center'; ctx.textBaseline='middle';
+    ctx.font = "62px 'Bebas Neue', Impact, sans-serif";
+    ctx.fillStyle = '#38bdf8'; ctx.shadowColor='#38bdf8'; ctx.shadowBlur=22;
+    ctx.fillText('TIPPEN ZUM ANPFIFF', W/2, 120);
+    ctx.restore();
+  }
+  if (mode === 'final'){
+    ctx.save();
+    ctx.fillStyle = 'rgba(8,16,36,.74)'; ctx.fillRect(0,0,W,H);
+    ctx.textAlign='center'; ctx.textBaseline='middle';
+    ctx.fillStyle = '#93a4cc'; ctx.font = "38px 'Bebas Neue', Impact, sans-serif";
+    ctx.fillText('ENDSTAND', W/2, 188);
+    ctx.fillStyle = '#38bdf8'; ctx.shadowColor = '#38bdf8'; ctx.shadowBlur = 28;
+    ctx.font = "150px 'Bebas Neue', Impact, sans-serif";
+    ctx.fillText(goals + ' / ' + MAX_SHOTS, W/2, 300);
+    ctx.shadowBlur = 0;
+    ctx.fillStyle = '#e8eefc'; ctx.font = "40px 'Bebas Neue', Impact, sans-serif";
+    ctx.fillText(ratingText(goals), W/2, 398);
+    if (newRecord){
+      ctx.fillStyle = '#ffce00'; ctx.shadowColor = '#ffce00'; ctx.shadowBlur = 18;
+      ctx.font = "34px 'Bebas Neue', Impact, sans-serif";
+      ctx.fillText('★ NEUER REKORD ★', W/2, 452); ctx.shadowBlur = 0;
+    } else if (best != null){
+      ctx.fillStyle = '#93a4cc'; ctx.font = "24px Inter, system-ui, sans-serif";
+      ctx.fillText('Bestleistung: ' + best + '/' + MAX_SHOTS, W/2, 452);
+    }
+    ctx.fillStyle = '#93a4cc'; ctx.font = "22px Inter, system-ui, sans-serif";
+    ctx.fillText('Tippen für neues Spiel', W/2, 502);
+    ctx.restore();
+  }
+  drawConfetti();
+}
+
+function frame(){
+  const now = performance.now();
+  stepConfetti();
+  if (mode === 'countdown'){
+    const el = now - tCount;
+    if (el >= TICK*3){ countShown = 0; sfxWhistle(); $hint.textContent = 'Tipp eine Ecke an'; mode = 'ready'; }
+    else { const n = 3 - Math.floor(el/TICK); if (n !== countShown){ countShown = n; sfxTick(); } }
+  } else if (mode === 'shooting'){
+    const p = Math.min((now - tShot)/SHOT_MS, 1);
+    const e = easeOut(p);
+    ball.x = SPOT.x + (shotTarget.x - SPOT.x)*e;
+    ball.y = SPOT.y + (shotTarget.y - SPOT.y)*e - ARC_LIFT*Math.sin(p*Math.PI); // Bogen
+    ball.r = 22 - 9*e;                   // kleiner werden = Tiefe
+    if (p >= 1){
+      shots++;
+      result = willSave ? 'HALT' : 'TOR';
+      if (!willSave) goals++;
+      $shots.textContent = shots + '/' + MAX_SHOTS;
+      $score.textContent = goals;
+      ball.x = shotTarget.x; ball.y = shotTarget.y; ball.r = 13;
+      if (willSave){ sfxSave(); }
+      else { sfxGoal(); if (!REDUCED) spawnConfetti(shotTarget.x, shotTarget.y); }
+      mode = 'result'; tResult = now;
+    }
+  } else if (mode === 'result'){
+    if (willSave){                       // Abpraller nach vorne / zur Seite
+      const pr = Math.min((now - tResult)/PARRY_MS, 1);
+      const er = easeOut(pr);
+      ball.x = shotTarget.x + (parryTarget.x - shotTarget.x)*er;
+      ball.y = shotTarget.y + (parryTarget.y - shotTarget.y)*er - 42*Math.sin(pr*Math.PI);
+      ball.r = 13 + 7*er;                // kommt nach vorne -> größer
+    }                                     // bei Tor: Ball bleibt im Netz liegen
+    if (now - tResult > HOLD_MS){
+      if (shots >= MAX_SHOTS){
+        newRecord = (best == null || goals > best);
+        if (newRecord){ best = goals; saveBest(best); renderBest(); }
+        mode = 'final'; $hint.textContent = 'Tippen für neues Spiel';
+      }
+      else resetShot();
+    }
+  }
+  drawScene(); drawActors();
+  const animating = mode === 'countdown' || mode === 'shooting' || mode === 'result';
+  if (animating || confetti.length) requestAnimationFrame(frame); else looping = false;
+}
+
+let looping = false;
+function ensureLoop(){ if (!looping){ looping = true; requestAnimationFrame(frame); } }
+function unlockAudio(){
+  const a = audio(); if (!a) return;
+  try { const o=a.createOscillator(), g=a.createGain(); g.gain.value=0.0001;
+        o.connect(g); g.connect(a.destination); o.start(); o.stop(a.currentTime+0.03); } catch(e){}
+}
+function startCountdown(){
+  mode = 'countdown'; tCount = performance.now(); countShown = null;
+  $hint.textContent = 'Anpfiff …';
+  ensureLoop();
+}
+function startMatch(){
+  goals = 0; shots = 0;
+  $score.textContent = 0; $shots.textContent = '0/' + MAX_SHOTS;
+  result = ''; confetti = [];
+  ball = { x: SPOT.x, y: SPOT.y, r: 22 };
+  keeperOff = { x: 0, y: 0, lean: 0 };
+  shotZone = -1; keeperZone = -1;
+  startCountdown();
+}
+function ratingText(g){
+  if (g >= 5) return 'Perfekt – Elfmeter-Gott';
+  if (g === 4) return 'Stark geschossen';
+  if (g === 3) return 'Solide Quote';
+  if (g === 2) return 'Da geht mehr';
+  if (g === 1) return 'Aufwärmen zählt auch';
+  return 'Üben, üben, üben';
+}
+function resetShot(){
+  ball = { x: SPOT.x, y: SPOT.y, r: 22 };
+  keeperOff = { x: 0, y: 0, lean: 0 };
+  shotZone = -1; keeperZone = -1; result = '';
+  startCountdown();
+  drawScene(); drawActors();
+}
+
+function shoot(i){
+  if (mode !== 'ready' || i < 0) return;
+  shotZone = i;
+  keeperZone = (Math.random() < KEEPER_READ) ? i : Math.floor(Math.random()*6);
+  willSave = (keeperZone === shotZone);
+  shotTarget = zoneCenter(i);
+  // Abpraller: zur näheren Seite und nach vorne (größeres y)
+  const col = i % 3;
+  const side = col === 2 ? -1 : col === 0 ? 1 : (Math.random() < 0.5 ? -1 : 1);
+  parryTarget = { x: shotTarget.x + side*180, y: 505 };
+  hoveredZone = -1;
+  sfxKick();
+  mode = 'shooting'; tShot = performance.now();
+  ensureLoop();
+}
+
+function toDesign(e){
+  const rect = cv.getBoundingClientRect();
+  return {
+    x: (e.clientX - rect.left) * (W / rect.width),
+    y: (e.clientY - rect.top)  * (H / rect.height)
+  };
+}
+function zoneAt(px, py){
+  for (let i=0;i<Z.length;i++){
+    const z = Z[i];
+    if (px>=z.x && px<=z.x+z.w && py>=z.y && py<=z.y+z.h) return i;
+  }
+  return -1;
+}
+
+cv.addEventListener('pointerdown', e=>{
+  if (mode === 'intro'){ unlockAudio(); startCountdown(); return; }
+  if (mode === 'final'){ unlockAudio(); startMatch(); return; }
+  const p = toDesign(e);
+  shoot(zoneAt(p.x, p.y));
+});
+cv.addEventListener('pointermove', e=>{
+  if (mode !== 'ready') return;
+  const p = toDesign(e);
+  const i = zoneAt(p.x, p.y);
+  if (i !== hoveredZone){ hoveredZone = i; drawScene(); drawActors(); }
+});
+cv.addEventListener('pointerleave', ()=>{
+  if (hoveredZone !== -1){ hoveredZone = -1; drawScene(); drawActors(); }
+});
+window.addEventListener('keydown', e=>{
+  if ((mode === 'intro' || mode === 'final') && (e.key === ' ' || e.key === 'Enter')){
+    unlockAudio(); (mode === 'final' ? startMatch : startCountdown)(); return;
+  }
+  const n = parseInt(e.key, 10);
+  if (n >= 1 && n <= 6) shoot(n-1);       // Tasten 1-6
+});
+
+// Start
+mode = 'intro';
+$score.textContent = 0; $shots.textContent = '0/' + MAX_SHOTS;
+renderBest();
+$hint.textContent = 'Tippen zum Anpfiff';
+drawScene(); drawActors();
+if (document.fonts && document.fonts.ready) document.fonts.ready.then(()=>{ drawScene(); drawActors(); });
+</script>
+</body>
+</html>
