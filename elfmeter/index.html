@@ -47,6 +47,12 @@
     font-size:13px;letter-spacing:.4px;color:var(--text);background:rgba(8,14,34,.6);
     border:1px solid rgba(56,189,248,.3);border-radius:999px;padding:4px 14px;white-space:nowrap;pointer-events:none}
   #nations b{font-weight:600}
+  /* Schuss-Stil-Umschalter */
+  #styleBtn{position:absolute;top:8px;right:8px;z-index:5;font-family:'Inter',sans-serif;font-size:12px;font-weight:600;
+    letter-spacing:.3px;color:var(--text);background:rgba(8,14,34,.7);border:1px solid rgba(56,189,248,.45);
+    border-radius:999px;padding:5px 12px;cursor:pointer;white-space:nowrap}
+  #styleBtn:active{transform:scale(.95)}
+  #styleBtn.gefuehl{border-color:#ffce00;color:#ffe27a}
 
   /* Power-Leiste */
   #powerwrap{position:absolute;left:50%;bottom:12px;transform:translateX(-50%);z-index:5;
@@ -146,6 +152,7 @@
     <canvas id="gl"></canvas>
     <div id="flash"></div>
     <div id="nations"></div>
+    <button id="styleBtn" title="Schuss-Stil umschalten">💥 Wucht</button>
     <div id="powerwrap"><div id="powerbar"></div></div>
 
     <div id="picker">
@@ -588,6 +595,7 @@ const raycaster=new THREE.Raycaster(), pointer=new THREE.Vector2();
 
 /* ===== Power & Kurve (Schuss-Mechanik) ===== */
 let shotDur=SHOT_MS, arcH=0.9, curveAmt=0, shotPower=0.6;
+let shotStyle='wucht';   // 'wucht' | 'gefuehl'
 let aiming=false, tAim=0, curSamples=[];
 const aimTarget=new THREE.Vector3();
 const savePt=new THREE.Vector3();    // Punkt, an dem der Keeper den Ball berührt
@@ -624,9 +632,12 @@ function shoot(p, power, curve){
   if(mode!=='ready') return;
   power=(power==null)?0.6:power; curve=curve||0;
   target.copy(p);
+  // Schuss-Stil: Wucht = schneller/flacher/härter; Gefühl = mehr Effet & Platzierung
+  if(shotStyle==='gefuehl'){ curve*=1.75; power=Math.min(1,power*0.9+0.04); }
+  else { curve*=0.55; }
   shotPower=power; curveAmt=curve;
-  shotDur = SHOT_MS - power*240 + 120;     // mehr Power = schneller (820 .. 580ms)
-  arcH    = 0.42 + power*0.85;             // mehr Power = höherer Bogen
+  shotDur = SHOT_MS - power*240 + 120 + (shotStyle==='wucht' ? -90 : 70);   // Wucht schneller
+  arcH    = 0.42 + power*0.85 + (shotStyle==='gefuehl' ? 0.15 : -0.05);
 
   const onTarget = isOnTarget(p);
   const overshoot = onTarget && power>0.86 && p.y>GH-0.55;   // zu viel Power oben -> drüber
@@ -638,7 +649,8 @@ function shoot(p, power, curve){
   else missMsg='';
 
   const shotZone=zoneOf(p);
-  const readChance = Math.max(0.05, KEEPER_READ - power*0.12 - Math.abs(curve)*0.07);
+  const styleBonus = shotStyle==='wucht' ? power*0.06 : Math.abs(curve)*0.10;   // Wucht/Effet überlistet Keeper
+  const readChance = Math.max(0.04, KEEPER_READ - power*0.12 - Math.abs(curve)*0.07 - styleBonus);
   const keeperZone=(Math.random()<readChance)?shotZone:Math.floor(Math.random()*6);
   willSave = onTarget && !overshoot && (keeperZone===shotZone);
   keeperDive=diveFor(keeperZone);
@@ -789,6 +801,14 @@ function endAim(ev){
 }
 glCanvas.addEventListener('pointerup', endAim);
 glCanvas.addEventListener('pointercancel', endAim);
+
+/* ===== Schuss-Stil-Umschalter ===== */
+const $styleBtn=document.getElementById('styleBtn');
+if($styleBtn) $styleBtn.addEventListener('click',()=>{
+  shotStyle = shotStyle==='wucht' ? 'gefuehl' : 'wucht';
+  $styleBtn.textContent = shotStyle==='wucht' ? '💥 Wucht' : '🎯 Gefühl';
+  $styleBtn.classList.toggle('gefuehl', shotStyle==='gefuehl');
+});
 
 /* ===== Resize ===== */
 function resize(){ const w=stageEl.clientWidth;
