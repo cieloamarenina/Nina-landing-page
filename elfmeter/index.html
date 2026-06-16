@@ -53,6 +53,11 @@
     border-radius:999px;padding:5px 12px;cursor:pointer;white-space:nowrap}
   #styleBtn:active{transform:scale(.95)}
   #styleBtn.gefuehl{border-color:#ffce00;color:#ffe27a}
+  /* Schussfuß-Umschalter */
+  #footBtn{position:absolute;top:8px;left:8px;z-index:5;font-family:'Inter',sans-serif;font-size:12px;font-weight:600;
+    letter-spacing:.3px;color:var(--text);background:rgba(8,14,34,.7);border:1px solid rgba(56,189,248,.45);
+    border-radius:999px;padding:5px 12px;cursor:pointer;white-space:nowrap}
+  #footBtn:active{transform:scale(.95)}
 
   /* Power-Leiste */
   #powerwrap{position:absolute;left:50%;bottom:12px;transform:translateX(-50%);z-index:5;
@@ -152,6 +157,7 @@
     <canvas id="gl"></canvas>
     <div id="flash"></div>
     <div id="nations"></div>
+    <button id="footBtn" title="Schussfuß umschalten">🦶 Rechtsfuß</button>
     <button id="styleBtn" title="Schuss-Stil umschalten">💥 Wucht</button>
     <div id="powerwrap"><div id="powerbar"></div></div>
 
@@ -508,8 +514,16 @@ function applyKeeperFlag(){ keeperFlagMesh.material.map=flagTex(KEEPER_C); keepe
 
 /* ===== Schütze (3D-Spieler, schießt den Ball) ===== */
 const shooter3D=new THREE.Group(); shooter3D.scale.setScalar(0.92); scene.add(shooter3D);
-const SH_IDLE={x:-1.0, z:SPOT_Z+1.3};      // Standposition (hinten-links vom Ball)
-const SH_PLANT={x:-0.32, z:SPOT_Z+0.42};   // Position beim Abschluss (neben dem Ball)
+const SH_SCALE=0.92;
+let shootFoot='R';                          // 'R' = Rechtsfuß (Anlauf von links), 'L' gespiegelt
+let SH_IDLE={x:-1.0, z:SPOT_Z+1.3};        // Standposition (hinten vom Ball)
+let SH_PLANT={x:-0.32, z:SPOT_Z+0.42};     // Position beim Abschluss (neben dem Ball)
+function setFoot(f){
+  shootFoot=f; const sgn = f==='R' ? 1 : -1;
+  SH_IDLE.x = -1.0*sgn; SH_PLANT.x = -0.32*sgn;
+  shooter3D.scale.set(SH_SCALE*sgn, SH_SCALE, SH_SCALE);   // -x spiegelt die Figur
+  if(typeof resetShooter==='function') resetShooter();
+}
 let shMat={jersey:new THREE.MeshStandardMaterial({roughness:0.7}), sock:new THREE.MeshStandardMaterial({roughness:0.6}),
   skin:new THREE.MeshStandardMaterial({color:0xf0c9a8,roughness:0.8}), short:new THREE.MeshStandardMaterial({color:0x12203a,roughness:0.9})};
 let shTorso, shKickLeg, shStandLeg, shArmL, shArmR;
@@ -828,6 +842,11 @@ if($styleBtn) $styleBtn.addEventListener('click',()=>{
   shotStyle = shotStyle==='wucht' ? 'gefuehl' : 'wucht';
   $styleBtn.textContent = shotStyle==='wucht' ? '💥 Wucht' : '🎯 Gefühl';
   $styleBtn.classList.toggle('gefuehl', shotStyle==='gefuehl');
+});
+const $footBtn=document.getElementById('footBtn');
+if($footBtn) $footBtn.addEventListener('click',()=>{
+  setFoot(shootFoot==='R' ? 'L' : 'R');
+  $footBtn.textContent = shootFoot==='R' ? '🦶 Rechtsfuß' : '🦶 Linksfuß';
 });
 
 /* ===== Resize ===== */
