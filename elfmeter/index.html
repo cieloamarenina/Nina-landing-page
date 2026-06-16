@@ -42,6 +42,12 @@
   #flash{position:absolute;top:14%;left:0;right:0;text-align:center;pointer-events:none;z-index:4;
     font-family:'Bebas Neue',Impact,sans-serif;font-size:84px;letter-spacing:2px;opacity:0;transition:opacity .15s}
   #flash.show{opacity:1}
+  /* Combo-Hype-Farbpuls über der Szene */
+  #hype{position:absolute;inset:0;z-index:3;pointer-events:none;opacity:0;
+    background:radial-gradient(120% 90% at 50% 40%, rgba(255,206,0,.0) 30%, rgba(255,206,0,.28) 75%, rgba(255,90,122,.30) 100%);
+    transition:opacity .12s}
+  #hype.on{opacity:1;animation:hypepulse .42s ease}
+  @keyframes hypepulse{0%{opacity:0}25%{opacity:1}100%{opacity:0}}
   /* Nationen-Label oben in der Szene (Schütze vs Torwart) */
   #nations{position:absolute;top:8px;left:50%;transform:translateX(-50%);z-index:5;
     font-size:13px;letter-spacing:.4px;color:var(--text);background:rgba(8,14,34,.6);
@@ -160,6 +166,7 @@
   <div class="stage" id="stage">
     <canvas id="gl"></canvas>
     <div id="flash"></div>
+    <div id="hype"></div>
     <div id="nations"></div>
     <button id="footBtn" title="Schussfuß umschalten">🦶 Rechtsfuß</button>
     <button id="styleBtn" title="Schuss-Stil umschalten">💥 Wucht</button>
@@ -628,6 +635,7 @@ function unlockAudio(){ const a=audio(); if(!a)return; try{const o=a.createOscil
 /* ===== Spiel-Logik ===== */
 let mode='menu';                       // menu | countdown | ready | shooting | result | final
 let shots=0, goals=0, best=null;
+let goalStreak=0, shakeT=0, shakeMag=0, hypeT=0;   // Combo-Hype
 let gameMode='solo';                    // 'solo' | 'duo' | 'turnier'
 const DUO_SHOTS=5;
 let shotsTarget=MAX_SHOTS, curPlayer=1, p1Goals=0, p2Goals=0;
@@ -772,7 +780,7 @@ function startTournament(){
   nextTournamentRound();
 }
 function nextTournamentRound(){
-  tOppIdx=tPool.pop();
+  tOppIdx=tPool.pop(); goalStreak=0;
   SHOOTER=COUNTRIES[tPlayerIdx]; KEEPER_C=COUNTRIES[tOppIdx];
   applyKit(); applyShooter(); applyShooterKit(); updateMatchup();
   goals=0; shots=0; $score.textContent=0; $shots.textContent='0/'+shotsTarget; renderBest();
@@ -804,7 +812,7 @@ function resolveTournamentRound(){
   $final.classList.remove('hidden'); mode='final';
 }
 function startPlayerTurn(){
-  goals=0; shots=0; $score.textContent=0; $shots.textContent='0/'+shotsTarget; renderBest();
+  goals=0; shots=0; goalStreak=0; $score.textContent=0; $shots.textContent='0/'+shotsTarget; renderBest();
   if(gameMode==='duo'){
     flash('SPIELER '+curPlayer,'#38bdf8');
     const n=document.getElementById('nations'); if(n) n.innerHTML='<b>Spieler '+curPlayer+'</b> am Ball &nbsp;·&nbsp; '+SHOOTER.f+' vs '+KEEPER_C.f;
@@ -838,6 +846,13 @@ function showDuoFinal(){
 }
 function startCountdown(){ resetBall(); result=''; mode='countdown'; tCount=performance.now(); countShown=null; setHint('Anpfiff …'); }
 function flash(txt,color){ $flash.textContent=txt; $flash.style.color=color; $flash.classList.add('show'); setTimeout(()=>$flash.classList.remove('show'),1100); }
+function comboFx(n){
+  const names={2:'DOPPELPACK!',3:'HATTRICK! 🔥',4:'COMBO ×4 🔥',5:'UNAUFHALTSAM! 🔥'};
+  flash(names[n] || ('COMBO ×'+n+' 🔥'), '#ffce00');
+  shakeT=performance.now(); shakeMag=Math.min(0.5,0.16+n*0.05); hypeT=performance.now();
+  const h=document.getElementById('hype'); if(h){ h.classList.add('on'); setTimeout(()=>h.classList.remove('on'),420); }
+  sfxCheer();
+}
 
 /* ===== Animationsschleife ===== */
 const easeOut=p=>1-Math.pow(1-p,3);
@@ -874,9 +889,11 @@ function loop(){
     else if(keeperDive.x>0){ armR.rotation.z=0.7+e*1.4; armL.rotation.z=-0.7+e*0.5; }
     else { armL.rotation.z=-0.7-e*0.7; armR.rotation.z=0.7+e*0.7; }
     if(p>=1){ shots++;
-      if(willSave){ result='HALT'; sfxSave(); sfxGroan(); flash('GEHALTEN!','#ff5a7a'); }
-      else if(willMiss||willOver){ result='MISS'; sfxGroan(); flash(missMsg||'DANEBEN!','#ffb020'); }
-      else { result='TOR'; goals++; sfxGoal(); sfxCheer(); flash('TOR!','#38bdf8'); startRipple(target.x,target.y); }
+      if(willSave){ result='HALT'; sfxSave(); sfxGroan(); flash('GEHALTEN!','#ff5a7a'); goalStreak=0; }
+      else if(willMiss||willOver){ result='MISS'; sfxGroan(); flash(missMsg||'DANEBEN!','#ffb020'); goalStreak=0; }
+      else { result='TOR'; goals++; goalStreak++; sfxGoal(); sfxCheer();
+        if(goalStreak>=2) comboFx(goalStreak); else flash('TOR!','#38bdf8');
+        startRipple(target.x,target.y); }
       $shots.textContent=shots+'/'+shotsTarget; $score.textContent=goals;
       mode='result'; tResult=now; }
   } else if(mode==='result'){
@@ -903,6 +920,13 @@ function loop(){
     retMat.opacity=0.7+0.3*Math.sin(now/110);
     reticle.scale.setScalar(1+0.12*Math.sin(now/140));
   }
+  // Combo-Hype: Kamera-Shake + Flutlicht-Puls
+  if(shakeT>0){ const dt=(now-shakeT)/360;
+    if(dt>=1){ shakeT=0; camera.position.set(0,1.5,15.4); }
+    else { const m=shakeMag*(1-dt); camera.position.set(Math.sin(now*0.09)*m, 1.5+Math.cos(now*0.075)*m*0.6, 15.4); } }
+  if(hypeT>0){ const dt=(now-hypeT)/520;
+    if(dt>=1){ hypeT=0; fl1.intensity=0.6; fl2.intensity=0.6; }
+    else { const b=0.6+(1-dt)*1.8; fl1.intensity=b; fl2.intensity=b; } }
   renderer.render(scene,camera);
   requestAnimationFrame(loop);
 }
