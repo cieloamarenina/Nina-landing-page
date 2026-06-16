@@ -328,6 +328,35 @@ const COUNTRIES = [
   {n:'Usbekistan',f:'🇺🇿',j:'#0099b5',t:'#ffffff',u:'#1eb53a'},
 ];
 const idxByName = nm => COUNTRIES.findIndex(c => c.n === nm);
+/* Ländernamen-Übersetzung [en,fr,it,es]; DE = c.n */
+const CNAMES={
+ 'Ägypten':['Egypt','Égypte','Egitto','Egipto'],'Algerien':['Algeria','Algérie','Algeria','Argelia'],
+ 'Argentinien':['Argentina','Argentine','Argentina','Argentina'],'Australien':['Australia','Australie','Australia','Australia'],
+ 'Belgien':['Belgium','Belgique','Belgio','Bélgica'],'Bosnien-H.':['Bosnia-H.','Bosnie-H.','Bosnia-E.','Bosnia-H.'],
+ 'Brasilien':['Brazil','Brésil','Brasile','Brasil'],'Curaçao':['Curaçao','Curaçao','Curaçao','Curazao'],
+ 'DR Kongo':['DR Congo','RD Congo','RD Congo','RD Congo'],'Deutschland':['Germany','Allemagne','Germania','Alemania'],
+ 'Ecuador':['Ecuador','Équateur','Ecuador','Ecuador'],'Elfenbeinküste':["Ivory Coast","Côte d'Ivoire","Costa d'Avorio","Costa de Marfil"],
+ 'England':['England','Angleterre','Inghilterra','Inglaterra'],'Frankreich':['France','France','Francia','Francia'],
+ 'Ghana':['Ghana','Ghana','Ghana','Ghana'],'Haiti':['Haiti','Haïti','Haiti','Haití'],
+ 'Irak':['Iraq','Irak','Iraq','Irak'],'Iran':['Iran','Iran','Iran','Irán'],
+ 'Japan':['Japan','Japon','Giappone','Japón'],'Jordanien':['Jordan','Jordanie','Giordania','Jordania'],
+ 'Kanada':['Canada','Canada','Canada','Canadá'],'Kap Verde':['Cape Verde','Cap-Vert','Capo Verde','Cabo Verde'],
+ 'Katar':['Qatar','Qatar','Qatar','Catar'],'Kolumbien':['Colombia','Colombie','Colombia','Colombia'],
+ 'Kroatien':['Croatia','Croatie','Croazia','Croacia'],'Marokko':['Morocco','Maroc','Marocco','Marruecos'],
+ 'Mexiko':['Mexico','Mexique','Messico','México'],'Neuseeland':['New Zealand','Nouvelle-Zélande','Nuova Zelanda','Nueva Zelanda'],
+ 'Niederlande':['Netherlands','Pays-Bas','Paesi Bassi','Países Bajos'],'Norwegen':['Norway','Norvège','Norvegia','Noruega'],
+ 'Österreich':['Austria','Autriche','Austria','Austria'],'Panama':['Panama','Panama','Panama','Panamá'],
+ 'Paraguay':['Paraguay','Paraguay','Paraguay','Paraguay'],'Portugal':['Portugal','Portugal','Portogallo','Portugal'],
+ 'Saudi-Arabien':['Saudi Arabia','Arabie saoudite','Arabia Saudita','Arabia Saudí'],'Schottland':['Scotland','Écosse','Scozia','Escocia'],
+ 'Schweden':['Sweden','Suède','Svezia','Suecia'],'Schweiz':['Switzerland','Suisse','Svizzera','Suiza'],
+ 'Senegal':['Senegal','Sénégal','Senegal','Senegal'],'Spanien':['Spain','Espagne','Spagna','España'],
+ 'Südafrika':['South Africa','Afrique du Sud','Sudafrica','Sudáfrica'],'Südkorea':['South Korea','Corée du Sud','Corea del Sud','Corea del Sur'],
+ 'Tschechien':['Czechia','Tchéquie','Cechia','Chequia'],'Tunesien':['Tunisia','Tunisie','Tunisia','Túnez'],
+ 'Türkei':['Turkey','Turquie','Turchia','Turquía'],'Uruguay':['Uruguay','Uruguay','Uruguay','Uruguay'],
+ 'USA':['USA','USA','USA','EE. UU.'],'Usbekistan':['Uzbekistan','Ouzbékistan','Uzbekistan','Uzbekistán']
+};
+const _CIDX={en:0,fr:1,it:2,es:3};
+function countryName(c){ if(!c) return ''; if(LANG==='de'||!(LANG in _CIDX)) return c.n; const a=CNAMES[c.n]; return a?a[_CIDX[LANG]]:c.n; }
 let SHOOTER  = COUNTRIES[idxByName('Deutschland')];
 let KEEPER_C = COUNTRIES[idxByName('Brasilien')];
 
@@ -784,7 +813,7 @@ const $slotS=document.getElementById('slotS'), $slotK=document.getElementById('s
 let pickS=idxByName('Deutschland'), pickK=idxByName('Brasilien'), activeSlot='S';
 function buildGrid(){
   COUNTRIES.forEach((c,i)=>{ const d=document.createElement('button'); d.type='button'; d.className='flag';
-    d.innerHTML='<span class="e">'+c.f+'</span><span class="nm">'+c.n+'</span>'; d.addEventListener('click',()=>choose(i)); $grid.appendChild(d); });
+    d.innerHTML='<span class="e">'+c.f+'</span><span class="nm">'+countryName(c)+'</span>'; d.addEventListener('click',()=>choose(i)); $grid.appendChild(d); });
   $slotS.addEventListener('click',()=>{activeSlot='S';renderPicker();});
   $slotK.addEventListener('click',()=>{activeSlot='K';renderPicker();});
   $startBtn.addEventListener('click',()=>{ unlockAudio(); applyPicks(); $picker.classList.add('hidden'); startMatch(); });
@@ -803,7 +832,7 @@ function renderPicker(){
 }
 function applyPicks(){ SHOOTER=COUNTRIES[pickS]; KEEPER_C=COUNTRIES[pickK]; applyKit(); applyShooter(); applyShooterKit(); updateMatchup(); }
 function updateMatchup(){ $match.textContent=SHOOTER.f+'  vs  '+KEEPER_C.f; document.getElementById('finalTeams').textContent=SHOOTER.f+' vs '+KEEPER_C.f;
-  const n=document.getElementById('nations'); if(n) n.innerHTML='<b>'+SHOOTER.f+' '+SHOOTER.n+'</b> &nbsp;·&nbsp; '+t('role.keeper')+' <b>'+KEEPER_C.f+' '+KEEPER_C.n+'</b>'; }
+  const n=document.getElementById('nations'); if(n) n.innerHTML='<b>'+SHOOTER.f+' '+countryName(SHOOTER)+'</b> &nbsp;·&nbsp; '+t('role.keeper')+' <b>'+KEEPER_C.f+' '+countryName(KEEPER_C)+'</b>'; }
 function showPicker(){ mode='menu'; resetBall(); $picker.classList.remove('hidden'); setHint(t('hint.pick')); renderPicker(); }
 
 function ratingText(g){ const p=g/MAX_SHOTS; if(g>=MAX_SHOTS)return t('rate.god'); if(p>=0.8)return t('rate.world'); if(p>=0.6)return t('rate.strong'); if(p>=0.4)return t('rate.solid'); if(p>=0.2)return t('rate.more'); if(g>=1)return t('rate.warmup'); return t('rate.practice'); }
@@ -832,7 +861,7 @@ function nextTournamentRound(){
   applyKit(); applyShooter(); applyShooterKit(); updateMatchup();
   goals=0; shots=0; $score.textContent=0; $shots.textContent='0/'+shotsTarget; renderBest();
   flash(roundName(tround),'#ffce00');
-  const n=document.getElementById('nations'); if(n) n.innerHTML='<b>🏆 '+roundName(tround)+'</b> &nbsp;·&nbsp; '+SHOOTER.f+' '+SHOOTER.n+' vs '+KEEPER_C.f+' '+KEEPER_C.n;
+  const n=document.getElementById('nations'); if(n) n.innerHTML='<b>🏆 '+roundName(tround)+'</b> &nbsp;·&nbsp; '+SHOOTER.f+' '+countryName(SHOOTER)+' vs '+KEEPER_C.f+' '+countryName(KEEPER_C);
   startCountdown();
 }
 function oppScoreFor(round){ return Math.min(4, 2 + Math.floor(round/1.5) + (Math.random()<0.4?1:0)); }
@@ -864,7 +893,7 @@ function renderFinalScreen(){
   } else if(finalKind==='cup'){
     h2.textContent='🏆 '+roundName(finalCupRound);
     teams.textContent=SHOOTER.f+' '+finalGoals+' : '+finalOpp+' '+KEEPER_C.f;
-    if(finalCupOutcome==='champion'){ sc.textContent='🏆'; rt.textContent=t('cup.champion',{team:SHOOTER.n}); $againBtn.textContent=t('btn.newcup'); finalAction=showPicker; }
+    if(finalCupOutcome==='champion'){ sc.textContent='🏆'; rt.textContent=t('cup.champion',{team:countryName(SHOOTER)}); $againBtn.textContent=t('btn.newcup'); finalAction=showPicker; }
     else if(finalCupOutcome==='advance'){ sc.textContent=finalGoals+' : '+finalOpp; rt.textContent=t('cup.advance',{next:roundName(finalCupRound+1)}); $againBtn.textContent=t('btn.nextround'); finalAction=()=>nextTournamentRound(); }
     else { sc.textContent=finalGoals+' : '+finalOpp; rt.textContent=t('cup.out',{round:roundName(finalCupRound)}); $againBtn.textContent=t('btn.newcup'); finalAction=showPicker; }
   }
@@ -1043,10 +1072,14 @@ function refreshLangLabels(){
   const sb=document.getElementById('styleBtn'); if(sb) sb.textContent=t(shotStyle==='wucht'?'style.power':'style.finesse');
 }
 function setLang(l){ if(!I18N[l])return; LANG=l; try{localStorage.setItem('nlvc_lang',l);}catch(e){}
-  applyStaticI18n(); refreshLangLabels();
+  applyStaticI18n(); refreshLangLabels(); refreshGridNames();
   if(mode==='menu') setHint(t('hint.pick'));
   if(SHOOTER && KEEPER_C) updateMatchup();
   if(mode==='final' && finalKind) renderFinalScreen();   // Endstand neu übersetzen
+}
+function refreshGridNames(){
+  const g=document.getElementById('flagGrid'); if(!g) return;
+  Array.from(g.children).forEach((el,i)=>{ const nm=el.querySelector('.nm'); if(nm&&COUNTRIES[i]) nm.textContent=countryName(COUNTRIES[i]); });
 }
 document.querySelectorAll('.lng').forEach(b=> b.addEventListener('click',()=>setLang(b.dataset.lang)));
 
