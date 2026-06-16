@@ -445,28 +445,39 @@ let kMat={jersey:new THREE.MeshStandardMaterial({roughness:0.7}), trim:new THREE
 const numMesh=new THREE.Mesh(new THREE.PlaneGeometry(0.32,0.32), new THREE.MeshBasicMaterial({transparent:true}));
 let armL, armR;
 (function buildKeeper(){
-  // Torso (leicht nach vorne geneigt -> wirkt aktiv)
-  const torso=new THREE.Mesh(new THREE.CapsuleGeometry(0.27,0.46,8,16),kMat.jersey); torso.position.set(0,1.2,0); torso.rotation.x=-0.1; torso.castShadow=true; keeper.add(torso);
-  // Trikotnummer vorne (zum Schützen)
-  numMesh.position.set(0,1.24,0.29); keeper.add(numMesh);
-  // Kopf + Gesicht (zum Schützen gewandt)
-  const head=new THREE.Mesh(new THREE.SphereGeometry(0.18,24,24),kMat.skin); head.position.y=1.72; head.castShadow=true; keeper.add(head);
-  const hair=new THREE.Mesh(new THREE.SphereGeometry(0.186,24,24,0,Math.PI*2,0,Math.PI*0.62),new THREE.MeshStandardMaterial({color:0x2a1c12,roughness:1})); hair.position.set(0,1.74,-0.01); keeper.add(hair);
+  const bootMat=new THREE.MeshStandardMaterial({color:0x14181f,roughness:0.6});
+  // Hüfte (rund statt Box)
+  const pelvis=new THREE.Mesh(new THREE.SphereGeometry(0.25,20,16),kMat.short); pelvis.scale.set(1.05,0.62,0.85); pelvis.position.y=0.92; pelvis.castShadow=true; keeper.add(pelvis);
+  // Torso (Brust breiter als Taille) leicht nach vorne geneigt
+  const torso=new THREE.Mesh(new THREE.CapsuleGeometry(0.23,0.4,10,18),kMat.jersey); torso.scale.set(1.14,1,0.82); torso.position.set(0,1.26,0); torso.rotation.x=-0.08; torso.castShadow=true; keeper.add(torso);
+  // Schultern
+  for(const s of [-1,1]){ const sh=new THREE.Mesh(new THREE.SphereGeometry(0.125,16,14),kMat.jersey); sh.position.set(s*0.26,1.49,0); sh.castShadow=true; keeper.add(sh); }
+  // Trikotnummer vorne
+  numMesh.position.set(0,1.3,0.27); keeper.add(numMesh);
+  // Hals
+  const neck=new THREE.Mesh(new THREE.CylinderGeometry(0.072,0.092,0.13,12),kMat.skin); neck.position.set(0,1.62,0); keeper.add(neck);
+  // Kopf + Haare + Gesicht (zum Schützen gewandt, +z)
+  const head=new THREE.Mesh(new THREE.SphereGeometry(0.162,28,24),kMat.skin); head.scale.set(1,1.08,1.02); head.position.y=1.77; head.castShadow=true; keeper.add(head);
+  const hair=new THREE.Mesh(new THREE.SphereGeometry(0.17,24,24,0,Math.PI*2,0,Math.PI*0.62),new THREE.MeshStandardMaterial({color:0x2a1c12,roughness:1})); hair.position.set(0,1.8,-0.008); keeper.add(hair);
   const eyeMat=new THREE.MeshStandardMaterial({color:0x1a1410});
-  for(const s of [-1,1]){ const eye=new THREE.Mesh(new THREE.SphereGeometry(0.022,10,10),eyeMat); eye.position.set(s*0.06,1.74,0.165); keeper.add(eye); }
-  // Hüfte/Shorts + Beine (gespreizter Stand)
-  const hips=new THREE.Mesh(new THREE.BoxGeometry(0.52,0.28,0.34),kMat.short); hips.position.y=0.84; hips.castShadow=true; keeper.add(hips);
+  for(const s of [-1,1]){ const eye=new THREE.Mesh(new THREE.SphereGeometry(0.02,10,10),eyeMat); eye.position.set(s*0.055,1.78,0.15); keeper.add(eye);
+    const ear=new THREE.Mesh(new THREE.SphereGeometry(0.034,10,10),kMat.skin); ear.scale.set(0.55,1,1); ear.position.set(s*0.16,1.76,0.01); keeper.add(ear); }
+  const nose=new THREE.Mesh(new THREE.SphereGeometry(0.026,8,8),kMat.skin); nose.position.set(0,1.75,0.165); keeper.add(nose);
+  // Beine: Oberschenkel + Knie + Stutzen + runder Schuh (gespreizt)
   for(const s of [-1,1]){
-    const leg=new THREE.Mesh(new THREE.CapsuleGeometry(0.115,0.6,6,10),kMat.skin); leg.position.set(s*0.2,0.42,0); leg.rotation.z=s*0.12; leg.castShadow=true; keeper.add(leg);
-    const sock=new THREE.Mesh(new THREE.CapsuleGeometry(0.12,0.18,4,8),kMat.trim); sock.position.set(s*0.26,0.14,0.02); keeper.add(sock);
+    const thigh=new THREE.Mesh(new THREE.CapsuleGeometry(0.115,0.28,8,12),kMat.skin); thigh.position.set(s*0.14,0.62,0); thigh.rotation.z=s*0.07; thigh.castShadow=true; keeper.add(thigh);
+    const knee=new THREE.Mesh(new THREE.SphereGeometry(0.1,12,12),kMat.skin); knee.position.set(s*0.17,0.43,0); keeper.add(knee);
+    const shin=new THREE.Mesh(new THREE.CapsuleGeometry(0.1,0.26,8,12),kMat.trim); shin.position.set(s*0.18,0.21,0); shin.castShadow=true; keeper.add(shin);
+    const shoe=new THREE.Mesh(new THREE.SphereGeometry(0.095,14,10),bootMat); shoe.scale.set(0.95,0.5,1.7); shoe.position.set(s*0.18,0.05,0.06); shoe.castShadow=true; keeper.add(shoe);
   }
-  // Arme als Gruppen, die an der Schulter rotieren; Glied hängt lokal nach unten
-  armL=new THREE.Group(); armL.position.set(-0.29,1.46,0.02); keeper.add(armL);
-  armR=new THREE.Group(); armR.position.set(0.29,1.46,0.02); keeper.add(armR);
+  // Arme als Gruppen (Schulter-Pivot) -> hechten
+  armL=new THREE.Group(); armL.position.set(-0.3,1.49,0.02); keeper.add(armL);
+  armR=new THREE.Group(); armR.position.set(0.3,1.49,0.02); keeper.add(armR);
   for(const grp of [armL,armR]){
-    const sleeve=new THREE.Mesh(new THREE.CapsuleGeometry(0.085,0.26,6,10),kMat.jersey); sleeve.position.y=-0.17; sleeve.castShadow=true; grp.add(sleeve);
-    const fore=new THREE.Mesh(new THREE.CapsuleGeometry(0.07,0.26,6,10),kMat.skin); fore.position.y=-0.42; grp.add(fore);
-    const glove=new THREE.Mesh(new THREE.SphereGeometry(0.13,16,16),kMat.trim); glove.position.set(0,-0.6,0.04); glove.castShadow=true; grp.add(glove);
+    const upper=new THREE.Mesh(new THREE.CapsuleGeometry(0.078,0.22,8,12),kMat.jersey); upper.position.y=-0.15; upper.castShadow=true; grp.add(upper);
+    const elbow=new THREE.Mesh(new THREE.SphereGeometry(0.072,12,10),kMat.skin); elbow.position.y=-0.31; grp.add(elbow);
+    const fore=new THREE.Mesh(new THREE.CapsuleGeometry(0.066,0.22,8,12),kMat.skin); fore.position.y=-0.43; grp.add(fore);
+    const glove=new THREE.Mesh(new THREE.SphereGeometry(0.1,16,14),kMat.trim); glove.scale.set(1,1.15,0.82); glove.position.set(0,-0.59,0.03); glove.castShadow=true; grp.add(glove);
   }
 })();
 function applyKit(){
@@ -513,19 +524,28 @@ let shTorso, shKickLeg, shStandLeg, shArmL, shArmR;
   const thigh=new THREE.Mesh(new THREE.CapsuleGeometry(0.11,0.42,6,10),shMat.skin); thigh.position.y=-0.32; thigh.castShadow=true; shKickLeg.add(thigh);
   const ksock=new THREE.Mesh(new THREE.CapsuleGeometry(0.115,0.22,6,10),shMat.sock); ksock.position.y=-0.67; shKickLeg.add(ksock);
   const boot=new THREE.Mesh(new THREE.SphereGeometry(0.09,14,10),bootMat); boot.scale.set(0.95,0.52,1.7); boot.position.set(0,-0.80,0.05); boot.castShadow=true; shKickLeg.add(boot);
-  // Hüfte/Shorts
-  const hips=new THREE.Mesh(new THREE.BoxGeometry(0.5,0.26,0.32),shMat.short); hips.position.y=0.86; hips.castShadow=true; shooter3D.add(hips);
-  // Torso (leicht nach vorn zum Tor geneigt)
-  shTorso=new THREE.Mesh(new THREE.CapsuleGeometry(0.26,0.46,8,16),shMat.jersey); shTorso.position.set(0,1.22,0); shTorso.rotation.x=-0.14; shTorso.castShadow=true; shooter3D.add(shTorso);
-  // Kopf + Haare (Blick Richtung Tor -z)
-  const head=new THREE.Mesh(new THREE.SphereGeometry(0.18,24,24),shMat.skin); head.position.set(0,1.74,-0.02); head.castShadow=true; shooter3D.add(head);
-  const hair=new THREE.Mesh(new THREE.SphereGeometry(0.186,24,24,0,Math.PI*2,0,Math.PI*0.62),new THREE.MeshStandardMaterial({color:0x21160d,roughness:1})); hair.position.set(0,1.77,0.02); hair.rotation.x=0.5; shooter3D.add(hair);
-  // Arme (Pivot Schulter)
-  shArmL=new THREE.Group(); shArmL.position.set(-0.28,1.48,0); shooter3D.add(shArmL);
-  shArmR=new THREE.Group(); shArmR.position.set(0.28,1.48,0); shooter3D.add(shArmR);
+  // Knie am Standbein
+  const sknee=new THREE.Mesh(new THREE.SphereGeometry(0.1,12,12),shMat.skin); sknee.position.set(-0.17,0.4,0); shooter3D.add(sknee);
+  // Hüfte (rund statt Box)
+  const pelvis=new THREE.Mesh(new THREE.SphereGeometry(0.24,20,16),shMat.short); pelvis.scale.set(1.05,0.62,0.85); pelvis.position.y=0.9; pelvis.castShadow=true; shooter3D.add(pelvis);
+  // Torso (Brust breiter als Taille) leicht nach vorn geneigt
+  shTorso=new THREE.Mesh(new THREE.CapsuleGeometry(0.225,0.42,10,18),shMat.jersey); shTorso.scale.set(1.14,1,0.82); shTorso.position.set(0,1.26,0); shTorso.rotation.x=-0.12; shTorso.castShadow=true; shooter3D.add(shTorso);
+  // Schultern
+  for(const s of [-1,1]){ const sh=new THREE.Mesh(new THREE.SphereGeometry(0.12,16,14),shMat.jersey); sh.position.set(s*0.25,1.5,0); sh.castShadow=true; shooter3D.add(sh); }
+  // Hals
+  const neck=new THREE.Mesh(new THREE.CylinderGeometry(0.07,0.09,0.13,12),shMat.skin); neck.position.set(0,1.63,-0.01); shooter3D.add(neck);
+  // Kopf + Haare + Ohren (Blick Richtung Tor -z)
+  const head=new THREE.Mesh(new THREE.SphereGeometry(0.162,28,24),shMat.skin); head.scale.set(1,1.08,1.02); head.position.set(0,1.77,-0.02); head.castShadow=true; shooter3D.add(head);
+  const hair=new THREE.Mesh(new THREE.SphereGeometry(0.172,24,24,0,Math.PI*2,0,Math.PI*0.66),new THREE.MeshStandardMaterial({color:0x21160d,roughness:1})); hair.position.set(0,1.8,0.0); hair.rotation.x=-0.35; shooter3D.add(hair);
+  for(const s of [-1,1]){ const ear=new THREE.Mesh(new THREE.SphereGeometry(0.034,10,10),shMat.skin); ear.scale.set(0.55,1,1); ear.position.set(s*0.16,1.76,-0.03); shooter3D.add(ear); }
+  // Arme (Pivot Schulter) + Hände
+  shArmL=new THREE.Group(); shArmL.position.set(-0.27,1.5,0); shooter3D.add(shArmL);
+  shArmR=new THREE.Group(); shArmR.position.set(0.27,1.5,0); shooter3D.add(shArmR);
   for(const grp of [shArmL,shArmR]){
-    const sleeve=new THREE.Mesh(new THREE.CapsuleGeometry(0.082,0.24,6,10),shMat.jersey); sleeve.position.y=-0.16; sleeve.castShadow=true; grp.add(sleeve);
-    const fore=new THREE.Mesh(new THREE.CapsuleGeometry(0.068,0.24,6,10),shMat.skin); fore.position.y=-0.4; grp.add(fore);
+    const upper=new THREE.Mesh(new THREE.CapsuleGeometry(0.075,0.2,8,12),shMat.jersey); upper.position.y=-0.14; upper.castShadow=true; grp.add(upper);
+    const elbow=new THREE.Mesh(new THREE.SphereGeometry(0.066,12,10),shMat.skin); elbow.position.y=-0.29; grp.add(elbow);
+    const fore=new THREE.Mesh(new THREE.CapsuleGeometry(0.062,0.2,8,12),shMat.skin); fore.position.y=-0.4; grp.add(fore);
+    const hand=new THREE.Mesh(new THREE.SphereGeometry(0.072,12,10),shMat.skin); hand.scale.set(1,1.2,0.7); hand.position.y=-0.55; hand.castShadow=true; grp.add(hand);
   }
   resetShooter();
 })();
