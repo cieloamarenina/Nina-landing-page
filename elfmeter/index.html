@@ -170,6 +170,7 @@
       <div class="modes">
         <button type="button" class="modebtn active" id="modeSolo">1 Spieler</button>
         <button type="button" class="modebtn" id="modeDuo">2 Spieler</button>
+        <button type="button" class="modebtn" id="modeTurnier">🏆 Turnier</button>
       </div>
       <div class="slots">
         <div class="slot s active" id="slotS"><span class="who">Schütze</span><span class="fl" id="flS">🏳️</span></div>
@@ -627,9 +628,13 @@ function unlockAudio(){ const a=audio(); if(!a)return; try{const o=a.createOscil
 /* ===== Spiel-Logik ===== */
 let mode='menu';                       // menu | countdown | ready | shooting | result | final
 let shots=0, goals=0, best=null;
-let gameMode='solo';                    // 'solo' | 'duo'
+let gameMode='solo';                    // 'solo' | 'duo' | 'turnier'
 const DUO_SHOTS=5;
 let shotsTarget=MAX_SHOTS, curPlayer=1, p1Goals=0, p2Goals=0;
+let finalAction=null;                    // was der "Weiter"-Button im Final-Screen tut
+// Turnier
+const TROUNDS=['Achtelfinale','Viertelfinale','Halbfinale','Finale'];
+let tround=0, tPlayerIdx=null, tOppIdx=null, tPool=[];
 let tShot=0, tResult=0, tCount=0, countShown=null;
 let willSave=false, willOver=false, willMiss=false, missMsg='', result='';
 const start=new THREE.Vector3(0,BALL_R,SPOT_Z);
@@ -728,10 +733,11 @@ function buildGrid(){
   $slotS.addEventListener('click',()=>{activeSlot='S';renderPicker();});
   $slotK.addEventListener('click',()=>{activeSlot='K';renderPicker();});
   $startBtn.addEventListener('click',()=>{ unlockAudio(); applyPicks(); $picker.classList.add('hidden'); startMatch(); });
-  $againBtn.addEventListener('click',()=>{ unlockAudio(); $final.classList.add('hidden'); showPicker(); });
-  const mSolo=document.getElementById('modeSolo'), mDuo=document.getElementById('modeDuo');
-  mSolo.addEventListener('click',()=>{ gameMode='solo'; mSolo.classList.add('active'); mDuo.classList.remove('active'); });
-  mDuo.addEventListener('click',()=>{ gameMode='duo'; mDuo.classList.add('active'); mSolo.classList.remove('active'); });
+  $againBtn.addEventListener('click',()=>{ unlockAudio(); $final.classList.add('hidden'); (finalAction||showPicker)(); });
+  const modeBtns={solo:document.getElementById('modeSolo'), duo:document.getElementById('modeDuo'), turnier:document.getElementById('modeTurnier')};
+  Object.entries(modeBtns).forEach(([m,btn])=> btn.addEventListener('click',()=>{
+    gameMode=m; Object.values(modeBtns).forEach(b=>b.classList.remove('active')); btn.classList.add('active');
+  }));
 }
 function choose(i){ if(activeSlot==='S'){pickS=i;activeSlot='K';} else {pickK=i;activeSlot='S';} renderPicker(); }
 function renderPicker(){
@@ -750,9 +756,52 @@ function ratingText(g){ const p=g/MAX_SHOTS; if(g>=MAX_SHOTS)return 'Perfekt –
 function resetBall(){ ball.position.copy(start); ball.rotation.set(0,0,0); keeper.position.set(0,0,0.35); keeper.rotation.z=0; armL.rotation.z=-0.7; armR.rotation.z=0.7; resetShooter();
   aiming=false; reticle.visible=false; const w=$pwrwrap(); if(w) w.classList.remove('show'); }
 function startMatch(){
+  finalAction=showPicker;
+  if(gameMode==='turnier'){ startTournament(); return; }
   if(gameMode==='duo'){ curPlayer=1; p1Goals=0; p2Goals=0; shotsTarget=DUO_SHOTS; }
   else shotsTarget=MAX_SHOTS;
   startPlayerTurn();
+}
+
+/* ===== Turniermodus ===== */
+function startTournament(){
+  tPlayerIdx=pickS; shotsTarget=DUO_SHOTS; tround=0;
+  // Gegner-Pool: zufällige andere Teams
+  tPool=COUNTRIES.map((_,i)=>i).filter(i=>i!==tPlayerIdx);
+  for(let i=tPool.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [tPool[i],tPool[j]]=[tPool[j],tPool[i]]; }
+  nextTournamentRound();
+}
+function nextTournamentRound(){
+  tOppIdx=tPool.pop();
+  SHOOTER=COUNTRIES[tPlayerIdx]; KEEPER_C=COUNTRIES[tOppIdx];
+  applyKit(); applyShooter(); applyShooterKit(); updateMatchup();
+  goals=0; shots=0; $score.textContent=0; $shots.textContent='0/'+shotsTarget; renderBest();
+  flash(TROUNDS[tround],'#ffce00');
+  const n=document.getElementById('nations'); if(n) n.innerHTML='<b>🏆 '+TROUNDS[tround]+'</b> &nbsp;·&nbsp; '+SHOOTER.f+' '+SHOOTER.n+' vs '+KEEPER_C.f+' '+KEEPER_C.n;
+  startCountdown();
+}
+function oppScoreFor(round){ return Math.min(4, 2 + Math.floor(round/1.5) + (Math.random()<0.4?1:0)); }
+function resolveTournamentRound(){
+  const opp=oppScoreFor(tround);
+  const win = goals>opp;
+  document.querySelector('#final h2').textContent='🏆 '+TROUNDS[tround];
+  document.getElementById('finalTeams').textContent=SHOOTER.f+' '+goals+' : '+opp+' '+KEEPER_C.f;
+  if(win){
+    if(tround>=TROUNDS.length-1){
+      document.getElementById('finalScore').textContent='🏆';
+      document.getElementById('finalRate').textContent=SHOOTER.n+' ist Turniersieger! 🎉';
+      finalAction=showPicker; $againBtn.textContent='Neues Turnier';
+    } else {
+      document.getElementById('finalScore').textContent=goals+' : '+opp;
+      document.getElementById('finalRate').textContent='Weiter ins '+TROUNDS[tround+1]+'!';
+      tround++; finalAction=()=>nextTournamentRound(); $againBtn.textContent='Nächste Runde →';
+    }
+  } else {
+    document.getElementById('finalScore').textContent=goals+' : '+opp;
+    document.getElementById('finalRate').textContent='Ausgeschieden im '+TROUNDS[tround]+' 😢';
+    finalAction=showPicker; $againBtn.textContent='Neues Turnier';
+  }
+  $final.classList.remove('hidden'); mode='final';
 }
 function startPlayerTurn(){
   goals=0; shots=0; $score.textContent=0; $shots.textContent='0/'+shotsTarget; renderBest();
@@ -763,6 +812,7 @@ function startPlayerTurn(){
   startCountdown();
 }
 function endOfRound(){
+  if(gameMode==='turnier'){ resolveTournamentRound(); return; }
   if(gameMode==='duo' && curPlayer===1){
     p1Goals=goals; curPlayer=2; setHint('Spieler 2 ist dran'); startPlayerTurn(); return;
   }
@@ -773,10 +823,12 @@ function endOfRound(){
     document.getElementById('finalScore').textContent=goals+' / '+shotsTarget;
     document.getElementById('finalRate').textContent=ratingText(goals)+(nr?'  ★ Rekord':'');
     document.querySelector('#final h2').textContent='Endstand';
+    $againBtn.textContent='Neues Spiel'; finalAction=showPicker;
     $final.classList.remove('hidden'); mode='final';
   }
 }
 function showDuoFinal(){
+  $againBtn.textContent='Neues Spiel'; finalAction=showPicker;
   const win = p1Goals>p2Goals ? 'Spieler 1 gewinnt! 🏆' : p2Goals>p1Goals ? 'Spieler 2 gewinnt! 🏆' : 'Unentschieden – Sudden Death? 🤝';
   document.querySelector('#final h2').textContent='2-Spieler-Duell';
   document.getElementById('finalTeams').textContent='Spieler 1: '+p1Goals+'  ·  Spieler 2: '+p2Goals;
