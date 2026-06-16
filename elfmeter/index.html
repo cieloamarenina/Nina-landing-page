@@ -42,6 +42,21 @@
   #flash{position:absolute;top:14%;left:0;right:0;text-align:center;pointer-events:none;z-index:4;
     font-family:'Bebas Neue',Impact,sans-serif;font-size:84px;letter-spacing:2px;opacity:0;transition:opacity .15s}
   #flash.show{opacity:1}
+  /* Nationen-Label oben in der Szene (Schütze vs Torwart) */
+  #nations{position:absolute;top:8px;left:50%;transform:translateX(-50%);z-index:5;
+    font-size:13px;letter-spacing:.4px;color:var(--text);background:rgba(8,14,34,.6);
+    border:1px solid rgba(56,189,248,.3);border-radius:999px;padding:4px 14px;white-space:nowrap;pointer-events:none}
+  #nations b{font-weight:600}
+
+  /* Power-Leiste */
+  #powerwrap{position:absolute;left:50%;bottom:12px;transform:translateX(-50%);z-index:5;
+    width:58%;max-width:300px;height:11px;border-radius:7px;overflow:hidden;
+    background:rgba(0,0,0,.5);border:1px solid rgba(255,255,255,.28);box-shadow:0 2px 10px rgba(0,0,0,.5);
+    opacity:0;transition:opacity .12s;pointer-events:none}
+  #powerwrap.show{opacity:1}
+  #powerbar{height:100%;width:0%;border-radius:7px;
+    background:linear-gradient(90deg,#38bdf8 0%,#22c55e 38%,#ffce00 68%,#ff5a7a 100%);
+    background-size:172px 100%;background-repeat:no-repeat}
 
   footer{width:100%;max-width:760px;display:flex;align-items:center;justify-content:space-between;padding:14px 6px 22px;gap:12px}
   .hint{font-size:13px;color:var(--muted)}
@@ -130,6 +145,8 @@
   <div class="stage" id="stage">
     <canvas id="gl"></canvas>
     <div id="flash"></div>
+    <div id="nations"></div>
+    <div id="powerwrap"><div id="powerbar"></div></div>
 
     <div id="picker">
       <h2>Wähle deine Teams</h2>
@@ -406,6 +423,9 @@ function updateRipple(now){
 // unsichtbare Torebene fürs Zielen
 const goalPlane=new THREE.Mesh(new THREE.PlaneGeometry(GW,GH), new THREE.MeshBasicMaterial({visible:false}));
 goalPlane.position.set(0,GH/2,0); scene.add(goalPlane);
+// Größere, unsichtbare Ziel-Ebene: erlaubt Zielen auch NEBEN/ÜBER das Tor (Fehlschuss möglich)
+const aimPlane=new THREE.Mesh(new THREE.PlaneGeometry(GW+6,GH+4), new THREE.MeshBasicMaterial({visible:false}));
+aimPlane.position.set(0,(GH+4)/2-0.2,0.02); scene.add(aimPlane);
 
 /* ===== Ball ===== */
 const ball=new THREE.Mesh(new THREE.SphereGeometry(BALL_R,32,32), new THREE.MeshStandardMaterial({map:makeBall(), roughness:0.4}));
@@ -445,10 +465,11 @@ let armL, armR;
 function applyKit(){
   kMat.jersey.color.set(KEEPER_C.j); kMat.trim.color.set(KEEPER_C.t);
   numMesh.material.map = numberTex('1', KEEPER_C.u); numMesh.material.needsUpdate=true;
+  applyKeeperFlag();
 }
 
 /* ===== Schützen-Flagge (Eckfahne neben dem Punkt) ===== */
-const shooterFlag=new THREE.Group(); shooterFlag.position.set(1.85,0,SPOT_Z+0.2); shooterFlag.scale.setScalar(0.62); scene.add(shooterFlag);
+const shooterFlag=new THREE.Group(); shooterFlag.position.set(1.85,0,SPOT_Z+0.2); shooterFlag.scale.setScalar(0.62); shooterFlag.visible=false; /* entfernt: redundant */ scene.add(shooterFlag);
 const pole=new THREE.Mesh(new THREE.CylinderGeometry(0.02,0.02,1.2,8),new THREE.MeshStandardMaterial({color:0xdddddd})); pole.position.y=0.6; shooterFlag.add(pole);
 const flagMesh=new THREE.Mesh(new THREE.PlaneGeometry(0.5,0.32), new THREE.MeshStandardMaterial({side:THREE.DoubleSide})); flagMesh.position.set(0.27,1.05,0); shooterFlag.add(flagMesh);
 function flagTex(country){
@@ -461,6 +482,12 @@ function flagTex(country){
 }
 function applyShooter(){ flagMesh.material.map=flagTex(SHOOTER); flagMesh.material.needsUpdate=true; }
 
+/* ===== Torwart-Nationsflagge (neben dem Tor) ===== */
+const keeperFlag=new THREE.Group(); keeperFlag.position.set(-(HALF+1.3),0,2.2); keeperFlag.scale.setScalar(0.85); keeperFlag.visible=false; /* Nation jetzt als Label oben */ scene.add(keeperFlag);
+const kPole=new THREE.Mesh(new THREE.CylinderGeometry(0.025,0.025,1.7,8),new THREE.MeshStandardMaterial({color:0xdddddd})); kPole.position.y=0.85; keeperFlag.add(kPole);
+const keeperFlagMesh=new THREE.Mesh(new THREE.PlaneGeometry(0.55,0.35), new THREE.MeshStandardMaterial({side:THREE.DoubleSide})); keeperFlagMesh.position.set(-0.3,1.5,0); keeperFlag.add(keeperFlagMesh);
+function applyKeeperFlag(){ keeperFlagMesh.material.map=flagTex(KEEPER_C); keeperFlagMesh.material.needsUpdate=true; }
+
 /* ===== Schütze (3D-Spieler, schießt den Ball) ===== */
 const shooter3D=new THREE.Group(); shooter3D.scale.setScalar(0.92); scene.add(shooter3D);
 const SH_IDLE={x:-1.0, z:SPOT_Z+1.3};      // Standposition (hinten-links vom Ball)
@@ -469,14 +496,16 @@ let shMat={jersey:new THREE.MeshStandardMaterial({roughness:0.7}), sock:new THRE
   skin:new THREE.MeshStandardMaterial({color:0xf0c9a8,roughness:0.8}), short:new THREE.MeshStandardMaterial({color:0x12203a,roughness:0.9})};
 let shTorso, shKickLeg, shStandLeg, shArmL, shArmR;
 (function buildShooter(){
-  // Standbein (links, fest), -x-Seite
-  shStandLeg=new THREE.Mesh(new THREE.CapsuleGeometry(0.115,0.6,6,10),shMat.skin); shStandLeg.position.set(-0.17,0.42,0); shStandLeg.castShadow=true; shooter3D.add(shStandLeg);
-  const ssock=new THREE.Mesh(new THREE.CapsuleGeometry(0.12,0.18,4,8),shMat.sock); ssock.position.set(-0.17,0.14,0.02); shooter3D.add(ssock);
-  // Schussbein als Gruppe (Pivot an der Hüfte), schwingt nach vorn
+  const bootMat=new THREE.MeshStandardMaterial({color:0x14181f,roughness:0.6});
+  // Standbein (links, fest): Oberschenkel + Stutzen + Schuh
+  shStandLeg=new THREE.Mesh(new THREE.CapsuleGeometry(0.11,0.42,6,10),shMat.skin); shStandLeg.position.set(-0.17,0.52,0); shStandLeg.castShadow=true; shooter3D.add(shStandLeg);
+  const ssock=new THREE.Mesh(new THREE.CapsuleGeometry(0.115,0.22,6,10),shMat.sock); ssock.position.set(-0.17,0.17,0); shooter3D.add(ssock);
+  const sboot=new THREE.Mesh(new THREE.SphereGeometry(0.09,14,10),bootMat); sboot.scale.set(0.95,0.52,1.7); sboot.position.set(-0.17,0.055,0.05); sboot.castShadow=true; shooter3D.add(sboot);
+  // Schussbein als Gruppe (Pivot an der Hüfte), schwingt nach vorn – gleiche Bauteile
   shKickLeg=new THREE.Group(); shKickLeg.position.set(0.17,0.84,0); shooter3D.add(shKickLeg);
-  const thigh=new THREE.Mesh(new THREE.CapsuleGeometry(0.115,0.56,6,10),shMat.skin); thigh.position.y=-0.42; thigh.castShadow=true; shKickLeg.add(thigh);
-  const ksock=new THREE.Mesh(new THREE.CapsuleGeometry(0.12,0.18,4,8),shMat.sock); ksock.position.y=-0.72; shKickLeg.add(ksock);
-  const boot=new THREE.Mesh(new THREE.BoxGeometry(0.16,0.1,0.26),new THREE.MeshStandardMaterial({color:0x14181f,roughness:0.6})); boot.position.set(0,-0.84,0.06); shKickLeg.add(boot);
+  const thigh=new THREE.Mesh(new THREE.CapsuleGeometry(0.11,0.42,6,10),shMat.skin); thigh.position.y=-0.32; thigh.castShadow=true; shKickLeg.add(thigh);
+  const ksock=new THREE.Mesh(new THREE.CapsuleGeometry(0.115,0.22,6,10),shMat.sock); ksock.position.y=-0.67; shKickLeg.add(ksock);
+  const boot=new THREE.Mesh(new THREE.SphereGeometry(0.09,14,10),bootMat); boot.scale.set(0.95,0.52,1.7); boot.position.set(0,-0.80,0.05); boot.castShadow=true; shKickLeg.add(boot);
   // Hüfte/Shorts
   const hips=new THREE.Mesh(new THREE.BoxGeometry(0.5,0.26,0.32),shMat.short); hips.position.y=0.86; hips.castShadow=true; shooter3D.add(hips);
   // Torso (leicht nach vorn zum Tor geneigt)
@@ -550,12 +579,28 @@ function unlockAudio(){ const a=audio(); if(!a)return; try{const o=a.createOscil
 let mode='menu';                       // menu | countdown | ready | shooting | result | final
 let shots=0, goals=0, best=null;
 let tShot=0, tResult=0, tCount=0, countShown=null;
-let willSave=false, result='';
+let willSave=false, willOver=false, willMiss=false, missMsg='', result='';
 const start=new THREE.Vector3(0,BALL_R,SPOT_Z);
 let target=new THREE.Vector3(0,1.0,0);   // Zielpunkt in der Torebene
 let endPos=new THREE.Vector3();          // tatsächliches Ballende
 let keeperDive={x:0,y:0,rot:0};
 const raycaster=new THREE.Raycaster(), pointer=new THREE.Vector2();
+
+/* ===== Power & Kurve (Schuss-Mechanik) ===== */
+let shotDur=SHOT_MS, arcH=0.9, curveAmt=0, shotPower=0.6;
+let aiming=false, tAim=0, curSamples=[];
+const aimTarget=new THREE.Vector3();
+const savePt=new THREE.Vector3();    // Punkt, an dem der Keeper den Ball berührt
+const reboundPt=new THREE.Vector3(); // Abpraller-Endpunkt (nach vorn)
+const PWR_PERIOD=1100, PWR_MIN=0.18;
+function currentPower(){ const t=((performance.now()-tAim)%PWR_PERIOD)/PWR_PERIOD; const tri=t<0.5?t*2:2-2*t; return PWR_MIN+(1-PWR_MIN)*tri; }
+// Ziel-Reticle in der Torebene (gut sichtbar: Ring + Mittelpunkt)
+const reticle=new THREE.Group(); reticle.visible=false; reticle.renderOrder=6; scene.add(reticle);
+const retMat=new THREE.MeshBasicMaterial({color:0xffffff,side:THREE.DoubleSide,transparent:true,opacity:0.95,depthTest:false,depthWrite:false});
+const retRing=new THREE.Mesh(new THREE.RingGeometry(0.22,0.30,32),retMat); retRing.renderOrder=6; reticle.add(retRing);
+const retGlow=new THREE.Mesh(new THREE.RingGeometry(0.30,0.40,32),new THREE.MeshBasicMaterial({color:0x38bdf8,side:THREE.DoubleSide,transparent:true,opacity:0.45,depthTest:false,depthWrite:false})); retGlow.renderOrder=6; reticle.add(retGlow);
+const retDot=new THREE.Mesh(new THREE.CircleGeometry(0.06,16),new THREE.MeshBasicMaterial({color:0xff5a7a,depthTest:false,depthWrite:false})); retDot.renderOrder=7; reticle.add(retDot);
+const $pwrwrap=()=>document.getElementById('powerwrap'), $pwrbar=()=>document.getElementById('powerbar');
 
 function zoneOf(p){ const col = p.x < -HALF/3 ? 0 : p.x > HALF/3 ? 2 : 1; const row = p.y > GH*0.55 ? 0 : 1; return row*3+col; }
 function diveFor(zone){ const col=zone%3, row=Math.floor(zone/3);
@@ -568,19 +613,49 @@ function aimFromPointer(ev){
   const r=glCanvas.getBoundingClientRect();
   pointer.x=((ev.clientX-r.left)/r.width)*2-1; pointer.y=-((ev.clientY-r.top)/r.height)*2+1;
   raycaster.setFromCamera(pointer,camera);
-  const hit=raycaster.intersectObject(goalPlane,false);
+  const hit=raycaster.intersectObject(aimPlane,false);   // große Ebene: auch neben/über dem Tor zielbar
   if(hit.length){ const p=hit[0].point; return new THREE.Vector3(
-    THREE.MathUtils.clamp(p.x,-HALF+0.25,HALF-0.25), THREE.MathUtils.clamp(p.y,0.35,GH-0.2), 0); }
+    THREE.MathUtils.clamp(p.x,-HALF-2.6,HALF+2.6), THREE.MathUtils.clamp(p.y,0.3,GH+1.8), 0); }
   return null;
 }
-function shoot(p){
+// Liegt der Zielpunkt im Tor-Rahmen?
+function isOnTarget(p){ return Math.abs(p.x) < HALF-0.12 && p.y < GH-0.1 && p.y > 0.12; }
+function shoot(p, power, curve){
   if(mode!=='ready') return;
+  power=(power==null)?0.6:power; curve=curve||0;
   target.copy(p);
+  shotPower=power; curveAmt=curve;
+  shotDur = SHOT_MS - power*240 + 120;     // mehr Power = schneller (820 .. 580ms)
+  arcH    = 0.42 + power*0.85;             // mehr Power = höherer Bogen
+
+  const onTarget = isOnTarget(p);
+  const overshoot = onTarget && power>0.86 && p.y>GH-0.55;   // zu viel Power oben -> drüber
+  willMiss = !onTarget;                                       // neben/über das Tor gezielt
+  willOver = overshoot;
+  // Beschriftung: über die Latte = DRÜBER, sonst seitlich = DANEBEN
+  if(overshoot) missMsg='DRÜBER!';
+  else if(willMiss) missMsg = (p.y>=GH-0.05 && Math.abs(p.x)<HALF) ? 'DRÜBER!' : 'DANEBEN!';
+  else missMsg='';
+
   const shotZone=zoneOf(p);
-  const keeperZone=(Math.random()<KEEPER_READ)?shotZone:Math.floor(Math.random()*6);
-  willSave=(keeperZone===shotZone);
+  const readChance = Math.max(0.05, KEEPER_READ - power*0.12 - Math.abs(curve)*0.07);
+  const keeperZone=(Math.random()<readChance)?shotZone:Math.floor(Math.random()*6);
+  willSave = onTarget && !overshoot && (keeperZone===shotZone);
   keeperDive=diveFor(keeperZone);
-  endPos.set(p.x, p.y, willSave ? 0.1 : -DEPTH+0.4);   // Tor: ins Netz, sonst an der Linie
+
+  if(willSave){
+    // Parade: Ball zum hechtenden Keeper, dann Abpraller nach vorn
+    savePt.set(keeperDive.x*0.9, Math.max(0.5, keeperDive.y*0.8+0.3), 0.32);
+    const side = keeperDive.x!==0 ? Math.sign(keeperDive.x) : (zoneOf(p)%3===1 ? (p.x>=0?1:-1) : 0);
+    reboundPt.set(keeperDive.x*1.6 + side*2.2, 0.2, SPOT_Z+3.2);   // fliegt nach vorn raus
+    endPos.copy(reboundPt);
+  } else if(willMiss){
+    endPos.set(p.x, p.y, -DEPTH+0.2);            // neben/über dem Tor vorbei
+  } else if(overshoot){
+    endPos.set(p.x, GH+1.5, -DEPTH+0.2);         // über die Latte
+  } else {
+    endPos.set(p.x, p.y, -DEPTH+0.4);            // Tor: ins Netz
+  }
   sfxKick();
   mode='shooting'; tShot=performance.now();
 }
@@ -606,12 +681,14 @@ function renderPicker(){
   $startBtn.disabled=(pickS==null||pickK==null);
 }
 function applyPicks(){ SHOOTER=COUNTRIES[pickS]; KEEPER_C=COUNTRIES[pickK]; applyKit(); applyShooter(); applyShooterKit(); updateMatchup(); }
-function updateMatchup(){ $match.textContent=SHOOTER.f+'  vs  '+KEEPER_C.f; document.getElementById('finalTeams').textContent=SHOOTER.f+' vs '+KEEPER_C.f; }
+function updateMatchup(){ $match.textContent=SHOOTER.f+'  vs  '+KEEPER_C.f; document.getElementById('finalTeams').textContent=SHOOTER.f+' vs '+KEEPER_C.f;
+  const n=document.getElementById('nations'); if(n) n.innerHTML='<b>'+SHOOTER.f+' '+SHOOTER.n+'</b> &nbsp;·&nbsp; Torwart <b>'+KEEPER_C.f+' '+KEEPER_C.n+'</b>'; }
 function showPicker(){ mode='menu'; resetBall(); $picker.classList.remove('hidden'); setHint('Wähle Schütze & Torwart'); renderPicker(); }
 
 function ratingText(g){ const p=g/MAX_SHOTS; if(g>=MAX_SHOTS)return 'Perfekt – Elfmeter-Gott'; if(p>=0.8)return 'Weltklasse'; if(p>=0.6)return 'Stark geschossen'; if(p>=0.4)return 'Solide Quote'; if(p>=0.2)return 'Da geht mehr'; if(g>=1)return 'Aufwärmen zählt auch'; return 'Üben, üben, üben'; }
 
-function resetBall(){ ball.position.copy(start); ball.rotation.set(0,0,0); keeper.position.set(0,0,0.35); keeper.rotation.z=0; armL.rotation.z=-0.7; armR.rotation.z=0.7; resetShooter(); }
+function resetBall(){ ball.position.copy(start); ball.rotation.set(0,0,0); keeper.position.set(0,0,0.35); keeper.rotation.z=0; armL.rotation.z=-0.7; armR.rotation.z=0.7; resetShooter();
+  aiming=false; reticle.visible=false; const w=$pwrwrap(); if(w) w.classList.remove('show'); }
 function startMatch(){ goals=0; shots=0; $score.textContent=0; $shots.textContent='0/'+MAX_SHOTS; renderBest(); startCountdown(); }
 function startCountdown(){ resetBall(); result=''; mode='countdown'; tCount=performance.now(); countShown=null; setHint('Anpfiff …'); }
 function flash(txt,color){ $flash.textContent=txt; $flash.style.color=color; $flash.classList.add('show'); setTimeout(()=>$flash.classList.remove('show'),1100); }
@@ -622,13 +699,25 @@ function loop(){
   const now=performance.now();
   if(mode==='countdown'){
     const el=now-tCount;
-    if(el>=COUNT_MS*3){ countShown=0; sfxWhistle(); setHint('Klick eine Stelle im Tor'); mode='ready'; }
+    if(el>=COUNT_MS*3){ countShown=0; sfxWhistle(); setHint('Ziehen = zielen · halten = Power · wischen = Effet'); mode='ready'; }
     else { const nn=3-Math.floor(el/COUNT_MS); if(nn!==countShown){ countShown=nn; sfxTick(); flash(String(nn),'#38bdf8'); } }
   } else if(mode==='shooting'){
-    const p=Math.min((now-tShot)/SHOT_MS,1), e=easeOut(p);
-    ball.position.x=start.x+(endPos.x-start.x)*e;
-    ball.position.z=start.z+(endPos.z-start.z)*e;
-    ball.position.y=BALL_R+(endPos.y-BALL_R)*e + Math.sin(p*Math.PI)*0.9;   // Bogen
+    const p=Math.min((now-tShot)/shotDur,1), e=easeOut(p);
+    if(willSave){
+      if(p<0.5){ const q=p/0.5, e2=easeOut(q);   // hin zum Keeper
+        ball.position.x=start.x+(savePt.x-start.x)*e2 + curveAmt*Math.sin(q*Math.PI)*0.6;
+        ball.position.z=start.z+(savePt.z-start.z)*e2;
+        ball.position.y=BALL_R+(savePt.y-BALL_R)*e2 + Math.sin(q*Math.PI)*arcH*0.7;
+      } else { const q=(p-0.5)/0.5, e3=easeOut(q);   // Abpraller nach vorn
+        ball.position.x=savePt.x+(reboundPt.x-savePt.x)*e3;
+        ball.position.z=savePt.z+(reboundPt.z-savePt.z)*e3;
+        ball.position.y=savePt.y+(reboundPt.y-savePt.y)*e3 + Math.sin(q*Math.PI)*0.85;
+      }
+    } else {
+      ball.position.x=start.x+(endPos.x-start.x)*e + curveAmt*Math.sin(p*Math.PI);   // Effet/Bananenkurve
+      ball.position.z=start.z+(endPos.z-start.z)*e;
+      ball.position.y=BALL_R+(endPos.y-BALL_R)*e + Math.sin(p*Math.PI)*arcH;          // Bogen (Power)
+    }
     ball.rotation.x-=0.5; ball.rotation.y-=0.3;
     animateShooterKick(p);   // Schütze tritt an & schießt
     // Torwart hechtet zur gewählten Ecke
@@ -638,8 +727,11 @@ function loop(){
     if(keeperDive.x<0){ armL.rotation.z=-0.7-e*1.4; armR.rotation.z=0.7-e*0.5; }
     else if(keeperDive.x>0){ armR.rotation.z=0.7+e*1.4; armL.rotation.z=-0.7+e*0.5; }
     else { armL.rotation.z=-0.7-e*0.7; armR.rotation.z=0.7+e*0.7; }
-    if(p>=1){ shots++; result=willSave?'HALT':'TOR'; if(!willSave)goals++; $shots.textContent=shots+'/'+MAX_SHOTS; $score.textContent=goals;
-      if(willSave){ sfxSave(); sfxGroan(); flash('GEHALTEN!','#ff5a7a'); } else { sfxGoal(); sfxCheer(); flash('TOR!','#38bdf8'); startRipple(target.x,target.y); }
+    if(p>=1){ shots++;
+      if(willSave){ result='HALT'; sfxSave(); sfxGroan(); flash('GEHALTEN!','#ff5a7a'); }
+      else if(willMiss||willOver){ result='MISS'; sfxGroan(); flash(missMsg||'DANEBEN!','#ffb020'); }
+      else { result='TOR'; goals++; sfxGoal(); sfxCheer(); flash('TOR!','#38bdf8'); startRipple(target.x,target.y); }
+      $shots.textContent=shots+'/'+MAX_SHOTS; $score.textContent=goals;
       mode='result'; tResult=now; }
   } else if(mode==='result'){
     if(result==='TOR'){ const pr=Math.min((now-tResult)/700,1); ball.position.y=endPos.y+(BALL_R-endPos.y)*easeOut(pr); ball.rotation.x-=0.12; }
@@ -661,15 +753,42 @@ function loop(){
     shArmL.rotation.z=-0.12+Math.sin(now/500)*0.05;
     shArmR.rotation.z= 0.12-Math.sin(now/500)*0.05;
   }
+  if(aiming){   // Power-Leiste füllt/oszilliert, Reticle pulsiert
+    const pw=currentPower(); const bar=$pwrbar(); if(bar) bar.style.width=(pw*100)+'%';
+    retMat.opacity=0.7+0.3*Math.sin(now/110);
+    reticle.scale.setScalar(1+0.12*Math.sin(now/140));
+  }
   renderer.render(scene,camera);
   requestAnimationFrame(loop);
 }
 
-/* ===== Eingabe ===== */
+/* ===== Eingabe: Ziehen=Zielen, Halten=Power, Loslassen=Schuss, Wischen=Effet ===== */
+function showReticle(p){ if(p){ aimTarget.copy(p); reticle.position.set(p.x,p.y,0.06); reticle.visible=true;
+  const on=isOnTarget(p); retMat.color.setHex(on?0xffffff:0xff4d4d); retDot.material.color.setHex(on?0xff5a7a:0xff2020); } }
 glCanvas.addEventListener('pointerdown', ev=>{
-  if(mode!=='ready') return;
-  const p=aimFromPointer(ev); if(p) shoot(p);
+  if(mode!=='ready'||aiming) return;
+  aiming=true; tAim=performance.now(); curSamples=[{x:ev.clientX,t:tAim}];
+  showReticle(aimFromPointer(ev));
+  const w=$pwrwrap(); if(w) w.classList.add('show');
+  try{ glCanvas.setPointerCapture(ev.pointerId); }catch(e){}
 });
+glCanvas.addEventListener('pointermove', ev=>{
+  if(!aiming) return;
+  showReticle(aimFromPointer(ev));
+  curSamples.push({x:ev.clientX,t:performance.now()}); if(curSamples.length>10) curSamples.shift();
+});
+function endAim(ev){
+  if(!aiming) return; aiming=false;
+  reticle.visible=false; const w=$pwrwrap(); if(w) w.classList.remove('show');
+  const power=currentPower();
+  // Effet aus der seitlichen Wisch-Geschwindigkeit am Ende
+  let curve=0; const s=curSamples;
+  if(s.length>=2){ const a=s[Math.max(0,s.length-4)], b=s[s.length-1]; const dt=Math.max(16,b.t-a.t);
+    curve=THREE.MathUtils.clamp((b.x-a.x)/dt*1.2,-1.7,1.7); }
+  shoot(aimTarget.clone(), power, curve);
+}
+glCanvas.addEventListener('pointerup', endAim);
+glCanvas.addEventListener('pointercancel', endAim);
 
 /* ===== Resize ===== */
 function resize(){ const w=stageEl.clientWidth;
