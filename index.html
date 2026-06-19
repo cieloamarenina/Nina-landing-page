@@ -1444,6 +1444,40 @@
     <div class="section-tag" data-i18n="automations.tag">// automations</div>
     <h2 class="section-title" data-i18n="automations.title">My n8n<br>Automations</h2>
   </div>
+
+  <style>
+    .wf-showcase{max-width:1080px;margin:0 auto 3.5rem;padding:0 1rem}
+    .wf-showcase-head{text-align:center;margin-bottom:1.4rem}
+    .wf-showcase .section-tag{justify-content:center}
+    .wf-showcase-title{font-family:var(--font-display);font-size:clamp(1.4rem,3.4vw,2.1rem);margin:.3rem 0 .6rem;color:var(--text)}
+    .wf-showcase-desc{max-width:620px;margin:0 auto;color:var(--muted,#9fb0c8);font-size:clamp(.9rem,1.6vw,1.02rem);line-height:1.55}
+    .wf-video-wrap{position:relative;border-radius:16px;overflow:hidden;border:1px solid rgba(0,212,255,.28);
+      box-shadow:0 0 0 1px rgba(0,212,255,.06),0 24px 70px -24px rgba(0,212,255,.35),0 12px 40px -18px rgba(0,0,0,.8);
+      background:var(--surface)}
+    .wf-video{display:block;width:100%;height:auto;aspect-ratio:16/9}
+    .wf-stages{display:flex;flex-wrap:wrap;justify-content:center;gap:.5rem;margin-top:1.1rem}
+    .wf-stages span{font-size:.74rem;letter-spacing:.04em;text-transform:uppercase;color:var(--text);
+      padding:.34rem .7rem;border:1px solid rgba(0,212,255,.25);border-radius:999px;background:rgba(0,212,255,.05)}
+    .wf-stages span::before{content:"→ ";color:var(--accent);opacity:.7}
+    .wf-stages span:first-child::before{content:""}
+  </style>
+
+  <figure class="wf-showcase reveal">
+    <div class="wf-showcase-head">
+      <div class="section-tag" data-i18n="automations.showcase_tag">// abschlussprojekt</div>
+      <h3 class="wf-showcase-title" data-i18n="automations.showcase_title">Bewerbungsworkflow v1 — End-to-End, DSGVO-konform</h3>
+      <p class="wf-showcase-desc" data-i18n="automations.showcase_desc">Eine vollautomatische Bewerbungs-Pipeline: Job-Scraping, KI-Filterung &amp; Scoring per Mistral-Agent, Human-in-the-Loop-Freigabe und signierter Versand — mit Audit-Trail. Meine n8n-Kreation.</p>
+    </div>
+    <div class="wf-video-wrap">
+      <video class="wf-video" autoplay loop muted playsinline preload="metadata" poster="images/bewerbungsworkflow-poster.jpg">
+        <source src="videos/bewerbungsworkflow.mp4" type="video/mp4">
+      </video>
+    </div>
+    <div class="wf-stages">
+      <span>Trigger</span><span>Scraping</span><span>KI-Filter &amp; Scoring</span><span>Human-in-the-Loop</span><span>Signierter Versand</span>
+    </div>
+  </figure>
+
   <div class="auto-stats-grid reveal">
     <div class="auto-stat-card">
       <div class="auto-stat-value" id="auto-total">—</div>
@@ -1998,6 +2032,9 @@ const TRANSLATIONS = {
     'automations.runs': 'Runs today',
     'automations.success': 'Success Rate',
     'automations.cta': '→ View Dashboard',
+    'automations.showcase_tag': '// final project',
+    'automations.showcase_title': 'Application Workflow v1 — end-to-end, GDPR-compliant',
+    'automations.showcase_desc': 'A fully automated job-application pipeline: job scraping, AI filtering &amp; scoring via a Mistral agent, human-in-the-loop approval and signed dispatch — with an audit trail. My own n8n build.',
     'automations.loading': 'Loading…',
     'automations.active': 'active',
     'automations.errors': 'errors (24h)',
@@ -2110,6 +2147,9 @@ const TRANSLATIONS = {
     'automations.runs': 'Runs heute',
     'automations.success': 'Erfolgsrate',
     'automations.cta': '→ Dashboard öffnen',
+    'automations.showcase_tag': '// abschlussprojekt',
+    'automations.showcase_title': 'Bewerbungsworkflow v1 — End-to-End, DSGVO-konform',
+    'automations.showcase_desc': 'Eine vollautomatische Bewerbungs-Pipeline: Job-Scraping, KI-Filterung &amp; Scoring per Mistral-Agent, Human-in-the-Loop-Freigabe und signierter Versand — mit Audit-Trail. Meine n8n-Kreation.',
     'automations.loading': 'Wird geladen…',
     'automations.active': 'aktiv',
     'automations.errors': 'Fehler (24h)',
@@ -2222,6 +2262,9 @@ const TRANSLATIONS = {
     'automations.runs': 'Runs aujourd\'hui',
     'automations.success': 'Taux de réussite',
     'automations.cta': '→ Voir le tableau',
+    'automations.showcase_tag': '// projet final',
+    'automations.showcase_title': 'Workflow de candidature v1 — de bout en bout, conforme RGPD',
+    'automations.showcase_desc': 'Un pipeline de candidature entièrement automatisé : scraping d’offres, filtrage et scoring par IA via un agent Mistral, validation humaine et envoi signé — avec piste d’audit. Ma création n8n.',
     'automations.loading': 'Chargement…',
     'automations.active': 'actifs',
     'automations.errors': 'erreurs (24h)',
@@ -2334,6 +2377,9 @@ const TRANSLATIONS = {
     'automations.runs': 'Runs oggi',
     'automations.success': 'Tasso di successo',
     'automations.cta': '→ Apri dashboard',
+    'automations.showcase_tag': '// progetto finale',
+    'automations.showcase_title': 'Workflow di candidatura v1 — end-to-end, conforme al GDPR',
+    'automations.showcase_desc': 'Una pipeline di candidatura completamente automatizzata: scraping degli annunci, filtraggio e scoring con IA tramite un agente Mistral, approvazione human-in-the-loop e invio firmato — con audit trail. Una mia creazione n8n.',
     'automations.loading': 'Caricamento…',
     'automations.active': 'attivi',
     'automations.errors': 'errori (24h)',
@@ -2446,6 +2492,9 @@ const TRANSLATIONS = {
     'automations.runs': 'Runs hoy',
     'automations.success': 'Tasa de éxito',
     'automations.cta': '→ Ver dashboard',
+    'automations.showcase_tag': '// proyecto final',
+    'automations.showcase_title': 'Workflow de candidatura v1 — de extremo a extremo, conforme al RGPD',
+    'automations.showcase_desc': 'Un pipeline de candidatura totalmente automatizado: scraping de ofertas, filtrado y scoring con IA mediante un agente Mistral, aprobación human-in-the-loop y envío firmado — con registro de auditoría. Mi propia creación en n8n.',
     'automations.loading': 'Cargando…',
     'automations.active': 'activos',
     'automations.errors': 'errores (24h)',
