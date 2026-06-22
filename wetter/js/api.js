@@ -58,7 +58,9 @@ export async function fetchWindyCam(place) {
 }
 export async function photoUrl(place, partOfDay) {
   if (!CONFIG.PROXY) return null;
-  const q = encodeURIComponent(`${place.name} ${partOfDay} city`);
+  // "skyline" returns far more recognizable shots of the actual city than
+  // "<name> day city" (which often matched generic/other cities).
+  const q = encodeURIComponent(`${place.name} skyline`);
   const res = await fetch(`${CONFIG.PROXY}?type=photo&q=${q}`);
   if (!res.ok) return null;
   const j = await res.json();
