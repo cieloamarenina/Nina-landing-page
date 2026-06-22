@@ -2,24 +2,21 @@ import { describeCode } from "./weather-codes.js";
 
 let liveTimer = null;
 
-// Photo is the default hero image. If a live cam exists, show a "● Live" toggle
-// button (top-right of the arch) that swaps the arch image to the live cam and
-// back. The 60s refresh interval only runs while live mode is active.
-export function setHeroImage(photoEl, { liveId, photoUrl, liveLabel, liveText, photoText }) {
-  if (liveTimer) { clearInterval(liveTimer); liveTimer = null; }
+// Set the arch background photo. INDEPENDENT of the live cam so a slow, hanging
+// or missing cam can never block the photo from showing (that was the black-hero bug).
+export function setHeroPhoto(photoEl, photoUrl) {
   if (photoUrl) photoEl.style.backgroundImage = `url('${photoUrl}')`;
+}
 
+// Add the "● Live" toggle + live cam image to the arch. Call only when a cam
+// actually exists. The 60s refresh runs only while live mode is active.
+export function setHeroLive(photoEl, { liveId, liveLabel, liveText, photoText }) {
+  if (liveTimer) { clearInterval(liveTimer); liveTimer = null; }
   const arch = photoEl.closest(".arch");
-  if (!arch) return;
+  if (!arch || !liveId) return;
 
   let img = arch.querySelector("img.cam");
   let btn = arch.querySelector(".livebtn");
-
-  if (!liveId) {
-    if (img) img.remove();
-    if (btn) btn.remove();
-    return;
-  }
 
   // Ensure the cam <img> exists (hidden by default — photo shows first).
   if (!img) {

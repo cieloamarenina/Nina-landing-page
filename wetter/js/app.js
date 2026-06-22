@@ -1,6 +1,6 @@
 import { forecastUrl, airQualityUrl, parseForecast, cachedJson, fetchWindyCam, photoUrl } from "./api.js";
 import { pickLang, translator, loadDict } from "./i18n.js";
-import { renderHero, setHeroImage } from "./hero.js";
+import { renderHero, setHeroPhoto, setHeroLive } from "./hero.js";
 import { renderPanel } from "./panel.js";
 import { renderSunCard } from "./sun.js";
 import { renderDreamCard } from "./dream.js";
@@ -117,13 +117,17 @@ async function loadPlace(place) {
 
   // Hero imagery — city photo (Pexels) + optional Windy live cam. Failures fall back silently.
   const part = current.isDay ? "day" : "night";
-  Promise.all([
-    fetchWindyCam(place).catch(() => null),
-    photoUrl(place, part).catch(() => null)
-  ]).then(([cam, photo]) => {
-    if (token !== renderSeq) return; // a newer loadPlace started; abandon
-    setHeroImage(heroHost.querySelector("#hero-photo"), {
-      liveId: cam?.id || null, photoUrl: photo,
+  const photoEl = heroHost.querySelector("#hero-photo");
+  // Photo first — INDEPENDENT so a slow/hanging/missing cam never blocks the hero photo.
+  photoUrl(place, part).catch(() => null).then(photo => {
+    if (token !== renderSeq) return;
+    setHeroPhoto(photoEl, photo);
+  });
+  // Live cam (the "● Live" toggle) — separate; if it hangs or fails, the photo already shows.
+  fetchWindyCam(place).catch(() => null).then(cam => {
+    if (token !== renderSeq || !cam) return;
+    setHeroLive(photoEl, {
+      liveId: cam.id,
       liveLabel: `${t("label.live")} · ${place.name}`,
       liveText: t("label.live"), photoText: t("label.photo")
     });
@@ -145,6 +149,7 @@ async function loadPlace(place) {
   panel.appendChild(dreamHost);
   renderDreamCard(dreamHost, {
     currentTemp: forecast.current.temp,
+    current: place,
     lang, t,
     onPick: (place) => {
       localStorage.setItem(LAST_KEY, JSON.stringify(place));

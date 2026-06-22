@@ -14,11 +14,20 @@ const DREAMS = [
 ];
 
 // Renders the "Traumwetter / dream weather" card into `host`.
-// opts: { currentTemp, lang, t, onPick }
-export function renderDreamCard(host, { currentTemp, lang, t, onPick }) {
+// opts: { currentTemp, current, lang, t, onPick } — `current` = the place being viewed,
+// which is excluded so we never compare a place to itself (e.g. Hawaii 15° vs Hawaii 29°).
+export function renderDreamCard(host, { currentTemp, current, lang, t, onPick }) {
+  // Exclude the current place (by name, or if a dream is within ~4° of it).
+  const near = (a, b) => Math.abs(a.lat - b.lat) < 4 && Math.abs(a.lon - b.lon) < 4;
+  const cName = (current?.name || "").toLowerCase();
+  let dreams = DREAMS.filter(d =>
+    d.name.toLowerCase() !== cName && !(current && current.lat != null && near(d, current))
+  );
+  if (!dreams.length) dreams = DREAMS; // safety: never empty
+
   // Rotate the starting destination by an index-like seed (changes through the day)
   // so the same city doesn't always show first.
-  let idx = Math.floor(Date.now() / 3600000) % DREAMS.length;
+  let idx = Math.floor(Date.now() / 3600000) % dreams.length;
 
   const card = document.createElement("div");
   card.className = "card dreamcard";
@@ -27,7 +36,7 @@ export function renderDreamCard(host, { currentTemp, lang, t, onPick }) {
   host.appendChild(card);
 
   async function show() {
-    const dest = DREAMS[idx];
+    const dest = dreams[idx];
     card.classList.add("loading");
     let temp = null, wx = null;
     try {
@@ -68,14 +77,14 @@ export function renderDreamCard(host, { currentTemp, lang, t, onPick }) {
     const shuffle = card.querySelector(".dream-shuffle");
     shuffle.addEventListener("click", (e) => {
       e.stopPropagation();           // don't trigger tap-to-load
-      idx = (idx + 1) % DREAMS.length;
+      idx = (idx + 1) % dreams.length;
       show();
     });
   }
 
   // Whole card taps through to actually visiting the destination (escapism).
   const go = () => {
-    const dest = DREAMS[idx];
+    const dest = dreams[idx];
     onPick?.({ name: dest.name, country: "", lat: dest.lat, lon: dest.lon });
   };
   card.addEventListener("click", go);

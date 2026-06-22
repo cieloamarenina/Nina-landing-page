@@ -29,7 +29,7 @@ function ensureSpotifyApi(cb) {
 
 export function mountPablo(rootEl, { storage }) {
   const el = document.createElement("div");
-  el.className = "player playing"; // start expanded so the player + play button are visible
+  el.className = "player collapsed playing"; // start collapsed (Pablo button only) so it never covers the screen on mobile; music still auto-starts on first gesture
   el.innerHTML = `
     <div class="ppanel">
       <div class="mlabel"><span class="pablo-now-dot"></span><span id="mtitle">${PLAYLISTS[0].name}</span></div>
