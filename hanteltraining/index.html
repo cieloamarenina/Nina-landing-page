@@ -869,6 +869,19 @@
   .ls-btn { background: none; border: none; color: var(--muted); font-family: monospace; font-size: 0.62rem; font-weight: 700; letter-spacing: 0.06em; padding: 0.25rem 0.5rem; border-radius: 999px; cursor: pointer; transition: all 0.15s; }
   .ls-btn:hover { color: var(--text); }
   .ls-btn.active { background: var(--accent); color: #04121f; }
+
+  /* ── RTL (Hebrew) overrides ─────────────────────────────── */
+  html[dir="rtl"] body { text-align: right; }
+  html[dir="rtl"] .phase-header { border-left: none; border-right: 4px solid var(--accent); }
+  html[dir="rtl"] .phase-meta .rounds { margin-left: 0; margin-right: 4px; }
+  html[dir="rtl"] .timer-btn { margin-left: 0; margin-right: auto; }
+  html[dir="rtl"] .hold-btn { margin-left: 0; margin-right: auto; }
+  html[dir="rtl"] .hold-btn + .timer-btn { margin-left: 0; margin-right: 8px; }
+  html[dir="rtl"] .progress-fill { background: linear-gradient(270deg, var(--blue), var(--accent)); }
+  html[dir="rtl"] .nlc-home { left: auto; right: 18px; }
+  html[dir="rtl"] .lang-switch { right: auto; left: 16px; }
+  /* Exercise figure animations are absolutely-positioned keyframes — keep LTR so they don't break */
+  html[dir="rtl"] .animation-box { direction: ltr; }
 </style>
 </head>
 <body>
@@ -879,6 +892,7 @@
   <button class="ls-btn" data-lang="es">ES</button>
   <button class="ls-btn" data-lang="fr">FR</button>
   <button class="ls-btn" data-lang="it">IT</button>
+  <button class="ls-btn" data-lang="he" lang="he">עברית</button>
 </div>
 
 <div class="container">
@@ -1820,7 +1834,8 @@ const UI = {
   en: { h1:"Strength Training", subtitle:"Nina · 25 min · 3× per week", subtitleVollkoerper:"Nina · 25 min · 3× per week", subtitleCompound:"Nina · 30 min · 2× per week", workoutVollkoerper:"Full Body", workoutCompound:"Compound", phase:"Phase", btnHistory:"📊 History", btnSave:"💪 Save workout", btnNew:"↻ New workout", progressLabel:"Done today", clockLabel:"Duration", btnStart:"▶ Start workout", btnStop:"■ Stop", tapToCheck:"Tap to check off", openSpotify:"▶ Open in Spotify (full songs)", sets:"sets", rounds:"rounds", resetPhase:"Reset phase", lblSets:"Sets", lblDone:"Done", rest:"rest", tabWarmup:"Warm-up", tabBeine:"Legs & Glutes", tabArme:"Arms & Core", tabCool:"Cool-down" },
   es: { h1:"Entrenamiento de Fuerza", subtitle:"Nina · 25 min · 3× por semana", subtitleVollkoerper:"Nina · 25 min · 3× por semana", subtitleCompound:"Nina · 30 min · 2× por semana", workoutVollkoerper:"Cuerpo Completo", workoutCompound:"Compound", phase:"Fase", btnHistory:"📊 Historial", btnSave:"💪 Guardar entreno", btnNew:"↻ Nuevo entreno", progressLabel:"Hecho hoy", clockLabel:"Duración", btnStart:"▶ Empezar entreno", btnStop:"■ Parar", tapToCheck:"Toca para marcar", openSpotify:"▶ Abrir en Spotify (canciones completas)", sets:"series", rounds:"rondas", resetPhase:"Reiniciar fase", lblSets:"Series", lblDone:"Hecho", rest:"descanso", tabWarmup:"Calentamiento", tabBeine:"Piernas y Glúteos", tabArme:"Brazos y Abdomen", tabCool:"Enfriamiento" },
   fr: { h1:"Entraînement de Force", subtitle:"Nina · 25 min · 3×/semaine", subtitleVollkoerper:"Nina · 25 min · 3×/semaine", subtitleCompound:"Nina · 30 min · 2×/semaine", workoutVollkoerper:"Corps Entier", workoutCompound:"Compound", phase:"Phase", btnHistory:"📊 Historique", btnSave:"💪 Enregistrer", btnNew:"↻ Nouveau", progressLabel:"Fait aujourd'hui", clockLabel:"Durée", btnStart:"▶ Démarrer l'entraînement", btnStop:"■ Arrêter", tapToCheck:"Toucher pour cocher", openSpotify:"▶ Ouvrir dans Spotify (titres complets)", sets:"séries", rounds:"tours", resetPhase:"Réinitialiser", lblSets:"Séries", lblDone:"Fait", rest:"pause", tabWarmup:"Échauffement", tabBeine:"Jambes & Fessiers", tabArme:"Bras & Abdos", tabCool:"Récupération" },
-  it: { h1:"Allenamento di Forza", subtitle:"Nina · 25 min · 3× a settimana", subtitleVollkoerper:"Nina · 25 min · 3× a settimana", subtitleCompound:"Nina · 30 min · 2× a settimana", workoutVollkoerper:"Corpo Intero", workoutCompound:"Compound", phase:"Fase", btnHistory:"📊 Cronologia", btnSave:"💪 Salva", btnNew:"↻ Nuovo", progressLabel:"Fatto oggi", clockLabel:"Durata", btnStart:"▶ Inizia allenamento", btnStop:"■ Ferma", tapToCheck:"Tocca per segnare", openSpotify:"▶ Apri in Spotify (brani completi)", sets:"serie", rounds:"round", resetPhase:"Reimposta fase", lblSets:"Serie", lblDone:"Fatto", rest:"pausa", tabWarmup:"Riscaldamento", tabBeine:"Gambe & Glutei", tabArme:"Braccia & Addome", tabCool:"Defaticamento" }
+  it: { h1:"Allenamento di Forza", subtitle:"Nina · 25 min · 3× a settimana", subtitleVollkoerper:"Nina · 25 min · 3× a settimana", subtitleCompound:"Nina · 30 min · 2× a settimana", workoutVollkoerper:"Corpo Intero", workoutCompound:"Compound", phase:"Fase", btnHistory:"📊 Cronologia", btnSave:"💪 Salva", btnNew:"↻ Nuovo", progressLabel:"Fatto oggi", clockLabel:"Durata", btnStart:"▶ Inizia allenamento", btnStop:"■ Ferma", tapToCheck:"Tocca per segnare", openSpotify:"▶ Apri in Spotify (brani completi)", sets:"serie", rounds:"round", resetPhase:"Reimposta fase", lblSets:"Serie", lblDone:"Fatto", rest:"pausa", tabWarmup:"Riscaldamento", tabBeine:"Gambe & Glutei", tabArme:"Braccia & Addome", tabCool:"Defaticamento" },
+  he: { h1:"אימון כוח", subtitle:"נינה · 25 דק׳ · 3× בשבוע", subtitleVollkoerper:"נינה · 25 דק׳ · 3× בשבוע", subtitleCompound:"נינה · 30 דק׳ · 2× בשבוע", workoutVollkoerper:"גוף מלא", workoutCompound:"Compound", phase:"שלב", btnHistory:"📊 היסטוריה", btnSave:"💪 שמירת אימון", btnNew:"↻ אימון חדש", progressLabel:"הושלם היום", clockLabel:"משך", btnStart:"▶ התחלת אימון", btnStop:"■ עצירה", tapToCheck:"הקישו לסימון", openSpotify:"▶ פתחו ב-Spotify (שירים מלאים)", sets:"סטים", rounds:"סבבים", resetPhase:"איפוס שלב", lblSets:"סטים", lblDone:"הושלם", rest:"מנוחה", tabWarmup:"חימום", tabBeine:"רגליים וישבן", tabArme:"ידיים ובטן", tabCool:"שחרור" }
 };
 const PHI = {
   en: {
@@ -1838,6 +1853,10 @@ const PHI = {
   it: {
     vollkoerper: { warmup:{title:"Riscaldamento", meta:"circa 3 minuti"}, beine:{title:"Gambe, Glutei & Co", meta:"circa 13 minuti · incl. cuscinetti, polpacci, zona lombare"}, arme:{title:"Addome & Braccia flaccide", meta:"circa 11 minuti · incl. maniglie dell'amore"}, cooldown:{title:"Defaticamento", meta:"circa 2-3 minuti · mantieni dolcemente"} },
     compound: { warmup:{title:"Riscaldamento", meta:"circa 5 minuti · attivare le articolazioni"}, lifts:{title:"Lift principali", meta:"circa 15 minuti · kettlebell 8 kg · 60 sec pausa"}, stability:{title:"Spalle & Core", meta:"circa 10 minuti · controllo prima del carico"}, cooldown:{title:"Defaticamento", meta:"circa 5 minuti · stretching dolce"} }
+  },
+  he: {
+    vollkoerper: { warmup:{title:"חימום", meta:"כ-3 דקות"}, beine:{title:"רגליים, ישבן ועוד", meta:"כ-13 דקות · כולל מכנסי רכיבה, שוקיים, גב תחתון"}, arme:{title:"בטן וזרועות מתנדנדות", meta:"כ-11 דקות · כולל גלגל שומן במותניים"}, cooldown:{title:"שחרור", meta:"כ-2-3 דקות · החזיקו בעדינות"} },
+    compound: { warmup:{title:"חימום", meta:"כ-5 דקות · הפעלת המפרקים"}, lifts:{title:"תרגילים מרכזיים", meta:"כ-15 דקות · קטלבל 8 ק״ג · 60 שנ׳ מנוחה"}, stability:{title:"כתפיים וליבה", meta:"כ-10 דקות · שליטה לפני עומס"}, cooldown:{title:"שחרור", meta:"כ-5 דקות · מתיחות עדינות"} }
   }
 };
 const EXI = {
@@ -1944,6 +1963,32 @@ const EXI = {
     "Bird Dog": {name:"Bird dog", reps:"8 per lato", weight:"senza peso", description:"A quattro zampe, allunga braccio e gamba opposti, tieni un momento — busto stabile, niente oscillazioni"},
     "Hüftbeuger-Stretch": {name:"Stretch flessori dell'anca", reps:"30 sec per lato", weight:"Stretch", description:"Affondo con ginocchio dietro a terra, spingi il bacino in avanti — si sente davanti all'anca"},
     "Katze-Kuh": {name:"Gatto-mucca", reps:"10 rip", weight:"Mobilità", description:"A quattro zampe · Arrotonda la schiena (gatto) poi inarcala (mucca) — mobilizza la colonna dopo gli stacchi"}
+  },
+  he: {
+    "Marschieren auf der Stelle": {name:"צעידה במקום", reps:"30 שנ׳", weight:"ללא משקל", description:"הרימו ברכיים, נופפו בידיים, העלו את הדופק"},
+    "Hüftkreise": {name:"סיבובי אגן", reps:"10 לכל צד", weight:"ללא משקל", description:"ידיים על המותניים, ציירו מעגלים גדולים עם האגן — קודם ימינה, אחר כך שמאלה"},
+    "Armkreise": {name:"סיבובי זרועות", reps:"10 קדימה + 10 אחורה", weight:"ללא משקל", description:"שתי הזרועות פרושות לצדדים, ציירו מעגלים גדולים"},
+    "Bodyweight Squats": {name:"סקוואט משקל גוף", reps:"10 חזרות", weight:"ללא משקל", description:"רדו עמוק לכריעה, ברכיים מעל האצבעות, חזה זקוף, ישבן אחורה"},
+    "Goblet Squat": {name:"סקוואט גביע", reps:"10-12 חזרות", weight:"קטלבל 8 ק״ג", description:"החזיקו את המשקולת מול החזה (כמו גביע), רדו עמוק, הברכיים עוקבות אחר האצבעות, החזה נשאר זקוף"},
+    "Hip Thrust": {name:"הרמת אגן", reps:"12-15 חזרות", weight:"קטלבל 8 ק״ג", description:"כתפיים על הספסל, כפות רגליים שטוחות על הרצפה, משקולת לרוחב האגן, דחפו את האגן למעלה עד שברך-אגן-כתף יוצרים קו אחד"},
+    "Romanian Deadlift": {name:"דדליפט רומני", reps:"10 חזרות", weight:"קטלבל 8 ק״ג", description:"כיפוף קל בברכיים, דחפו את האגן אחורה, הובילו את המשקולת לאורך השוקיים — שמרו על גב ישר"},
+    "Curtsy Lunges": {name:"מספריים מצטלבות", reps:"10 לכל צד", weight:"קטלבל 8 ק״ג", description:"אזור מטרה: מכנסי רכיבה · משקולת מול החזה, הרגל האחורית חוצה באלכסון לאחור כמו קידה, רדו עמוק, הברך הקדמית נשארת מעל כף הרגל — לסירוגין שמאל וימין"},
+    "Standing Calf Raises": {name:"הרמות שוקיים בעמידה", reps:"15 חזרות", weight:"קטלבל 8 ק״ג", description:"אזור מטרה: שוקיים · משקולת ביד אחת, עלו לאט על קצות האצבעות, החזיקו רגע למעלה, רדו לאט — היעזרו בקיר לשיווי משקל במידת הצורך"},
+    "Superman": {name:"סופרמן", reps:"12 חזרות", weight:"ללא משקל", description:"אזור מטרה: גב תחתון · שכבו על הבטן, ידיים מושטות קדימה, רגליים לאחור — הרימו ידיים ורגליים מהרצפה יחד, החזיקו 2 שנ׳, הורידו בשליטה"},
+    "Trizeps Kickbacks": {name:"בעיטות טריצפס", reps:"12 לכל צד", weight:"2 ק״ג לכל יד", description:"ברך על הספסל, רכנו קדימה, הזרוע העליונה מקבילה לרצפה, מתחו את האמה לאחור — הזרוע העליונה נשארת קבועה"},
+    "Overhead Trizeps Extension": {name:"מתיחת טריצפס מעל הראש", reps:"10-12 חזרות", weight:"2 ק״ג בשתי ידיים", description:"בעמידה, הורידו את המשקולת מאחורי הראש בשתי ידיים, ואז מתחו כלפי מעלה — שמרו את המרפקים צמודים לראש"},
+    "Russian Twists": {name:"סיבובים רוסיים", reps:"20 חזרות בסך הכל", weight:"2 ק״ג", description:"בישיבה, נטויות מעט לאחור, רגליים מורמות (ברכיים כפופות), הקישו את המשקולת לצדכם לאט משמאל לימין"},
+    "Plank": {name:"פלאנק", reps:"20-30 שנ׳", weight:"ללא משקל", description:"פלאנק על האמות, הגוף בקו ישר מהראש ועד העקבים, הדקו את הבטן, אל תרימו את האגן"},
+    "Side Plank": {name:"פלאנק צד", reps:"20-30 שנ׳ לכל צד", weight:"ללא משקל", description:"אזור מטרה: גלגל שומן במותניים · תמיכה צדדית על אמה אחת, הגוף בקו ישר, הזרוע העליונה מושטת לתקרה, אל תתנו לאגן לצנוח — סט אחד לכל צד"},
+    "Taubensitz": {name:"תנוחת היונה", reps:"30 שנ׳ לכל צד", weight:"מתיחה", description:"הרגל הקדמית מכופפת לפניכם, הרגל האחורית מושטת לאחור, פלג הגוף העליון שוקע בעדינות לכיוון הרצפה"},
+    "Hamstring-Stretch": {name:"מתיחת שרירי ירך אחוריים", reps:"30 שנ׳ לכל צד", weight:"מתיחה", description:"בישיבה, רגל אחת ישרה, השנייה כפופה, הושיטו יד לאצבעות הרגל הישרה"},
+    "Trizeps-Stretch": {name:"מתיחת טריצפס", reps:"20 שנ׳ לכל צד", weight:"מתיחה", description:"זרוע מעל הראש, היד לכיוון העורף, דחפו בעדינות את המרפק לאחור עם היד השנייה"},
+    "Schulter-Crossbody": {name:"מתיחת כתף חוצה גוף", reps:"20 שנ׳ לכל צד", weight:"מתיחה", description:"זרוע ישרה לרוחב החזה, משכו אותה אליכם עם הזרוע השנייה — שמרו את הכתף למטה"},
+    "Glute Bridge": {name:"גשר ישבן", reps:"12 חזרות", weight:"קטלבל 8 ק״ג על האגן", description:"גב על הרצפה, ברכיים כפופות, אזנו את הקטלבל על האגן, הרימו את האגן — הדקו חזק את הישבן למעלה למשך שנ׳ אחת"},
+    "Halbkniender Schulterdruck": {name:"לחיצת כתפיים בכריעה חלקית", reps:"6 לכל צד", weight:"קטלבל 8 ק״ג", description:"⚠️ זהירות בכתף · ברך אחת למטה, הרגל השנייה קדימה. קטלבל על כתף אחת, לחצו ישר כלפי מעלה. בכל אי-נוחות קלה בכתף — דלגו והכפילו את סט הפלאנק במקום"},
+    "Bird Dog": {name:"כלב ציד", reps:"8 לכל צד", weight:"ללא משקל", description:"על ארבע, מתחו זרוע ורגל מנוגדות לאורך, החזיקו רגע — שמרו על פלג גוף יציב, ללא נדנוד"},
+    "Hüftbeuger-Stretch": {name:"מתיחת כופפי הירך", reps:"30 שנ׳ לכל צד", weight:"מתיחה", description:"פיתות בכריעה חלקית, הברך האחורית על הרצפה, דחפו את האגן קדימה — מורגש בחזית הירך"},
+    "Katze-Kuh": {name:"חתול-פרה", reps:"10 חזרות", weight:"ניידות", description:"על ארבע · עגלו את הגב (חתול) ואז קמרו אותו (פרה) — שחררו את עמוד השדרה אחרי הדדליפטים"}
   }
 };
 function ui(k){ return (UI[lang] && UI[lang][k] != null) ? UI[lang][k] : UI.de[k]; }
@@ -1959,9 +2004,10 @@ function applyUI(){
     if (u[subKey]) subtitleEl.textContent = u[subKey];
   }
   document.documentElement.lang = lang;
+  document.documentElement.dir = (lang === 'he') ? 'rtl' : 'ltr';
   document.querySelectorAll('.ls-btn').forEach(b => b.classList.toggle('active', b.dataset.lang === lang));
 }
-function switchLang(l){ lang = l; localStorage.setItem('nina_workout_lang', l); applyUI(); buildPhaseTabs(); renderPhase(currentPhase); }
+function switchLang(l){ lang = l; localStorage.setItem('nina_workout_lang', l); document.documentElement.dir = (lang === 'he') ? 'rtl' : 'ltr'; applyUI(); buildPhaseTabs(); renderPhase(currentPhase); }
 
 function updateProgress() {
   const total = totalSets();

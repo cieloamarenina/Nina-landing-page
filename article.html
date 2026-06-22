@@ -266,6 +266,10 @@
     nav .nav-links { display: none; }
     footer { flex-direction: column; gap: 1rem; text-align: center; }
   }
+
+  /* RTL overrides for Hebrew */
+  html[dir="rtl"] body { text-align: right; }
+  html[dir="rtl"] .article-content { text-align: right; }
 </style>
 </head>
 <body>
@@ -285,6 +289,7 @@
     <button class="lang-btn" data-lang="fr">FR</button>
     <button class="lang-btn" data-lang="es">ES</button>
     <button class="lang-btn" data-lang="it">IT</button>
+    <button class="lang-btn" data-lang="he" lang="he">עברית</button>
   </div>
 </nav>
 
@@ -296,7 +301,7 @@
 </footer>
 
 <script>
-const LANG_LOCALE = {en:'en-GB', de:'de-DE', fr:'fr-FR', es:'es-ES', it:'it-IT'};
+const LANG_LOCALE = {en:'en-GB', de:'de-DE', fr:'fr-FR', es:'es-ES', it:'it-IT', he:'he-IL'};
 
 const UI = {
   en: { back:'← Back to Blog', loading:'Loading article...', notFound:'This article does not exist (anymore).', footer:'© 2026 Nina Panknin — Learning in Public', about:'About', journey:'Journey', stack:'Stack', blog:'Blog', guestbook:'Guestbook' },
@@ -304,6 +309,7 @@ const UI = {
   fr: { back:'← Retour au blog', loading:'Chargement...', notFound:"Cet article n'existe plus.", footer:'© 2026 Nina Panknin — Apprendre en public', about:'À propos', journey:'Parcours', stack:'Stack', blog:'Blog', guestbook:"Livre d'or" },
   es: { back:'← Volver al blog', loading:'Cargando artículo...', notFound:'Este artículo no existe (más).', footer:'© 2026 Nina Panknin — Aprendiendo en público', about:'Sobre mí', journey:'Journey', stack:'Stack', blog:'Blog', guestbook:'Libro de visitas' },
   it: { back:'← Torna al blog', loading:'Caricamento...', notFound:"Questo articolo non esiste (più).", footer:'© 2026 Nina Panknin — Imparare in pubblico', about:'Chi sono', journey:'Percorso', stack:'Stack', blog:'Blog', guestbook:'Libro degli ospiti' },
+  he: { back:'← חזרה לבלוג', loading:'טוען מאמר...', notFound:'המאמר הזה כבר לא קיים.', footer:'© 2026 Nina Panknin — לומדת בפומבי', about:'אודות', journey:'המסע', stack:'כלים', blog:'בלוג', guestbook:'ספר אורחים' },
 };
 
 const slug = new URLSearchParams(window.location.search).get('slug');
@@ -322,6 +328,7 @@ function applyUI(lang) {
   document.getElementById('nav-guestbook').textContent = u.guestbook;
   document.querySelectorAll('.lang-btn').forEach(b => b.classList.toggle('active', b.dataset.lang === lang));
   document.documentElement.lang = lang;
+  document.documentElement.dir = (lang === 'he') ? 'rtl' : 'ltr';
   localStorage.setItem('nlvc_lang', lang);
 }
 

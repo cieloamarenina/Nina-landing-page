@@ -278,6 +278,7 @@
     <button class="lang-btn" data-lang="fr">FR</button>
     <button class="lang-btn" data-lang="it">IT</button>
     <button class="lang-btn" data-lang="es">ES</button>
+    <button class="lang-btn" data-lang="he" lang="he">עברית</button>
   </div>
 </nav>
 
@@ -294,7 +295,7 @@
 </footer>
 
 <script>
-const LANG_LOCALE = {en:'en-GB', de:'de-DE', fr:'fr-FR', es:'es-ES', it:'it-IT'};
+const LANG_LOCALE = {en:'en-GB', de:'de-DE', fr:'fr-FR', es:'es-ES', it:'it-IT', he:'he-IL'};
 
 const UI = {
   en: { tag:'// latest posts', sub:'Learnings, tools and honest reports from everyday AI-assisted building.', footer:'© 2026 Nina Panknin — Learning in Public', about:'About', journey:'Journey', stack:'Stack', blog:'Blog', guestbook:'Guestbook' },
@@ -302,6 +303,7 @@ const UI = {
   fr: { tag:'// derniers articles', sub:"Apprentissages, outils et rapports honnêtes du quotidien de la construction assistée par IA.", footer:'© 2026 Nina Panknin — Apprendre en public', about:'À propos', journey:'Parcours', stack:'Stack', blog:'Blog', guestbook:"Livre d'or" },
   es: { tag:'// últimas entradas', sub:'Aprendizajes, herramientas e informes honestos del día a día de la construcción asistida por IA.', footer:'© 2026 Nina Panknin — Aprendiendo en público', about:'Sobre mí', journey:'Journey', stack:'Stack', blog:'Blog', guestbook:'Libro de visitas' },
   it: { tag:'// ultimi articoli', sub:"Apprendimenti, strumenti e resoconti onesti dal quotidiano della costruzione assistita dall'IA.", footer:'© 2026 Nina Panknin — Imparare in pubblico', about:'Chi sono', journey:'Percorso', stack:'Stack', blog:'Blog', guestbook:'Libro degli ospiti' },
+  he: { tag:'// הפוסטים האחרונים', sub:'לקחים, כלים ודיווחים כנים מהיומיום של בנייה בעזרת בינה מלאכותית.', footer:'© 2026 Nina Panknin — לומדת בפומבי', about:'אודות', journey:'המסע', stack:'Stack', blog:'בלוג', guestbook:'ספר אורחים' },
 };
 
 let _articles = [];
@@ -320,6 +322,7 @@ function applyUI(lang) {
   document.getElementById('nav-guestbook').textContent = u.guestbook;
   document.querySelectorAll('.lang-btn').forEach(b => b.classList.toggle('active', b.dataset.lang === lang));
   document.documentElement.lang = lang;
+  document.documentElement.dir = (lang === 'he') ? 'rtl' : 'ltr';
   localStorage.setItem('nlvc_lang', lang);
 }
 
