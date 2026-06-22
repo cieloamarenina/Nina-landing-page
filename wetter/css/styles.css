@@ -107,7 +107,10 @@ img.cam{position:absolute;inset:0;z-index:1;width:100%;height:100%;object-fit:co
 @keyframes stageFade{from{opacity:0}to{opacity:1}}
 
 /* Search, results, favorites (Task 14) — adapted from prototype */
-.topbar{position:relative;display:flex;align-items:center;gap:10px;padding:14px 14px 6px;z-index:30}
+.topbar{position:relative;display:flex;align-items:center;flex-wrap:wrap;gap:10px;padding:14px 14px 6px;z-index:30}
+.lang-row{display:flex;gap:5px;width:100%;margin-top:2px}
+.lang-row .lang-btn{flex:1;min-width:34px;font-family:var(--font-mono);font-size:11px;font-weight:600;letter-spacing:.05em;color:var(--muted);background:rgba(10,14,24,.55);border:1px solid var(--border);border-radius:10px;padding:7px 4px;cursor:pointer;text-align:center;transition:background .15s,color .15s}
+.lang-row .lang-btn.on{background:var(--accent);color:#04121a;border-color:var(--accent)}
 .search{flex:1;display:flex;align-items:center;gap:8px;background:rgba(10,14,24,.55);border:1px solid var(--border);backdrop-filter:blur(14px);border-radius:14px;padding:11px 14px;font-size:13px;color:var(--text);font-family:var(--font-mono);outline:none}
 .search::placeholder{color:var(--muted)}
 .icobtn{width:42px;height:42px;display:grid;place-items:center;background:rgba(10,14,24,.55);border:1px solid var(--border);backdrop-filter:blur(14px);border-radius:14px;font-size:16px;color:var(--text);cursor:pointer}
@@ -142,7 +145,7 @@ img.cam{position:absolute;inset:0;z-index:1;width:100%;height:100%;object-fit:co
 .player.playing .ptoggle{animation:pablo-float-fast 1.2s ease-in-out infinite}
 .player.playing .pablo-ring{border-color:var(--accent);box-shadow:0 0 14px rgba(0,212,255,.55),0 0 28px rgba(0,212,255,.25)}
 .ppanel{width:280px;background:rgba(10,14,24,.85);border:1px solid rgba(255,255,255,.16);backdrop-filter:blur(16px);border-radius:16px;padding:12px;transition:opacity .25s,transform .25s;transform-origin:bottom right}
-.ppanel #spotify{border-radius:12px}
+.ppanel #spotify,.ppanel iframe{border-radius:12px;width:100%;border:0;display:block}
 .player.collapsed .ppanel{opacity:0;transform:scale(.9) translateY(8px);pointer-events:none;height:0;padding:0;overflow:hidden;border:0;margin:0}
 
 /* RTL (Hebrew) — flip text direction, keep numbers/temperature LTR */
@@ -242,17 +245,73 @@ img.cam{position:absolute;inset:0;z-index:1;width:100%;height:100%;object-fit:co
 .wmap-scroll::-webkit-scrollbar-thumb{background:rgba(0,212,255,.3);border-radius:3px}
 /* Map is wider than the viewport so temperature labels stay legible; the
    .wmap-scroll wrapper provides horizontal scroll on mobile. */
-.wmap-svg{display:block;width:720px;max-width:none;height:auto;border-radius:16px;border:1px solid rgba(255,255,255,.08);background:#0a1020;box-shadow:0 8px 28px rgba(0,0,0,.35)}
-.wmap-ocean{fill:#0a1424}
-.wmap-grid{stroke:rgba(107,127,163,.18);stroke-width:1}
-.wmap-land{fill:rgba(40,60,96,.6);stroke:rgba(0,212,255,.18);stroke-width:1;stroke-linejoin:round}
+.wmap-svg{display:block;width:720px;max-width:none;height:auto;border-radius:16px;border:1px solid rgba(255,255,255,.08);box-shadow:0 8px 28px rgba(0,0,0,.35);transition:border-color .5s}
 .wmap-pin{cursor:pointer;outline:none}
 .wmap-halo{opacity:.22}
-.wmap-pin:hover .wmap-halo,.wmap-pin:focus .wmap-halo{opacity:.4}
+.wmap-pin:hover .wmap-halo,.wmap-pin:focus .wmap-halo{opacity:.5}
+/* Pulsing glow ring behind each pin — gently breathes so the map feels alive. */
+.wmap-pulse{opacity:0;transform-origin:center;transform-box:fill-box;animation:wmap-pulse 3.4s ease-in-out infinite}
+.wmap-pin:hover .wmap-pulse,.wmap-pin:focus .wmap-pulse{animation-duration:1.8s}
+@keyframes wmap-pulse{0%{opacity:.32;transform:scale(.6)}55%{opacity:0;transform:scale(2.1)}100%{opacity:0;transform:scale(2.1)}}
+@media (prefers-reduced-motion:reduce){.wmap-pulse{animation:none;opacity:.18;transform:scale(1.3)}}
 .wmap-dot{stroke:rgba(8,12,20,.85);stroke-width:1.5}
 .wmap-pin:hover .wmap-dot,.wmap-pin:focus .wmap-dot{stroke:var(--text)}
-.wmap-temp{font-family:var(--font-mono);font-weight:700;font-size:17px;paint-order:stroke;stroke:rgba(8,12,20,.92);stroke-width:3px;stroke-linejoin:round}
+.wmap-temp{font-family:var(--font-mono);font-weight:700;font-size:17px;paint-order:stroke;stroke-linejoin:round}
+
+/* ---- Day theme: vivid sky→sea gradient, warm light land ---- */
+.wmap[data-time="day"] .wmap-ocean{fill:url(#wmap-day-grad)}
+.wmap[data-time="day"] .wmap-svg{border-color:rgba(120,190,240,.35)}
+.wmap[data-time="day"] .wmap-grid{stroke:rgba(230,245,255,.16);stroke-width:1}
+.wmap[data-time="day"] .wmap-land{fill:rgba(180,210,200,.5);stroke:rgba(120,235,255,.5);stroke-width:1;stroke-linejoin:round}
+.wmap[data-time="day"] .wmap-stars{display:none}
+.wmap[data-time="day"] .wmap-halo{opacity:.3}
+.wmap[data-time="day"] .wmap-temp{stroke:rgba(7,22,42,.9);stroke-width:3.2px}
+.wmap[data-time="day"] .wmap-dot{stroke:rgba(7,22,42,.85)}
+
+/* ---- Night theme: deep navy + starfield, glowing pins ---- */
+.wmap[data-time="night"] .wmap-ocean{fill:url(#wmap-night-grad)}
+.wmap[data-time="night"] .wmap-svg{border-color:rgba(60,90,150,.3)}
+.wmap[data-time="night"] .wmap-grid{stroke:rgba(107,127,163,.16);stroke-width:1}
+.wmap[data-time="night"] .wmap-land{fill:rgba(30,44,72,.6);stroke:rgba(0,212,255,.18);stroke-width:1;stroke-linejoin:round}
+.wmap[data-time="night"] .wmap-temp{stroke:rgba(4,8,18,.95);stroke-width:3.2px}
+.wmap[data-time="night"] .wmap-halo{opacity:.34;filter:blur(.4px)}
+.wmap[data-time="night"] .wmap-dot{stroke:rgba(4,8,18,.9)}
+
+/* Starfield (night only). Base opacity per-star via --star-op; some twinkle. */
+.wmap-star{opacity:var(--star-op,.6)}
+.wmap-star.twinkle{animation:wmap-twinkle 3s ease-in-out infinite}
+@keyframes wmap-twinkle{0%,100%{opacity:calc(var(--star-op,.6) * .35)}50%{opacity:var(--star-op,.6)}}
+@media (prefers-reduced-motion:reduce){.wmap-star.twinkle{animation:none}}
 .wmap-status{padding:0 16px;font-family:var(--font-mono);font-size:12px;color:var(--muted)}
+
+/* Living background — slowly drifting glints (iPhone live-wallpaper feel) */
+.wmap-stage{position:relative;width:720px;max-width:none}
+.wmap-stage .wmap-svg{width:100%}
+.wmap-fx{position:absolute;inset:0;border-radius:16px;overflow:hidden;pointer-events:none;z-index:2;mix-blend-mode:screen}
+.wmap-fx::before,.wmap-fx::after{content:"";position:absolute;border-radius:50%;will-change:transform}
+.wmap[data-time="day"] .wmap-fx::before{width:55%;height:72%;left:-10%;top:-22%;background:radial-gradient(circle,rgba(255,255,255,.20),transparent 60%);animation:wmap-drift1 19s ease-in-out infinite alternate}
+.wmap[data-time="day"] .wmap-fx::after{width:46%;height:60%;right:-8%;bottom:-16%;background:radial-gradient(circle,rgba(130,222,255,.18),transparent 62%);animation:wmap-drift2 25s ease-in-out infinite alternate}
+.wmap[data-time="night"] .wmap-fx::before{width:62%;height:55%;left:-6%;top:-15%;background:radial-gradient(circle,rgba(60,205,180,.13),transparent 65%);animation:wmap-drift1 27s ease-in-out infinite alternate}
+.wmap[data-time="night"] .wmap-fx::after{width:52%;height:52%;right:-10%;top:8%;background:radial-gradient(circle,rgba(125,95,225,.13),transparent 65%);animation:wmap-drift2 33s ease-in-out infinite alternate}
+@keyframes wmap-drift1{from{transform:translate(0,0) scale(1)}to{transform:translate(58%,28%) scale(1.25)}}
+@keyframes wmap-drift2{from{transform:translate(0,0) scale(1.1)}to{transform:translate(-48%,-22%) scale(1)}}
+@media (prefers-reduced-motion:reduce){.wmap-fx::before,.wmap-fx::after{animation:none}}
+
+/* City names under the temperatures */
+.wmap-name{font-family:var(--font-mono);font-weight:500;font-size:9px;letter-spacing:.02em;paint-order:stroke;stroke-linejoin:round;transition:font-size .15s ease,opacity .15s ease}
+/* Zoom name + pin on hover/touch (focus) — magnify the city you point at */
+.wmap-temp,.wmap-dot{transition:font-size .15s ease,r .15s ease}
+.wmap-pin:hover .wmap-name,.wmap-pin:focus .wmap-name{font-size:17px;font-weight:700;opacity:1}
+.wmap-pin:hover .wmap-temp,.wmap-pin:focus .wmap-temp{font-size:23px}
+.wmap-pin:hover .wmap-dot,.wmap-pin:focus .wmap-dot{r:8}
+.wmap-pin:hover .wmap-halo,.wmap-pin:focus .wmap-halo{opacity:.5}
+.wmap[data-time="day"] .wmap-name{fill:rgba(255,255,255,.92);stroke:rgba(7,22,42,.85);stroke-width:2.4px}
+.wmap[data-time="night"] .wmap-name{fill:rgba(214,230,255,.9);stroke:rgba(4,8,18,.92);stroke-width:2.4px}
+/* Dense European cluster: hide the name until hover/focus so labels don't pile up;
+   the temperature stays visible always. Reveal raises the pin above its neighbours. */
+.wmap-pin--dense .wmap-name{opacity:0;transition:opacity .15s}
+.wmap-pin--dense:hover .wmap-name,.wmap-pin--dense:focus .wmap-name{opacity:1}
+.wmap-pin--dense:hover,.wmap-pin--dense:focus{position:relative}
 /* Map content is geographic — force LTR even in RTL layouts. */
 [dir="rtl"] .wmap-scroll,[dir="rtl"] .wmap{direction:ltr}
 

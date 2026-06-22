@@ -1,4 +1,5 @@
 import { cachedJson } from "./api.js";
+import { WORLD_LAND_PATH } from "./world-land-path.js";
 
 // ~30 major cities spread across the continents.
 const CITIES = [
@@ -37,32 +38,12 @@ const CITIES = [
 // Equirectangular SVG canvas dimensions (2:1 like a world map).
 const W = 1000, H = 500;
 
-// Simplified public-domain world continent outlines (equirectangular, 0-1000 x / 0-500 y).
-// Rough silhouettes — enough to read as continents behind the temperature pins.
-const CONTINENTS = [
-  // North America
-  "M150 80 L210 75 L270 90 L300 120 L290 150 L255 175 L250 210 L225 245 L195 250 L185 215 L160 195 L150 160 L120 150 L110 120 L130 95 Z",
-  // Central America
-  "M250 250 L270 260 L285 285 L275 300 L255 290 L248 265 Z",
-  // South America
-  "M295 305 L330 300 L355 325 L360 370 L345 420 L320 455 L300 460 L295 420 L280 380 L285 335 Z",
-  // Greenland
-  "M340 55 L380 50 L395 80 L375 110 L345 100 L335 75 Z",
-  // Europe
-  "M470 110 L515 100 L545 115 L540 145 L510 160 L485 150 L465 165 L455 140 L460 120 Z",
-  // Africa
-  "M475 200 L545 195 L575 215 L585 260 L565 310 L530 350 L505 345 L490 300 L470 255 L465 220 Z",
-  // Asia
-  "M555 95 L700 90 L800 110 L850 140 L835 175 L780 185 L720 200 L660 195 L600 175 L565 150 L550 120 Z",
-  // India
-  "M640 200 L675 205 L685 240 L665 270 L645 255 L635 220 Z",
-  // SE Asia islands
-  "M740 250 L790 255 L820 275 L800 300 L760 290 L735 270 Z",
-  // Australia
-  "M810 340 L880 335 L905 365 L890 405 L840 415 L805 390 L800 360 Z",
-  // Antarctica strip
-  "M100 470 L900 470 L900 495 L100 495 Z",
-];
+// Accurate world land geometry (Natural Earth 110m, public domain) is imported as
+// WORLD_LAND_PATH — a single combined equirectangular SVG path aligned to projX/projY.
+
+// Cities packed densely in Europe — for these we stagger label offsets and only show
+// the name on hover/focus to avoid the cluttered overlap, while the temp is always shown.
+const DENSE_CLUSTER = new Set(["London", "Madrid", "Rome", "Oslo", "Istanbul", "Berlin"]);
 
 // Cold→hot color scale. Stops in °C → RGB.
 const STOPS = [
@@ -99,25 +80,79 @@ function batchUrl(cities) {
   return `https://api.open-meteo.com/v1/forecast?latitude=${lats}&longitude=${lons}&current_weather=true`;
 }
 
-export async function mountWorldMap(host, { lang, t, onPickCity }) {
+export async function mountWorldMap(host, { lang, t, onPickCity, isDay = true }) {
   host.innerHTML = `
-    <div class="wmap">
+    <div class="wmap" data-time="${isDay ? "day" : "night"}">
       <div class="wmap-head">${t("map.title")}</div>
       <div class="wmap-scroll">
-        <svg class="wmap-svg" viewBox="0 0 ${W} ${H}" preserveAspectRatio="xMidYMid meet" role="img"></svg>
+        <div class="wmap-stage">
+          <svg class="wmap-svg" viewBox="0 0 ${W} ${H}" preserveAspectRatio="xMidYMid meet" role="img"></svg>
+          <div class="wmap-fx" aria-hidden="true"></div>
+        </div>
       </div>
       <div class="wmap-status">${t("map.loading")}</div>
     </div>`;
+  const wmap = host.querySelector(".wmap");
   const svg = host.querySelector(".wmap-svg");
   const status = host.querySelector(".wmap-status");
-
-  // Ocean + graticule + continents (static base).
   const SVGNS = "http://www.w3.org/2000/svg";
+
+  // ---- Themed background: day = sky→sea gradient, night = navy + starfield. ----
+  const defs = document.createElementNS(SVGNS, "defs");
+  // Day gradient: bright sky-blue at top → deep sea-blue at bottom.
+  const dayGrad = document.createElementNS(SVGNS, "linearGradient");
+  dayGrad.setAttribute("id", "wmap-day-grad");
+  dayGrad.setAttribute("x1", "0"); dayGrad.setAttribute("y1", "0");
+  dayGrad.setAttribute("x2", "0"); dayGrad.setAttribute("y2", "1");
+  [["0%", "#5bb8f0"], ["35%", "#4aa3e8"], ["68%", "#1a4a7a"], ["100%", "#0d2b52"]]
+    .forEach(([off, col]) => {
+      const s = document.createElementNS(SVGNS, "stop");
+      s.setAttribute("offset", off); s.setAttribute("stop-color", col);
+      dayGrad.appendChild(s);
+    });
+  defs.appendChild(dayGrad);
+  // Night gradient: deep navy.
+  const nightGrad = document.createElementNS(SVGNS, "linearGradient");
+  nightGrad.setAttribute("id", "wmap-night-grad");
+  nightGrad.setAttribute("x1", "0"); nightGrad.setAttribute("y1", "0");
+  nightGrad.setAttribute("x2", "0"); nightGrad.setAttribute("y2", "1");
+  [["0%", "#0a1428"], ["100%", "#060b18"]].forEach(([off, col]) => {
+    const s = document.createElementNS(SVGNS, "stop");
+    s.setAttribute("offset", off); s.setAttribute("stop-color", col);
+    nightGrad.appendChild(s);
+  });
+  defs.appendChild(nightGrad);
+  svg.appendChild(defs);
+
+  // Ocean rect — fill driven by theme via CSS (references the gradients above).
   const ocean = document.createElementNS(SVGNS, "rect");
   ocean.setAttribute("x", 0); ocean.setAttribute("y", 0);
   ocean.setAttribute("width", W); ocean.setAttribute("height", H);
   ocean.setAttribute("class", "wmap-ocean");
   svg.appendChild(ocean);
+
+  // Starfield (night only; hidden in day via CSS). Deterministic scatter.
+  const stars = document.createElementNS(SVGNS, "g");
+  stars.setAttribute("class", "wmap-stars");
+  let seed = 1337;
+  const rnd = () => { seed = (seed * 1103515245 + 12345) & 0x7fffffff; return seed / 0x7fffffff; };
+  for (let i = 0; i < 110; i++) {
+    const st = document.createElementNS(SVGNS, "circle");
+    st.setAttribute("cx", (rnd() * W).toFixed(1));
+    st.setAttribute("cy", (rnd() * H).toFixed(1));
+    const r = 0.5 + rnd() * 1.6;
+    st.setAttribute("r", r.toFixed(2));
+    st.setAttribute("class", "wmap-star");
+    st.setAttribute("fill", rnd() > 0.7 ? "#bcd8ff" : "#ffffff");
+    st.style.setProperty("--star-op", (0.3 + rnd() * 0.6).toFixed(2));
+    if (rnd() > 0.6) {
+      st.classList.add("twinkle");
+      st.style.animationDelay = (rnd() * 4).toFixed(2) + "s";
+      st.style.animationDuration = (2.4 + rnd() * 2.8).toFixed(2) + "s";
+    }
+    stars.appendChild(st);
+  }
+  svg.appendChild(stars);
 
   // Graticule lines every 30°.
   for (let lon = -180; lon <= 180; lon += 30) {
@@ -136,12 +171,12 @@ export async function mountWorldMap(host, { lang, t, onPickCity }) {
     ln.setAttribute("class", "wmap-grid");
     svg.appendChild(ln);
   }
-  for (const d of CONTINENTS) {
-    const p = document.createElementNS(SVGNS, "path");
-    p.setAttribute("d", d);
-    p.setAttribute("class", "wmap-land");
-    svg.appendChild(p);
-  }
+  // Accurate coastlines: one combined path, filled via .wmap-land theming.
+  const land = document.createElementNS(SVGNS, "path");
+  land.setAttribute("d", WORLD_LAND_PATH);
+  land.setAttribute("class", "wmap-land");
+  land.setAttribute("fill-rule", "evenodd");
+  svg.appendChild(land);
 
   // Fetch all temps in ONE batched request → array indexed by city.
   let temps = CITIES.map(() => null);
@@ -163,12 +198,21 @@ export async function mountWorldMap(host, { lang, t, onPickCity }) {
     const temp = temps[i];
     const color = tempColor(temp);
 
+    const dense = DENSE_CLUSTER.has(city.name);
+
     const g = document.createElementNS(SVGNS, "g");
-    g.setAttribute("class", "wmap-pin");
+    g.setAttribute("class", dense ? "wmap-pin wmap-pin--dense" : "wmap-pin");
     g.setAttribute("transform", `translate(${x},${y})`);
     g.setAttribute("tabindex", "0");
     g.setAttribute("role", "button");
     g.setAttribute("aria-label", `${city.name} ${temp == null ? "" : temp + "°"}`);
+
+    // Pulsing glow ring — gentle, staggered so the map feels alive.
+    const pulse = document.createElementNS(SVGNS, "circle");
+    pulse.setAttribute("r", 11); pulse.setAttribute("class", "wmap-pulse");
+    pulse.setAttribute("fill", color);
+    pulse.style.animationDelay = `${(i % 6) * 0.5}s`;
+    g.appendChild(pulse);
 
     const halo = document.createElementNS(SVGNS, "circle");
     halo.setAttribute("r", 11); halo.setAttribute("class", "wmap-halo");
@@ -183,17 +227,36 @@ export async function mountWorldMap(host, { lang, t, onPickCity }) {
     const label = document.createElementNS(SVGNS, "text");
     label.setAttribute("class", "wmap-temp");
     label.setAttribute("x", 0);
-    label.setAttribute("y", -14);
+    // Stagger the temp label vertically in the dense European cluster to reduce overlap.
+    label.setAttribute("y", dense && i % 2 ? -20 : -14);
     label.setAttribute("text-anchor", "middle");
     label.setAttribute("fill", color);
     label.textContent = temp == null ? "–" : `${temp}°`;
     g.appendChild(label);
+
+    // City name under the dot. In the dense cluster it only shows on hover/focus (CSS).
+    const nameEl = document.createElementNS(SVGNS, "text");
+    nameEl.setAttribute("class", "wmap-name");
+    nameEl.setAttribute("x", 0);
+    nameEl.setAttribute("y", 17);
+    nameEl.setAttribute("text-anchor", "middle");
+    nameEl.textContent = city.name;
+    g.appendChild(nameEl);
 
     const activate = () => onPickCity && onPickCity(city);
     g.addEventListener("click", activate);
     g.addEventListener("keydown", e => {
       if (e.key === "Enter" || e.key === " ") { e.preventDefault(); activate(); }
     });
+    // Raise the pin to the front on hover/touch so its zoomed name isn't hidden by neighbours.
+    g.addEventListener("pointerenter", () => svg.appendChild(g));
     svg.appendChild(g);
   });
+
+  // Expose a tiny API so app.js can re-theme the map when a place loads.
+  return {
+    setTime(isDayNow) {
+      wmap.setAttribute("data-time", isDayNow ? "day" : "night");
+    },
+  };
 }

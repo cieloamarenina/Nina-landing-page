@@ -1809,12 +1809,9 @@ initVisitors();
       <button class="pl-btn" onclick="switchPlaylist('0gmft5pcMN8iDI30vspobp','Aqua Feelin\'',this)">🌊 Aqua Feelin'</button>
       <button class="pl-btn" onclick="switchPlaylist('2R10VQvUU02ga3185KXjR6','Your All-Time Top Songs',this)">🏆 Top All-Time</button>
     </div>
-    <iframe id="pablo-iframe"
-      src="https://open.spotify.com/embed/playlist/3H8MvvuocXmp798LbjFrzy?utm_source=generator&theme=0"
-      width="300" height="352" frameBorder="0"
-      allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
-      loading="lazy">
-    </iframe>
+    <div id="pablo-embed" style="width:300px;max-width:100%"></div>
+    <!-- Offizielle Spotify IFrame-API: erlaubt programmatisches Play innerhalb einer User-Geste -->
+    <script src="https://open.spotify.com/embed/iframe-api/v1" async></script>
   </div>
   <div id="pablo-btn" onclick="togglePabloPanel()" title="Pablo's Playlist 🎵">
     <div id="pablo-zzz"><span>z</span><span>z</span><span>z</span></div>
@@ -1917,13 +1914,32 @@ document.querySelectorAll('.nav-links a').forEach(a =>
   })
 );
 
+// --- Pablo via official Spotify IFrame API: real play button + auto-start on first gesture ---
+let pabloCtrl = null, pabloWantPlay = false, pabloCur = '3H8MvvuocXmp798LbjFrzy';
+function pabloStart() {
+  if (!pabloCtrl) { pabloWantPlay = true; return; }
+  try { pabloCtrl.play(); } catch (e) { try { pabloCtrl.resume(); } catch (_) {} }
+}
+window.onSpotifyIframeApiReady = (API) => {
+  API.createController(
+    document.getElementById('pablo-embed'),
+    { uri: 'spotify:playlist:' + pabloCur, width: '100%', height: 352 },
+    (ctrl) => { pabloCtrl = ctrl; if (pabloWantPlay) pabloStart(); }
+  );
+};
 function switchPlaylist(id, name, btn) {
-  document.getElementById('pablo-iframe').src =
-    'https://open.spotify.com/embed/playlist/' + id + '?utm_source=generator&theme=0';
+  if (id !== pabloCur) { pabloCur = id; if (pabloCtrl) pabloCtrl.loadUri('spotify:playlist:' + id); }
   document.getElementById('pablo-track-name').textContent = name;
   document.querySelectorAll('.pl-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
+  pabloStart(); // a click is a user gesture → start playback
 }
+// Auto-start on the first interaction anywhere on the page (bypasses autoplay block).
+(function () {
+  const go = () => { pabloStart(); window.removeEventListener('pointerdown', go, true); window.removeEventListener('keydown', go, true); };
+  window.addEventListener('pointerdown', go, true);
+  window.addEventListener('keydown', go, true);
+})();
 
 function togglePabloPanel() {
   pabloPanel.classList.toggle('open');

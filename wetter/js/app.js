@@ -28,6 +28,8 @@ let views = {};
 let currentPlace = null;
 let compareMounted = false;
 let mapMounted = false;
+let mapApi = null;
+let mapIsDay = true; // tracks current place's day/night, applied when map mounts/loads
 let radarApi = null;
 
 // Show the selected view, hide the others.
@@ -51,8 +53,8 @@ function switchView(view) {
   // Mount the world map lazily on first open; tapping a city loads it on home.
   if (view === "map" && !mapMounted) {
     mapMounted = true;
-    mountWorldMap(views.map, {
-      lang, t,
+    Promise.resolve(mountWorldMap(views.map, {
+      lang, t, isDay: mapIsDay,
       onPickCity: (city) => {
         const place = { name: city.name, country: "", lat: city.lat, lon: city.lon };
         localStorage.setItem(LAST_KEY, JSON.stringify(place));
@@ -61,7 +63,7 @@ function switchView(view) {
         document.querySelector('.tabbar .tab[data-view="home"]')?.classList.add("on");
         document.querySelectorAll('.tabbar .tab:not([data-view="home"])').forEach(b => b.classList.remove("on"));
       },
-    });
+    })).then(api => { mapApi = api; mapApi.setTime(mapIsDay); });
   }
 }
 let renderSeq = 0;
@@ -107,6 +109,9 @@ async function loadPlace(place) {
   addFavStar(heroHost, place);
 
   const current = forecast.current;
+  // Theme the world map by the active place's day/night.
+  mapIsDay = !!current.isDay;
+  if (mapApi) mapApi.setTime(mapIsDay);
   const wx = describeCode(current.code, current.isDay);
   applyFx(document.querySelector(".scene"), heroHost.querySelector("#hero-fx"), { fx: wx.fx, isDay: current.isDay });
 
@@ -223,14 +228,24 @@ async function boot() {
   home.appendChild(bar);
   mountSearch(bar, { lang, t, onPick: p => { localStorage.setItem(LAST_KEY, JSON.stringify(p)); loadPlace(p); } });
 
-  const langBtn = document.createElement("button");
-  langBtn.id = "lang";
-  langBtn.className = "icobtn";
-  langBtn.title = "Language";
-  langBtn.textContent = lang.toUpperCase();
-  langBtn.onclick = cycleLang;
+  const langRow = document.createElement("div");
+  langRow.id = "lang";
+  langRow.className = "lang-row";
+  AVAILABLE.forEach(code => {
+    const b = document.createElement("button");
+    b.className = "lang-btn" + (code === lang ? " on" : "");
+    b.dataset.lang = code;
+    b.textContent = code === "he" ? "עברית" : code.toUpperCase();
+    if (code === "he") b.lang = "he";
+    b.onclick = () => {
+      if (code === lang) return;
+      localStorage.setItem(LANG_KEY, code);
+      boot();
+    };
+    langRow.appendChild(b);
+  });
   const topbar = bar.querySelector(".topbar");
-  (topbar || bar).appendChild(langBtn);
+  (topbar || bar).appendChild(langRow);
 
   favsHost = document.createElement("div");
   home.appendChild(favsHost);
