@@ -117,6 +117,20 @@
   #final .score{font-family:'Bebas Neue',Impact,sans-serif;font-size:120px;line-height:1;color:var(--sky);text-shadow:0 0 28px rgba(56,189,248,.6)}
   #final .rate{font-family:'Bebas Neue',Impact,sans-serif;font-size:34px;color:var(--text)}
   #final .teams{font-size:22px;letter-spacing:2px;margin-bottom:6px}
+  #final{overflow-y:auto}
+  #final .btnrow{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:10px}
+  .btn.alt{background:transparent;color:var(--sky);border:1.5px solid var(--sky);box-shadow:none}
+  .btn.alt:hover{background:rgba(56,189,248,.12)}
+  .lb{width:100%;max-width:340px;margin:8px auto 0;text-align:start}
+  .lb.hidden{display:none}
+  .lb h3{font-family:'Bebas Neue',Impact,sans-serif;font-size:18px;letter-spacing:1.5px;color:var(--muted);text-align:center;margin:0 0 6px}
+  .lb ol{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:4px}
+  .lb li{display:flex;align-items:center;gap:8px;font-size:15px;padding:5px 10px;border-radius:9px;background:rgba(8,14,34,.55);border:1px solid rgba(56,189,248,.14)}
+  .lb li .r{color:var(--muted);min-width:18px;font-weight:700}
+  .lb li .sc{color:var(--sky);font-weight:700;min-width:54px}
+  .lb li .mu{flex:1;font-size:18px;letter-spacing:1px}
+  .lb li.me{border-color:#ffce00;background:rgba(255,206,0,.12)}
+  .lb li .badge2{font-size:9px;font-weight:700;letter-spacing:1px;color:#06122e;background:#ffce00;padding:2px 6px;border-radius:6px}
 
   /* ── Musik-Button (Spotify-Embed) ───────────────── */
   #music-btn{position:fixed;left:16px;bottom:16px;z-index:30;width:54px;height:54px;border-radius:50%;
@@ -210,7 +224,11 @@
       <div class="teams" id="finalTeams">🇩🇪 vs 🇧🇷</div>
       <div class="score" id="finalScore">0 / 10</div>
       <div class="rate" id="finalRate"></div>
-      <button class="btn" id="againBtn">Neues Spiel</button>
+      <div id="leaderboard" class="lb hidden"></div>
+      <div class="btnrow">
+        <button class="btn" id="againBtn">Neues Spiel</button>
+        <button class="btn alt" id="shareBtn">📤 Teilen</button>
+      </div>
     </div>
   </div>
 
@@ -265,12 +283,12 @@ import * as THREE from 'three';
 
 /* ===== i18n (5 Sprachen, synchron mit der Hauptseite via localStorage 'nlvc_lang') ===== */
 const I18N={
- en:{'title':'Penalty Challenge 3D','brand1':'Penalty','brand2':'Challenge','board.goals':'Goals','board.shots':'Shots','board.best':'Best','picker.title':'Choose your teams','mode.solo':'1 Player','mode.duo':'2 Players','mode.cup':'🏆 Cup','role.shooter':'Shooter','role.keeper':'Keeper','btn.kickoff':'Kick off ⚽','final.end':'Final score','btn.newgame':'New game','foot.right':'🦶 Right foot','foot.left':'🦶 Left foot','style.power':'💥 Power','style.finesse':'🎯 Finesse','hint.pick':'Choose shooter & keeper','hint.kickoff':'Kick off …','hint.controls':'Drag = aim · hold = power · swipe = curve','hint.player2':"Player 2's turn",'flash.goal':'GOAL!','flash.saved':'SAVED!','flash.wide':'WIDE!','flash.over':'OVER!','combo.double':'DOUBLE!','combo.hat':'HAT-TRICK! 🔥','combo.x':'COMBO ×{n} 🔥','combo.unstoppable':'UNSTOPPABLE! 🔥','player':'Player','atBall':'on the ball','rate.god':'Perfect – penalty god','rate.world':'World class','rate.strong':'Strong shooting','rate.solid':'Solid rate','rate.more':'Room to improve','rate.warmup':'Warm-up counts too','rate.practice':'Practice, practice','duel.title':'2-Player duel','duel.win1':'Player 1 wins! 🏆','duel.win2':'Player 2 wins! 🏆','duel.draw':'Draw 🤝','round.0':'Round of 16','round.1':'Quarter-final','round.2':'Semi-final','round.3':'Final','cup.advance':'Into the {next}!','cup.out':'Out in the {round} 😢','cup.champion':'{team} wins the cup! 🎉','btn.nextround':'Next round →','btn.newcup':'New cup','record':'Record'},
- de:{'title':'Elfmeter-Challenge 3D','brand1':'Elfmeter','brand2':'Challenge','board.goals':'Tore','board.shots':'Schuss','board.best':'Best','picker.title':'Wähle deine Teams','mode.solo':'1 Spieler','mode.duo':'2 Spieler','mode.cup':'🏆 Turnier','role.shooter':'Schütze','role.keeper':'Torwart','btn.kickoff':'Anpfiff ⚽','final.end':'Endstand','btn.newgame':'Neues Spiel','foot.right':'🦶 Rechtsfuß','foot.left':'🦶 Linksfuß','style.power':'💥 Wucht','style.finesse':'🎯 Gefühl','hint.pick':'Wähle Schütze & Torwart','hint.kickoff':'Anpfiff …','hint.controls':'Ziehen = zielen · halten = Power · wischen = Effet','hint.player2':'Spieler 2 ist dran','flash.goal':'TOR!','flash.saved':'GEHALTEN!','flash.wide':'DANEBEN!','flash.over':'DRÜBER!','combo.double':'DOPPELPACK!','combo.hat':'HATTRICK! 🔥','combo.x':'COMBO ×{n} 🔥','combo.unstoppable':'UNAUFHALTSAM! 🔥','player':'Spieler','atBall':'am Ball','rate.god':'Perfekt – Elfmeter-Gott','rate.world':'Weltklasse','rate.strong':'Stark geschossen','rate.solid':'Solide Quote','rate.more':'Da geht mehr','rate.warmup':'Aufwärmen zählt auch','rate.practice':'Üben, üben, üben','duel.title':'2-Spieler-Duell','duel.win1':'Spieler 1 gewinnt! 🏆','duel.win2':'Spieler 2 gewinnt! 🏆','duel.draw':'Unentschieden 🤝','round.0':'Achtelfinale','round.1':'Viertelfinale','round.2':'Halbfinale','round.3':'Finale','cup.advance':'Weiter ins {next}!','cup.out':'Ausgeschieden im {round} 😢','cup.champion':'{team} ist Turniersieger! 🎉','btn.nextround':'Nächste Runde →','btn.newcup':'Neues Turnier','record':'Rekord'},
- fr:{'title':'Défi Penalty 3D','brand1':'Défi','brand2':'Penalty','board.goals':'Buts','board.shots':'Tirs','board.best':'Best','picker.title':'Choisis tes équipes','mode.solo':'1 Joueur','mode.duo':'2 Joueurs','mode.cup':'🏆 Tournoi','role.shooter':'Tireur','role.keeper':'Gardien','btn.kickoff':"Coup d'envoi ⚽",'final.end':'Score final','btn.newgame':'Nouvelle partie','foot.right':'🦶 Pied droit','foot.left':'🦶 Pied gauche','style.power':'💥 Puissance','style.finesse':'🎯 Effet','hint.pick':'Choisis tireur & gardien','hint.kickoff':"Coup d'envoi …",'hint.controls':'Glisser = viser · maintenir = puissance · balayer = effet','hint.player2':'Au tour du joueur 2','flash.goal':'BUT!','flash.saved':'ARRÊT!','flash.wide':'À CÔTÉ!','flash.over':'TROP HAUT!','combo.double':'DOUBLÉ!','combo.hat':'TRIPLÉ! 🔥','combo.x':'COMBO ×{n} 🔥','combo.unstoppable':'IMPARABLE! 🔥','player':'Joueur','atBall':'au ballon','rate.god':'Parfait – dieu du penalty','rate.world':'Classe mondiale','rate.strong':'Bien tiré','rate.solid':'Bon ratio','rate.more':'Peut mieux faire','rate.warmup':"L'échauffement compte",'rate.practice':'Entraîne-toi','duel.title':'Duel à 2','duel.win1':'Joueur 1 gagne ! 🏆','duel.win2':'Joueur 2 gagne ! 🏆','duel.draw':'Égalité 🤝','round.0':'Huitièmes','round.1':'Quarts','round.2':'Demi-finale','round.3':'Finale','cup.advance':'Vers {next} !','cup.out':'Éliminé en {round} 😢','cup.champion':'{team} remporte le tournoi ! 🎉','btn.nextround':'Tour suivant →','btn.newcup':'Nouveau tournoi','record':'Record'},
- it:{'title':'Sfida Rigori 3D','brand1':'Sfida','brand2':'Rigori','board.goals':'Gol','board.shots':'Tiri','board.best':'Best','picker.title':'Scegli le squadre','mode.solo':'1 Giocatore','mode.duo':'2 Giocatori','mode.cup':'🏆 Torneo','role.shooter':'Tiratore','role.keeper':'Portiere','btn.kickoff':'Fischio ⚽','final.end':'Risultato','btn.newgame':'Nuova partita','foot.right':'🦶 Destro','foot.left':'🦶 Sinistro','style.power':'💥 Potenza','style.finesse':'🎯 Effetto','hint.pick':'Scegli tiratore e portiere','hint.kickoff':'Fischio …','hint.controls':'Trascina = mira · tieni = potenza · scorri = effetto','hint.player2':'Tocca al giocatore 2','flash.goal':'GOL!','flash.saved':'PARATA!','flash.wide':'FUORI!','flash.over':'ALTO!','combo.double':'DOPPIETTA!','combo.hat':'TRIPLETTA! 🔥','combo.x':'COMBO ×{n} 🔥','combo.unstoppable':'INARRESTABILE! 🔥','player':'Giocatore','atBall':'al pallone','rate.god':'Perfetto – dio dei rigori','rate.world':'Fuoriclasse','rate.strong':'Bei tiri','rate.solid':'Buona media','rate.more':'Si può migliorare','rate.warmup':'Anche scaldarsi conta','rate.practice':'Allenati ancora','duel.title':'Duello a 2','duel.win1':'Vince il giocatore 1! 🏆','duel.win2':'Vince il giocatore 2! 🏆','duel.draw':'Pareggio 🤝','round.0':'Ottavi','round.1':'Quarti','round.2':'Semifinale','round.3':'Finale','cup.advance':'Avanti a {next}!','cup.out':'Fuori a {round} 😢','cup.champion':'{team} vince il torneo! 🎉','btn.nextround':'Turno successivo →','btn.newcup':'Nuovo torneo','record':'Record'},
- es:{'title':'Desafío de Penaltis 3D','brand1':'Desafío','brand2':'Penaltis','board.goals':'Goles','board.shots':'Tiros','board.best':'Best','picker.title':'Elige tus equipos','mode.solo':'1 Jugador','mode.duo':'2 Jugadores','mode.cup':'🏆 Torneo','role.shooter':'Tirador','role.keeper':'Portero','btn.kickoff':'¡A jugar! ⚽','final.end':'Marcador final','btn.newgame':'Nuevo juego','foot.right':'🦶 Pie derecho','foot.left':'🦶 Pie izquierdo','style.power':'💥 Potencia','style.finesse':'🎯 Efecto','hint.pick':'Elige tirador y portero','hint.kickoff':'¡A jugar! …','hint.controls':'Arrastra = apunta · mantén = potencia · desliza = efecto','hint.player2':'Turno del jugador 2','flash.goal':'¡GOL!','flash.saved':'¡PARADA!','flash.wide':'¡FUERA!','flash.over':'¡POR ENCIMA!','combo.double':'¡DOBLETE!','combo.hat':'¡HAT-TRICK! 🔥','combo.x':'COMBO ×{n} 🔥','combo.unstoppable':'¡IMPARABLE! 🔥','player':'Jugador','atBall':'al balón','rate.god':'Perfecto – dios del penalti','rate.world':'Clase mundial','rate.strong':'Buenos tiros','rate.solid':'Buen promedio','rate.more':'Puedes mejorar','rate.warmup':'Calentar también cuenta','rate.practice':'A practicar','duel.title':'Duelo a 2','duel.win1':'¡Gana el jugador 1! 🏆','duel.win2':'¡Gana el jugador 2! 🏆','duel.draw':'Empate 🤝','round.0':'Octavos','round.1':'Cuartos','round.2':'Semifinal','round.3':'Final','cup.advance':'¡A {next}!','cup.out':'Eliminado en {round} 😢','cup.champion':'¡{team} gana el torneo! 🎉','btn.nextround':'Siguiente ronda →','btn.newcup':'Nuevo torneo','record':'Récord'},
- he:{'title':'אתגר פנדלים תלת-ממד','brand1':'אתגר','brand2':'פנדלים','board.goals':'שערים','board.shots':'בעיטות','board.best':'שיא','picker.title':'בחרו את הקבוצות שלכם','mode.solo':'שחקן אחד','mode.duo':'שני שחקנים','mode.cup':'🏆 גביע','role.shooter':'בועט','role.keeper':'שוער','btn.kickoff':'בעיטת פתיחה ⚽','final.end':'תוצאה סופית','btn.newgame':'משחק חדש','foot.right':'🦶 רגל ימין','foot.left':'🦶 רגל שמאל','style.power':'💥 עוצמה','style.finesse':'🎯 דיוק','hint.pick':'בחרו בועט ושוער','hint.kickoff':'בעיטת פתיחה …','hint.controls':'גרירה = כיוון · החזקה = עוצמה · החלקה = סיבוב','hint.player2':'תורו של שחקן 2','flash.goal':'גול!','flash.saved':'הצלה!','flash.wide':'החטאה!','flash.over':'מעל!','combo.double':'צמד!','combo.hat':'שלושער! 🔥','combo.x':'רצף ×{n} 🔥','combo.unstoppable':'בלתי ניתן לעצירה! 🔥','player':'שחקן','atBall':'על הכדור','rate.god':'מושלם – אלוף הפנדלים','rate.world':'ברמה עולמית','rate.strong':'בעיטות חזקות','rate.solid':'אחוז יציב','rate.more':'יש מקום לשיפור','rate.warmup':'גם החימום נחשב','rate.practice':'תרגול, תרגול','duel.title':'דו-קרב לשניים','duel.win1':'שחקן 1 ניצח! 🏆','duel.win2':'שחקן 2 ניצח! 🏆','duel.draw':'תיקו 🤝','round.0':'שמינית הגמר','round.1':'רבע הגמר','round.2':'חצי הגמר','round.3':'הגמר','cup.advance':'עולים ל{next}!','cup.out':'הודחתם ב{round} 😢','cup.champion':'{team} זוכה בגביע! 🎉','btn.nextround':'הסיבוב הבא ←','btn.newcup':'גביע חדש','record':'שיא'}
+ en:{'title':'Penalty Challenge 3D','brand1':'Penalty','brand2':'Challenge','board.goals':'Goals','board.shots':'Shots','board.best':'Best','picker.title':'Choose your teams','mode.solo':'1 Player','mode.duo':'2 Players','mode.cup':'🏆 Cup','role.shooter':'Shooter','role.keeper':'Keeper','btn.kickoff':'Kick off ⚽','final.end':'Final score','btn.newgame':'New game','foot.right':'🦶 Right foot','foot.left':'🦶 Left foot','style.power':'💥 Power','style.finesse':'🎯 Finesse','hint.pick':'Choose shooter & keeper','hint.kickoff':'Kick off …','hint.controls':'Drag = aim · hold = power · swipe = curve','hint.player2':"Player 2's turn",'flash.goal':'GOAL!','flash.saved':'SAVED!','flash.wide':'WIDE!','flash.over':'OVER!','combo.double':'DOUBLE!','combo.hat':'HAT-TRICK! 🔥','combo.x':'COMBO ×{n} 🔥','combo.unstoppable':'UNSTOPPABLE! 🔥','player':'Player','atBall':'on the ball','rate.god':'Perfect – penalty god','rate.world':'World class','rate.strong':'Strong shooting','rate.solid':'Solid rate','rate.more':'Room to improve','rate.warmup':'Warm-up counts too','rate.practice':'Practice, practice','duel.title':'2-Player duel','duel.win1':'Player 1 wins! 🏆','duel.win2':'Player 2 wins! 🏆','duel.draw':'Draw 🤝','round.0':'Round of 16','round.1':'Quarter-final','round.2':'Semi-final','round.3':'Final','cup.advance':'Into the {next}!','cup.out':'Out in the {round} 😢','cup.champion':'{team} wins the cup! 🎉','btn.nextround':'Next round →','btn.newcup':'New cup','record':'Record','share.btn':'📤 Share','share.copied':'Copied ✓','share.solo':'I scored {goals}/{target} in the Penalty Challenge ⚽ Can you beat that?','share.duo':'Penalty duel: {a} : {b} ⚽ Who wins?','share.cup':'{round}: {a} : {b} in the Penalty Cup ⚽','lb.title':'Your best scores','lb.new':'NEW'},
+ de:{'title':'Elfmeter-Challenge 3D','brand1':'Elfmeter','brand2':'Challenge','board.goals':'Tore','board.shots':'Schuss','board.best':'Best','picker.title':'Wähle deine Teams','mode.solo':'1 Spieler','mode.duo':'2 Spieler','mode.cup':'🏆 Turnier','role.shooter':'Schütze','role.keeper':'Torwart','btn.kickoff':'Anpfiff ⚽','final.end':'Endstand','btn.newgame':'Neues Spiel','foot.right':'🦶 Rechtsfuß','foot.left':'🦶 Linksfuß','style.power':'💥 Wucht','style.finesse':'🎯 Gefühl','hint.pick':'Wähle Schütze & Torwart','hint.kickoff':'Anpfiff …','hint.controls':'Ziehen = zielen · halten = Power · wischen = Effet','hint.player2':'Spieler 2 ist dran','flash.goal':'TOR!','flash.saved':'GEHALTEN!','flash.wide':'DANEBEN!','flash.over':'DRÜBER!','combo.double':'DOPPELPACK!','combo.hat':'HATTRICK! 🔥','combo.x':'COMBO ×{n} 🔥','combo.unstoppable':'UNAUFHALTSAM! 🔥','player':'Spieler','atBall':'am Ball','rate.god':'Perfekt – Elfmeter-Gott','rate.world':'Weltklasse','rate.strong':'Stark geschossen','rate.solid':'Solide Quote','rate.more':'Da geht mehr','rate.warmup':'Aufwärmen zählt auch','rate.practice':'Üben, üben, üben','duel.title':'2-Spieler-Duell','duel.win1':'Spieler 1 gewinnt! 🏆','duel.win2':'Spieler 2 gewinnt! 🏆','duel.draw':'Unentschieden 🤝','round.0':'Achtelfinale','round.1':'Viertelfinale','round.2':'Halbfinale','round.3':'Finale','cup.advance':'Weiter ins {next}!','cup.out':'Ausgeschieden im {round} 😢','cup.champion':'{team} ist Turniersieger! 🎉','btn.nextround':'Nächste Runde →','btn.newcup':'Neues Turnier','record':'Rekord','share.btn':'📤 Teilen','share.copied':'Kopiert ✓','share.solo':'Ich hab {goals}/{target} bei der Elfmeter-Challenge verwandelt ⚽ Schaffst du das?','share.duo':'Elfmeter-Duell: {a} : {b} ⚽ Wer gewinnt?','share.cup':'{round}: {a} : {b} im Elfmeter-Cup ⚽','lb.title':'Deine Bestenliste','lb.new':'NEU'},
+ fr:{'title':'Défi Penalty 3D','brand1':'Défi','brand2':'Penalty','board.goals':'Buts','board.shots':'Tirs','board.best':'Best','picker.title':'Choisis tes équipes','mode.solo':'1 Joueur','mode.duo':'2 Joueurs','mode.cup':'🏆 Tournoi','role.shooter':'Tireur','role.keeper':'Gardien','btn.kickoff':"Coup d'envoi ⚽",'final.end':'Score final','btn.newgame':'Nouvelle partie','foot.right':'🦶 Pied droit','foot.left':'🦶 Pied gauche','style.power':'💥 Puissance','style.finesse':'🎯 Effet','hint.pick':'Choisis tireur & gardien','hint.kickoff':"Coup d'envoi …",'hint.controls':'Glisser = viser · maintenir = puissance · balayer = effet','hint.player2':'Au tour du joueur 2','flash.goal':'BUT!','flash.saved':'ARRÊT!','flash.wide':'À CÔTÉ!','flash.over':'TROP HAUT!','combo.double':'DOUBLÉ!','combo.hat':'TRIPLÉ! 🔥','combo.x':'COMBO ×{n} 🔥','combo.unstoppable':'IMPARABLE! 🔥','player':'Joueur','atBall':'au ballon','rate.god':'Parfait – dieu du penalty','rate.world':'Classe mondiale','rate.strong':'Bien tiré','rate.solid':'Bon ratio','rate.more':'Peut mieux faire','rate.warmup':"L'échauffement compte",'rate.practice':'Entraîne-toi','duel.title':'Duel à 2','duel.win1':'Joueur 1 gagne ! 🏆','duel.win2':'Joueur 2 gagne ! 🏆','duel.draw':'Égalité 🤝','round.0':'Huitièmes','round.1':'Quarts','round.2':'Demi-finale','round.3':'Finale','cup.advance':'Vers {next} !','cup.out':'Éliminé en {round} 😢','cup.champion':'{team} remporte le tournoi ! 🎉','btn.nextround':'Tour suivant →','btn.newcup':'Nouveau tournoi','record':'Record','share.btn':'📤 Partager','share.copied':'Copié ✓','share.solo':"J'ai marqué {goals}/{target} au Défi Penalty ⚽ Tu peux faire mieux ?",'share.duo':'Duel penalty : {a} : {b} ⚽ Qui gagne ?','share.cup':'{round} : {a} : {b} au Tournoi Penalty ⚽','lb.title':'Tes meilleurs scores','lb.new':'NOUVEAU'},
+ it:{'title':'Sfida Rigori 3D','brand1':'Sfida','brand2':'Rigori','board.goals':'Gol','board.shots':'Tiri','board.best':'Best','picker.title':'Scegli le squadre','mode.solo':'1 Giocatore','mode.duo':'2 Giocatori','mode.cup':'🏆 Torneo','role.shooter':'Tiratore','role.keeper':'Portiere','btn.kickoff':'Fischio ⚽','final.end':'Risultato','btn.newgame':'Nuova partita','foot.right':'🦶 Destro','foot.left':'🦶 Sinistro','style.power':'💥 Potenza','style.finesse':'🎯 Effetto','hint.pick':'Scegli tiratore e portiere','hint.kickoff':'Fischio …','hint.controls':'Trascina = mira · tieni = potenza · scorri = effetto','hint.player2':'Tocca al giocatore 2','flash.goal':'GOL!','flash.saved':'PARATA!','flash.wide':'FUORI!','flash.over':'ALTO!','combo.double':'DOPPIETTA!','combo.hat':'TRIPLETTA! 🔥','combo.x':'COMBO ×{n} 🔥','combo.unstoppable':'INARRESTABILE! 🔥','player':'Giocatore','atBall':'al pallone','rate.god':'Perfetto – dio dei rigori','rate.world':'Fuoriclasse','rate.strong':'Bei tiri','rate.solid':'Buona media','rate.more':'Si può migliorare','rate.warmup':'Anche scaldarsi conta','rate.practice':'Allenati ancora','duel.title':'Duello a 2','duel.win1':'Vince il giocatore 1! 🏆','duel.win2':'Vince il giocatore 2! 🏆','duel.draw':'Pareggio 🤝','round.0':'Ottavi','round.1':'Quarti','round.2':'Semifinale','round.3':'Finale','cup.advance':'Avanti a {next}!','cup.out':'Fuori a {round} 😢','cup.champion':'{team} vince il torneo! 🎉','btn.nextround':'Turno successivo →','btn.newcup':'Nuovo torneo','record':'Record','share.btn':'📤 Condividi','share.copied':'Copiato ✓','share.solo':'Ho segnato {goals}/{target} alla Sfida Rigori ⚽ Ce la fai?','share.duo':'Duello rigori: {a} : {b} ⚽ Chi vince?','share.cup':'{round}: {a} : {b} al Torneo Rigori ⚽','lb.title':'I tuoi record','lb.new':'NUOVO'},
+ es:{'title':'Desafío de Penaltis 3D','brand1':'Desafío','brand2':'Penaltis','board.goals':'Goles','board.shots':'Tiros','board.best':'Best','picker.title':'Elige tus equipos','mode.solo':'1 Jugador','mode.duo':'2 Jugadores','mode.cup':'🏆 Torneo','role.shooter':'Tirador','role.keeper':'Portero','btn.kickoff':'¡A jugar! ⚽','final.end':'Marcador final','btn.newgame':'Nuevo juego','foot.right':'🦶 Pie derecho','foot.left':'🦶 Pie izquierdo','style.power':'💥 Potencia','style.finesse':'🎯 Efecto','hint.pick':'Elige tirador y portero','hint.kickoff':'¡A jugar! …','hint.controls':'Arrastra = apunta · mantén = potencia · desliza = efecto','hint.player2':'Turno del jugador 2','flash.goal':'¡GOL!','flash.saved':'¡PARADA!','flash.wide':'¡FUERA!','flash.over':'¡POR ENCIMA!','combo.double':'¡DOBLETE!','combo.hat':'¡HAT-TRICK! 🔥','combo.x':'COMBO ×{n} 🔥','combo.unstoppable':'¡IMPARABLE! 🔥','player':'Jugador','atBall':'al balón','rate.god':'Perfecto – dios del penalti','rate.world':'Clase mundial','rate.strong':'Buenos tiros','rate.solid':'Buen promedio','rate.more':'Puedes mejorar','rate.warmup':'Calentar también cuenta','rate.practice':'A practicar','duel.title':'Duelo a 2','duel.win1':'¡Gana el jugador 1! 🏆','duel.win2':'¡Gana el jugador 2! 🏆','duel.draw':'Empate 🤝','round.0':'Octavos','round.1':'Cuartos','round.2':'Semifinal','round.3':'Final','cup.advance':'¡A {next}!','cup.out':'Eliminado en {round} 😢','cup.champion':'¡{team} gana el torneo! 🎉','btn.nextround':'Siguiente ronda →','btn.newcup':'Nuevo torneo','record':'Récord','share.btn':'📤 Compartir','share.copied':'Copiado ✓','share.solo':'He metido {goals}/{target} en el Desafío de Penaltis ⚽ ¿Puedes superarlo?','share.duo':'Duelo de penaltis: {a} : {b} ⚽ ¿Quién gana?','share.cup':'{round}: {a} : {b} en el Torneo de Penaltis ⚽','lb.title':'Tus mejores marcas','lb.new':'NUEVO'},
+ he:{'title':'אתגר פנדלים תלת-ממד','brand1':'אתגר','brand2':'פנדלים','board.goals':'שערים','board.shots':'בעיטות','board.best':'שיא','picker.title':'בחרו את הקבוצות שלכם','mode.solo':'שחקן אחד','mode.duo':'שני שחקנים','mode.cup':'🏆 גביע','role.shooter':'בועט','role.keeper':'שוער','btn.kickoff':'בעיטת פתיחה ⚽','final.end':'תוצאה סופית','btn.newgame':'משחק חדש','foot.right':'🦶 רגל ימין','foot.left':'🦶 רגל שמאל','style.power':'💥 עוצמה','style.finesse':'🎯 דיוק','hint.pick':'בחרו בועט ושוער','hint.kickoff':'בעיטת פתיחה …','hint.controls':'גרירה = כיוון · החזקה = עוצמה · החלקה = סיבוב','hint.player2':'תורו של שחקן 2','flash.goal':'גול!','flash.saved':'הצלה!','flash.wide':'החטאה!','flash.over':'מעל!','combo.double':'צמד!','combo.hat':'שלושער! 🔥','combo.x':'רצף ×{n} 🔥','combo.unstoppable':'בלתי ניתן לעצירה! 🔥','player':'שחקן','atBall':'על הכדור','rate.god':'מושלם – אלוף הפנדלים','rate.world':'ברמה עולמית','rate.strong':'בעיטות חזקות','rate.solid':'אחוז יציב','rate.more':'יש מקום לשיפור','rate.warmup':'גם החימום נחשב','rate.practice':'תרגול, תרגול','duel.title':'דו-קרב לשניים','duel.win1':'שחקן 1 ניצח! 🏆','duel.win2':'שחקן 2 ניצח! 🏆','duel.draw':'תיקו 🤝','round.0':'שמינית הגמר','round.1':'רבע הגמר','round.2':'חצי הגמר','round.3':'הגמר','cup.advance':'עולים ל{next}!','cup.out':'הודחתם ב{round} 😢','cup.champion':'{team} זוכה בגביע! 🎉','btn.nextround':'הסיבוב הבא ←','btn.newcup':'גביע חדש','record':'שיא','share.btn':'📤 שיתוף','share.copied':'הועתק ✓','share.solo':'כבשתי {goals}/{target} באתגר הפנדלים ⚽ תצליחו לנצח?','share.duo':'דו-קרב פנדלים: {a} : {b} ⚽ מי מנצח?','share.cup':'{round}: {a} : {b} בגביע הפנדלים ⚽','lb.title':'השיאים שלכם','lb.new':'חדש'}
 };
 let LANG=(()=>{ try{ const s=localStorage.getItem('nlvc_lang'); return (s&&I18N[s])?s:'en'; }catch(e){ return 'en'; } })();
 function t(k,vars){ let s=(I18N[LANG]&&I18N[LANG][k]) || I18N.en[k] || k; if(vars) for(const p in vars) s=s.replace('{'+p+'}',vars[p]); return s; }
@@ -714,7 +732,17 @@ function unlockAudio(){ const a=audio(); if(!a)return; try{const o=a.createOscil
 
 /* ===== Spiel-Logik ===== */
 let mode='menu';                       // menu | countdown | ready | shooting | result | final
-let shots=0, goals=0, best=null;
+/* Persistenter Rekord + lokale Bestenliste (nur dieses Gerät, kein Backend) */
+const LS_BEST='nlvc_penalty_best', LS_SCORES='nlvc_penalty_scores';
+function loadBest(){ try{ const v=localStorage.getItem(LS_BEST); return v==null?null:(parseInt(v,10)||0); }catch(e){ return null; } }
+function saveBest(v){ try{ localStorage.setItem(LS_BEST,String(v)); }catch(e){} }
+function loadScores(){ try{ const a=JSON.parse(localStorage.getItem(LS_SCORES)||'[]'); return Array.isArray(a)?a:[]; }catch(e){ return []; } }
+function saveScores(a){ try{ localStorage.setItem(LS_SCORES,JSON.stringify(a)); }catch(e){} }
+// Eintrag aufnehmen, Top 5 nach Toren (bei Gleichstand älterer zuerst). Gibt Index im Top-5 zurück oder -1.
+function recordScore(entry){ const a=loadScores(); a.push(entry);
+  a.sort((x,y)=> (y.goals-x.goals) || (x.ts-y.ts)); const top=a.slice(0,5); saveScores(top); return top.indexOf(entry); }
+let lbNewIndex=-1;   // Index des frisch gespielten Eintrags in der Bestenliste (für Hervorhebung)
+let shots=0, goals=0, best=loadBest();
 let goalStreak=0, shakeT=0, shakeMag=0, hypeT=0;   // Combo-Hype
 let gameMode='solo';                    // 'solo' | 'duo' | 'turnier'
 const DUO_SHOTS=5;
@@ -825,6 +853,7 @@ function buildGrid(){
   $slotK.addEventListener('click',()=>{activeSlot='K';renderPicker();});
   $startBtn.addEventListener('click',()=>{ unlockAudio(); applyPicks(); $picker.classList.add('hidden'); startMatch(); });
   $againBtn.addEventListener('click',()=>{ unlockAudio(); $final.classList.add('hidden'); (finalAction||showPicker)(); });
+  const sh=document.getElementById('shareBtn'); if(sh) sh.addEventListener('click',()=>{ unlockAudio(); onShare(); });
   const modeBtns={solo:document.getElementById('modeSolo'), duo:document.getElementById('modeDuo'), turnier:document.getElementById('modeTurnier')};
   Object.entries(modeBtns).forEach(([m,btn])=> btn.addEventListener('click',()=>{
     gameMode=m; Object.values(modeBtns).forEach(b=>b.classList.remove('active')); btn.classList.add('active');
@@ -904,6 +933,71 @@ function renderFinalScreen(){
     else if(finalCupOutcome==='advance'){ sc.textContent=finalGoals+' : '+finalOpp; rt.textContent=t('cup.advance',{next:roundName(finalCupRound+1)}); $againBtn.textContent=t('btn.nextround'); finalAction=()=>nextTournamentRound(); }
     else { sc.textContent=finalGoals+' : '+finalOpp; rt.textContent=t('cup.out',{round:roundName(finalCupRound)}); $againBtn.textContent=t('btn.newcup'); finalAction=showPicker; }
   }
+  renderLeaderboard();
+}
+/* Lokale Bestenliste im Endscreen — nur Solo (Duo/Cup haben keinen vergleichbaren Einzel-Score) */
+function renderLeaderboard(){
+  const el=document.getElementById('leaderboard'); if(!el) return;
+  const scores=(finalKind==='solo')?loadScores():[];
+  if(!scores.length){ el.classList.add('hidden'); el.innerHTML=''; return; }
+  let html='<h3>'+t('lb.title')+'</h3><ol>';
+  scores.forEach((s,i)=>{ const me=(i===lbNewIndex);
+    html+='<li'+(me?' class="me"':'')+'><span class="r">'+(i+1)+'</span><span class="sc">'+s.goals+'/'+s.target+'</span>'
+        +'<span class="mu">'+s.shooter+' '+s.keeper+'</span>'+(me?'<span class="badge2">'+t('lb.new')+'</span>':'')+'</li>'; });
+  html+='</ol>'; el.innerHTML=html; el.classList.remove('hidden');
+}
+/* ===== Teilen: Score-Karte (Canvas) + Web Share, Fallback Zwischenablage ===== */
+const SHARE_URL='https://ninalearnsvibecoding.com/penalty';
+function shareLine(){
+  if(finalKind==='duo') return t('share.duo',{a:p1Goals,b:p2Goals});
+  if(finalKind==='cup'){
+    if(finalCupOutcome==='champion') return t('cup.champion',{team:countryName(SHOOTER)});
+    return t('share.cup',{round:roundName(finalCupRound),a:finalGoals,b:finalOpp});
+  }
+  return t('share.solo',{goals:finalGoals,target:finalShotsTarget});
+}
+function shareCard(){
+  return new Promise(resolve=>{ try{
+    const S=1080, c=document.createElement('canvas'); c.width=S; c.height=S; const x=c.getContext('2d');
+    const g=x.createLinearGradient(0,0,0,S); g.addColorStop(0,'#0a1024'); g.addColorStop(1,'#0f1c44');
+    x.fillStyle=g; x.fillRect(0,0,S,S);
+    x.strokeStyle='rgba(56,189,248,.25)'; x.lineWidth=14; x.strokeRect(40,40,S-80,S-80);
+    x.textAlign='center';
+    x.fillStyle='#38bdf8'; x.font="700 60px 'Bebas Neue', Impact, sans-serif";
+    x.fillText(t('title').toUpperCase(), S/2, 190);
+    x.fillStyle='#e8eefc'; x.font='110px sans-serif';
+    x.fillText(SHOOTER.f+'   '+KEEPER_C.f, S/2, 400);
+    const big = finalKind==='duo' ? (p1Goals+' : '+p2Goals)
+      : finalKind==='cup' ? (finalCupOutcome==='champion'?'🏆':finalGoals+' : '+finalOpp)
+      : (finalGoals+' / '+finalShotsTarget);
+    x.fillStyle='#38bdf8'; x.font="700 240px 'Bebas Neue', Impact, sans-serif";
+    x.fillText(big, S/2, 720);
+    const rate = (finalKind==='solo') ? ratingText(finalGoals) : (document.getElementById('finalRate').textContent||'');
+    x.fillStyle='#e8eefc'; x.font="600 56px 'Bebas Neue', Impact, sans-serif";
+    x.fillText(rate, S/2, 830);
+    x.fillStyle='#93a4cc'; x.font='40px system-ui, sans-serif';
+    x.fillText('ninalearnsvibecoding.com/penalty', S/2, 1000);
+    c.toBlob(b=>resolve(b),'image/png');
+  }catch(e){ resolve(null); } });
+}
+function shareToast(){ const b=document.getElementById('shareBtn'); if(!b) return;
+  b.textContent=t('share.copied'); b.disabled=true;
+  setTimeout(()=>{ b.textContent=t('share.btn'); b.disabled=false; },1600); }
+async function onShare(){
+  const line=shareLine();
+  try{
+    const blob=await shareCard();
+    if(blob && navigator.canShare){
+      const file=new File([blob],'penalty.png',{type:'image/png'});
+      if(navigator.canShare({files:[file]})){ await navigator.share({files:[file],text:line,url:SHARE_URL}); return; }
+    }
+    if(navigator.share){ await navigator.share({text:line,url:SHARE_URL}); return; }
+    throw new Error('no-share');
+  }catch(e){
+    if(e && e.name==='AbortError') return;   // Nutzer hat das Teilen-Menü abgebrochen
+    try{ await navigator.clipboard.writeText(line+' '+SHARE_URL); }catch(_){}
+    shareToast();
+  }
 }
 function startPlayerTurn(){
   goals=0; shots=0; goalStreak=0; $score.textContent=0; $shots.textContent='0/'+shotsTarget; renderBest();
@@ -921,7 +1015,8 @@ function endOfRound(){
   if(gameMode==='duo'){
     p2Goals=goals; showDuoFinal();
   } else {
-    const nr=(best==null||goals>best); if(nr)best=goals; renderBest();
+    const nr=(best==null||goals>best); if(nr){best=goals; saveBest(best);} renderBest();
+    lbNewIndex=recordScore({goals, target:shotsTarget, shooter:SHOOTER.f, keeper:KEEPER_C.f, ts:Date.now()});
     finalKind='solo'; finalGoals=goals; finalRecord=nr; finalShotsTarget=shotsTarget;
     renderFinalScreen();
     $final.classList.remove('hidden'); mode='final';
@@ -1077,6 +1172,7 @@ window.addEventListener('resize', resize);
 function refreshLangLabels(){
   const fb=document.getElementById('footBtn'); if(fb) fb.textContent=t(shootFoot==='R'?'foot.right':'foot.left');
   const sb=document.getElementById('styleBtn'); if(sb) sb.textContent=t(shotStyle==='wucht'?'style.power':'style.finesse');
+  const sh=document.getElementById('shareBtn'); if(sh && !sh.disabled) sh.textContent=t('share.btn');
 }
 function setLang(l){ if(!I18N[l])return; LANG=l; try{localStorage.setItem('nlvc_lang',l);}catch(e){}
   document.documentElement.dir = (l === 'he') ? 'rtl' : 'ltr';
