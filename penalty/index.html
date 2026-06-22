@@ -121,16 +121,17 @@
   #final .btnrow{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:10px}
   .btn.alt{background:transparent;color:var(--sky);border:1.5px solid var(--sky);box-shadow:none}
   .btn.alt:hover{background:rgba(56,189,248,.12)}
-  .lb{width:100%;max-width:340px;margin:8px auto 0;text-align:start}
+  #final .rate{margin-bottom:4px}
+  .lb{width:100%;max-width:340px;margin:22px auto 4px;text-align:start;border-top:1px solid rgba(56,189,248,.18);padding-top:14px}
   .lb.hidden{display:none}
-  .lb h3{font-family:'Bebas Neue',Impact,sans-serif;font-size:18px;letter-spacing:1.5px;color:var(--muted);text-align:center;margin:0 0 6px}
-  .lb ol{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:4px}
-  .lb li{display:flex;align-items:center;gap:8px;font-size:15px;padding:5px 10px;border-radius:9px;background:rgba(8,14,34,.55);border:1px solid rgba(56,189,248,.14)}
+  .lb h3{font-family:'Bebas Neue',Impact,sans-serif;font-size:17px;letter-spacing:2px;color:var(--sky);text-align:center;margin:0 0 10px}
+  .lb ol{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:5px}
+  .lb li{display:flex;align-items:center;gap:10px;font-size:16px;padding:8px 12px;border-radius:10px;background:rgba(8,14,34,.55);border:1px solid rgba(56,189,248,.16)}
   .lb li .r{color:var(--muted);min-width:18px;font-weight:700}
-  .lb li .sc{color:var(--sky);font-weight:700;min-width:54px}
-  .lb li .mu{flex:1;font-size:18px;letter-spacing:1px}
-  .lb li.me{border-color:#ffce00;background:rgba(255,206,0,.12)}
-  .lb li .badge2{font-size:9px;font-weight:700;letter-spacing:1px;color:#06122e;background:#ffce00;padding:2px 6px;border-radius:6px}
+  .lb li .sc{color:var(--sky);font-weight:700;min-width:58px}
+  .lb li .mu{flex:1;font-size:19px;letter-spacing:1px}
+  .lb li.me{border-color:#ffce00;background:rgba(255,206,0,.14)}
+  .lb li .badge2{font-size:11px;font-weight:800;letter-spacing:1px;color:#06122e;background:#ffce00;padding:3px 9px;border-radius:7px;box-shadow:0 0 10px rgba(255,206,0,.5)}
 
   /* ── Musik-Button (Spotify-Embed) ───────────────── */
   #music-btn{position:fixed;left:16px;bottom:16px;z-index:30;width:54px;height:54px;border-radius:50%;
@@ -227,7 +228,7 @@
       <div id="leaderboard" class="lb hidden"></div>
       <div class="btnrow">
         <button class="btn" id="againBtn">Neues Spiel</button>
-        <button class="btn alt" id="shareBtn">📤 Teilen</button>
+        <button class="btn alt" id="tellBtn">📤 Teilen</button>
       </div>
     </div>
   </div>
@@ -853,7 +854,7 @@ function buildGrid(){
   $slotK.addEventListener('click',()=>{activeSlot='K';renderPicker();});
   $startBtn.addEventListener('click',()=>{ unlockAudio(); applyPicks(); $picker.classList.add('hidden'); startMatch(); });
   $againBtn.addEventListener('click',()=>{ unlockAudio(); $final.classList.add('hidden'); (finalAction||showPicker)(); });
-  const sh=document.getElementById('shareBtn'); if(sh) sh.addEventListener('click',()=>{ unlockAudio(); onShare(); });
+  const sh=document.getElementById('tellBtn'); if(sh) sh.addEventListener('click',()=>{ unlockAudio(); onShare(); });
   const modeBtns={solo:document.getElementById('modeSolo'), duo:document.getElementById('modeDuo'), turnier:document.getElementById('modeTurnier')};
   Object.entries(modeBtns).forEach(([m,btn])=> btn.addEventListener('click',()=>{
     gameMode=m; Object.values(modeBtns).forEach(b=>b.classList.remove('active')); btn.classList.add('active');
@@ -980,7 +981,7 @@ function shareCard(){
     c.toBlob(b=>resolve(b),'image/png');
   }catch(e){ resolve(null); } });
 }
-function shareToast(){ const b=document.getElementById('shareBtn'); if(!b) return;
+function shareToast(){ const b=document.getElementById('tellBtn'); if(!b) return;
   b.textContent=t('share.copied'); b.disabled=true;
   setTimeout(()=>{ b.textContent=t('share.btn'); b.disabled=false; },1600); }
 async function onShare(){
@@ -1172,7 +1173,7 @@ window.addEventListener('resize', resize);
 function refreshLangLabels(){
   const fb=document.getElementById('footBtn'); if(fb) fb.textContent=t(shootFoot==='R'?'foot.right':'foot.left');
   const sb=document.getElementById('styleBtn'); if(sb) sb.textContent=t(shotStyle==='wucht'?'style.power':'style.finesse');
-  const sh=document.getElementById('shareBtn'); if(sh && !sh.disabled) sh.textContent=t('share.btn');
+  const sh=document.getElementById('tellBtn'); if(sh && !sh.disabled) sh.textContent=t('share.btn');
 }
 function setLang(l){ if(!I18N[l])return; LANG=l; try{localStorage.setItem('nlvc_lang',l);}catch(e){}
   document.documentElement.dir = (l === 'he') ? 'rtl' : 'ltr';
