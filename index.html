@@ -1082,6 +1082,13 @@
     border-color: var(--accent);
     transform: translateY(-2px);
   }
+
+  /* RTL (Hebrew) — mirror the directionally hard-coded timeline */
+  html[dir="rtl"] #journey .timeline { padding-left: 0; padding-right: 2rem; }
+  html[dir="rtl"] .timeline::before { left: auto; right: 0; }
+  html[dir="rtl"] .tl-item { padding: 1.5rem 2rem 1.5rem 1.5rem; border-left: 1px solid var(--border); border-right: 2px solid var(--accent); }
+  html[dir="rtl"] .tl-item:hover { border-left-color: var(--border); border-right-color: var(--accent2); transform: translateX(-4px); }
+  html[dir="rtl"] .tl-dot { left: auto; right: -2.85rem; }
 </style>
 </head>
 <body>
@@ -1108,6 +1115,7 @@
     <button class="lang-btn" data-lang="fr">FR</button>
     <button class="lang-btn" data-lang="it">IT</button>
     <button class="lang-btn" data-lang="es">ES</button>
+    <button class="lang-btn" data-lang="he" lang="he">עברית</button>
   </div>
   <button class="nav-toggle" aria-label="Menü" aria-expanded="false" onclick="toggleNav()">☰</button>
 </nav>
@@ -2500,6 +2508,121 @@ const TRANSLATIONS = {
     'automations.errors': 'errores (24h)',
     'automations.online': 'n8n en línea',
     'automations.offline': 'n8n sin conexión',
+  },
+
+  he: {
+    'nav.about': 'אודות',
+    'nav.journey': 'המסע',
+    'nav.stack': 'כלים',
+    'nav.visitors': 'מבקרים',
+    'nav.contact': 'צור קשר',
+    'hero.badge': 'בשידור חי &amp; לומדת',
+    'hero.sub': 'אנליסטית ויועצת בינה מלאכותית מ<span>ברלין</span> — בדרך מהפרומפטינג אל האוטומציה. אני בונה, נכשלת, לומדת ומשיקה. בזמן אמת.',
+    'hero.cta': 'אל המסע',
+    'hero.linkedin': '<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style="width:16px;height:16px;fill:currentColor;flex-shrink:0"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg> LinkedIn',
+    'hero.stat1': 'קורס סוכני AI',
+    'hero.stat2': 'לומדת בפומבי',
+    'hero.stat3': 'מרחוק · ברלין',
+    'about.tag': '// אודות',
+    'about.title': 'מי עומדת<br>מאחורי זה?',
+    'about.p1': 'אני <span>נינה פנקנין</span> — אנליסטית ויועצת בינה מלאכותית, בעלת תעודה בהצטיינות. מאז שהתחלתי לא רק לנתח כלי AI אלא גם לבנות אותם בעצמי, הכול השתנה.',
+    'about.p2': '<span>Vibe Coding</span> זה בשבילי: לתכנת עם AI כטייס משנה — גם בלי רקע קלאסי בפיתוח. וורקפלואים, אוטומציות, אפליקציות. נבנה עם Claude, n8n, Python ותחושה טובה למה שאפשרי.',
+    'about.p3': 'האתר הזה הוא יומן הלמידה הפומבי שלי. בלי ליטוש. <span>תהליך אמיתי.</span>',
+    'journey.tag': '// המסע',
+    'journey.title': 'אבני דרך<br>במסע שלי',
+    'tl1.title': 'אנליסטית AI — תעודה בהצטיינות',
+    'tl1.desc': '348 מתוך 360 נקודות. מודול אינטנסיבי על אסטרטגיית AI, פרומפטינג ושימוש ארגוני. יריית הפתיחה לכל מה שבא אחר כך.',
+    'tl2.title': 'יועצת AI — תעודה בהצטיינות',
+    'tl2.desc': '340 מתוך 360 נקודות. פרויקט גמר: FEMhit — כלי התמצאות פיננסית מבוסס AI לנשים במצבי חיים קריטיים. נבנה עם Langdock.',
+    'tl3.title': 'קורס סוכני AI ב-n8n — מודול 3 · תעודה בהצטיינות',
+    'tl3.desc': '88 מתוך 90 נקודות. הכשרת AZAV על וורקפלואים פרודוקטיביים עם n8n, Mistral ו-Claude Code. פייפליין לינקדאין מקצה לקצה, דפי הגשה דו-לשוניים, צ׳אט ווידג׳ט — הכול נבנה והוא חי.',
+    'tl4.title': 'וורקפלו תוכן ללינקדאין',
+    'tl4.desc': 'פייפליין לינקדאין אוטומטי לחלוטין: ה-AI מייצר פוסטים, שומר אותם ב-NocoDB, מפרסם דרך LinkedIn API ומסמן כפורסם. נבנה כולו ב-n8n — האוטומציה הראשונה מקצה לקצה.',
+    'tl5.title': 'Mail Tracker — מתיבת הדואר למסד הנתונים',
+    'tl5.desc': 'וורקפלו n8n שקולט מיילים נכנסים דרך Gmail, מנתח אותם וכותב נתונים מובְנים למסד נתונים PostgreSQL. הפרויקט הראשון שנוגע במסד נתונים אמיתי בשרת עצמי.',
+    'tl6.title': 'Portfolio Tracker — מניות, ETF &amp; קריפטו',
+    'tl6.desc': 'דאשבורד שבניתי לעצמי למעקב אחר פוזיציות במניות, ETF וקריפטו בזמן אמת. מושך מחירים חיים, מחשב רווח והפסד ומציג ביצועים — פרויקט פול-סטאק אמיתי ראשון עם React ו-Node.',
+    'tl7.title': 'אוטומציית Job Scraper',
+    'tl7.desc': 'סקרייפר משרות אוטומטי שמחפש בכמה פלטפורמות, מסנן לפי קריטריונים ושולח תוצאות ישירות לתיבת הדואר. נבנה עם n8n ו-Python — נגמר החיפוש הידני.',
+    'tl8.title': 'הדומיין הראשון שלי באוויר',
+    'tl8.desc': 'ninalearnsvibecoding.com באוויר. מתארח על Hetzner דרך Coolify. נבנה ב-Vibe Coding עם Claude כטייס משנה. אתם מסתכלים עליו ממש עכשיו.',
+    'tl9.title': 'סוכן הזמנות Cal.com',
+    'tl9.desc': 'פייפליין הזמנות אוטומטי: Cal.com שולח webhook על כל פגישה חדשה, סוכן AI כותב מייל אישור מותאם אישית בשפת האורח, שומר את ההזמנה ב-NocoDB ושולח התראת Pushover — הכול ב-n8n.',
+    'tl10.title': 'פייפליין חדשות RAG',
+    'tl10.desc': 'אוטומציה מלאה מקצה לקצה: פידים של RSS → Mistral RAG → מאגר וקטורים ב-PostgreSQL → ה-AI מייצר מאמר בלוג ב-5 שפות + פוסט לינקדאין → פרסום מתוזמן לדף הנחיתה וללינקדאין.',
+    'tl11.title': 'צ׳אט ווידג׳ט — סוכן Mistral + RAG',
+    'tl11.desc': 'בניתי צ׳אט ווידג׳ט חי בדף הנחיתה המופעל על ידי סוכן Mistral AI עם RAG — הוא עונה על שאלות לגבי הפרויקטים שלי בעזרת בסיס ידע וקטורי. מוצר ה-AI הראשון בזמן אמת שהשקתי.',
+    'tl12.title': 'בוט טלגרם — סוכן AI',
+    'tl12.desc': 'בוט טלגרם המופעל על ידי סוכן AI שמטפל בטקסט, מייצר תמונות ומגיב בהודעות קוליות — הכול בוורקפלו אחד שנבנה ב-n8n.',
+    'tl13.title': 'GDPR & EU AI Act — סקירת ציות',
+    'tl13.desc': 'הערכת כל הוורקפלואים הפעילים מול דרישות GDPR ו-EU AI Act. בדקתי זרימות נתונים, מיקומי אחסון ולוגיקת עיבוד — והתאמתי את האוטומציות בהתאם.',
+    'tools.tag': '// כלים',
+    'tools.title': 'כלים &amp;<br>Tech Stack',
+    'tool.n8n': 'אוטומציית וורקפלו &amp; סוכני AI. הכלי היומיומי שלי לפייפליינים של No-Code / Low-Code.',
+    'tool.claude': 'טייס המשנה החשוב ביותר שלי. קוד, ניתוח, קונספטים — Claude תמיד שם.',
+    'tool.python': 'סקריפטים, אוטומציות, עיבוד נתונים. בעבודה — משתפרת מיום ליום.',
+    'tool.cursor': 'עורך קוד מבוסס AI. ה-Vibe Coding מתחיל כאן — Tab, Tab, Tab.',
+    'tool.hetzner': 'שרת ענן ל-n8n משלי. בשרת עצמי, שליטה מלאה.',
+    'tool.langdock': 'פלטפורמת AI ארגונית. שימשה ל-FEMhit — Custom GPT לנשים במצבי משבר.',
+    'tool.postgres': 'מסד נתונים רלציוני בשרת עצמי. שומר מיילים, נתוני וורקפלו ועוד — רץ על Hetzner.',
+    'tool.nocodb': 'ממשק מסד נתונים No-Code. הופך את PostgreSQL לנגיש בלי לכתוב SQL — מושלם לוורקפלואים.',
+    'tool.coolify': 'פלטפורמת דיפלוי בשרת עצמי. מנהלת את כל השירותים בשרת ה-Hetzner שלי — דיפלוי בלחיצה.',
+    'tool.react': 'ספריית פרונטאנד ל-Portfolio Tracker. פרויקט React אמיתי ראשון — נבנה עם Vite ו-Tailwind.',
+    'tool.github': 'בקרת גרסאות וטריגר לדיפלוי. כל push ל-main עושה דיפלוי אוטומטי דרך Coolify.',
+    'tool.adminer': 'ממשק מסד נתונים קל. גישה ישירה ל-PostgreSQL — שאילתות, בדיקה וניהול טבלאות בדפדפן.',
+    'tool.spotify': 'אינטגרציית Music API דרך n8n — פלייליסטים אוטומטיים ווורקפלואים של נתוני האזנה.',
+    'tool.searxng': 'מנוע חיפוש פרטי בשרת עצמי. מפעיל את חיפוש הרשת של סוכן ה-AI בלי מעקב של Google.',
+    'tool.nextcloud': 'אחסון קבצים ושיתוף פעולה בשרת עצמי — מחובר ל-n8n לוורקפלואים של אוטומציית קבצים.',
+    'tool.mistral': 'LLM בקוד פתוח — התוספת החדשה ביותר. משמש לוורקפלואים של סוכני AI לצד Claude.',
+    'tool.telegram': 'Bot API להתראות ואינטראקציה. מריצה בוט טלגרם חי דרך n8n.',
+    'tool.gdrive': 'אוטומציית העלאת קבצים — קבצים מצורפים מ-Gmail ממוינים אוטומטית לתיקיות ב-Drive דרך n8n.',
+    'tool.calcom': 'כלי תזמון בקוד פתוח. מפעיל את וורקפלו סוכן ההזמנות — ניהול יומן אוטומטי.',
+    'tool.pushover': 'שירות התראות Push. וורקפלואים שולחים התראות בזמן אמת לטלפון דרך Pushover.',
+    'tool.hubspot': 'CRM וניהול אנשי קשר. מחובר ל-n8n לוורקפלואים אוטומטיים של לידים ומיילים.',
+    'visitors.tag': '// מבקרים',
+    'visitors.title': 'קוראים את זה<br>מאיפה?',
+    'visitors.online': 'מחוברים כרגע',
+    'visitors.total': 'סך הביקורים',
+    'footer.copy': '© 2026 נינה פנקנין — לומדת בפומבי',
+    'contact.tag': '// צור קשר',
+    'contact.title': 'איך אפשר לעזור?',
+    'contact.sub': 'אחזור אליכם תוך 24 שעות.',
+    'contact.name': 'שם *',
+    'contact.phone': 'טלפון',
+    'contact.email': 'אימייל *',
+    'contact.company': 'חברה',
+    'contact.message': 'הודעה',
+    'contact.submit': 'שליחת פנייה ←',
+    'contact.sending': 'שולח...',
+    'contact.success': '✓ תודה! אחזור אליכם בקרוב.',
+    'contact.error': '✗ משהו השתבש. נסו שוב בבקשה.',
+    'contact.placeholder.name': 'ישראל ישראלי',
+    'contact.placeholder.phone': '+972 ...',
+    'contact.placeholder.email': 'hello@example.com',
+    'contact.placeholder.company': 'חברה בע״מ',
+    'contact.placeholder.message': 'איך אפשר לעזור לכם?',
+    'blog.tag': '// הפוסטים האחרונים',
+    'blog.title': 'חדשות<br>Vibe Coding',
+    'blog.cta': 'לכל המאמרים ←',
+    'blog.loading': 'טוען מאמרים...',
+    'nav.automations': 'אוטומציות',
+    'nav.learning': 'למידה ↗',
+    'nav.gym': 'חדר כושר',
+    'nav.elfmeter': 'פנדל ⚽',
+    'automations.tag': '// אוטומציות',
+    'automations.title': 'אוטומציות<br>ה-n8n שלי',
+    'automations.workflows': 'וורקפלואים',
+    'automations.runs': 'הרצות היום',
+    'automations.success': 'אחוז הצלחה',
+    'automations.cta': '← לצפייה בדאשבורד',
+    'automations.showcase_tag': '// פרויקט גמר',
+    'automations.showcase_title': 'וורקפלו הגשת מועמדות — מקצה לקצה, תואם GDPR',
+    'automations.showcase_desc': 'פייפליין הגשת מועמדות אוטומטי לחלוטין:<br>סקרייפינג משרות, סינון &amp; ניקוד באמצעות סוכן Mistral, אישור עם human-in-the-loop ושליחה חתומה — עם audit trail. בנייה עצמית שלי ב-n8n.',
+    'automations.loading': 'טוען…',
+    'automations.active': 'פעילים',
+    'automations.errors': 'שגיאות (24 שעות)',
+    'automations.online': 'n8n מחובר',
+    'automations.offline': 'n8n מנותק',
   }
 };
 
@@ -2518,6 +2641,7 @@ function applyLang(lang) {
     btn.classList.toggle('active', btn.dataset.lang === lang);
   });
   document.documentElement.lang = lang;
+  document.documentElement.dir = (lang === 'he') ? 'rtl' : 'ltr';
   localStorage.setItem('nlvc_lang', lang);
 }
 
@@ -2535,7 +2659,7 @@ applyLang(detectLang());
 </script>
 
 <script>
-  const LANG_LOCALE = {en:'en-GB', de:'de-DE', fr:'fr-FR', es:'es-ES', it:'it-IT'};
+  const LANG_LOCALE = {en:'en-GB', de:'de-DE', fr:'fr-FR', es:'es-ES', it:'it-IT', he:'he-IL'};
   let _teaserArticles = [];
 
   function renderTeaser(lang) {
