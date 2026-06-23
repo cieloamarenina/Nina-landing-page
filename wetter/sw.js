@@ -1,4 +1,4 @@
-const CACHE = "aether-v5";
+const CACHE = "aether-v6";
 const SHELL = ["./","index.html","css/styles.css","js/app.js","manifest.json","img/pablo.png"];
 self.addEventListener("install", e => { self.skipWaiting(); e.waitUntil(caches.open(CACHE).then(c => c.addAll(SHELL))); });
 self.addEventListener("activate", e => e.waitUntil(
