@@ -65,7 +65,12 @@ export async function photoUrl(place, partOfDay) {
   const res = await fetch(`${CONFIG.PROXY}?type=photo&q=${q}`);
   if (!res.ok) return null;
   const j = await res.json();
-  return j.photos?.[0]?.src?.portrait || null;
+  const list = j.photos || [];
+  if (!list.length) return null;
+  // Rotate through the day so the hero isn't the same photo all day long:
+  // the hour-of-day picks one of the ~20 results (stable within the hour).
+  const idx = new Date().getHours() % list.length;
+  return (list[idx] || list[0]).src?.portrait || null;
 }
 
 export function parseGeocode(json) {
