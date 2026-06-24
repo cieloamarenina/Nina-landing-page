@@ -1420,8 +1420,8 @@ body {
       <a href="./zertifikat-ki-agenten.pdf" target="_blank" rel="noopener" class="cert-card">
         <div class="cert-badge">🎓</div>
         <div class="cert-text">
-          <div class="cert-t1" data-i18n="cert-m3-t1">Modul 3 · n8n &amp; AI Agents</div>
-          <div class="cert-t2" data-i18n="cert-m3-t2"><strong>88/90 Punkte</strong> · hervorragend · abgeschlossen 05/2026</div>
+          <div class="cert-t1" data-i18n="cert-m3-t1">Zertifikat · n8n-KI-Agenten</div>
+          <div class="cert-t2" data-i18n="cert-m3-t2">Modul 3 · <strong>88/90 Punkte</strong> · hervorragend</div>
         </div>
         <div class="cert-cta" data-i18n="cert-open">↗ PDF</div>
       </a>
@@ -1584,8 +1584,8 @@ const I18N = {
     'cert-analyst-t2': 'Modul 1 · <strong>348/360 Punkte</strong> · sehr gut',
     'cert-berater-t1': 'Zertifikat · KI-Beraterin',
     'cert-berater-t2': 'Modul 2 · <strong>340/360 Punkte</strong> · Auszeichnung · Projekt FEMhit',
-    'cert-m3-t1': 'Modul 3 · n8n &amp; AI Agents',
-    'cert-m3-t2': '<strong>88/90 Punkte</strong> · hervorragend · abgeschlossen 05/2026',
+    'cert-m3-t1': 'Zertifikat · n8n-KI-Agenten',
+    'cert-m3-t2': 'Modul 3 · <strong>88/90 Punkte</strong> · hervorragend',
     'cert-open': '↗ PDF',
     'cert-soon': '✓',
     'cv-pdf-title': 'Lebenslauf · PDF',
@@ -1713,8 +1713,8 @@ const I18N = {
     'cert-analyst-t2': 'Module 1 · <strong>348/360 points</strong> · very good',
     'cert-berater-t1': 'Certificate · AI Consultant',
     'cert-berater-t2': 'Module 2 · <strong>340/360 points</strong> · distinction · FEMhit project',
-    'cert-m3-t1': 'Module 3 · n8n &amp; AI Agents',
-    'cert-m3-t2': '<strong>88/90 points</strong> · excellent · completed 05/2026',
+    'cert-m3-t1': 'Certificate · n8n AI Agents',
+    'cert-m3-t2': 'Module 3 · <strong>88/90 points</strong> · excellent',
     'cert-open': '↗ PDF',
     'cert-soon': '✓',
     'cv-pdf-title': 'CV · PDF',
@@ -1818,7 +1818,7 @@ document.querySelectorAll('[data-set-lang]').forEach(btn => {
   let stored = null;
   try { stored = localStorage.getItem('nv_lang'); } catch (e) {}
   const browser = (navigator.language || 'de').toLowerCase().startsWith('en') ? 'en' : 'de';
-  applyLang(stored || browser);
+  applyLang(stored || 'en');
 })();
 
 // ============================================
