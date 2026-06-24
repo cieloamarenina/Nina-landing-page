@@ -1839,10 +1839,15 @@ document.querySelectorAll('[data-set-lang]').forEach(btn => {
 
   // Primäre QR-Quelle
   function buildSrc(useFallback) {
-    if (!useFallback && CONFIG.QR_API_URL) {
-      const sep = CONFIG.QR_API_URL.includes('?') ? '&' : '?';
-      return `${CONFIG.QR_API_URL}${sep}data=${encodeURIComponent(qrTarget)}&size=240&color=050810&bgcolor=ffffff`;
+    // Primär: lokale statische QR-PNG (kein externer Dienst, DSGVO-konform)
+    if (!useFallback) {
+      if (CONFIG.QR_API_URL) {
+        const sep = CONFIG.QR_API_URL.includes('?') ? '&' : '?';
+        return `${CONFIG.QR_API_URL}${sep}data=${encodeURIComponent(qrTarget)}&size=240&color=050810&bgcolor=ffffff`;
+      }
+      return './qr.png';
     }
+    // Fallback: externer Generator
     return `https://api.qrserver.com/v1/create-qr-code/?size=240x240&margin=4&data=${encodeURIComponent(qrTarget)}&bgcolor=ffffff&color=050810`;
   }
 
