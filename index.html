@@ -1693,7 +1693,6 @@ function renderFlags(countries) {
   document.getElementById('flag-grid').innerHTML = countries
     .filter(c => c.code !== 'XX')
     .sort((a, b) => b.count - a.count)
-    .slice(0, 24)
     .map(c => `<div class="flag-item">
       <img src="https://flagcdn.com/24x18/${c.code.toLowerCase()}.png" alt="${c.name}">
       <span>${c.name}</span>
