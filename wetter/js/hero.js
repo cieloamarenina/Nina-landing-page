@@ -46,6 +46,7 @@ export function setHeroLive(photoEl, { liveId, liveLabel, liveText, photoText })
     btn.innerHTML = `<span class="dot"></span> ${live ? (photoText || "Foto") : (liveText || "Live")}`;
     btn.classList.toggle("on", live);
     img.style.display = live ? "block" : "none";
+    arch.classList.toggle("cam-on", live);
   };
   btn.onclick = () => {
     live = !live;
