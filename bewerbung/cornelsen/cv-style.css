@@ -1,0 +1,148 @@
+/* ATS-clean CV Style — schwarzweiß, einspaltig, recruiterfreundlich */
+
+@page {
+  size: A4;
+  margin: 1.25cm 1.7cm;
+  @bottom-right {
+    content: "Seite " counter(page) " / " counter(pages);
+    font-family: "Helvetica", "Arial", sans-serif;
+    font-size: 9pt;
+    color: #888;
+  }
+  @bottom-left {
+    content: "Nina Panknin · AI Automation Specialist";
+    font-family: "Helvetica", "Arial", sans-serif;
+    font-size: 9pt;
+    color: #888;
+  }
+}
+
+* { box-sizing: border-box; }
+
+body {
+  font-family: "Helvetica Neue", "Helvetica", "Arial", sans-serif;
+  font-size: 10.5pt;
+  line-height: 1.45;
+  color: #111;
+  margin: 0;
+  padding: 0;
+}
+
+/* HEADER (h1 = Name) */
+h1 {
+  font-size: 26pt;
+  font-weight: 700;
+  letter-spacing: 1.5pt;
+  text-transform: uppercase;
+  margin: 0 0 4pt 0;
+  color: #111;
+  border: none;
+}
+
+/* Position-Untertitel direkt nach h1 (bold) und Tagline */
+h1 + p {
+  font-size: 12pt;
+  font-weight: 600;
+  margin: 0 0 2pt 0;
+  color: #111;
+}
+h1 + p + p {
+  font-size: 9.5pt;
+  color: #555;
+  margin: 0 0 6pt 0;
+}
+
+/* Kontakt-Block */
+h1 + p + p + p,
+h1 + p + p + p + p {
+  font-size: 9.5pt;
+  color: #444;
+  margin: 0;
+}
+
+/* H2 = Sektion-Überschriften */
+h2 {
+  font-size: 12pt;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.8pt;
+  border-bottom: 1.2pt solid #111;
+  padding-bottom: 2pt;
+  margin: 16pt 0 8pt 0;
+  page-break-after: avoid;
+}
+
+/* H3 = Sub-Punkte (Job-Titel, Modul) */
+h3 {
+  font-size: 11pt;
+  font-weight: 700;
+  margin: 8pt 0 1pt 0;
+  color: #111;
+  page-break-after: avoid;
+}
+
+/* H4 falls genutzt */
+h4 {
+  font-size: 10pt;
+  font-weight: 600;
+  margin: 4pt 0 1pt 0;
+}
+
+p {
+  margin: 3pt 0;
+}
+
+strong { font-weight: 700; color: #000; }
+em { font-style: italic; color: #333; }
+
+ul {
+  margin: 4pt 0 6pt 0;
+  padding-left: 14pt;
+}
+li {
+  margin: 1pt 0;
+  font-size: 10.5pt;
+}
+
+hr {
+  border: 0;
+  border-top: 0.5pt solid #ccc;
+  margin: 10pt 0;
+}
+
+/* Keywords-Block am Ende kleiner & grau */
+h2 + p + p,
+body > p:last-of-type {
+  font-size: 8.5pt;
+  color: #777;
+  line-height: 1.5;
+}
+
+/* Profil-Block (erstes Absatz nach Profil-Heading) bigger emphasis */
+h2:first-of-type + p {
+  font-size: 11pt;
+  line-height: 1.55;
+}
+
+/* Skill-Block: bold labels in eigener Zeile */
+h2 + p strong:first-child {
+  display: inline-block;
+  margin-top: 4pt;
+}
+
+/* Print-Pagebreak Hilfen */
+h2 { page-break-after: avoid; }
+h3 { page-break-after: avoid; }
+h3 + p { page-break-before: avoid; }
+
+/* Keywords ganz am Ende */
+h2:last-of-type + p em {
+  color: #888;
+  font-style: normal;
+  font-size: 8.5pt;
+  line-height: 1.55;
+}
+
+/* Links: klickbar, aber dezent (CV-clean) */
+a { color: #1a4f8a; text-decoration: none; }
+a:hover { text-decoration: underline; }

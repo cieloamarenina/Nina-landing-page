@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Service Center · AI Copilot — Prototyp für Cornelsen</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%230a3d91'/><text x='6' y='23' font-family='Georgia,serif' font-weight='bold' font-size='18' fill='white'>C</text></svg>">
+<style>
+  :root {
+    --blue:      #0a3d91;
+    --blue-2:    #1456b8;
+    --blue-soft: #e8effb;
+    --blue-line: #cdddf5;
+    --ink:       #1a2330;
+    --muted:     #5a6675;
+    --bg:        #f4f7fc;
+    --card:      #ffffff;
+    --line:      #e2e8f2;
+    --ok:        #1a7a4c;
+    --warn:      #b7791f;
+    --high:      #c0392b;
+    --radius:    14px;
+    --shadow:    0 4px 24px rgba(16, 42, 90, 0.07);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 880px; margin: 0 auto; padding: 0 22px; }
+
+  /* ---------- Header ---------- */
+  header {
+    background: var(--card);
+    border-bottom: 1px solid var(--line);
+    padding: 14px 0;
+    position: sticky; top: 0; z-index: 10;
+    backdrop-filter: saturate(180%) blur(6px);
+  }
+  .head-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+  .brand { display: flex; align-items: center; gap: 11px; font-weight: 700; color: var(--blue); }
+  .brand .logo {
+    width: 34px; height: 34px; border-radius: 8px; background: var(--blue);
+    color: #fff; display: grid; place-items: center; font-family: Georgia, serif;
+    font-size: 19px; font-weight: 700;
+  }
+  .brand small { display: block; font-weight: 500; color: var(--muted); font-size: 12px; letter-spacing: .2px; }
+  .head-tag {
+    font-size: 12px; color: var(--blue-2); background: var(--blue-soft);
+    border: 1px solid var(--blue-line); padding: 5px 11px; border-radius: 999px; white-space: nowrap;
+  }
+
+  /* ---------- Hero ---------- */
+  .hero { padding: 48px 0 26px; }
+  .hero h1 { font-size: clamp(27px, 5vw, 40px); line-height: 1.12; letter-spacing: -.5px; color: var(--ink); }
+  .hero h1 b { color: var(--blue); }
+  .hero p.lead { margin-top: 16px; font-size: 17px; color: var(--muted); max-width: 640px; }
+  .human-note {
+    margin-top: 20px; display: inline-flex; align-items: center; gap: 9px;
+    background: #fff; border: 1px solid var(--blue-line); color: var(--blue);
+    padding: 9px 15px; border-radius: 10px; font-size: 14px; font-weight: 600; box-shadow: var(--shadow);
+  }
+  .human-note span.dot { width: 9px; height: 9px; border-radius: 50%; background: var(--ok); }
+
+  /* ---------- Console card ---------- */
+  .console { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow); padding: 24px; margin-top: 14px; }
+  .label { font-size: 13px; font-weight: 700; color: var(--ink); text-transform: uppercase; letter-spacing: .6px; margin-bottom: 9px; }
+  textarea {
+    width: 100%; min-height: 120px; resize: vertical; font: inherit; font-size: 15.5px;
+    color: var(--ink); background: #fcfdff; border: 1.5px solid var(--line); border-radius: 11px;
+    padding: 14px 15px; transition: border-color .15s, box-shadow .15s;
+  }
+  textarea:focus { outline: none; border-color: var(--blue-2); box-shadow: 0 0 0 3px rgba(20,86,184,.13); }
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 13px; }
+  .chip {
+    font: inherit; font-size: 13px; cursor: pointer; background: var(--blue-soft);
+    color: var(--blue); border: 1px solid var(--blue-line); padding: 8px 13px; border-radius: 999px;
+    transition: background .15s, transform .1s;
+  }
+  .chip:hover { background: #dbe7fa; }
+  .chip:active { transform: scale(.97); }
+  .chip b { font-weight: 700; }
+  .actions { display: flex; align-items: center; gap: 14px; margin-top: 18px; flex-wrap: wrap; }
+  .btn-primary {
+    font: inherit; font-size: 15.5px; font-weight: 700; cursor: pointer; border: none;
+    background: var(--blue); color: #fff; padding: 13px 26px; border-radius: 11px;
+    display: inline-flex; align-items: center; gap: 10px; transition: background .15s, transform .1s;
+  }
+  .btn-primary:hover { background: var(--blue-2); }
+  .btn-primary:active { transform: translateY(1px); }
+  .btn-primary:disabled { opacity: .65; cursor: progress; }
+  .hint { font-size: 13px; color: var(--muted); }
+  .spinner {
+    width: 16px; height: 16px; border: 2.5px solid rgba(255,255,255,.45);
+    border-top-color: #fff; border-radius: 50%; animation: spin .7s linear infinite; display: none;
+  }
+  .btn-primary.loading .spinner { display: inline-block; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* ---------- Result ---------- */
+  #result { margin-top: 18px; }
+  .result-card {
+    background: var(--card); border: 1px solid var(--line); border-radius: var(--radius);
+    box-shadow: var(--shadow); overflow: hidden; animation: rise .35s ease both;
+  }
+  @keyframes rise { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+  .rc-top {
+    display: flex; flex-wrap: wrap; gap: 12px; align-items: center; justify-content: space-between;
+    padding: 18px 22px; background: linear-gradient(180deg, #fbfcff, #f3f7fd); border-bottom: 1px solid var(--line);
+  }
+  .cat-badge { font-size: 17px; font-weight: 800; color: var(--blue); display: flex; align-items: center; gap: 10px; }
+  .cat-badge .ico { width: 30px; height: 30px; border-radius: 8px; background: var(--blue-soft); display: grid; place-items: center; font-size: 16px; }
+  .pills { display: flex; gap: 8px; flex-wrap: wrap; }
+  .pill { font-size: 12.5px; font-weight: 700; padding: 6px 12px; border-radius: 999px; border: 1px solid transparent; white-space: nowrap; }
+  .pill .k { font-weight: 500; opacity: .8; margin-right: 5px; }
+  .pill.team { background: #eef2f7; color: #3a4658; border-color: #dde3ec; }
+  .urg-Niedrig { background: #e7f5ee; color: var(--ok); border-color: #c2e6d3; }
+  .urg-Mittel  { background: #fdf3e0; color: var(--warn); border-color: #f3dfb4; }
+  .urg-Hoch    { background: #fdeceb; color: var(--high); border-color: #f6c9c4; }
+
+  .rc-body { padding: 20px 22px; display: grid; gap: 18px; }
+  .field .ftitle { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .6px; color: var(--muted); margin-bottom: 6px; }
+  .field p { font-size: 15px; color: var(--ink); }
+  .miss { list-style: none; display: flex; flex-wrap: wrap; gap: 7px; }
+  .miss li { font-size: 13.5px; background: #fff7e8; color: var(--warn); border: 1px solid #f3e2bd; padding: 5px 11px; border-radius: 8px; }
+  .miss li::before { content: "?"; font-weight: 800; margin-right: 6px; }
+  .draft { background: #fbfcfe; border: 1px solid var(--blue-line); border-radius: 11px; padding: 15px 16px; }
+  .draft .dhead { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 9px; flex-wrap: wrap; }
+  .draft .dhead .ftitle { margin: 0; }
+  .approve { font-size: 12px; font-weight: 700; color: var(--blue); background: var(--blue-soft); border: 1px solid var(--blue-line); padding: 5px 11px; border-radius: 999px; display: inline-flex; gap: 7px; align-items: center; }
+  .approve span.lock { font-size: 12px; }
+  .draft .dtext { font-size: 15px; color: var(--ink); white-space: pre-wrap; }
+  .demo-note { font-size: 12.5px; color: var(--muted); padding: 11px 22px; border-top: 1px dashed var(--line); background: #fafbfd; }
+  .demo-note b { color: var(--blue-2); }
+
+  /* ---------- Footer ---------- */
+  footer { margin: 40px 0 50px; text-align: center; }
+  .disclaimer { font-size: 12.5px; color: var(--muted); border-top: 1px solid var(--line); padding-top: 22px; }
+  .docs { margin-top: 16px; display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; font-size: 13px; }
+  .docs a { color: var(--blue-2); text-decoration: none; font-weight: 600; }
+  .docs a:hover { text-decoration: underline; }
+
+  @media (max-width: 560px) {
+    .hero { padding: 34px 0 18px; }
+    .console { padding: 18px; }
+    .rc-top { padding: 15px 16px; }
+    .rc-body { padding: 16px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap head-row">
+    <div class="brand">
+      <div class="logo">C</div>
+      <div>Service Center · AI Copilot
+        <small>Konzeptioneller Prototyp für Cornelsen</small>
+      </div>
+    </div>
+    <div class="head-tag">Claude Code · n8n · GPT</div>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <section class="hero">
+    <h1>Eine Serviceanfrage rein —<br><b>Kategorie, Priorität, Team & Antwortentwurf</b> in Sekunden.</h1>
+    <p class="lead">Dieser Prototyp zeigt, wie KI das Service Center im Alltag <b>entlasten</b> kann: Sie analysiert das Anliegen, schlägt eine Einordnung und eine Antwort vor — die finale Prüfung bleibt bewusst bei der Sachbearbeitung.</p>
+    <div class="human-note"><span class="dot"></span> Der Mensch entscheidet — die KI bereitet nur vor.</div>
+  </section>
+
+  <section class="console">
+    <div class="label">Kundennachricht</div>
+    <textarea id="msg" placeholder="Nachricht der Kundin / des Kunden hier einfügen — oder unten ein Beispiel anklicken …"></textarea>
+
+    <div class="chips" id="chips">
+      <button class="chip" data-key="webcode">📘 <b>Webcode</b> funktioniert nicht</button>
+      <button class="chip" data-key="versand">📦 Lieferung <b>nicht angekommen</b></button>
+      <button class="chip" data-key="datenschutz">🔒 <b>Datenschutz</b>-Auskunft</button>
+    </div>
+
+    <div class="actions">
+      <button class="btn-primary" id="analyze">
+        <span class="spinner"></span>
+        <span class="btxt">Anfrage analysieren</span>
+      </button>
+      <span class="hint">Drei Beispiele liegen bereit — oder eigenen Text eingeben.</span>
+    </div>
+  </section>
+
+  <div id="result" aria-live="polite"></div>
+
+  <footer>
+    <div class="disclaimer">
+      Konzeptioneller Prototyp · synthetische Beispieldaten · keine echten Kundendaten · keine automatische Versendung.<br>
+      Da die realen Prozesse, Systeme und Qualitätsanforderungen von Cornelsen hier nicht bekannt sind, ist dies bewusst keine fertige Lösung, sondern ein Gesprächsöffner.
+    </div>
+    <div class="docs">
+      <a href="cv-nina-panknin.pdf">Lebenslauf (PDF)</a>
+      <a href="anschreiben.pdf">Anschreiben (PDF)</a>
+      <a href="https://ninalearnsvibecoding.com">ninalearnsvibecoding.com</a>
+    </div>
+  </footer>
+
+</main>
+
+<script>
+  // ====== Konfiguration ======
+  const WEBHOOK_URL = "https://n8n.ninalearnsvibecoding.com/webhook/cornelsen-triage";
+  const TIMEOUT_MS  = 8000;
+
+  // Kategorie -> Icon (rein dekorativ)
+  const CAT_ICON = {
+    "Bestellung, Versand oder Rechnung": "📦",
+    "Registrierung und Benutzerkonto":   "👤",
+    "Zugang zu digitalen Produkten":     "🔑",
+    "Webcode oder Lizenz":               "📘",
+    "Technisches Problem":               "🛠️",
+    "Produkt- oder Programmanfrage":     "💬",
+    "Datenschutz / rechtliche Frage":    "🔒",
+    "Sonstiges / manuelle Prüfung":      "🗂️"
+  };
+
+  // ====== Handkuratierte Fallback-Ergebnisse (Demo-Sicherheit) ======
+  const FALLBACKS = {
+    webcode: {
+      kundentext: "Ich habe den Mathe-Arbeitsheft-Zugang gekauft, aber mein Webcode funktioniert nicht. Beim Eingeben kommt nur eine Fehlermeldung.",
+      kategorie: "Webcode oder Lizenz",
+      dringlichkeit: "Hoch",
+      team: "Lizenzservice",
+      begruendung: "Die Kundin hat bezahlt, kann das gekaufte Produkt aber nicht nutzen — der Webcode wird nicht akzeptiert. Da der Zugang blockiert ist, besteht akuter Handlungsbedarf.",
+      fehlende_infos: ["Eingegebener Webcode", "Bestell- oder Rechnungsnummer", "Genauer Wortlaut der Fehlermeldung"],
+      antwortentwurf: "Guten Tag,\n\nvielen Dank für Ihre Nachricht — das tut mir leid, dass der Webcode nicht funktioniert. Damit ich Ihren Zugang schnell freischalten kann, senden Sie mir bitte den genauen Webcode sowie Ihre Bestellnummer. Häufig hilft es bereits, den Code ohne Leerzeichen und in Großbuchstaben einzugeben.\n\nIch kümmere mich umgehend darum.\n\nFreundliche Grüße\nIhr Cornelsen Service Center",
+      freigabe_hinweis: "Freigabe durch Mitarbeitende erforderlich"
+    },
+    versand: {
+      kundentext: "Meine bestellten Hefte sind nach zwei Wochen immer noch nicht angekommen. Wann kann ich mit der Lieferung rechnen?",
+      kategorie: "Bestellung, Versand oder Rechnung",
+      dringlichkeit: "Mittel",
+      team: "Auftrags- & Rechnungsservice",
+      begruendung: "Es geht um eine verzögerte Lieferung einer bezahlten Bestellung. Ärgerlich, aber kein Systemausfall — daher mittlere Priorität mit zeitnaher Klärung über den Versanddienstleister.",
+      fehlende_infos: ["Bestellnummer", "Liefer- bzw. Rechnungsadresse"],
+      antwortentwurf: "Guten Tag,\n\ndanke für Ihre Nachricht und entschuldigen Sie die Verzögerung. Damit ich den Sendungsstatus prüfen kann, nennen Sie mir bitte Ihre Bestellnummer. Ich gehe der Lieferung dann umgehend nach und melde mich mit einem konkreten Stand bei Ihnen zurück.\n\nFreundliche Grüße\nIhr Cornelsen Service Center",
+      freigabe_hinweis: "Freigabe durch Mitarbeitende erforderlich"
+    },
+    datenschutz: {
+      kundentext: "Ich möchte wissen, welche Daten Sie über mein Lehrerkonto speichern und ob ich eine Kopie davon bekommen kann.",
+      kategorie: "Datenschutz / rechtliche Frage",
+      dringlichkeit: "Mittel",
+      team: "Datenschutz & Recht",
+      begruendung: "Es handelt sich um ein Auskunftsersuchen nach Art. 15 DSGVO. Solche Anfragen sind fristgebunden und müssen an die zuständige Stelle weitergeleitet werden — daher kein reiner Standardfall.",
+      fehlende_infos: ["Im Konto hinterlegte E-Mail-Adresse", "Bestätigung der Identität (zum Schutz der Daten)"],
+      antwortentwurf: "Guten Tag,\n\nvielen Dank für Ihre Anfrage. Selbstverständlich haben Sie das Recht auf Auskunft über die zu Ihrer Person gespeicherten Daten. Ich leite Ihr Anliegen an unsere zuständige Stelle für Datenschutz weiter, die sich innerhalb der gesetzlichen Frist bei Ihnen meldet. Zur Sicherheit bestätigen Sie uns bitte die im Konto hinterlegte E-Mail-Adresse.\n\nFreundliche Grüße\nIhr Cornelsen Service Center",
+      freigabe_hinweis: "Freigabe durch Mitarbeitende erforderlich"
+    },
+    // generischer Fallback für freien Text, wenn das Backend nicht erreichbar ist
+    _generic: {
+      kategorie: "Sonstiges / manuelle Prüfung",
+      dringlichkeit: "Mittel",
+      team: "Service Center (manuelle Sichtung)",
+      begruendung: "Das Anliegen lässt sich nicht eindeutig einer Kategorie zuordnen und sollte daher von einer Mitarbeiterin / einem Mitarbeiter persönlich gesichtet werden.",
+      fehlende_infos: ["Kontext zur Anfrage", "Kunden- oder Bestellnummer"],
+      antwortentwurf: "Guten Tag,\n\nvielen Dank für Ihre Nachricht. Ich habe Ihr Anliegen aufgenommen und leite es zur persönlichen Prüfung an die zuständige Kollegin / den zuständigen Kollegen weiter. Sie erhalten zeitnah eine Rückmeldung.\n\nFreundliche Grüße\nIhr Cornelsen Service Center",
+      freigabe_hinweis: "Freigabe durch Mitarbeitende erforderlich"
+    }
+  };
+
+  // ====== Rendering ======
+  const $result = document.getElementById("result");
+
+  function esc(s) {
+    return String(s == null ? "" : s).replace(/[&<>"]/g, c => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;" }[c]));
+  }
+
+  function renderResult(d, opts) {
+    opts = opts || {};
+    const urg = ["Niedrig","Mittel","Hoch"].includes(d.dringlichkeit) ? d.dringlichkeit : "Mittel";
+    const ico = CAT_ICON[d.kategorie] || "🗂️";
+    const missing = Array.isArray(d.fehlende_infos) ? d.fehlende_infos : [];
+    const missHtml = missing.length
+      ? `<ul class="miss">${missing.map(m => `<li>${esc(m)}</li>`).join("")}</ul>`
+      : `<p style="color:var(--ok);font-size:14px;">Keine offensichtlich fehlenden Angaben.</p>`;
+
+    $result.innerHTML = `
+      <div class="result-card">
+        <div class="rc-top">
+          <div class="cat-badge"><span class="ico">${ico}</span>${esc(d.kategorie)}</div>
+          <div class="pills">
+            <span class="pill urg-${urg}"><span class="k">Dringlichkeit</span>${esc(urg)}</span>
+            <span class="pill team"><span class="k">Team</span>${esc(d.team)}</span>
+          </div>
+        </div>
+        <div class="rc-body">
+          <div class="field">
+            <div class="ftitle">Begründung</div>
+            <p>${esc(d.begruendung)}</p>
+          </div>
+          <div class="field">
+            <div class="ftitle">Noch zu klären</div>
+            ${missHtml}
+          </div>
+          <div class="draft">
+            <div class="dhead">
+              <div class="ftitle">Antwortentwurf</div>
+              <span class="approve"><span class="lock">🔓</span>${esc(d.freigabe_hinweis || "Freigabe durch Mitarbeitende erforderlich")}</span>
+            </div>
+            <div class="dtext">${esc(d.antwortentwurf)}</div>
+          </div>
+        </div>
+        ${opts.demo ? `<div class="demo-note">⚙️ <b>Demo-Modus:</b> vorbereitetes Ergebnis (Backend nicht erreichbar). Die Analyse läuft produktiv über einen n8n-Workflow mit GPT.</div>` : ``}
+      </div>`;
+    $result.scrollIntoView({ behavior: "smooth", block: "nearest" });
+  }
+
+  // ====== Beispiel-Chips ======
+  document.getElementById("chips").addEventListener("click", e => {
+    const btn = e.target.closest(".chip");
+    if (!btn) return;
+    const data = FALLBACKS[btn.dataset.key];
+    document.getElementById("msg").value = data.kundentext;
+    renderResult(data); // Chips zeigen IMMER das perfekte kuratierte Ergebnis (kein Backend nötig)
+  });
+
+  // ====== Live-Analyse (mit Timeout + Fallback) ======
+  const $btn = document.getElementById("analyze");
+
+  function pickFallbackFor(text) {
+    const t = (text || "").toLowerCase();
+    if (t.includes("webcode") || t.includes("lizenz") || t.includes("freischalt")) return FALLBACKS.webcode;
+    if (t.includes("liefer") || t.includes("versand") || t.includes("paket") || t.includes("bestell")) return FALLBACKS.versand;
+    if (t.includes("daten") || t.includes("dsgvo") || t.includes("auskunft") || t.includes("löschen")) return FALLBACKS.datenschutz;
+    return FALLBACKS._generic;
+  }
+
+  async function analyze() {
+    const text = document.getElementById("msg").value.trim();
+    if (!text) { document.getElementById("msg").focus(); return; }
+
+    $btn.classList.add("loading");
+    $btn.disabled = true;
+    $btn.querySelector(".btxt").textContent = "Analysiere …";
+
+    const ctrl = new AbortController();
+    const timer = setTimeout(() => ctrl.abort(), TIMEOUT_MS);
+
+    try {
+      const res = await fetch(WEBHOOK_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message: text }),
+        signal: ctrl.signal
+      });
+      clearTimeout(timer);
+      if (!res.ok) throw new Error("HTTP " + res.status);
+      let data = await res.json();
+      if (Array.isArray(data)) data = data[0];          // n8n liefert ggf. ein Array
+      if (data && data.output) data = data.output;      // oder verschachtelt
+      if (!data || !data.kategorie) throw new Error("Unerwartetes Format");
+      renderResult(data);
+    } catch (err) {
+      clearTimeout(timer);
+      renderResult(pickFallbackFor(text), { demo: true });
+    } finally {
+      $btn.classList.remove("loading");
+      $btn.disabled = false;
+      $btn.querySelector(".btxt").textContent = "Anfrage analysieren";
+    }
+  }
+
+  $btn.addEventListener("click", analyze);
+  document.getElementById("msg").addEventListener("keydown", e => {
+    if ((e.metaKey || e.ctrlKey) && e.key === "Enter") analyze();
+  });
+</script>
+</body>
+</html>
