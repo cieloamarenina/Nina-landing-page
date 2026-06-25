@@ -1,0 +1,125 @@
+{
+  "name": "🎓 CORNELSEN · Service Center · AI Copilot (Triage)",
+  "nodes": [
+    {
+      "id": "11111111-1111-1111-1111-111111111111",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        0,
+        0
+      ],
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "cornelsen-triage",
+        "responseMode": "responseNode",
+        "options": {
+          "allowedOrigins": "*"
+        }
+      },
+      "webhookId": "cornelsen-triage-wh"
+    },
+    {
+      "id": "22222222-2222-2222-2222-222222222222",
+      "name": "OpenAI Triage",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        240,
+        0
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.openai.com/v1/chat/completions",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "openAiApi",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={ \"model\": \"gpt-4o-mini\", \"temperature\": 0.3, \"response_format\": { \"type\": \"json_object\" }, \"messages\": [ { \"role\": \"system\", \"content\": \"Du bist ein Triage-Assistent für das Service Center des Cornelsen Verlags. Analysiere die eingehende Kundennachricht und antworte ausschließlich mit einem gültigen JSON-Objekt ohne Markdown und ohne weiteren Text. Pflichtfelder: kategorie_id, dringlichkeit, begruendung, fehlende_infos, antwortentwurf. kategorie_id ist genau einer dieser Codes: bestellung (Bestellung, Versand oder Rechnung), konto (Registrierung und Benutzerkonto), digitalzugang (Zugang zu digitalen Produkten), webcode (Webcode oder Lizenz), technik (Technisches Problem), produkt (Produkt- oder Programmanfrage), datenschutz (Datenschutz oder rechtliche Frage), sonstiges (Sonstiges, manuelle Prüfung). Bei unklarer oder leerer Nachricht nutze sonstiges. dringlichkeit ist Niedrig, Mittel oder Hoch; Hoch nur bei blockiertem Zugang, bezahltem aber unbrauchbarem Produkt oder rechtlich Dringendem. begruendung sind ein bis zwei Sätze zur Einordnung. fehlende_infos ist ein Array kurzer Strings mit noch benötigten Angaben, sonst ein leeres Array. antwortentwurf ist ein höflicher, gesiezter deutscher Antwortentwurf, der fehlende Angaben erfragt und mit der Grußformel Freundliche Grüße, Ihr Cornelsen Service Center endet.\" }, { \"role\": \"user\", \"content\": {{ JSON.stringify($json.body.message || \"\") }} } ] }",
+        "options": {}
+      },
+      "credentials": {
+        "openAiApi": {
+          "id": "7G74VmUFTa0yFc6H",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "id": "44444444-4444-4444-4444-444444444444",
+      "name": "Normalisieren & Routing",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        480,
+        0
+      ],
+      "parameters": {
+        "jsCode": "const raw = $input.first().json.choices?.[0]?.message?.content || \"{}\";\nlet p; try { p = JSON.parse(raw); } catch (e) { p = {}; }\nconst MAP = {\n  bestellung:    { kategorie: \"Bestellung, Versand oder Rechnung\", team: \"Auftrags- & Rechnungsservice\" },\n  konto:         { kategorie: \"Registrierung und Benutzerkonto\",   team: \"Kundenkonto-Service\" },\n  digitalzugang: { kategorie: \"Zugang zu digitalen Produkten\",     team: \"Digital-Support\" },\n  webcode:       { kategorie: \"Webcode oder Lizenz\",               team: \"Lizenzservice\" },\n  technik:       { kategorie: \"Technisches Problem\",               team: \"Technischer Support\" },\n  produkt:       { kategorie: \"Produkt- oder Programmanfrage\",     team: \"Produktberatung\" },\n  datenschutz:   { kategorie: \"Datenschutz / rechtliche Frage\",    team: \"Datenschutz & Recht\" },\n  sonstiges:     { kategorie: \"Sonstiges / manuelle Prüfung\",      team: \"Service Center (manuelle Sichtung)\" }\n};\nconst id = String(p.kategorie_id || \"sonstiges\").toLowerCase().trim();\nconst m = MAP[id] || MAP.sonstiges;\nconst urg = [\"Niedrig\",\"Mittel\",\"Hoch\"].includes(p.dringlichkeit) ? p.dringlichkeit : \"Mittel\";\nreturn [{ json: {\n  kategorie: m.kategorie,\n  team: m.team,\n  dringlichkeit: urg,\n  begruendung: p.begruendung || \"\",\n  fehlende_infos: Array.isArray(p.fehlende_infos) ? p.fehlende_infos : [],\n  antwortentwurf: p.antwortentwurf || \"\",\n  freigabe_hinweis: \"Freigabe durch Mitarbeitende erforderlich\"\n}}];"
+      }
+    },
+    {
+      "id": "33333333-3333-3333-3333-333333333333",
+      "name": "Respond",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        720,
+        0
+      ],
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $json }}",
+        "options": {
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "Access-Control-Allow-Origin",
+                "value": "*"
+              }
+            ]
+          }
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "OpenAI Triage",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Triage": {
+      "main": [
+        [
+          {
+            "node": "Normalisieren & Routing",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Normalisieren & Routing": {
+      "main": [
+        [
+          {
+            "node": "Respond",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  }
+}
