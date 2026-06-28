@@ -56,12 +56,27 @@ export async function fetchWindyCam(place) {
   if (!res.ok) return null;
   return parseWindy(await res.json());
 }
+// Meteorological season for the hero photo, hemisphere-aware so a June shot of
+// a southern city reads as winter (and Berlin in June reads as summer — no more
+// snowy skyline at 38°). Months: Dec–Feb / Mar–May / Jun–Aug / Sep–Nov.
+export function seasonWord(lat, date = new Date()) {
+  const north = ["winter","spring","summer","autumn"];
+  const m = date.getMonth(); // 0=Jan
+  const idx = Math.floor(((m + 1) % 12) / 3); // Dec→0(winter) … Sep–Nov→3(autumn)
+  const season = north[idx];
+  if (lat < 0) { // southern hemisphere: flip by half a year
+    return north[(idx + 2) % 4];
+  }
+  return season;
+}
+
 export async function photoUrl(place, partOfDay) {
   if (!CONFIG.PROXY) return null;
-  // "<city> skyline <day|night>": "skyline" keeps the shot recognizably the
-  // right city; the day/night word matches the local time so a daytime view
-  // isn't a dark night photo (and vice-versa).
-  const q = encodeURIComponent(`${place.name} skyline ${partOfDay}`);
+  // "<city> skyline <season> <day|night>": "skyline" keeps the shot recognizably
+  // the right city; "season" stops a snowy winter photo showing at 38° in summer;
+  // the day/night word matches local time so a daytime view isn't a night photo.
+  const season = seasonWord(place.lat ?? 0);
+  const q = encodeURIComponent(`${place.name} skyline ${season} ${partOfDay}`);
   const res = await fetch(`${CONFIG.PROXY}?type=photo&q=${q}`);
   if (!res.ok) return null;
   const j = await res.json();
@@ -92,7 +107,8 @@ export function parseForecast(json) {
     gust: Math.round((h.wind_gusts_10m||[])[i] ?? 0),
     humidity: (h.relative_humidity_2m||[])[i] ?? null,
     uv: (h.uv_index||[])[i] ?? null,
-    isDay: cw.is_day === 1
+    isDay: cw.is_day === 1,
+    time: cw.time || null
   };
   const hours = (h.time||[]).map((iso, k) => ({
     iso, temp: Math.round(h.temperature_2m[k]), code: h.weather_code[k], pop: h.precipitation_probability[k]

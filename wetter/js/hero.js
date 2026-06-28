@@ -29,7 +29,7 @@ export function setHeroLive(photoEl, { liveId, liveLabel, liveText, photoText })
   img.style.display = "none";
 
   const startLive = () => {
-    const tick = () => { img.src = `https://imgproxy.windy.com/_/preview/plain/current/${liveId}/original.jpg?t=${Date.now()}`; };
+    const tick = () => { img.src = `https://imgproxy.windy.com/_/full/plain/current/${liveId}/original.jpg?t=${Date.now()}`; };
     tick();
     liveTimer = setInterval(tick, 60000);
   };
@@ -41,7 +41,10 @@ export function setHeroLive(photoEl, { liveId, liveLabel, liveText, photoText })
     btn.className = "livebtn";
     arch.appendChild(btn);
   }
-  let live = false;
+  // Live cam is the DEFAULT view (the user wants real webcams, not stock photos).
+  // The Pexels photo stays underneath as a silent fallback for when the cam has
+  // no image yet or fails to load.
+  let live = true;
   const sync = () => {
     btn.innerHTML = `<span class="dot"></span> ${live ? (photoText || "Foto") : (liveText || "Live")}`;
     btn.classList.toggle("on", live);
@@ -53,12 +56,19 @@ export function setHeroLive(photoEl, { liveId, liveLabel, liveText, photoText })
     if (live) startLive(); else stopLive();
     sync();
   };
+  // Quality guard: if the cam can't load, OR only delivers a small/low-res frame
+  // (many cams have no real HD image), drop back to the curated photo so the hero
+  // is never blurry or blank. 800px is the cutoff between "crisp" and "pixelated".
+  img.onerror = () => { live = false; stopLive(); sync(); };
+  img.onload = () => { if (img.naturalWidth && img.naturalWidth < 800) { live = false; stopLive(); sync(); } };
+  startLive();
   sync();
 }
 
-export function renderHero(el, { place, forecast, t }) {
+export function renderHero(el, { place, forecast, t, lang }) {
   const c = forecast.current;
   const wx = describeCode(c.code, c.isDay);
+  const dateStr = formatHeroDate(c.time, lang);
   el.innerHTML = `
     <div class="hero">
       <div class="arch">
@@ -69,6 +79,7 @@ export function renderHero(el, { place, forecast, t }) {
         <div class="scrim"></div>
         <div class="hero-info">
           <div class="loc">📍 ${place.name}, ${place.country}</div>
+          ${dateStr ? `<div class="hero-date">${dateStr}</div>` : ""}
           <div class="temprow">
             <div class="temp"><span class="tval">${c.temp}</span><sup>°</sup></div>
             <div class="cond">
@@ -81,6 +92,18 @@ export function renderHero(el, { place, forecast, t }) {
       <div class="scrollhint" aria-hidden="true">⌄</div>
     </div>`;
   countUp(el.querySelector(".tval"), c.temp);
+}
+
+// Local date for the hero, e.g. "Sonntag, 28. Juni" — uses the place's own
+// timezone (the API returns current.time as local wall-clock, no offset) so the
+// date stays correct even when viewing a city in another timezone. Falls back
+// to the viewer's "now" if the API omitted the timestamp.
+function formatHeroDate(iso, lang) {
+  const d = iso ? new Date(iso) : new Date();
+  if (isNaN(d)) return "";
+  return new Intl.DateTimeFormat(lang || "en", {
+    weekday: "long", day: "numeric", month: "long"
+  }).format(d);
 }
 
 // Subtle count-up tween for the big hero temperature (0 → real value, ~600ms).

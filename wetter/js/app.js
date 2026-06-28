@@ -105,7 +105,7 @@ async function loadPlace(place) {
 
   const heroHost = document.createElement("div");
   stage.appendChild(heroHost);
-  renderHero(heroHost, { place, forecast, t });
+  renderHero(heroHost, { place, forecast, t, lang });
   addFavStar(heroHost, place);
 
   const current = forecast.current;
