@@ -1,0 +1,146 @@
+{
+  "name": "People-Ops Inbox-Triage (Digistore24 Demo)",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "people-ops-inbox",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "webhook-in",
+      "name": "Mitarbeiteranfrage eingegangen",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [240, 400],
+      "webhookId": "people-ops-inbox"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            { "id": "a1", "name": "from", "value": "={{ $json.body.from }}", "type": "string" },
+            { "id": "a2", "name": "subject", "value": "={{ $json.body.subject }}", "type": "string" },
+            { "id": "a3", "name": "message", "value": "={{ $json.body.message }}", "type": "string" }
+          ]
+        },
+        "options": {}
+      },
+      "id": "parse-in",
+      "name": "Anfrage normalisieren",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [460, 400]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.mistral.ai/v1/chat/completions",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "mistralCloudApi",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({\n  model: 'mistral-small-latest',\n  response_format: { type: 'json_object' },\n  messages: [\n    { role: 'system', content: 'Du bist HR-Assistenz im People-Operations-Team. Klassifiziere die Mitarbeiteranfrage in genau eine Kategorie: Urlaub, Vertrag, Benefits, Bescheinigung oder Sonstiges. Entwirf eine freundliche, korrekte Antwort auf Deutsch. Gib NUR JSON zurueck mit den Feldern: category (string), confidence (0-1), draft_reply (string), needs_human (boolean - true bei rechtlichen/vertraglichen/heiklen Themen).' },\n    { role: 'user', content: 'Betreff: ' + $json.subject + '\\n\\nNachricht: ' + $json.message }\n  ]\n}) }}",
+        "options": {}
+      },
+      "id": "mistral-classify",
+      "name": "KI: Klassifizieren + Antwort entwerfen",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [680, 400]
+    },
+    {
+      "parameters": {
+        "jsCode": "const raw = $input.first().json.choices[0].message.content;\nconst ai = JSON.parse(raw);\nconst src = $('Anfrage normalisieren').first().json;\nreturn [{ json: { ...src, ...ai } }];"
+      },
+      "id": "parse-ai",
+      "name": "KI-Ergebnis parsen",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [900, 400]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": { "version": 2, "caseSensitive": true },
+          "combinator": "or",
+          "conditions": [
+            { "id": "c1", "leftValue": "={{ $json.needs_human }}", "rightValue": true, "operator": { "type": "boolean", "operation": "true", "singleValue": true } },
+            { "id": "c2", "leftValue": "={{ $json.confidence }}", "rightValue": 0.85, "operator": { "type": "number", "operation": "lt" } }
+          ]
+        },
+        "options": {}
+      },
+      "id": "if-human",
+      "name": "Freigabe nötig?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [1120, 400]
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $env.HR_TELEGRAM_CHAT_ID }}",
+        "text": "=🟡 *Freigabe nötig* ({{ $json.category }}, Konfidenz {{ $json.confidence }})\n\n*Von:* {{ $json.from }}\n*Betreff:* {{ $json.subject }}\n\n*KI-Entwurf:*\n{{ $json.draft_reply }}\n\nVor dem Versand bitte prüfen & freigeben.",
+        "additionalFields": { "parse_mode": "Markdown" }
+      },
+      "id": "tg-approval",
+      "name": "Human-in-the-Loop: Telegram-Freigabe",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [1360, 280]
+    },
+    {
+      "parameters": {
+        "fromEmail": "people-ops@example.com",
+        "toEmail": "={{ $json.from }}",
+        "subject": "=Re: {{ $json.subject }}",
+        "emailFormat": "text",
+        "text": "={{ $json.draft_reply }}",
+        "options": {}
+      },
+      "id": "smtp-send",
+      "name": "Antwort versenden (SMTP)",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [1360, 520]
+    },
+    {
+      "parameters": {
+        "operation": "create",
+        "options": {}
+      },
+      "id": "nocodb-log",
+      "name": "Audit-Trail (NocoDB)",
+      "type": "n8n-nodes-base.nocoDb",
+      "typeVersion": 3,
+      "position": [1580, 400],
+      "notesInFlow": true,
+      "notes": "Loggt: from, category, confidence, needs_human, draft_reply, status (auto-sent / human-approved), timestamp"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify({ status: 'received', category: $json.category, routed: $json.needs_human ? 'human-review' : 'auto-reply' }) }}",
+        "options": {}
+      },
+      "id": "respond",
+      "name": "Antwort an Absender-System",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [1800, 400]
+    }
+  ],
+  "connections": {
+    "Mitarbeiteranfrage eingegangen": { "main": [[{ "node": "Anfrage normalisieren", "type": "main", "index": 0 }]] },
+    "Anfrage normalisieren": { "main": [[{ "node": "KI: Klassifizieren + Antwort entwerfen", "type": "main", "index": 0 }]] },
+    "KI: Klassifizieren + Antwort entwerfen": { "main": [[{ "node": "KI-Ergebnis parsen", "type": "main", "index": 0 }]] },
+    "KI-Ergebnis parsen": { "main": [[{ "node": "Freigabe nötig?", "type": "main", "index": 0 }]] },
+    "Freigabe nötig?": { "main": [[{ "node": "Human-in-the-Loop: Telegram-Freigabe", "type": "main", "index": 0 }], [{ "node": "Antwort versenden (SMTP)", "type": "main", "index": 0 }]] },
+    "Human-in-the-Loop: Telegram-Freigabe": { "main": [[{ "node": "Audit-Trail (NocoDB)", "type": "main", "index": 0 }]] },
+    "Antwort versenden (SMTP)": { "main": [[{ "node": "Audit-Trail (NocoDB)", "type": "main", "index": 0 }]] },
+    "Audit-Trail (NocoDB)": { "main": [[{ "node": "Antwort an Absender-System", "type": "main", "index": 0 }]] }
+  },
+  "settings": { "executionOrder": "v1" },
+  "active": false,
+  "pinData": {}
+}

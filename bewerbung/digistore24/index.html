@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>People Operations Command Center · Demo</title>
+<style>
+  :root{
+    --bg:#0e1217; --panel:#161d26; --panel2:#1c2530; --line:#2a3540;
+    --txt:#e6edf3; --muted:#8b9aa8; --accent:#2ec4b6; --accent2:#3b82f6;
+    --warn:#f5a524; --ok:#2ec4b6; --danger:#ef4444; --r:14px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    background:radial-gradient(1100px 560px at 82% -8%,#1b2a33 0%,var(--bg) 55%);
+    color:var(--txt);line-height:1.5;padding:30px 18px 70px;min-height:100vh}
+  .wrap{max-width:1120px;margin:0 auto}
+  header{display:flex;align-items:flex-start;justify-content:space-between;gap:18px;flex-wrap:wrap}
+  .title h1{font-size:23px;font-weight:700;letter-spacing:-.3px}
+  .title .tag{color:var(--muted);font-size:14px;margin-top:5px;max-width:640px}
+  .lang{display:flex;border:1px solid var(--line);border-radius:999px;background:var(--panel)}
+  .lang button{background:transparent;border:0;color:var(--muted);padding:7px 16px;font-size:13px;font-weight:600;cursor:pointer;border-radius:999px}
+  .lang button.active{background:var(--accent);color:#06231f}
+  .demoflag{display:inline-block;font-size:11px;color:var(--warn);border:1px solid var(--warn);border-radius:999px;padding:2px 10px;margin-top:12px}
+  .panel{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:18px;margin-top:18px}
+  .panel h2{font-size:12px;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);margin-bottom:14px}
+  .kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+  @media(max-width:620px){.kpis{grid-template-columns:repeat(2,1fr)}}
+  .kpi{background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:13px}
+  .kpi .v{font-size:23px;font-weight:700}.kpi .k{font-size:11px;color:var(--muted);margin-top:3px}
+  /* process row */
+  .flow{display:flex;gap:6px;flex-wrap:nowrap;align-items:center;overflow-x:auto;padding-bottom:6px}
+  .step{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--muted);white-space:nowrap;flex-shrink:0;
+    background:var(--panel2);border:1px solid var(--line);border-radius:8px;padding:6px 10px;transition:.3s}
+  .step.on{color:var(--txt);border-color:var(--accent);box-shadow:0 0 0 1px var(--accent) inset}
+  .step .n{width:18px;height:18px;border-radius:50%;background:var(--line);color:var(--bg);font-size:11px;
+    font-weight:700;display:flex;align-items:center;justify-content:center}
+  .step.on .n{background:var(--accent)}
+  .arrow{color:var(--line);font-size:14px;flex-shrink:0}
+  .cols{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+  @media(max-width:860px){.cols{grid-template-columns:1fr}}
+  label{display:block;font-size:12px;color:var(--muted);margin:10px 0 5px}
+  input,select,textarea{width:100%;background:var(--panel2);border:1px solid var(--line);border-radius:9px;
+    color:var(--txt);padding:10px 12px;font-size:14px;font-family:inherit}
+  textarea{resize:vertical;min-height:84px}
+  .row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .btn{border:0;border-radius:9px;padding:10px 15px;font-size:13px;font-weight:600;cursor:pointer}
+  .btn.primary{background:var(--accent);color:#06231f;margin-top:14px;width:100%}
+  .analyze-tbl{width:100%;border-collapse:collapse;font-size:13px}
+  .analyze-tbl td{padding:8px 6px;border-bottom:1px solid var(--line)}
+  .analyze-tbl td:first-child{color:var(--muted);width:46%}
+  .analyze-tbl td:last-child{font-weight:600;text-align:right}
+  .v-ok{color:var(--ok)}.v-warn{color:var(--warn)}
+  .draft{background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:13px;font-size:13.5px;white-space:pre-wrap;margin-top:4px}
+  .draftnote{font-size:12px;color:var(--warn);margin-top:8px}
+  .actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+  .actions .btn{flex:1;min-width:120px}
+  .approve{background:var(--accent);color:#06231f}
+  .edit{background:var(--panel2);color:var(--txt);border:1px solid var(--line)}
+  .reject{background:transparent;color:var(--danger);border:1px solid var(--danger)}
+  .escalate{background:rgba(245,165,36,.14);color:var(--warn);border:1px solid var(--warn)}
+  .result-box{margin-top:12px;padding:12px;border-radius:10px;display:none}
+  .result-ok{background:rgba(46,196,182,.1);border:1px solid var(--ok)}
+  .result-info{background:rgba(59,130,246,.1);border:1px solid var(--accent2)}
+  .muted{color:var(--muted);font-size:13px}
+  .timeline{list-style:none}
+  .timeline li{position:relative;padding:0 0 14px 24px;font-size:13px;color:var(--muted);border-left:2px solid var(--line);margin-left:6px}
+  .timeline li:last-child{border-left:2px solid transparent}
+  .timeline li::before{content:"";position:absolute;left:-7px;top:3px;width:12px;height:12px;border-radius:50%;background:var(--line);border:2px solid var(--panel)}
+  .timeline li.done{color:var(--txt)}
+  .timeline li.done::before{background:var(--accent)}
+  .timeline li .t{font-size:11px;color:var(--muted);margin-left:8px}
+  .hint{font-size:12px;color:var(--muted);margin-top:8px}
+  .tech{font-family:ui-monospace,Menlo,monospace;font-size:11px;color:var(--muted);margin-top:12px}
+  .foot{margin-top:26px;font-size:12px;color:var(--muted);text-align:center}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="title">
+      <h1 data-i="title"></h1>
+      <div class="tag" data-i="tag"></div>
+      <span class="demoflag" data-i="demoflag"></span>
+    </div>
+    <div class="lang">
+      <button id="bde" class="active" onclick="setLang('de')">DE</button>
+      <button id="ben" onclick="setLang('en')">EN</button>
+    </div>
+  </header>
+
+  <!-- KPIs -->
+  <div class="panel">
+    <h2 data-i="kpiHead"></h2>
+    <div class="kpis">
+      <div class="kpi"><div class="v" id="kOpen">6</div><div class="k" data-i="kpiOpen"></div></div>
+      <div class="kpi"><div class="v" id="kCat">11</div><div class="k" data-i="kpiCat"></div></div>
+      <div class="kpi"><div class="v" id="kAppr">4</div><div class="k" data-i="kpiAppr"></div></div>
+      <div class="kpi"><div class="v">~3 <span style="font-size:13px" data-i="min"></span></div><div class="k" data-i="kpiTime"></div></div>
+    </div>
+  </div>
+
+  <!-- Process view -->
+  <div class="panel">
+    <h2 data-i="procHead"></h2>
+    <div class="flow" id="flow"></div>
+  </div>
+
+  <div class="cols">
+    <!-- Input -->
+    <div class="panel">
+      <h2 data-i="inHead"></h2>
+      <label data-i="lExample"></label>
+      <select id="example" onchange="loadExample()"></select>
+      <div class="row2">
+        <div><label data-i="lName"></label><input id="fName"></div>
+        <div><label data-i="lDept"></label><input id="fDept"></div>
+      </div>
+      <label data-i="lLang"></label><input id="fLang" readonly>
+      <label data-i="lMsg"></label><textarea id="fMsg"></textarea>
+      <button class="btn primary" onclick="analyze()" data-i="bAnalyze"></button>
+      <div class="hint" data-i="inHint"></div>
+    </div>
+
+    <!-- Results -->
+    <div class="panel">
+      <h2 data-i="resHead"></h2>
+      <div id="noRes" class="muted" data-i="resEmpty"></div>
+      <table class="analyze-tbl" id="resTbl" style="display:none">
+        <tr><td data-i="aLang"></td><td id="rLang"></td></tr>
+        <tr><td data-i="aCat"></td><td id="rCat"></td></tr>
+        <tr><td data-i="aSub"></td><td id="rSub"></td></tr>
+        <tr><td data-i="aPrio"></td><td id="rPrio"></td></tr>
+        <tr><td data-i="aPersonal"></td><td id="rPersonal"></td></tr>
+        <tr><td data-i="aSpecial"></td><td id="rSpecial"></td></tr>
+        <tr><td data-i="aTeam"></td><td id="rTeam"></td></tr>
+        <tr><td data-i="aPolicy"></td><td id="rPolicy"></td></tr>
+        <tr><td data-i="aAuto"></td><td id="rAuto"></td></tr>
+        <tr><td data-i="aHuman"></td><td id="rHuman" class="v-warn"></td></tr>
+      </table>
+
+      <div id="draftWrap" style="display:none">
+        <h2 style="margin-top:18px" data-i="draftHead"></h2>
+        <div class="draft" id="draftBox"></div>
+        <div class="draftnote" data-i="draftNote"></div>
+        <div class="actions" id="actionRow">
+          <button class="btn approve" onclick="approve()" data-i="bApprove"></button>
+          <button class="btn edit" onclick="edit()" data-i="bEdit"></button>
+          <button class="btn reject" onclick="reject()" data-i="bReject"></button>
+          <button class="btn escalate" onclick="escalate()" data-i="bEscalate"></button>
+        </div>
+        <div class="result-box result-ok" id="boxApprove"></div>
+        <div class="result-box result-info" id="boxEdit"></div>
+        <button class="btn edit" id="resetBtn" onclick="resetDemo()" style="display:none;margin-top:12px;width:100%" data-i="bReset"></button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Audit trail -->
+  <div class="panel">
+    <h2 data-i="auditHead"></h2>
+    <ul class="timeline" id="timeline"></ul>
+    <div class="tech" data-i="tech"></div>
+    <div class="hint" data-i="transparency"></div>
+  </div>
+
+  <div class="foot"><span data-i="foot"></span><br>Nina Panknin · ninalearnsvibecoding.com</div>
+</div>
+
+<script>
+const FLOW = {
+  de:["Mitarbeiteranfrage","Spracherkennung","Kategorisierung","Richtlinienprüfung","Antwortentwurf","Menschliche Freigabe","Versand","Protokollierung"],
+  en:["Employee request","Language detection","Classification","Policy check","Draft response","Human approval","Send","Audit log"]
+};
+const I={
+  de:{
+    title:"People Operations Command Center",
+    tag:"Von der Mitarbeiteranfrage bis zur freigegebenen Antwort – strukturiert, nachvollziehbar und menschlich kontrolliert.",
+    demoflag:"Simulierte Demo-Daten · keine echten Mitarbeiterdaten",
+    kpiHead:"Kennzahlen",kpiOpen:"Offene Anfragen",kpiCat:"Automatisch kategorisiert",kpiAppr:"Zur Freigabe",kpiTime:"Ø Bearbeitungszeit",min:"Min",
+    procHead:"Prozessansicht",
+    inHead:"Mitarbeiteranfrage eingeben",
+    lExample:"Beispiel auswählen",lName:"Name",lDept:"Abteilung",lLang:"Sprache (erkannt)",lMsg:"Anliegen",
+    bAnalyze:"Anfrage analysieren",
+    inHint:"Beispiele sind vorbereitete Szenarien – die Klassifizierung ist hier simuliert, im echten Workflow übernimmt sie ein KI-Modell (Mistral).",
+    resHead:"Automatische Workflow-Analyse",resEmpty:"Wähle ein Beispiel und klicke „Anfrage analysieren“.",
+    aLang:"Sprache",aCat:"Kategorie",aSub:"Unterkategorie",aPrio:"Priorität",aPersonal:"Personenbezogene Daten",aSpecial:"Besondere Kategorien",aTeam:"Zuständiges Team",aPolicy:"Richtlinienquelle",aAuto:"Automatisierung",aHuman:"Menschliche Freigabe",
+    draftHead:"KI-generierter Antwortentwurf",
+    draftNote:"⚠ Dieser Text wurde automatisch erstellt und noch nicht versendet.",
+    bApprove:"Freigeben",bEdit:"Bearbeiten",bReject:"Zurückweisen",bEscalate:"An People Operations eskalieren",bReset:"Demo zurücksetzen",
+    auditHead:"Audit-Trail",
+    tech:"Unter der Haube: n8n (self-hosted) · Mistral AI · Telegram (Human-in-the-Loop) · SMTP · NocoDB (Audit-Trail)",
+    transparency:"Funktionaler Prototyp mit simulierten Daten. Die Workflow-Logik wird hier demonstriert; die Architektur ist für eine echte n8n-Integration mit KI-Klassifizierung, Human-in-the-Loop und Audit-Trail vorbereitet.",
+    foot:"Derselbe Prozess funktioniert in Deutsch und Englisch – Schalter oben rechts.",
+    prioNormal:"Normal",prioLow:"Niedrig",prioHigh:"Hoch",
+    personalYes:"Ja",specialNo:"Nein",specialMaybe:"Möglich",
+    autoDraft:"Antwortentwurf zulässig",autoDraftOnly:"Nur Entwurf, kein Auto-Versand",
+    humanReq:"Erforderlich",
+    approvedBy:"✅ Demo-Freigabe durch Nina Panknin",reviewerRole:"People Operations Reviewer",
+    editLog:"✏ Antwortentwurf manuell angepasst · Grund: Unternehmensrichtlinie ergänzt",
+    rejectLog:"✕ Entwurf zurückgewiesen – wird neu erstellt",
+    escalateLog:"↗ An People Operations eskaliert – persönliche Bearbeitung",
+    sent:"Versand simuliert",
+    auditSteps:["Anfrage eingegangen","Sprache erkannt","Kategorie zugewiesen","Datenschutzprüfung durchgeführt","Antwortentwurf erstellt","Menschliche Prüfung angefordert"],
+  },
+  en:{
+    title:"People Operations Command Center",
+    tag:"From employee request to approved response – structured, traceable and human-controlled.",
+    demoflag:"Simulated demo data · no real employee data",
+    kpiHead:"Metrics",kpiOpen:"Open requests",kpiCat:"Auto-classified",kpiAppr:"Awaiting approval",kpiTime:"Avg. handling time",min:"min",
+    procHead:"Process view",
+    inHead:"Submit employee request",
+    lExample:"Choose example",lName:"Name",lDept:"Department",lLang:"Language (detected)",lMsg:"Request",
+    bAnalyze:"Analyse request",
+    inHint:"Examples are prepared scenarios – classification is simulated here; in the live workflow an AI model (Mistral) does it.",
+    resHead:"Automated workflow analysis",resEmpty:"Pick an example and click “Analyse request”.",
+    aLang:"Language",aCat:"Category",aSub:"Sub-category",aPrio:"Priority",aPersonal:"Personal data",aSpecial:"Special-category data",aTeam:"Responsible team",aPolicy:"Policy source",aAuto:"Automation",aHuman:"Human approval",
+    draftHead:"AI-generated draft reply",
+    draftNote:"⚠ This text was generated automatically and has not been sent yet.",
+    bApprove:"Approve",bEdit:"Edit",bReject:"Reject",bEscalate:"Escalate to People Operations",bReset:"Reset demo",
+    auditHead:"Audit trail",
+    tech:"Under the hood: n8n (self-hosted) · Mistral AI · Telegram (human-in-the-loop) · SMTP · NocoDB (audit trail)",
+    transparency:"Functional prototype with simulated data. The workflow logic is demonstrated here; the architecture is prepared for a real n8n integration with AI classification, human-in-the-loop and audit trail.",
+    foot:"The same process works in German and English – switch top right.",
+    prioNormal:"Normal",prioLow:"Low",prioHigh:"High",
+    personalYes:"Yes",specialNo:"No",specialMaybe:"Possible",
+    autoDraft:"Draft reply allowed",autoDraftOnly:"Draft only, no auto-send",
+    humanReq:"Required",
+    approvedBy:"✅ Demo approval by Nina Panknin",reviewerRole:"People Operations Reviewer",
+    editLog:"✏ Draft adjusted manually · reason: company policy added",
+    rejectLog:"✕ Draft rejected – will be regenerated",
+    escalateLog:"↗ Escalated to People Operations – handled in person",
+    sent:"Send simulated",
+    auditSteps:["Request received","Language detected","Category assigned","Data-protection check done","Draft reply created","Human review requested"],
+  }
+};
+
+// Scenarios. msg & draft stay in the employee's language (that's the point).
+const SC=[
+ {
+   id:"sonderurlaub",
+   name:"Anna M.", dept:{de:"Marketing",en:"Marketing"},
+   detLang:"de",
+   msg:"Hallo, ich habe im nächsten Monat einen Arzttermin. Kann ich dafür Sonderurlaub beantragen und welche Unterlagen benötigt ihr?",
+   cat:{de:"Abwesenheit",en:"Absence"}, sub:{de:"Arzttermin",en:"Doctor's appointment"},
+   prio:"normal", personal:"yes", special:"maybe", auto:"draft", human:true,
+   policy:{de:"Demo-Abwesenheitsrichtlinie, Abschnitt 4.2",en:"Demo absence policy, section 4.2"},
+   draft:"Hallo Anna,\ndanke für deine Nachricht. Ob und wie der Termin als Arbeitszeit bzw. Abwesenheit behandelt wird, richtet sich nach der bei uns geltenden Abwesenheitsregelung. Bitte sende uns eine kurze Terminbestätigung ohne medizinische Angaben. Das People Experience Team prüft den Vorgang und meldet sich anschließend bei dir.\n\nViele Grüße\nPeople Experience Team"
+ },
+ {
+   id:"address",
+   name:"Jordan P.", dept:{de:"Sales",en:"Sales"},
+   detLang:"en",
+   msg:"Hi, I'm moving to a new address next month. Which documents or information do you need from me?",
+   cat:{de:"Stammdaten",en:"Master data"}, sub:{de:"Adressänderung",en:"Address change"},
+   prio:"low", personal:"yes", special:"no", auto:"draft", human:true,
+   policy:{de:"Demo-Stammdatenrichtlinie",en:"Demo master-data policy"},
+   draft:"Hi Jordan,\nthanks for letting us know. To update your address we just need your new full address and the date it becomes valid. You can reply here or update it directly in your profile. No further documents are required.\n\nBest regards\nPeople Experience Team"
+ },
+ {
+   id:"contract",
+   name:"Alex R.", dept:{de:"Support",en:"Support"},
+   detLang:"de",
+   msg:"Hallo, ich würde gerne von 30 auf 40 Stunden aufstocken. Was muss vertraglich passieren und ab wann ginge das?",
+   cat:{de:"Vertrag / Arbeitszeit",en:"Contract / Working hours"}, sub:{de:"Stundenaufstockung",en:"Hours increase"},
+   prio:"high", personal:"yes", special:"no", auto:"draftOnly", human:true,
+   policy:{de:"Demo-Arbeitszeit-/Vertragsrichtlinie",en:"Demo working-hours/contract policy"},
+   draft:"Hallo Alex,\nvielen Dank für deine Nachricht. Eine Aufstockung auf 40 Stunden ist grundsätzlich möglich und erfordert eine Vertragsänderung. Ich prüfe die Details (Frist, Stichtag, Gehaltsanpassung) und melde mich mit einem konkreten Vorschlag.\n\nViele Grüße\nPeople Experience Team"
+ }
+];
+
+let lang="de", cur=null;
+
+function t(k){return I[lang][k];}
+
+function setLang(l){
+  lang=l; document.documentElement.lang=l;
+  document.getElementById('bde').classList.toggle('active',l==='de');
+  document.getElementById('ben').classList.toggle('active',l==='en');
+  document.querySelectorAll('[data-i]').forEach(e=>{const v=I[l][e.dataset.i]; if(typeof v==='string') e.textContent=v;});
+  buildFlow(); buildExamples(); if(cur){loadExample(true);}
+}
+
+function buildFlow(){
+  const f=document.getElementById('flow'); f.innerHTML='';
+  FLOW[lang].forEach((s,i)=>{
+    const d=document.createElement('div'); d.className='step'; d.id='fstep'+i;
+    d.innerHTML=`<span class="n">${i+1}</span>${s}`; f.appendChild(d);
+    if(i<FLOW[lang].length-1){const a=document.createElement('span');a.className='arrow';a.textContent='→';f.appendChild(a);}
+  });
+}
+function flowTo(n){ for(let i=0;i<8;i++){document.getElementById('fstep'+i).classList.toggle('on',i<=n);} }
+
+function buildExamples(){
+  const sel=document.getElementById('example'); const keep=sel.value; sel.innerHTML='';
+  SC.forEach(s=>{const o=document.createElement('option');o.value=s.id;
+    o.textContent=`${s.name} · ${s.cat[lang]} (${s.detLang==='de'?'DE':'EN'})`; sel.appendChild(o);});
+  if(keep) sel.value=keep;
+}
+
+function loadExample(keepResults){
+  const id=document.getElementById('example').value;
+  cur=SC.find(s=>s.id===id);
+  document.getElementById('fName').value=cur.name;
+  document.getElementById('fDept').value=cur.dept[lang];
+  document.getElementById('fLang').value=(cur.detLang==='de'?(lang==='de'?'Deutsch':'German'):(lang==='de'?'Englisch':'English'));
+  document.getElementById('fMsg').value=cur.msg;
+  if(!keepResults){ resetResults(); }
+  else if(document.getElementById('resTbl').style.display!=='none'){ analyze(true); }
+}
+
+function resetResults(){
+  document.getElementById('noRes').style.display='block';
+  document.getElementById('resTbl').style.display='none';
+  document.getElementById('draftWrap').style.display='none';
+  document.getElementById('boxApprove').style.display='none';
+  document.getElementById('boxEdit').style.display='none';
+  buildTimeline(0); flowTo(0);
+}
+
+function analyze(instant){
+  if(!cur) return;
+  document.getElementById('actionRow').style.display='flex';
+  document.getElementById('resetBtn').style.display='none';
+  document.getElementById('noRes').style.display='none';
+  document.getElementById('resTbl').style.display='table';
+  document.getElementById('rLang').textContent=(cur.detLang==='de'?(lang==='de'?'Deutsch':'German'):(lang==='de'?'Englisch':'English'));
+  document.getElementById('rCat').textContent=cur.cat[lang];
+  document.getElementById('rSub').textContent=cur.sub[lang];
+  document.getElementById('rPrio').textContent=t(cur.prio==='normal'?'prioNormal':cur.prio==='low'?'prioLow':'prioHigh');
+  document.getElementById('rPersonal').textContent=t('personalYes');
+  const sp=document.getElementById('rSpecial');
+  sp.textContent=t(cur.special==='maybe'?'specialMaybe':'specialNo');
+  sp.className=cur.special==='maybe'?'v-warn':'';
+  document.getElementById('rTeam').textContent='People Operations';
+  document.getElementById('rPolicy').textContent=cur.policy[lang];
+  document.getElementById('rAuto').textContent=t(cur.auto==='draft'?'autoDraft':'autoDraftOnly');
+  document.getElementById('rAuto').className='v-ok';
+  document.getElementById('rHuman').textContent=t('humanReq');
+  document.getElementById('draftWrap').style.display='block';
+  document.getElementById('draftBox').textContent=cur.draft;
+  document.getElementById('boxApprove').style.display='none';
+  document.getElementById('boxEdit').style.display='none';
+  buildTimeline(6); flowTo(4);
+}
+
+function buildTimeline(done){
+  const tl=document.getElementById('timeline'); tl.innerHTML='';
+  t('auditSteps').forEach((s,i)=>{
+    const li=document.createElement('li'); if(i<done) li.classList.add('done');
+    li.textContent=s; tl.appendChild(li);
+  });
+}
+function addAudit(text){
+  const tl=document.getElementById('timeline');
+  const li=document.createElement('li'); li.className='done';
+  const now=new Date();
+  const tm=String(now.getHours()).padStart(2,'0')+':'+String(now.getMinutes()).padStart(2,'0');
+  li.innerHTML=text+`<span class="t">${now.toLocaleDateString(lang==='de'?'de-DE':'en-GB')} · ${tm}</span>`;
+  tl.appendChild(li);
+}
+
+function approve(){
+  flowTo(7);
+  addAudit(t('approvedBy')); addAudit(t('sent'));
+  const b=document.getElementById('boxApprove');
+  const now=new Date(); const tm=String(now.getHours()).padStart(2,'0')+':'+String(now.getMinutes()).padStart(2,'0');
+  b.style.display='block';
+  b.innerHTML=`<b>${t('approvedBy')}</b><br><span class="muted">${t('reviewerRole')} · ${now.toLocaleDateString(lang==='de'?'de-DE':'en-GB')} · ${tm} · ${t('sent')}</span>`;
+  endState();
+}
+function edit(){
+  flowTo(5); addAudit(t('editLog'));
+  const b=document.getElementById('boxEdit'); b.style.display='block';
+  b.innerHTML=`<b>${t('editLog')}</b>`;
+}
+function reject(){ flowTo(4); addAudit(t('rejectLog')); }
+function escalate(){ flowTo(5); addAudit(t('escalateLog')); endState(); }
+function endState(){
+  document.getElementById('actionRow').style.display='none';
+  document.getElementById('resetBtn').style.display='block';
+}
+function resetDemo(){
+  document.getElementById('resetBtn').style.display='none';
+  document.getElementById('actionRow').style.display='flex';
+  loadExample();
+}
+
+// init
+buildFlow(); buildExamples(); setLang('de'); loadExample();
+</script>
+</body>
+</html>
