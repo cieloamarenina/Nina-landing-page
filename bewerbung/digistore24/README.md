@@ -1,6 +1,8 @@
 # People-Ops Inbox-Triage — Automatisierungs-Demo für Digistore24
 
-Ein lauffähiger n8n-Workflow, der einen People-Operations-Prozess automatisiert, den Digistore24 **wörtlich in der Stellenanzeige nennt**: *„Du bearbeitest die Inbox … Fragen zu Urlaub, Verträgen oder Benefits."*
+Ein **importierbarer Architektur-Prototyp** für einen n8n-basierten People-Operations-Workflow zu einem Prozess, den Digistore24 **wörtlich in der Stellenanzeige nennt**: *„Du bearbeitest die Inbox … Fragen zu Urlaub, Verträgen oder Benefits."*
+
+> **Ehrlicher Status:** Das interaktive Dashboard demonstriert den vollständigen Freigabeprozess mit simulierten Daten. Die produktive n8n-Integration (echter Wait-/Resume-Schritt nach der Telegram-Freigabe, Versand erst nach tatsächlichem Approve) ist **konzeptionell vorbereitet, aber noch nicht live in n8n importiert oder ausgeführt.** Die JSON-Datei zeigt die Architektur, nicht einen produktionsfertigen Workflow.
 
 ---
 
@@ -32,12 +34,12 @@ Ein n8n-Workflow übernimmt die Triage, der Mensch behält die Kontrolle:
 
 `n8n (self-hosted) · Mistral AI · Telegram (Human-in-the-Loop) · SMTP · NocoDB (Audit-Trail) · REST/Webhook`
 
-Workflow-Datei: [`people-ops-inbox-triage.json`](people-ops-inbox-triage.json) — in n8n importierbar.
+Workflow-Datei: [`people-ops-inbox-triage.json`](people-ops-inbox-triage.json) — in n8n importierbar (Architektur-Vorlage).
 
-> Hinweis: Demo-Workflow. Credentials (Mistral, Telegram, SMTP, NocoDB) und die NocoDB-Tabelle werden beim Import in der eigenen n8n-Instanz gesetzt. `active: false` — läuft erst nach bewusster Aktivierung.
+> Hinweis: Die JSON skizziert die Knoten-Architektur. Für einen echten Human-in-the-Loop fehlt noch ein Wait-/Resume-Schritt (Approve-/Reject-Callback per Webhook), damit der SMTP-Versand erst *nach* tatsächlicher Freigabe erfolgt. Credentials und NocoDB-Tabelle werden beim Import gesetzt; `active: false`.
 
 ---
 
 ## Für Anschreiben / CV (1–2 Sätze)
 
-> *„Als Arbeitsprobe habe ich einen People-Ops-Inbox-Triage-Workflow gebaut: Mitarbeiteranfragen werden per KI klassifiziert und beantwortet, heikle Fälle gehen über eine Human-in-the-Loop-Freigabe, jeder Vorgang landet im Audit-Trail. Genau das Muster, mit dem sich wiederkehrende People-Operations-Aufgaben standardisieren lassen."*
+> *„Als Arbeitsprobe habe ich einen interaktiven People-Ops-Prototyp gebaut: Mitarbeiteranfragen werden klassifiziert, datenschutzgeprüft und beantwortet, heikle Fälle gehen über eine Human-in-the-Loop-Freigabe, jeder Vorgang landet im Audit-Trail. Genau das Muster, mit dem sich wiederkehrende People-Operations-Aufgaben standardisieren lassen."*
