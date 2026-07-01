@@ -2,6 +2,15 @@
 <html lang="de">
 <head>
 <meta charset="UTF-8">
+<script>
+  // No-flash theme: set data-theme before first paint. Dark is default.
+  (function () {
+    try {
+      if (localStorage.getItem('nlc-theme') === 'light')
+        document.documentElement.setAttribute('data-theme', 'light');
+    } catch (e) {}
+  })();
+</script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Hanteltraining — Nina</title>
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%230d1320'/><text x='2' y='22' font-family='monospace' font-weight='bold' font-size='13' fill='%2300d4ff'>NLC</text></svg>">
@@ -18,6 +27,25 @@
     --muted: #94A3B8;
     --border: #1E3A5F;
     --success: #10B981;
+    --nav-bg: rgba(20,38,64,0.72);
+    --shadow-strong: rgba(0,0,0,0.6);
+  }
+
+  /* LIGHT THEME — nur Hintergrund/Text hell, Akzentfarben bleiben original */
+  :root[data-theme="light"] {
+    --bg: #f6f8fc;
+    --bg-card: #ffffff;
+    --bg-elevated: #eef3fa;
+    --accent: #38BDF8;
+    --text: #0e1726;
+    --muted: #5a6b86;
+    --border: #d7e0ee;
+    --nav-bg: rgba(255,255,255,0.85);
+    --shadow-strong: rgba(30,45,70,0.18);
+  }
+
+  body, nav, section, .card {
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -865,10 +893,14 @@
   .nlc-home:hover { filter: brightness(1.18); }
 
   /* ── SPRACH-UMSCHALTER ──────────────────────── */
-  .lang-switch { position: fixed; top: 14px; right: 16px; z-index: 1100; display: flex; gap: 3px; background: rgba(20,38,64,0.72); backdrop-filter: blur(6px); border: 1px solid var(--border); border-radius: 999px; padding: 4px; }
+  .lang-switch { position: fixed; top: 14px; right: 16px; z-index: 1100; display: flex; gap: 3px; background: var(--nav-bg); backdrop-filter: blur(6px); border: 1px solid var(--border); border-radius: 999px; padding: 4px; }
   .ls-btn { background: none; border: none; color: var(--muted); font-family: monospace; font-size: 0.62rem; font-weight: 700; letter-spacing: 0.06em; padding: 0.25rem 0.5rem; border-radius: 999px; cursor: pointer; transition: all 0.15s; }
   .ls-btn:hover { color: var(--text); }
   .ls-btn.active { background: var(--accent); color: #04121f; }
+
+  /* THEME TOGGLE — optisch wie die Sprachbuttons (.ls-btn) */
+  .theme-toggle { background: none; border: none; color: var(--muted); font-family: monospace; font-size: 0.8rem; line-height: 1; width: 26px; height: 24px; display: inline-flex; align-items: center; justify-content: center; border-radius: 999px; cursor: pointer; transition: all 0.15s; margin-left: 3px; }
+  .theme-toggle:hover { color: var(--text); background: rgba(56,189,248,0.12); }
 
   /* ── RTL (Hebrew) overrides ─────────────────────────────── */
   html[dir="rtl"] body { text-align: right; }
@@ -893,6 +925,7 @@
   <button class="ls-btn" data-lang="fr">FR</button>
   <button class="ls-btn" data-lang="it">IT</button>
   <button class="ls-btn" data-lang="he" lang="he">עברית</button>
+  <button class="theme-toggle" id="themeToggle" aria-label="Hell/Dunkel umschalten" aria-pressed="false" title="Hell/Dunkel umschalten" onclick="toggleTheme()">🌙</button>
 </div>
 
 <div class="container">
@@ -2245,6 +2278,27 @@ applyUI();
 buildPhaseTabs();
 renderPhase(currentPhase);
 updateWorkoutClock();
+
+// THEME TOGGLE (light/dark) — dark ist Default, Wahl wird gespeichert
+function applyThemeIcon() {
+  const isLight = document.documentElement.getAttribute('data-theme') === 'light';
+  const btn = document.getElementById('themeToggle');
+  if (!btn) return;
+  btn.textContent = isLight ? '☀️' : '🌙';
+  btn.setAttribute('aria-pressed', isLight);
+}
+function toggleTheme() {
+  const root = document.documentElement;
+  if (root.getAttribute('data-theme') === 'light') {
+    root.removeAttribute('data-theme');
+    try { localStorage.setItem('nlc-theme', 'dark'); } catch (e) {}
+  } else {
+    root.setAttribute('data-theme', 'light');
+    try { localStorage.setItem('nlc-theme', 'light'); } catch (e) {}
+  }
+  applyThemeIcon();
+}
+applyThemeIcon();
 </script>
 
 

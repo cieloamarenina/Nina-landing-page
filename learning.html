@@ -2,6 +2,15 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<script>
+  // No-flash theme: set data-theme before first paint. Dark is default.
+  (function () {
+    try {
+      if (localStorage.getItem('nlc-theme') === 'light')
+        document.documentElement.setAttribute('data-theme', 'light');
+    } catch (e) {}
+  })();
+</script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Learning – Nina Learns Vibe Coding</title>
 <meta name="description" content="What I learn while vibe coding — Claude Code, n8n, RAG, AI skills & frameworks. A topic-sorted learning reference.">
@@ -16,6 +25,25 @@
     --text: #e8f0fe; --muted: #8094b3;
     --font-display: 'Syne', sans-serif;
     --font-body: 'Inter', system-ui, sans-serif;
+    --nav-bg: rgba(8,12,20,0.85);
+    --shadow-strong: rgba(0,0,0,0.6);
+  }
+
+  /* LIGHT THEME — nur Hintergrund/Text hell, Akzentfarben bleiben original */
+  :root[data-theme="light"] {
+    --bg: #f6f8fc;
+    --surface: #ffffff;
+    --card: #ffffff;
+    --border: #d7e0ee;
+    --accent: #00d4ff;
+    --text: #0e1726;
+    --muted: #5a6b86;
+    --nav-bg: rgba(255,255,255,0.85);
+    --shadow-strong: rgba(30,45,70,0.18);
+  }
+
+  body, nav, section, .card {
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
   }
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   html { scroll-behavior: smooth; }
@@ -25,7 +53,7 @@
   nav {
     position: fixed; top: 0; left: 0; right: 0; z-index: 100;
     padding: 1.1rem 2rem; display: flex; justify-content: space-between; align-items: center;
-    background: rgba(8,12,20,0.85); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border);
+    background: var(--nav-bg); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border);
   }
   .nav-logo { font-family: var(--font-display); font-size: 1rem; font-weight: 800; color: var(--accent); letter-spacing: 0.04em; text-decoration: none; }
   .nav-right { display: flex; align-items: center; gap: 1rem; }
@@ -34,6 +62,25 @@
   .lang-btn { background: transparent; color: var(--muted); border: 1px solid var(--border); border-radius: 5px; padding: 0.25rem 0.5rem; font-family: var(--font-body); font-size: 0.7rem; font-weight: 600; cursor: pointer; }
   .lang-btn:hover { color: var(--accent); }
   .lang-btn.active { color: var(--accent); border-color: rgba(0,212,255,0.5); }
+
+  /* THEME TOGGLE */
+  .theme-toggle {
+    background: none;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    font-size: 0.9rem;
+    line-height: 1;
+    width: 30px;
+    height: 26px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: color 0.2s, border-color 0.2s;
+    margin-left: 0.5rem;
+  }
+  .theme-toggle:hover { color: var(--accent); border-color: rgba(0,212,255,0.4); }
 
   .wrap { max-width: 820px; margin: 0 auto; padding: 7rem 1.5rem 5rem; }
   .badge { display: inline-block; color: var(--accent); font-size: 0.72rem; font-weight: 600; letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 0.8rem; }
@@ -113,6 +160,7 @@
       <button class="lang-btn" data-lang="es">ES</button>
       <button class="lang-btn" data-lang="he" lang="he">עברית</button>
     </div>
+    <button class="theme-toggle" id="themeToggle" aria-label="Hell/Dunkel umschalten" aria-pressed="false" title="Hell/Dunkel umschalten" onclick="toggleTheme()">🌙</button>
     <a href="/" class="nav-back" data-i18n="back">← back to nlc</a>
   </div>
 </nav>
@@ -214,6 +262,27 @@ fetch('learnings.json?v=' + Date.now())
   .then(r => { if (!r.ok) throw new Error('fetch failed'); return r.json(); })
   .then(data => { DATA = data; render(); })
   .catch(() => { $cats.innerHTML = `<div class="errored">⚠️ ${lang==='de'?'Inhalte konnten nicht geladen werden.':'Could not load content.'}</div>`; });
+
+// THEME TOGGLE (light/dark) — dark ist Default, Wahl wird gespeichert
+function applyThemeIcon() {
+  const isLight = document.documentElement.getAttribute('data-theme') === 'light';
+  const btn = document.getElementById('themeToggle');
+  if (!btn) return;
+  btn.textContent = isLight ? '☀️' : '🌙';
+  btn.setAttribute('aria-pressed', isLight);
+}
+function toggleTheme() {
+  const root = document.documentElement;
+  if (root.getAttribute('data-theme') === 'light') {
+    root.removeAttribute('data-theme');
+    try { localStorage.setItem('nlc-theme', 'dark'); } catch (e) {}
+  } else {
+    root.setAttribute('data-theme', 'light');
+    try { localStorage.setItem('nlc-theme', 'light'); } catch (e) {}
+  }
+  applyThemeIcon();
+}
+applyThemeIcon();
 </script>
 </body>
 </html>
